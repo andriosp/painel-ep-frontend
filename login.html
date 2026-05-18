@@ -440,9 +440,28 @@
             return;
         }
 
-        setTimeout(() => {
+        setTimeout(async () => {
+
+          try {
+            const teste = await fetch(`${API}/auth/me`, {
+              method: "GET",
+              credentials: "include"
+            });
+
+            console.log("auth/me status:", teste.status);
+
+            if (!teste.ok) {
+              throw new Error("Sessão não persistiu. Status: " + teste.status);
+            }
+
             window.location.href = "/index.html";
-        }, 500);
+
+          } catch (e) {
+            console.error("Erro no teste auth/me:", e);
+            mostrarAlerta("Login aceito, mas a sessão não persistiu. Verifique CORS/cookie.");
+          }
+
+          }, 500);
         }catch(err){
         console.error(err);
         mostrarAlerta(err.message || "Erro ao tentar entrar.");
