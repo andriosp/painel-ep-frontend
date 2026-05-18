@@ -344,7 +344,7 @@
   <script>
     (async function validarSessao(){
       try{
-        const resp = await fetch("http://localhost:8000/auth/me", {
+        const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
@@ -455,7 +455,7 @@
   </div>
 
   <script>
-    const API = "http://localhost:8000";
+    const API = "https://painel-ep-backend.onrender.com";
     let indicadorAtual = "matriculas";
     let programasValidosReceita = new Set();
 
@@ -832,7 +832,7 @@
 
     async function carregarUsuario(){
       try{
-        const resp = await fetch("http://localhost:8000/auth/me", {
+        const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
@@ -851,7 +851,7 @@
 
     async function logout(){
       try{
-        await fetch("http://localhost:8000/auth/logout", {
+        await fetch(`${API}/auth/logout`, {
           method: "POST",
           credentials: "include"
         });
