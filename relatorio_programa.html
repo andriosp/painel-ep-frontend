@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Painel • Relatório Executivo</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow: 0 10px 24px rgba(15,23,42,.08);
+      --radius:14px;
+      --radius-sm:12px;
+      --brand:#2563eb;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#dc2626;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container{
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 18px 18px 36px;
+    }
+
+    .topnav{
+      display:flex;
+      gap:10px;
+      padding:10px 0 14px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .navlink{
+      text-decoration:none;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 13px;
+      padding:8px 12px;
+      border-radius: 12px;
+      border:1px solid transparent;
+    }
+    .navlink:hover{
+      background:#fff;
+      border-color: var(--border);
+    }
+    .navlink.active{
+      background: rgba(37,99,235,.10);
+      color: var(--text);
+      border-color: rgba(37,99,235,.25);
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .title h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+
+    .title p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size:13px;
+    }
+
+    .panel{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .filters{
+      display:grid;
+      grid-template-columns: minmax(260px, 1.2fr) 160px 160px 1fr;
+      gap:12px;
+      align-items:end;
+    }
+
+    .field{
+      min-width:0;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color: var(--muted);
+      margin-bottom:8px;
+    }
+
+    select,
+    input,
+    textarea{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding:10px;
+      background:#fff;
+      outline:none;
+      font: inherit;
+    }
+
+    select,
+    input{
+      height:44px;
+    }
+
+    textarea{
+      min-height:100px;
+      resize:vertical;
+    }
+
+    select:focus,
+    input:focus,
+    textarea:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    .actions-panel{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    button{
+      appearance:none;
+      border:1px solid var(--border);
+      background:#fff;
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 650;
+      font-size:13px;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+    }
+
+    button:hover{
+      background:#f8fafc;
+      border-color:#dbe3ef;
+    }
+
+    button:active{
+      transform: translateY(1px);
+    }
+
+    .btn-primary{
+      background: var(--brand);
+      color:#fff;
+      border-color: rgba(37,99,235,.65);
+    }
+
+    .btn-primary:hover{
+      background:#1d4ed8;
+    }
+
+    .btn-danger{
+      color:#b91c1c;
+      border-color:#fecaca;
+      background:#fff5f5;
+    }
+
+    .section-title{
+      margin: 18px 2px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+    }
+
+    .acoes-box{
+      display:grid;
+      gap:10px;
+    }
+
+    .acao-input-row{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:10px;
+      align-items:start;
+    }
+
+    .acoes-lista{
+      display:grid;
+      gap:8px;
+      margin-top:6px;
+    }
+
+    .acao-item{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+    }
+
+    .acao-item span{
+      font-size:14px;
+      line-height:1.4;
+    }
+
+    .acao-item button{
+      padding:6px 10px;
+      font-size:12px;
+    }
+
+    .hint{
+      font-size:12px;
+      color: var(--muted);
+      margin-top:4px;
+    }
+
+    .status{
+      margin-top:10px;
+      font-size:12px;
+      color: var(--muted);
+      min-height:18px;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background: rgba(15,23,42,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      z-index:9999;
+    }
+
+    .modal.open{
+      display:flex;
+    }
+
+    .modal-content{
+      width:min(1200px, 100%);
+      max-height:90vh;
+      overflow:auto;
+      background:#fff;
+      border-radius:18px;
+      box-shadow: 0 20px 60px rgba(15,23,42,.25);
+      border:1px solid var(--border);
+    }
+
+    .modal-header{
+      position:sticky;
+      top:0;
+      z-index:2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 16px;
+      background:#fff;
+      border-bottom:1px solid var(--border);
+    }
+
+    .modal-header h2{
+      margin:0;
+      font-size:18px;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .relatorio-preview{
+      padding:24px;
+      background:#f8fafc;
+    }
+
+    .preview-placeholder{
+      background:#fff;
+      border:1px dashed #cbd5e1;
+      border-radius:16px;
+      padding:32px;
+      text-align:center;
+      color: var(--muted);
+      font-size:14px;
+    }
+
+    @media (max-width: 980px){
+      .filters{
+        grid-template-columns: 1fr;
+      }
+
+      .acao-input-row{
+        grid-template-columns: 1fr;
+      }
+
+      .modal{
+        padding:10px;
+      }
+
+      .relatorio-preview{
+        padding:14px;
+      }
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    .relatorio-corpo {
+        background:#fff;
+        padding:12px;
+        border-radius:16px;
+        border:1px solid #e5e7eb;
+    }
+
+    @media print {
+        .topnav,
+        .header,
+        .panel,
+        .modal-header,
+        .status,
+        #toast-alerta {
+            display: none !important;
+        }
+
+        #modal-escolha-relatorio {
+          display: none !important;
+        }
+
+        .mapa-box {
+            height: 460px !important;
+            min-height: 460px !important;
+            padding: 16px !important;
+            overflow: hidden !important;
+        }
+
+        #mapa-rs {
+            height: 420px !important;
+            min-height: 420px !important;
+        }
+
+        #mapa-rs-box {
+          height: 540px !important;
+        }
+
+        .regioes-box {
+          height: 540px !important;
+          overflow: hidden !important;
+        }
+
+        .regioes-box .regiao-item {
+          padding: 7px 9px !important;
+        }
+
+        .regioes-box .regiao-item [style*="margin-top:5px"] {
+          margin-top: 3px !important;
+        }
+
+        .mapa-wrapper {
+            position: relative !important;
+            width: 100% !important;
+            height: 420px !important;
+            min-height: 420px !important;
+        }
+
+        .mapa-wrapper img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            object-position: center center !important;
+            display: block !important;
+        }
+
+        #pontos-mapa {
+            position: absolute !important;
+            inset: 0 !important;
+        }
+
+        .modal {
+            position: static !important;
+            inset: auto !important;
+            background: none !important;
+            padding: 0 !important;
+            display: block !important;
+        }
+
+        .modal-content {
+            width: 100% !important;
+            max-height: none !important;
+            overflow: visible !important;
+            border: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+        }
+
+        .relatorio-preview {
+            padding: 0 !important;
+            background: transparent !important;
+        }
+
+        .relatorio-pagina {
+            position: relative !important;
+            min-height: 260mm !important;
+            padding-top: 95px !important;
+            padding-bottom: 70px !important;
+            padding-left: 5mm !important;
+            padding-right: 5mm !important;
+            background: #fff !important;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+        }
+
+        .relatorio-pagina + .relatorio-pagina {
+            page-break-before: always !important;
+            break-before: page !important;
+            margin-top: 0 !important;
+        }
+
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        .barra-progresso-externa {
+            display: block !important;
+            height: 8px !important;
+            background: #e5e7eb !important;
+            border-radius: 999px !important;
+            overflow: hidden !important;
+        }
+
+        .barra-progresso-interna {
+            display: block !important;
+            height: 100% !important;
+            border-radius: 999px !important;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+        }
+
+        .print-header,
+        .print-footer {
+            display: block !important;
+            position: fixed !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 9999 !important;
+        }
+
+        .print-header {
+            top: 0 !important;
+        }
+
+        .print-footer {
+            bottom: 0 !important;
+        }
+
+        .print-header-img,
+        .print-footer-img {
+            width: 100% !important;
+            display: block !important;
+        }
+
+        .relatorio-header {
+            margin: 0 0 8px 0 !important;
+        }
+
+        .relatorio-footer {
+            margin: 10px 0 0 0 !important;
+        }
+
+        .relatorio-header-img,
+        .relatorio-footer-img {
+            width: 100% !important;
+            display: block !important;
+        }
+    }
+
+    .relatorio-pagina + .relatorio-pagina {
+        margin-top: 24px;
+    }
+
+    .print-header,
+    .print-footer {
+        display: none;
+    }
+
+    .print-header-img,
+    .print-footer-img {
+        width: 100%;
+        display: block;
+    }
+
+    .topnav{
+      display:flex;
+      gap:10px;
+      padding:10px 0 14px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .topnav-right{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    #usuario-logado{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:#fff;
+      color:var(--muted);
+      font-size:12px;
+      box-shadow:0 6px 14px rgba(15,23,42,.06);
+      white-space:nowrap;
+    }
+
+    #usuario-logado .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--brand);
+      box-shadow:0 0 0 5px rgba(37,99,235,.12);
+      flex:0 0 auto;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <script>
+    (async function validarSessao(){
+      try{
+        const resp = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include"
+        });
+
+        if(!resp.ok){
+          window.location.href = "/login.html";
+          return;
+        }
+
+        const data = await resp.json();
+
+        // 🔥 AQUI é o que faltava
+        if(data.deve_trocar_senha){
+          window.location.href = "/alterar_senha.html";
+          return;
+        }
+
+      }catch(e){
+        window.location.href = "/login.html";
+      }
+    })();
+  </script>
+
+  <div class="container">
+
+    <nav class="topnav">
+      <a href="index.html" class="navlink">Dashboard</a>
+      <a href="po.html" class="navlink">PO</a>
+      <a href="programas.html" class="navlink">Programas</a>
+      <a href="performance.html" class="navlink">Performance</a>
+      <a href="modalidades.html" class="navlink">Modalidades</a>
+      <a href="unidades.html" class="navlink">Unidades</a>
+      <a href="sge_turmas.html" class="navlink">Turmas</a>
+      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
+      <a href="relatorio_programa.html" class="navlink active">Relatório Executivo</a>
+    
+      <div class="topnav-right">
+        <a href="alterar_senha.html" class="navlink">
+          Alterar senha
+        </a>
+        <div id="usuario-logado" class="badge">
+          <span class="dot"></span>
+          Usuário: —
+        </div>
+    
+        <button onclick="logout()">Sair</button>
+      </div>
+    </nav>
+
+    <div class="header">
+      <div class="title">
+        <h1>Relatório Executivo de Programa</h1>
+        <p>Selecione o programa, o período e registre as ações realizadas para gerar a visualização executiva.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="filters">
+        <div class="field">
+          <label for="programa">Programa</label>
+          <select id="programa">
+            <option value="">Selecione...</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="ano">Ano</label>
+          <select id="ano"></select>
+        </div>
+
+        <div class="field">
+          <label for="mes">Meses</label>
+          <select id="mes" multiple style="height:140px;"></select>
+        </div>
+
+        <div class="field">
+          <label>&nbsp;</label>
+          <div style="display:flex; gap:8px;">
+            <button id="btn-visualizar-relatorio" class="btn-primary" onclick="abrirEscolhaRelatorio()" disabled>
+              Visualizar relatório
+            </button>
+          
+            <button onclick="limparTudo()">
+              Limpar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Ações realizadas</div>
+
+      <div class="acoes-box">
+        <div class="acao-input-row">
+          <textarea id="nova-acao" placeholder="Descreva uma ação realizada..."></textarea>
+          <button type="button" id="btn-adicionar-acao" onclick="adicionarAcao()">Adicionar ação</button>
+        </div>
+
+        <div class="hint">Você poderá registrar várias ações. Elas aparecerão no final do relatório.</div>
+
+        <div id="acoes-lista" class="acoes-lista"></div>
+      </div>
+
+      <div class="status" id="status"></div>
+    </div>
+  </div>
+
+  <div class="print-header">
+    <img
+      src="assets/cabecalho-relatorio.png"
+      alt="Cabeçalho do relatório"
+      class="print-header-img"
+    />
+  </div>
+  
+  <div class="print-footer">
+    <img
+      src="assets/rodape-relatorio.png"
+      alt="Rodapé do relatório"
+      class="print-footer-img"
+    />
+  </div>
+
+  <div class="modal" id="modal-relatorio">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Pré-visualização do relatório</h2>
+        <div class="modal-actions">
+            <button onclick="window.print()">Imprimir / PDF</button>
+          <button onclick="fecharRelatorio()">Fechar</button>
+        </div>
+      </div>
+
+      <div class="relatorio-preview" id="relatorio-preview">
+        <div class="preview-placeholder">
+          O relatório será montado aqui após a seleção do programa e do período.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-escolha-relatorio">
+    <div class="modal-content" style="width:min(520px, 100%);">
+      <div class="modal-header">
+        <h2>Escolha o tipo de relatório</h2>
+        <div class="modal-actions">
+          <button onclick="fecharEscolhaRelatorio()">Fechar</button>
+        </div>
+      </div>
+  
+      <div style="padding:20px; display:grid; gap:12px;">
+        <button class="btn-primary" onclick="abrirRelatorioRegioes()">
+          Relatório Executivo Regiões
+        </button>
+  
+        <button class="btn-primary" onclick="abrirRelatorioSubregioes()">
+          Relatório Executivo Subregiões
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://localhost:8000";
+    let ACOES_REALIZADAS = [];
+    let ACAO_EDITANDO_IDX = null;
+
+    function setStatus(msg){
+      const el = document.getElementById("status");
+      if(el) el.textContent = msg || "";
+    }
+
+    function pad2(n){
+      return String(n).padStart(2, "0");
+    }
+
+    function nomeMesPT(m){
+      const nomes = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+      return nomes[m - 1] || "";
+    }
+
+    function mesesSelecionados(){
+      return Array.from(document.getElementById("mes").selectedOptions)
+        .map(opt => Number(opt.value))
+        .filter(n => Number.isInteger(n) && n >= 1 && n <= 12);
+    }
+
+    function textoPeriodoMeses(meses){
+      if(!meses.length) return "";
+
+      const ordenados = [...meses].sort((a,b) => a - b);
+
+      if(ordenados.length === 1){
+        return `${nomeMesPT(ordenados[0])}`;
+      }
+
+      return `${nomeMesPT(ordenados[0])} a ${nomeMesPT(ordenados[ordenados.length - 1])}`;
+    }
+
+    function carregarAnoMes(){
+        const anoSel = document.getElementById("ano");
+        const mesSel = document.getElementById("mes");
+
+        // Placeholder
+        anoSel.innerHTML = '<option value="">Selecione...</option>';
+        mesSel.innerHTML = '<option value="">Selecione...</option>';
+
+        const agora = new Date();
+        const anoAtual = agora.getFullYear();
+
+        // Anos
+        for(let y = anoAtual - 1; y <= anoAtual + 1; y++){
+            const opt = document.createElement("option");
+            opt.value = String(y);
+            opt.textContent = String(y);
+            anoSel.appendChild(opt);
+        }
+
+        // Meses
+        for(let m = 1; m <= 12; m++){
+            const opt = document.createElement("option");
+            opt.value = String(m);
+            opt.textContent = `${pad2(m)} - ${nomeMesPT(m)}`;
+            mesSel.appendChild(opt);
+        }
+    }
+
+    async function carregarProgramas(){
+        const sel = document.getElementById("programa");
+        sel.innerHTML = '<option value="">Selecione...</option>';
+
+        const res = await fetch(API + "/programas/list");
+
+        if(!res.ok){
+            throw new Error("Erro ao buscar programas");
+        }
+
+        const data = await res.json();
+
+        data.forEach(p => {
+            const opt = document.createElement("option");
+            opt.value = p.codigo;
+            opt.textContent = p.nome;
+            sel.appendChild(opt);
+        });
+        }
+
+    function renderizarAcoes(){
+      const box = document.getElementById("acoes-lista");
+      box.innerHTML = "";
+
+      if(!ACOES_REALIZADAS.length){
+        box.innerHTML = '<div class="hint">Nenhuma ação adicionada até o momento.</div>';
+        atualizarBotaoVisualizar();
+        return;
+      }
+
+      ACOES_REALIZADAS.forEach((acao, idx) => {
+        const item = document.createElement("div");
+        item.className = "acao-item";
+
+        const texto = document.createElement("span");
+        texto.textContent = `${idx + 1}. ${acao}`;
+
+        const acoes = document.createElement("div");
+        acoes.style.display = "flex";
+        acoes.style.gap = "6px";
+
+        const btnEditar = document.createElement("button");
+        btnEditar.innerHTML = "✏️";
+        btnEditar.title = "Editar";
+        btnEditar.style.padding = "6px 8px";
+        btnEditar.onclick = () => editarAcao(idx);
+
+        const btnRemover = document.createElement("button");
+        btnRemover.innerHTML = "🗑️";
+        btnRemover.title = "Remover";
+        btnRemover.style.padding = "6px 8px";
+        btnRemover.onclick = () => removerAcao(idx);
+
+        acoes.appendChild(btnEditar);
+        acoes.appendChild(btnRemover);
+
+        item.appendChild(texto);
+        item.appendChild(acoes);
+        box.appendChild(item);
+      });
+
+      atualizarBotaoVisualizar();
+      atualizarBotaoAcao();
+    }
+
+    function adicionarAcao(){
+        const input = document.getElementById("nova-acao");
+        const valor = (input.value || "").trim();
+
+        if(!valor){
+            input.focus();
+            return;
+        }
+
+        if(ACAO_EDITANDO_IDX !== null){
+            ACOES_REALIZADAS[ACAO_EDITANDO_IDX] = valor;
+            ACAO_EDITANDO_IDX = null;
+            mostrarAlerta("Ação atualizada com sucesso.");
+        } else {
+            ACOES_REALIZADAS.push(valor);
+        }
+
+        input.value = "";
+        renderizarAcoes();
+        atualizarBotaoVisualizar();
+        atualizarBotaoAcao();
+        setStatus("");
+    }
+
+    function removerAcao(idx){
+        ACOES_REALIZADAS.splice(idx, 1);
+
+        if(ACAO_EDITANDO_IDX === idx){
+            ACAO_EDITANDO_IDX = null;
+            document.getElementById("nova-acao").value = "";
+        } else if(ACAO_EDITANDO_IDX !== null && idx < ACAO_EDITANDO_IDX){
+            ACAO_EDITANDO_IDX -= 1;
+        }
+
+        renderizarAcoes();
+        atualizarBotaoVisualizar();
+        atualizarBotaoAcao();
+    }
+
+    function limparAcoes(){
+        ACOES_REALIZADAS = [];
+        ACAO_EDITANDO_IDX = null;
+        document.getElementById("nova-acao").value = "";
+        renderizarAcoes();
+        atualizarBotaoVisualizar();
+        atualizarBotaoAcao();
+    }
+
+    async function abrirRelatorio(){
+        try {
+            const programaId = document.getElementById("programa").value;
+            const programaTxt = document.getElementById("programa").selectedOptions[0]?.textContent || "";
+            const ano = Number(document.getElementById("ano").value);
+            const meses = mesesSelecionados();
+            const mes = Math.max(...meses);
+            const mesesParam = meses.join(",");
+
+            if(!programaId){
+                alert("Selecione um programa.");
+                return;
+            }
+
+            if(!ACOES_REALIZADAS || ACOES_REALIZADAS.length === 0){
+                mostrarAlerta("⚠ Nenhuma ação cadastrada. Adicione ao menos uma ação para liberar o relatório.");
+                return;
+            }
+
+            document.getElementById("modal-relatorio").classList.add("open");
+            setStatus("Carregando relatório...");
+
+            const res = await fetch(
+                API + `/relatorio-programa/resumo?programa=${encodeURIComponent(programaId)}&ano=${ano}&meses=${mesesParam}`
+            );
+
+            if(!res.ok){
+            throw new Error(`Falha ao buscar resumo do relatório. Status: ${res.status}`);
+            }
+
+            const resumo = await res.json();
+            if(meses.length === 1){
+              await fetch(API + "/relatorio-programa/salvar", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                      programa: Number(programaId),
+                      ano,
+                      mes,
+                      descricao_programa: resumo.descricao || "",
+
+                      mat_real_mes: Number(resumo.mat_real_mes || 0),
+                      mat_meta_mes: Number(resumo.mat_meta_mes || 0),
+                      mat_proj_mes: Number(resumo.mat_proj_mes || 0),
+                      mat_real_acum: Number(resumo.mat_real_acum || 0),
+                      mat_meta_acum: Number(resumo.mat_meta_acum || 0),
+                      mat_meta_anual: Number(resumo.mat_meta_anual || 0),
+                      mat_proj_anual: Number(resumo.mat_proj_anual || 0),
+
+                      ha_real_mes: Number(resumo.ha_real_mes || 0),
+                      ha_meta_mes: Number(resumo.ha_meta_mes || 0),
+                      ha_proj_mes: Number(resumo.ha_proj_mes || 0),
+                      ha_real_acum: Number(resumo.ha_real_acum || 0),
+                      ha_meta_acum: Number(resumo.ha_meta_acum || 0),
+                      ha_meta_anual: Number(resumo.ha_meta_anual || 0),
+                      ha_proj_anual: Number(resumo.ha_proj_anual || 0),
+
+                      rec_real_mes: Number(resumo.rec_real_mes !== null && resumo.rec_real_mes !== undefined ? resumo.rec_real_mes : 0),
+                      rec_meta_mes: Number(resumo.rec_meta_mes || 0),
+                      rec_proj_mes: Number(resumo.rec_proj_mes || 0),
+                      rec_real_acum: Number(resumo.rec_real_acum || 0),
+                      rec_meta_acum: Number(resumo.rec_meta_acum || 0),
+                      rec_meta_anual: Number(resumo.rec_meta_anual || 0),
+                      rec_proj_anual: Number(resumo.rec_proj_anual || 0),
+
+                      regioes: Number(resumo.regioes || 0),
+                      turmas: Number(resumo.turmas || 0),
+
+                      acoes: ACOES_REALIZADAS
+                  })
+                  });
+            }
+            const descricao = resumo.descricao || "Descrição do programa não informada.";
+            const indicadores = {
+                mat_real_mes: Number(resumo.mat_real_mes || 0),
+                mat_meta_mes: Number(resumo.mat_meta_mes || 0),
+                mat_proj_mes: Number(resumo.mat_proj_mes || 0),
+                mat_real_acum: Number(resumo.mat_real_acum || 0),
+                mat_alvo_anual: Number(resumo.mat_meta_anual || 0) > 0
+                    ? Number(resumo.mat_meta_anual || 0)
+                    : Number(resumo.mat_proj_anual || 0),
+
+                ha_real_mes: Number(resumo.ha_real_mes || 0),
+                ha_meta_mes: Number(resumo.ha_meta_mes || 0),
+                ha_proj_mes: Number(resumo.ha_proj_mes || 0),
+                ha_real_acum: Number(resumo.ha_real_acum || 0),
+                ha_alvo_anual: Number(resumo.ha_meta_anual || 0) > 0
+                    ? Number(resumo.ha_meta_anual || 0)
+                    : Number(resumo.ha_proj_anual || 0),
+
+                rec_real_mes: Number(resumo.rec_real_mes || 0),
+                rec_meta_mes: Number(resumo.rec_meta_mes || 0),
+                rec_proj_mes: Number(resumo.rec_proj_mes || 0),
+                rec_real_acum: Number(resumo.rec_real_acum || 0),
+                rec_alvo_anual: Number(resumo.rec_meta_anual || 0) > 0
+                    ? Number(resumo.rec_meta_anual || 0)
+                    : Number(resumo.rec_proj_anual || 0)
+                };
+
+                const regioes = Number(resumo.regioes || 0);
+                const turmasAteMes = Number(resumo.turmas_ate_mes || 0);
+                const turmasAno = Number(resumo.turmas_ano || 0);
+                const pctTurmas = turmasAno > 0 ? (turmasAteMes / turmasAno) * 100 : 0;
+            
+
+            const acoesHtml = ACOES_REALIZADAS.length
+              ? `<ul>${ACOES_REALIZADAS.map(a => `<li>${a}</li>`).join("")}</ul>`
+              : `<p style="color:#64748b;">Nenhuma ação registrada.</p>`;
+
+            document.getElementById("relatorio-preview").innerHTML = `
+                <div class="relatorio-pagina">
+
+                    <div class="relatorio-corpo">
+                        <h1 class="relatorio-titulo" style="margin:0; font-size:26px;">
+                            Relatório Executivo | ${programaTxt}
+                        </h1>
+
+                        <p class="relatorio-subtitulo texto-sm-print" style="color:#64748b; margin-top:6px;">
+                            ${textoPeriodoMeses(meses)} de ${ano}
+                        </p>
+
+                        <div class="bloco-programa" style="margin-top:12px; padding:10px; background:#f8fafc; border-radius:12px;">
+                            <strong>Sobre o Programa</strong>
+                            <p style="margin-top:6px;">${descricao}</p>
+                        </div>
+
+                        <h3 class="secao-titulo" style="margin-top:22px;">Indicadores Estratégicos</h3>
+
+                        ${cardIndicador("Matrículas Realizadas", indicadores.mat_real_mes, indicadores.mat_meta_mes, indicadores.mat_proj_mes, indicadores.mat_real_acum, indicadores.mat_alvo_anual)}
+                        ${cardIndicador("Hora-Aluno Realizada", indicadores.ha_real_mes, indicadores.ha_meta_mes, indicadores.ha_proj_mes, indicadores.ha_real_acum, indicadores.ha_alvo_anual)}
+                        ${cardIndicador("Receita Realizada", indicadores.rec_real_mes, indicadores.rec_meta_mes, indicadores.rec_proj_mes, indicadores.rec_real_acum, indicadores.rec_alvo_anual, true)}
+
+                        <div class="mini-cards" style="display:flex; gap:10px; margin-top:12px;">
+                            ${miniCard("Regiões envolvidas", regioes)}
+                            ${miniCardTurmas("Turmas", turmasAteMes, turmasAno, pctTurmas)}
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="relatorio-pagina">
+
+                <div class="relatorio-corpo">
+                    <h3 class="secao-titulo" style="margin-top:0;">Distribuição Territorial do Programa</h3>
+
+                    <div class="bloco-territorial" style="display:grid; grid-template-columns: 1.15fr .85fr; gap:16px; margin-top:10px; align-items:stretch;">
+                        <div id="mapa-rs-box" class="mapa-box" style="background:#fff; border:1px solid #e5e7eb; border-radius:14px; padding:16px; height:100%; overflow:hidden;">
+                          <div id="mapa-rs" style="width:100%; height:100%; min-height:100%; display:flex; align-items:center; justify-content:center; color:#64748b;">
+                                Carregando mapa...
+                            </div>
+                        </div>
+
+                        <div class="regioes-box" style="background:#fff; border:1px solid #e5e7eb; border-radius:14px; padding:16px; min-height:520px; overflow:visible;">
+                            <div style="font-size:12px; color:#64748b; text-transform:uppercase; font-weight:700; letter-spacing:.3px; margin-bottom:10px;">
+                                Regiões x Indicadores (acumulado e meta)
+                            </div>
+                            <div id="dist-territorial" style="margin-top:10px;">
+                                <div style="font-size:12px; color:#64748b;">Carregando distribuição...</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="relatorio-corpo" style="margin-top:16px;">
+                      <h3 class="secao-titulo" style="margin-top:0;">Demais Regiões</h3>
+
+                      <div id="dist-territorial-resto" style="
+                        display:grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap:10px 14px;
+                        align-items:start;
+                      "></div>
+                    </div>
+
+                    </div>
+                    </div>
+
+                    <div class="relatorio-pagina">
+                      <div class="relatorio-corpo">
+                        <h3 class="secao-titulo" style="margin-top:0;">Demais Regiões — continuação</h3>
+
+                        <div id="dist-territorial-resto-pagina3" style="
+                          display:grid;
+                          grid-template-columns: 1fr 1fr;
+                          gap:10px 14px;
+                          align-items:start;
+                        "></div>
+
+                        <div class="relatorio-corpo" style="margin-top:16px;">
+                          <h3 class="secao-titulo" style="margin-top:0;">Ações Realizadas</h3>
+                          ${acoesHtml}
+                        </div>
+
+                </div>
+
+            </div>
+            `;
+
+            try {
+            const resDist = await fetch(
+                API + `/relatorio-programa/distribuicao?programa=${encodeURIComponent(programaId)}&ano=${ano}&mes=${mes}`
+            );
+
+            if(!resDist.ok){
+                throw new Error(`Falha ao buscar distribuição. Status: ${resDist.status}`);
+            }
+
+            const dist = await resDist.json();
+            const totalReal = dist.reduce((s, r) => s + Number(r.matriculas_real || 0), 0);
+            renderizarMapaRS(dist);
+
+            function barraRegiao(label, realizado, meta, isMoney = false){
+              const real = Number(realizado || 0);
+              const alvo = Number(meta || 0);
+              const pct = alvo > 0 ? (real / alvo) * 100 : 0;
+
+              const fmt = (v) => isMoney
+                ? Number(v || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" })
+                : Number(v || 0).toLocaleString("pt-BR");
+
+              return `
+                <div style="margin-top:5px;">
+                  <div style="display:flex; justify-content:space-between; gap:8px; font-size:11px;">
+                    <span style="color:#64748b; font-weight:700;">${label}</span>
+                    <span><strong>${fmt(real)}</strong> / ${fmt(alvo)}</span>
+                  </div>
+
+                  <div style="margin-top:4px; height:7px; background:#e5e7eb; border-radius:999px; overflow:hidden;">
+                    <div style="width:${Math.min(pct, 100)}%; height:100%; background:#2563eb; border-radius:999px;"></div>
+                  </div>
+
+                  <div style="font-size:10px; color:#64748b; margin-top:2px;">
+                    ${alvo > 0 ? `${pct.toFixed(1).replace(".", ",")}% da meta` : "sem meta cadastrada"}
+                  </div>
+                </div>
+              `;
+            }
+
+            function renderRegiaoItem(r, idx) {
+              return `
+                <div class="regiao-item" style="
+                  padding:10px 12px;
+                  border:1px solid #e5e7eb;
+                  border-radius:10px;
+                  background:#fff;
+                ">
+                  <div style="display:flex; align-items:center; gap:8px; font-size:12px;">
+                    <span class="regiao-badge" style="
+                      width:22px;
+                      height:22px;
+                      border-radius:999px;
+                      background:#7db4f3;
+                      color:#fff;
+                      display:inline-flex;
+                      align-items:center;
+                      justify-content:center;
+                      font-size:11px;
+                      font-weight:700;
+                      flex:0 0 auto;
+                    ">${idx + 1}</span>
+
+                    <strong>${r.regiao}</strong>
+                  </div>
+
+                  ${barraRegiao("Matrículas", r.matriculas_real, r.matriculas_meta)}
+                  ${barraRegiao("Hora-Aluno", r.ha_real, r.ha_meta)}
+                  ${barraRegiao("Receita", r.receita_real, r.receita_meta, true)}
+                </div>
+              `;
+            }
+
+            const top3 = dist.slice(0, 3);
+            const demaisPagina2 = dist.slice(3, 5);
+            const demaisPagina3 = dist.slice(5);
+
+            const htmlTop3 = top3.map((r, idx) => renderRegiaoItem(r, idx)).join("");
+            const htmlDemaisPagina2 = demaisPagina2.map((r, idx) => renderRegiaoItem(r, idx + 3)).join("");
+            const htmlDemaisPagina3 = demaisPagina3.map((r, idx) => renderRegiaoItem(r, idx + 5)).join("");
+
+            document.getElementById("dist-territorial").innerHTML =
+              htmlTop3 || '<div style="color:#64748b;">Sem dados de distribuição.</div>';
+
+              document.getElementById("dist-territorial-resto").innerHTML = htmlDemaisPagina2;
+              document.getElementById("dist-territorial-resto-pagina3").innerHTML = htmlDemaisPagina3;
+
+            } catch(e) {
+            console.error("Erro na distribuição territorial:", e);
+            document.getElementById("dist-territorial").innerHTML =
+                '<div style="color:#b91c1c;">Erro ao carregar distribuição.</div>';
+
+            const mapa = document.getElementById("mapa-rs");
+            if (mapa) {
+                mapa.innerHTML = '<div style="color:#b91c1c;">Erro ao carregar mapa.</div>';
+            }
+            }
+
+            setStatus("");
+
+        } catch (e) {
+            console.error("Erro ao abrir relatório:", e);
+
+            document.getElementById("relatorio-preview").innerHTML = `
+            <div style="color:#b91c1c; padding:20px; background:#fff; border-radius:12px; border:1px solid #fecaca;">
+                Erro ao gerar relatório.<br>
+                Verifique o console (F12).
+            </div>
+            `;
+
+            setStatus("");
+        }
+        }
+
+    function fecharRelatorio(){
+      document.getElementById("modal-relatorio").classList.remove("open");
+    }
+
+    (async function init(){
+      await carregarUsuario();
+      try{
+        setStatus("Carregando página...");
+        carregarAnoMes();
+        await carregarProgramas();
+        renderizarAcoes();
+        configurarEventosFiltros();
+        atualizarBotaoVisualizar();
+        setStatus("");
+      }catch(e){
+        console.error(e);
+        setStatus("Erro ao carregar programas. Verifique o endpoint /programas/list.");
+      }
+    })();
+
+    function cardIndicador(titulo, realMes, metaMes, projMes=0, realAcum=0, metaAnual=0, moeda=false){
+        let pctMetaAnual = 0;
+        let cor = "#dc2626";
+        let status = "Abaixo do esperado";
+
+        if (metaAnual > 0) {
+            pctMetaAnual = (realAcum / metaAnual) * 100;
+
+            if (pctMetaAnual >= 100) cor = "#16a34a";
+            else if (pctMetaAnual >= 70) cor = "#f59e0b";
+
+            status =
+                pctMetaAnual >= 100 ? "Meta anual atingida" :
+                pctMetaAnual >= 70 ? "Em evolução" :
+                "Abaixo do esperado";
+
+        } else if (realAcum > 0) {
+            pctMetaAnual = 100;
+            cor = "#6b7280";
+            status = "Realizado sem meta";
+            
+        } else {
+            pctMetaAnual = 0;
+            cor = "#94a3b8";
+            status = "Sem meta e sem realizado";
+        }
+
+        const pctTexto = metaAnual > 0
+            ? `${pctMetaAnual.toFixed(1)}%`
+            : (realAcum > 0 ? "100,0%" : "—");
+
+        return `
+            <div class="card-indicador" style="
+                margin-top:12px;
+                padding:16px;
+                border:1px solid #e5e7eb;
+                border-radius:14px;
+                background:#fff;
+            ">
+                <div style="font-size:13px; color:#64748b;">
+                    ${titulo}
+                </div>
+
+                <div class="numero-principal" style="font-size:26px; font-weight:700; margin-top:4px;">
+                    ${moeda ? formatMoeda(realMes) : formatNumero(realMes)}
+                </div>
+
+                <div class="texto-sm-print" style="font-size:12px; color:#64748b; margin-top:4px;">
+                    ${mesesSelecionados().length > 1 ? "Meta do período" : "Meta do mês"}:
+                    ${moeda ? formatMoeda(metaMes) : formatNumero(metaMes)}
+
+                    &nbsp; | &nbsp;
+
+                    Acumulado:
+                    ${moeda ? formatMoeda(realAcum) : formatNumero(realAcum)}
+                </div>
+
+                <div style="margin-top:6px; display:flex; align-items:center; gap:6px;">
+                    <div class="barra-progresso-externa" style="flex:1; height:8px; background:#e5e7eb; border-radius:999px; overflow:hidden;">
+                        <div class="barra-progresso-interna" style="
+                            width:${Math.min(pctMetaAnual, 100)}%;
+                            height:100%;
+                            background:${cor};
+                            border-radius:999px;
+                        "></div>
+                    </div>
+                    <div class="texto-xs-print" style="font-size:11px; color:#64748b; white-space:nowrap; font-weight:600;">
+                        ${moeda ? formatMoeda(metaAnual) : formatNumero(metaAnual)}
+                    </div>
+                </div>
+
+                <div class="texto-sm-print" style="font-size:12px; margin-top:6px; color:${cor}; font-weight:600;">
+                    ${pctTexto} • ${status}
+                </div>
+            </div>
+        `;
+    }
+
+    function formatNumero(n){
+    return Number(n||0).toLocaleString("pt-BR");
+    }
+
+    function formatMoeda(n){
+    return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+    }
+
+    function miniCard(titulo, valor){
+        return `
+            <div class="mini-card" style="
+            flex:1;
+            padding:16px;
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            background:#fff;
+            min-height:96px;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            ">
+            <div style="font-size:12px; color:#64748b; text-transform:uppercase; font-weight:600;">
+                ${titulo}
+            </div>
+            <div class="numero-principal" style="font-size:28px; font-weight:700; margin-top:4px;">
+                ${formatNumero(valor)}
+            </div>
+            </div>
+        `;
+    }
+
+    function miniCardTurmas(titulo, atual, total, pct){
+        return `
+            <div class="mini-card" style="
+                flex:1;
+                padding:16px;
+                border:1px solid #e5e7eb;
+                border-radius:14px;
+                background:#fff;
+                min-height:96px;
+                display:flex;
+                flex-direction:column;
+                justify-content:center;
+            ">
+                <div style="font-size:12px; color:#64748b; text-transform:uppercase; font-weight:600;">
+                    ${titulo}
+                </div>
+
+                <div class="numero-principal" style="font-size:24px; font-weight:700; margin-top:4px;">
+                    ${formatNumero(atual)} / ${formatNumero(total)}
+                </div>
+
+                <div style="margin-top:8px; display:flex; align-items:center; gap:6px;">
+                    <div style="flex:1; height:8px; background:#e5e7eb; border-radius:999px; overflow:hidden;">
+                        <div style="
+                            width:${Math.min(pct, 100)}%;
+                            height:100%;
+                            background:#2563eb;
+                            border-radius:999px;
+                        "></div>
+                    </div>
+                    <div style="font-size:11px; color:#64748b; white-space:nowrap; font-weight:600;">
+                        ${pct.toFixed(1).replace(".", ",")}%
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderizarMapaRS(dados){
+        const mapa = document.getElementById("mapa-rs");
+        if(!mapa) return;
+
+        const total = dados.reduce((s, r) => s + Number(r.matriculas || 0), 0);
+
+        const posicoes = {
+          "NOROESTE":         { x: 43, y: 17 },
+          "NORTE":            { x: 66, y: 17 },
+          "SERRA":            { x: 77, y: 28 },
+          "ENCOSTA DA SERRA": { x: 87, y: 36 },
+          "VALE DOS SINOS":   { x: 81, y: 40 },
+          "METROPOLITANA":    { x: 73, y: 51 },
+          "VALE DO RIO PARDO":{ x: 65, y: 39 },
+          "CENTRAL":          { x: 37, y: 38 },
+          "VALE DO TAQUARI":  { x: 72, y: 36 },
+          "SUL":              { x: 55, y: 67 }
+        };
+
+        function normalizarNome(nome){
+            const s = String(nome || "")
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .toUpperCase()
+            .trim();
+
+            if (s.startsWith("METROPOLITANA")) return "METROPOLITANA";
+            if (s.startsWith("VALE DOS SINOS")) return "VALE DOS SINOS";
+            if (s.startsWith("ENCOSTA DA SERRA")) return "ENCOSTA DA SERRA";
+            if (s.startsWith("SERRA")) return "SERRA";
+            if (s.startsWith("VALE DO TAQUARI")) return "VALE DO TAQUARI";
+            if (s.startsWith("VALE DO RIO PARDO")) return "VALE DO RIO PARDO";
+            if (s.startsWith("CENTRAL")) return "CENTRAL";
+            if (s.startsWith("NORTE")) return "NORTE";
+            if (s.startsWith("NOROESTE")) return "NOROESTE";
+            if (s.startsWith("SUL")) return "SUL";
+
+            return s;
+        }
+
+        function intensidade(valor){
+            if (!total || valor <= 0) return "#dbeafe";
+            const pct = valor / total;
+            if (pct >= 0.20) return "#1d4ed8";
+            if (pct >= 0.12) return "#2563eb";
+            if (pct >= 0.07) return "#60a5fa";
+            return "#93c5fd";
+        }
+
+        const pontos = dados.map((r, idx) => {
+            const chave = normalizarNome(r.regiao);
+            const pos = posicoes[chave];
+            if(!pos) return "";
+
+            const valor = Number(r.matriculas || 0);
+            const cor = "#7db4f3";
+            const n = idx + 1;
+
+            return `
+                <g>
+                <circle cx="${pos.x}%" cy="${pos.y}%" r="8" fill="${cor}" stroke="#ffffff" stroke-width="2"></circle>
+                <text x="${pos.x}%" y="${pos.y}%" text-anchor="middle" dominant-baseline="middle"
+                        font-size="10" font-weight="700" fill="#ffffff">
+                    ${n}
+                </text>
+                </g>
+            `;
+            }).join("");
+
+            mapa.innerHTML = `
+              <div class="mapa-wrapper" style="position:relative; width:100%; height:100%; min-height:320px;">
+                  <img
+                  src="assets/mapa-rs.png"
+                  style="width:100%; height:100%; object-fit:contain; display:block;"
+                  />
+                  <div
+                    id="pontos-mapa"
+                    style="position:absolute; inset:0; pointer-events:none;"
+                  ></div>
+              </div>
+          `;
+            
+                const container = document.getElementById("pontos-mapa");
+
+                container.innerHTML = dados.map((r, idx) => {
+                const chave = normalizarNome(r.regiao);
+                const pos = posicoes[chave];
+                if (!pos) return "";
+
+                const valor = Number(r.matriculas || 0);
+                const cor = "#7db4f3";
+                const n = idx + 1;
+
+                return `
+                    <div style="
+                    position:absolute;
+                    left:${pos.x}%;
+                    top:${pos.y}%;
+                    transform:translate(-50%, -50%);
+                    width:18px;
+                    height:18px;
+                    border-radius:999px;
+                    background:${cor};
+                    color:#fff;
+                    font-size:10px;
+                    font-weight:700;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    box-shadow:0 2px 6px rgba(0,0,0,.25);
+                    ">
+                    ${n}
+                    </div>
+                `;
+                }).join("");
+        }
+
+    function atualizarBotaoVisualizar(){
+        const btn = document.getElementById("btn-visualizar-relatorio");
+        const programaId = document.getElementById("programa").value;
+        const ano = document.getElementById("ano").value;
+        const meses = mesesSelecionados();
+        const filtrosPreenchidos = !!programaId && !!ano && meses.length > 0;
+        const temAcoes = Array.isArray(ACOES_REALIZADAS) && ACOES_REALIZADAS.length > 0;
+
+        btn.disabled = !(filtrosPreenchidos && temAcoes);
+    }
+
+    function detectarMesPrefixo(acao){
+      const texto = String(acao || "").trim();
+
+      const meses = [
+        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+      ];
+
+      for(let i = 0; i < meses.length; i++){
+        const prefixo = meses[i] + ":";
+        if(texto.startsWith(prefixo)){
+          return {
+            mes: i + 1,
+            texto: texto.replace(prefixo, "").trim()
+          };
+        }
+      }
+
+      return {
+        mes: null,
+        texto
+      };
+    }
+
+    async function carregarAcoesSalvasPorFiltro(){
+      try {
+        const programaId = document.getElementById("programa").value;
+        const ano = Number(document.getElementById("ano").value);
+        const meses = mesesSelecionados();
+
+        if(!programaId || !ano || meses.length === 0){
+          ACOES_REALIZADAS = [];
+          renderizarAcoes();
+          atualizarBotaoVisualizar();
+          setStatus("");
+          return;
+        }
+
+        setStatus("Verificando ações cadastradas...");
+
+        const todasAcoes = [];
+        const controle = new Set();
+
+        for(const mes of meses){
+          const res = await fetch(
+            API + `/relatorio-programa/carregar?programa=${encodeURIComponent(programaId)}&ano=${ano}&mes=${mes}`
+          );
+
+          if(!res.ok) continue;
+
+          const salvo = await res.json();
+
+          if(salvo.existe && Array.isArray(salvo.acoes)){
+            salvo.acoes.forEach(acaoOriginal => {
+              const parsed = detectarMesPrefixo(acaoOriginal);
+
+              if(parsed.mes !== null && parsed.mes !== mes){
+                return;
+              }
+
+              const textoLimpo = parsed.texto;
+
+              if(!textoLimpo) return;
+
+              const chave = `${mes}|${textoLimpo.toUpperCase()}`;
+
+              if(!controle.has(chave)){
+                controle.add(chave);
+                todasAcoes.push(`${nomeMesPT(mes)}: ${textoLimpo}`);
+              }
+            });
+          }
+        }
+
+        ACOES_REALIZADAS = todasAcoes;
+
+        if(ACOES_REALIZADAS.length === 0){
+          mostrarAlerta("⚠ Nenhuma ação cadastrada para este Programa, Ano e período selecionado.");
+        }
+
+        renderizarAcoes();
+        atualizarBotaoVisualizar();
+        setStatus("");
+
+      } catch(e){
+        console.error("Erro ao carregar ações salvas:", e);
+        ACOES_REALIZADAS = [];
+        renderizarAcoes();
+        atualizarBotaoVisualizar();
+        setStatus("⚠ Não foi possível verificar as ações cadastradas.");
+      }
+    }
+
+    function configurarEventosFiltros(){
+        document.getElementById("programa").addEventListener("change", carregarAcoesSalvasPorFiltro);
+        document.getElementById("ano").addEventListener("change", carregarAcoesSalvasPorFiltro);
+        document.getElementById("mes").addEventListener("change", carregarAcoesSalvasPorFiltro);
+    }
+
+    function mostrarAlerta(msg){
+        const el = document.getElementById("toast-alerta");
+        if(!el) return;
+
+        el.textContent = msg;
+        el.style.display = "block";
+
+        setTimeout(() => {
+            el.style.display = "none";
+        }, 3000);
+    }
+
+    function limparTudo(){
+        document.getElementById("programa").value = "";
+        document.getElementById("ano").value = "";
+        document.getElementById("mes").value = "";
+
+        ACOES_REALIZADAS = [];
+        ACAO_EDITANDO_IDX = null;
+
+        document.getElementById("nova-acao").value = "";
+
+        renderizarAcoes();
+        atualizarBotaoVisualizar();
+        atualizarBotaoAcao();
+        setStatus("");
+
+        mostrarAlerta("Filtros e ações foram limpos.");
+    }
+
+    function editarAcao(idx){
+        const input = document.getElementById("nova-acao");
+        const valorAtual = ACOES_REALIZADAS[idx] || "";
+
+        ACAO_EDITANDO_IDX = idx;
+        input.value = valorAtual;
+        input.focus();
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        atualizarBotaoAcao();
+    }
+
+    function atualizarBotaoAcao(){
+        const btn = document.getElementById("btn-adicionar-acao");
+        if(!btn) return;
+
+        btn.textContent = ACAO_EDITANDO_IDX === null ? "Adicionar ação" : "Salvar edição";
+    }
+
+    async function carregarUsuario(){
+      try{
+        const resp = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include"
+        });
+
+        if(!resp.ok) return;
+
+        const data = await resp.json();
+
+        const el = document.getElementById("usuario-logado");
+        if(el){
+          el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+        }
+      }catch(e){
+        console.error(e);
+      }
+    }
+
+    async function logout(){
+      try{
+        await fetch("http://localhost:8000/auth/logout", {
+          method: "POST",
+          credentials: "include"
+        });
+      } catch(e) {}
+
+      window.location.href = "/login.html";
+    }
+
+    function abrirEscolhaRelatorio(){
+      const programaId = document.getElementById("programa").value;
+      const ano = document.getElementById("ano").value;
+      const mes = document.getElementById("mes").value;
+
+      if(!programaId || !ano || !mes){
+        mostrarAlerta("Selecione Programa, Ano e Mês.");
+        return;
+      }
+
+      if(!ACOES_REALIZADAS || ACOES_REALIZADAS.length === 0){
+        mostrarAlerta("Adicione ao menos uma ação para liberar o relatório.");
+        return;
+      }
+
+      document.getElementById("modal-escolha-relatorio").classList.add("open");
+    }
+
+    function fecharEscolhaRelatorio(){
+      document.getElementById("modal-escolha-relatorio").classList.remove("open");
+    }
+
+    function abrirRelatorioRegioes(){
+      fecharEscolhaRelatorio();
+      abrirRelatorio();
+    }
+
+    async function abrirRelatorioSubregioes(){
+      fecharEscolhaRelatorio();
+
+      const programaId = document.getElementById("programa").value;
+      const programaTxt = document.getElementById("programa").selectedOptions[0]?.textContent || "";
+      const ano = Number(document.getElementById("ano").value);
+      const meses = mesesSelecionados();
+      const mes = Math.max(...meses);
+      const mesesParam = meses.join(",");
+
+      document.getElementById("modal-relatorio").classList.add("open");
+      setStatus("Carregando relatório por sub-regiões...");
+
+      // 🔹 1. BUSCA RESUMO (igual relatório principal)
+      const resResumo = await fetch(
+        API + `/relatorio-programa/resumo?programa=${encodeURIComponent(programaId)}&ano=${ano}&meses=${mesesParam}`
+      );
+
+      if(!resResumo.ok){
+        throw new Error("Erro ao carregar resumo.");
+      }
+
+      const resumo = await resResumo.json();
+
+      // 🔹 2. BUSCA SUB-REGIÕES
+      const resSub = await fetch(
+        API + `/relatorio-programa/distribuicao-subregioes?programa=${encodeURIComponent(programaId)}&ano=${ano}&meses=${mesesParam}`
+      );
+
+      if(!resSub.ok){
+        throw new Error("Erro ao carregar sub-regiões.");
+      }
+
+      const dados = await resSub.json();
+
+      const totalMat = dados.reduce((s, r) => s + Number(r.matriculas_real || 0), 0);
+      const totalHa = dados.reduce((s, r) => s + Number(r.ha_real || 0), 0);
+      const totalRec = dados.reduce((s, r) => s + Number(r.receita_real || 0), 0);
+
+      function barraIndicador(label, realizado, meta, isMoney = false){
+        const real = Number(realizado || 0);
+        const alvo = Number(meta || 0);
+
+        const temMeta = alvo > 0;
+        const pct = temMeta ? (real / alvo) * 100 : 0;
+        const largura = temMeta ? Math.min(pct, 100) : 100;
+
+        const fmt = (v) => isMoney
+          ? Number(v || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" })
+          : Number(v || 0).toLocaleString("pt-BR");
+
+        return `
+          <div style="margin-top:10px;">
+            <div style="font-size:12px; color:#64748b; font-weight:700;">
+              ${label}
+            </div>
+
+            <div style="display:flex; justify-content:space-between; gap:10px; font-size:12px; margin-top:2px;">
+              <span>Realizado acumulado: <strong>${fmt(real)}</strong></span>
+              <span>Meta: <strong>${temMeta ? fmt(alvo) : "não disponível"}</strong></span>
+            </div>
+
+            <div style="margin-top:5px; height:7px; background:#e5e7eb; border-radius:999px; overflow:hidden;">
+              <div style="
+                width:${largura}%;
+                height:100%;
+                background:${temMeta ? "#2563eb" : "#94a3b8"};
+                border-radius:999px;
+              "></div>
+            </div>
+
+            <div style="font-size:10px; color:#64748b; margin-top:3px;">
+              ${temMeta ? `${pct.toFixed(1).replace(".", ",")}% da meta` : "sem meta cadastrada para comparação"}
+            </div>
+          </div>
+        `;
+      }
+
+      const itensSubregioes = dados.map((r, idx) => {
+        return `
+          <div style="margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid #e5e7eb; break-inside:avoid; page-break-inside:avoid;">
+            <div style="font-size:13px; font-weight:800;">
+              ${idx + 1}. ${r.subregiao}
+            </div>
+
+            ${barraIndicador("Matrículas", r.matriculas_real, r.matriculas_meta)}
+            ${barraIndicador("Hora-Aluno", r.ha_real, r.ha_meta)}
+            ${barraIndicador("Receita", r.receita_real, r.receita_meta, true)}
+          </div>
+        `;
+      });
+
+      function dividirEmPaginas(lista, tamanho){
+        const paginas = [];
+        for(let i = 0; i < lista.length; i += tamanho){
+          paginas.push(lista.slice(i, i + tamanho));
+        }
+        return paginas;
+      }
+
+      const paginasSubregioes = dividirEmPaginas(itensSubregioes, 3);
+
+      const acoesHtml = ACOES_REALIZADAS.length
+            ? `<ul class="acoes-lista-relatorio">${ACOES_REALIZADAS.map(a => `<li>${a}</li>`).join("")}</ul>`
+            : `<p class="texto-sm-print">Nenhuma ação registrada.</p>`;
+
+      const paginasSubregioesHtml = paginasSubregioes.map((pagina, idx) => {
+        const ehUltimaPagina = idx === paginasSubregioes.length - 1;
+
+        return `
+          <div class="relatorio-pagina">
+            <div class="relatorio-corpo">
+              <h3 style="margin-top:0;">
+                Distribuição dos Indicadores por Sub-região${idx > 0 ? " — continuação" : ""}
+              </h3>
+
+              <div style="margin-top:12px;">
+                ${pagina.join("") || '<div style="color:#64748b;">Sem dados.</div>'}
+              </div>
+
+              ${ehUltimaPagina ? `
+                <h3 style="margin-top:22px;">Ações Realizadas</h3>
+                ${acoesHtml}
+              ` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const descricao = resumo.descricao || "Descrição não informada.";
+
+      // 🔹 4. TEMPLATE FINAL (sem mapa)
+      document.getElementById("relatorio-preview").innerHTML = `
+        <div class="relatorio-pagina">
+
+          <div class="relatorio-corpo">
+
+            <h1 style="margin:0; font-size:26px;">
+              Relatório Executivo por Sub-regiões | ${programaTxt}
+            </h1>
+
+            <p style="color:#64748b; margin-top:6px;">
+              ${textoPeriodoMeses(meses)} de ${ano}
+            </p>
+
+            <div style="margin-top:12px; padding:10px; background:#f8fafc; border-radius:12px;">
+              <strong>Sobre o Programa</strong>
+              <p style="margin-top:6px;">${descricao}</p>
+            </div>
+
+            <h3 style="margin-top:22px;">Indicadores</h3>
+
+            ${cardIndicador("Matrículas", resumo.mat_real_mes, resumo.mat_meta_mes, resumo.mat_proj_mes, resumo.mat_real_acum, resumo.mat_meta_anual)}
+            ${cardIndicador("Hora-Aluno", resumo.ha_real_mes, resumo.ha_meta_mes, resumo.ha_proj_mes, resumo.ha_real_acum, resumo.ha_meta_anual)}
+            ${cardIndicador("Receita", resumo.rec_real_mes, resumo.rec_meta_mes, resumo.rec_proj_mes, resumo.rec_real_acum, resumo.rec_meta_anual, true)}
+
+          </div>
+        </div>
+
+        ${paginasSubregioesHtml}
+      `;
+
+      setStatus("");
+    }
+
+  </script>
+    <div id="toast-alerta" style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #dc2626;
+        color: #fff;
+        padding: 14px 18px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.2);
+        font-size: 14px;
+        font-weight: 500;
+        display: none;
+        z-index: 99999;
+        ">
+    </div>
+</body>
+</html>

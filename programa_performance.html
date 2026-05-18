@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Programa • Performance Mensal</title>
+
+  <style>
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f6f7fb; color:#0f172a; }
+    .container{ max-width: 1200px; margin: 0 auto; padding: 18px; }
+    .panel{ background:#fff; border:1px solid #e5e7eb; border-radius:14px; box-shadow:0 10px 24px rgba(15,23,42,.08); padding:14px; }
+    .h{ display:flex; justify-content:space-between; gap:12px; align-items:flex-end; flex-wrap:wrap; }
+    h1{ margin:0; font-size:22px; }
+    .muted{ color:#64748b; font-size:13px; margin-top:6px; }
+    .controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .controls input,
+    .controls select,
+    .controls button {
+      height: 44px;
+      min-width: 140px;     /* 👈 força o mesmo “tamanho visual” */
+      padding: 10px 14px;
+      border-radius: 12px;
+      box-sizing: border-box;
+    }
+
+    .controls button {
+      min-width: 120px;     /* botão pode ser um pouco menor */
+    }
+    select, input{ border:1px solid #e5e7eb; border-radius:12px; padding:10px; height:40px; background:#fff; }
+    button{ border:1px solid #e5e7eb; background:#fff; border-radius:12px; padding:10px 12px; cursor:pointer; font-weight:650; }
+    button:hover{ background:#f8fafc; }
+    .chart-wrap{ height:520px; }
+    .summary-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap:12px;
+      margin-top:14px;
+      margin-bottom:14px;
+    }
+    .summary-card{
+      background:#f8fafc;
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:14px;
+    }
+    .summary-card .label{
+      font-size:12px;
+      color:#64748b;
+      margin-bottom:6px;
+      font-weight:600;
+      text-transform: uppercase;
+      letter-spacing:.02em;
+    }
+    .summary-card .value{
+      font-size:24px;
+      font-weight:800;
+      color:#0f172a;
+      line-height:1.1;
+    }
+    .summary-card .sub{
+      margin-top:6px;
+      font-size:12px;
+      color:#64748b;
+    }
+    #grafico{ width:100%; height:100%; display:block; }
+  </style>
+</head>
+
+<body>
+
+  <script>
+    (async function validarSessao(){
+      try{
+        const resp = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include"
+        });
+    
+        if(!resp.ok){
+          window.location.href = "/login.html";
+        }
+      }catch(e){
+        window.location.href = "/login.html";
+      }
+    })();
+    </script>
+
+  <div class="container">
+    <div class="panel">
+      <div class="h">
+        <div>
+          <h1 id="titulo">Programa • Performance Mensal</h1>
+          <div class="muted" id="subtitulo">—</div>
+        </div>
+
+        <div class="controls">
+          <input id="ano" type="number" min="2000" max="2100" />
+          <select id="indicador">
+            <option value="matriculas">Matrículas</option>
+            <option value="hora_aluno">Hora-Aluno</option>
+            <option value="receita">Receita</option>
+          </select>
+          <button id="btnAtualizar">Atualizar</button>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="label">Meta acumulada</div>
+          <div class="value" id="cardMetaAcum">0</div>
+          <div class="sub">No período</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="label">Realizado acumulado</div>
+          <div class="value" id="cardRealizadoAcum">0</div>
+          <div class="sub" id="cardRealizadoAcumSub">No ano</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="label">Diferença para meta</div>
+          <div class="value" id="cardDiffMeta">0</div>
+          <div class="sub">Acumulado</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="label">% atingimento</div>
+          <div class="value" id="cardPctMeta">0%</div>
+          <div class="sub">Realizado x meta</div>
+        </div>
+      </div>
+
+      <div class="chart-wrap" style="margin-top:14px;">
+        <canvas id="grafico"></canvas>
+      </div>
+
+      <div class="panel" style="margin-top:14px; padding:0;">
+        <div style="padding:14px 14px 0;">
+          <h2 style="margin:0; font-size:18px;">Detalhamento mensal</h2>
+          <div class="muted">Resumo mês a mês do desempenho do programa</div>
+        </div>
+
+        <div style="overflow:auto; padding:14px;">
+          <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <thead>
+              <tr style="background:#f8fafc; text-align:left;">
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">Mês</th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">Meta</th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">Realizado</th>
+                <th id="thSemContrato" style="padding:10px; border-bottom:1px solid #e5e7eb;">
+                  Sem contrato
+                </th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">Dif. meta</th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">% atingido</th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyDetalhamentoMensal"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel" id="panelMarketShare" style="margin-top:14px; display:none;">
+        <div style="padding:14px 14px 0;">
+          <h2 style="margin:0; font-size:18px;">Market Share Aprendizagem Industrial</h2>
+          <div class="muted">
+            Participação de aprendizes sobre o número de cotas por sub-região
+          </div>
+          <div class="summary-grid" id="cardsMarketShare">
+            <div class="summary-card">
+              <div class="label">Market Share Total</div>
+              <div class="value" id="cardMarketShareTotal">0%</div>
+              <div class="sub">No mês selecionado</div>
+            </div>
+          
+            <div class="summary-card">
+              <div class="label">Total de Cotas</div>
+              <div class="value" id="cardTotalCotas">0</div>
+              <div class="sub">Todas as regiões</div>
+            </div>
+          
+            <div class="summary-card">
+              <div class="label">Total de Aprendizes</div>
+              <div class="value" id="cardTotalAprendizes">0</div>
+              <div class="sub">No mês selecionado</div>
+            </div>
+          
+            <div class="summary-card">
+              <div class="label">Total de CNPJs</div>
+              <div class="value" id="cardTotalCnpjs">0</div>
+              <div class="sub">CNPJs distintos</div>
+            </div>
+          </div>
+        </div>
+      
+        <div style="overflow:auto; padding:14px;">
+          <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <thead>
+              <tr style="background:#f8fafc; text-align:left;">
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">Região</th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">CNPJs</th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">Aprendizes</th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">Nro. de Cotas</th>
+                <th style="padding:10px; border-bottom:1px solid #e5e7eb;">% Market Share</th>
+              </tr>
+            </thead>
+      
+            <tbody id="tbodyMarketShare"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    const API = "http://localhost:8000";
+    let chart = null;
+
+    function qp(name){
+      return new URLSearchParams(window.location.search).get(name);
+    }
+
+    function mesesSelecionadosUrl() {
+      const meses = String(qp("meses") || "")
+        .split(",")
+        .map(s => Number(s.trim()))
+        .filter(n => Number.isInteger(n) && n >= 1 && n <= 12)
+        .sort((a, b) => a - b);
+
+      return meses.length ? meses : [1,2,3,4,5,6,7,8,9,10,11,12];
+    }
+
+    function moeda(n){
+      return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+    }
+    function format(n){
+      return Number(n||0).toLocaleString("pt-BR");
+    }
+
+    // ✅ Plugin de rótulos fixos (Chart.js v4)
+    const valueLabelsPlugin = {
+      id: "valueLabelsPlugin",
+      afterDatasetsDraw(ch, args, opts) {
+        const ctx = ch.ctx;
+        const indicador = opts?.indicador || "matriculas";
+        const isReceita = indicador === "receita";
+
+        const fmt = (v) => isReceita ? moeda(v) : format(v);
+
+        ch.data.datasets.forEach((dataset, di) => {
+          const datasetMeta = ch.getDatasetMeta(di);
+          if (datasetMeta.hidden) return;
+
+          const isLinhaAcumulada = dataset.type === "line";
+
+          datasetMeta.data.forEach((bar, i) => {
+            const v = dataset.data[i];
+            if (v === null || v === undefined) return;
+            if (Number(v) === 0) return;
+
+            const x = bar.x;
+            const y = bar.y;
+
+            // evita duplicar rótulo quando Meta = Projetado
+            const valorMeta = Number(ch.data.datasets[0]?.data[i] || 0);
+
+            // se houver segundo dataset e for igual à meta, evita duplicar
+            if (di === 1 && ch.data.datasets.length > 2) {
+              const valorProj = Number(ch.data.datasets[1]?.data[i] || 0);
+              if (valorProj === valorMeta) return;
+            }
+
+            ctx.save();
+            ctx.font = isReceita
+              ? "10px system-ui, -apple-system, Segoe UI, Roboto, Arial"
+              : "12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+            ctx.fillStyle = "#0f172a";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "bottom";
+
+            if (isLinhaAcumulada) {
+              ctx.fillText(fmt(v), x, y - 10);
+              ctx.restore();
+              return;
+            }
+
+            const alturaGrafico = ch.chartArea.bottom - ch.chartArea.top;
+            const barraPequena = y > ch.chartArea.bottom - (alturaGrafico * 0.25);
+
+            if (barraPequena) {
+              ctx.fillText(fmt(v), x, y - 6);
+            } else {
+              ctx.fillText(fmt(v), x, y - 8);
+            }
+
+            ctx.restore();
+          });
+        });
+      }
+    };
+
+    // ✅ registra plugin (obrigatório no Chart 4)
+    Chart.register(valueLabelsPlugin);
+
+    async function resolverSubRegioes(idsCsv) {
+      const ids = String(idsCsv).split(",").map(s => s.trim()).filter(Boolean);
+      if (!ids.length) return "";
+
+      try {
+        const qs = new URLSearchParams({ ids: ids.join(",") });
+        const res = await fetch(`${API}/subregioes/nome?` + qs.toString());
+        const d = await res.json();
+
+        const nomes = (d.nomes || []).filter(Boolean);
+        return nomes.length ? nomes.join(", ") : `IDs: ${ids.join(", ")}`;
+      } catch (e) {
+        console.error("Erro ao resolver sub-regiões:", e);
+        return `IDs: ${ids.join(", ")}`;
+      }
+    }
+
+    async function buscarSerieIndicador(programa_id, ano, indicador, subregioes = "") {
+      const qs = new URLSearchParams({
+        programa_id: String(programa_id),
+        ano: String(ano),
+        indicador
+      });
+      if (subregioes) qs.set("subregioes", subregioes);
+
+      const url = API + "/performance/programa/serie?" + qs.toString();
+      return await (await fetch(url)).json();
+    }
+
+    async function buscarResumoAcumulado(programa_id, ano, indicador, subregioes = "") {
+      const mesesFiltro = mesesSelecionadosUrl();
+
+      const qs = new URLSearchParams({
+        indicador,
+        ano: String(ano),
+        meses: mesesFiltro.join(","),
+        programas: String(programa_id)
+      });
+
+      if (subregioes) qs.set("subregioes", subregioes);
+
+      const url = API + "/performance/cards?" + qs.toString();
+      const data = await (await fetch(url)).json();
+
+      return (data && data.length) ? data[0] : {
+        meta: 0,
+        projetado: 0,
+        realizado: 0
+      };
+    }
+
+    async function buscarSerieCards(programa_id, ano, indicador, subregioes = "") {
+      const resultados = [];
+
+      for (let mes = 1; mes <= 12; mes++) {
+        const qs = new URLSearchParams({
+          indicador,
+          ano: String(ano),
+          meses: String(mes),
+          programas: String(programa_id)
+        });
+
+        if (subregioes) qs.set("subregioes", subregioes);
+
+        const url = API + "/performance/cards?" + qs.toString();
+        const data = await (await fetch(url)).json();
+        const item = (data && data.length) ? data[0] : null;
+
+        resultados.push({
+          mes,
+          meta: Number(item?.meta || 0),
+          projetado: Number(item?.projetado || 0),
+          realizado: Number(item?.realizado || 0),
+          sem_contrato: Number(item?.sem_contrato || 0)
+        });
+      }
+
+      return resultados;
+    }
+
+    function serieTemDados(data) {
+      return data.some(r =>
+        Number(r.meta || 0) > 0 ||
+        Number(r.projetado || 0) > 0 ||
+        Number(r.realizado || 0) > 0
+      );
+    }
+
+    async function atualizarIndicadoresDisponiveis(programa_id, ano, subregioes = "") {
+      const select = document.getElementById("indicador");
+      const indicadores = ["matriculas", "hora_aluno", "receita"];
+
+      const resultados = await Promise.all(
+        indicadores.map(async (ind) => {
+          const data = await buscarSerieIndicador(programa_id, ano, ind, subregioes);
+          return { indicador: ind, disponivel: serieTemDados(data) };
+        })
+      );
+
+      Array.from(select.options).forEach(opt => {
+        opt.hidden = false;
+        opt.disabled = false;
+      });
+
+      if (!select.dataset.inicializado) {
+        const indicadorUrl = qp("indicador");
+
+        if (indicadorUrl && Array.from(select.options).some(o => o.value === indicadorUrl)) {
+          select.value = indicadorUrl;
+        }
+
+        select.dataset.inicializado = "1";
+      }
+
+      return resultados;
+    }
+
+    function renderTabelaMensal(data, indicador, programa) {
+      const tbody = document.getElementById("tbodyDetalhamentoMensal");
+      tbody.innerHTML = "";
+
+      const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+      const isReceita = indicador === "receita";
+      const fmt = (v) => isReceita ? moeda(v) : format(v);
+      const isJovemAprendiz =
+        String(programa || "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toUpperCase()
+          .includes("JOVEM APRENDIZ");
+
+      document.getElementById("thSemContrato").style.display =
+        isJovemAprendiz ? "" : "none";
+
+      data.forEach((r) => {
+        const meta = Number(r.meta || 0);
+        const realizado = Number(r.realizado || 0);
+        const diff = realizado - meta;
+        const semContrato = Number(r.sem_contrato || 0);
+        const pct = meta > 0 ? (realizado / meta) * 100 : null;
+
+        let status = "Crítico";
+        if (meta === 0 && realizado === 0) {
+          status = "Ainda não iniciado";
+        } else if (meta === 0 && realizado > 0) {
+          status = "Realizado sem meta";
+        } else if (realizado >= meta) {
+          status = "Meta atingida";
+        } else if (realizado >= meta * 0.8) {
+          status = "Atenção";
+        }
+
+        if (status === "Ainda não iniciado" && meta === 0) {
+          return;
+        }
+
+        const tr = document.createElement("tr");
+        const corStatus =
+          status === "Meta atingida" ? "#16a34a" :
+          status === "Atenção" ? "#f59e0b" :
+          status === "Realizado sem meta" ? "#7c3aed" :
+          status === "Planejado sem meta" ? "#2563eb" :
+          status === "Em execução sem meta" ? "#7c3aed" :
+          status === "Ainda não iniciado" ? "#64748b" :
+          "#dc2626";
+
+        const bgStatus =
+          status === "Meta atingida" ? "#dcfce7" :
+          status === "Atenção" ? "#fef3c7" :
+          status === "Realizado sem meta" ? "#ede9fe" :
+          status === "Planejado sem meta" ? "#dbeafe" :
+          status === "Em execução sem meta" ? "#ede9fe" :
+          status === "Ainda não iniciado" ? "#f1f5f9" :
+          "#fee2e2";
+            tr.innerHTML = `
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${meses[(r.mes || 1) - 1]}</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fmt(meta)}</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fmt(realizado)}</td>
+              ${isJovemAprendiz ? `
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">
+                ${fmt(semContrato)}
+              </td>
+              ` : ""}
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fmt(diff)}</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${pct === null ? "—" : pct.toFixed(1).replace(".", ",") + "%"}</td>
+              <td style="padding:10px; border-bottom:1px solid #e5e7eb;">
+                <span style="
+                  background:${bgStatus};
+                  color:${corStatus};
+                  padding:4px 8px;
+                  border-radius:999px;
+                  font-weight:600;
+                  font-size:12px;
+                ">
+                  ${status}
+                </span>
+              </td>
+            `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function carregarMarketShareAprendizagem(programa, ano, subregioes = "") {
+      const panel = document.getElementById("panelMarketShare");
+      const tbody = document.getElementById("tbodyMarketShare");
+
+      tbody.innerHTML = "";
+
+      const nomePrograma = String(programa || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toUpperCase();
+
+      console.log("Programa recebido para Market Share:", nomePrograma);
+
+      if (!nomePrograma.includes("JOVEM APRENDIZ")) {
+        panel.style.display = "none";
+        return;
+      }
+
+      const meses = mesesSelecionadosUrl();
+      const mes = Math.max(...meses);
+
+      const qs = new URLSearchParams({
+        ano: String(ano),
+        mes: String(mes)
+      });
+
+      if (subregioes) {
+        qs.set("subregioes", subregioes);
+      }
+
+      const resp = await fetch(
+        `${API}/performance/programa/market-share-aprendizagem?${qs.toString()}`
+      );
+
+      const resposta = await resp.json();
+
+      console.log("Market Share Aprendizagem:", resposta);
+
+      const cards = resposta.cards || {};
+      const data = resposta.linhas || resposta;
+
+      if (!resp.ok) {
+        console.error("Erro Market Share:", data);
+        throw new Error(data.detail || "Erro ao carregar Market Share.");
+      }
+
+      panel.style.display = "";
+
+      document.getElementById("cardMarketShareTotal").textContent =
+        Number(cards.market_share_total || 0).toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) + "%";
+
+      document.getElementById("cardTotalCotas").textContent =
+        Number(cards.total_cotas || 0).toLocaleString("pt-BR");
+
+      document.getElementById("cardTotalAprendizes").textContent =
+        Number(cards.total_aprendizes || 0).toLocaleString("pt-BR");
+
+      document.getElementById("cardTotalCnpjs").textContent =
+        Number(cards.total_cnpjs || 0).toLocaleString("pt-BR");
+
+      data.forEach((r) => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td style="padding:10px; border-bottom:1px solid #e5e7eb;">
+            ${r.regiao || "-"}
+          </td>
+
+          <td style="padding:10px; border-bottom:1px solid #e5e7eb;">
+            ${Number(r.cnpjs || 0).toLocaleString("pt-BR")}
+          </td>
+
+          <td style="padding:10px; border-bottom:1px solid #e5e7eb;">
+            ${Number(r.aprendizes || 0).toLocaleString("pt-BR")}
+          </td>
+
+          <td style="padding:10px; border-bottom:1px solid #e5e7eb;">
+            ${Number(r.nro_cotas || 0).toLocaleString("pt-BR")}
+          </td>
+
+          <td style="padding:10px; border-bottom:1px solid #e5e7eb; font-weight:700;">
+            ${Number(r.market_share || 0).toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })}%
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function carregar(){
+      const programa_id = qp("programa_id");
+      const programa = qp("programa") || "Programa";
+      const subregioes = qp("subregioes") || "";
+      const ano = document.getElementById("ano").value || "2026";
+      const mesesFiltro = mesesSelecionadosUrl();
+      const mesReferencia = Math.max(...mesesFiltro);
+      const isMesUnico = mesesFiltro.length === 1;
+
+      let resultados;
+      try {
+        resultados = await atualizarIndicadoresDisponiveis(programa_id, ano, subregioes);
+      } catch (e) {
+        console.error("ERRO atualizarIndicadoresDisponiveis:", e);
+        resultados = [];
+      }
+
+      const chartWrap = document.querySelector(".chart-wrap");
+      const tabelaPanel = document.querySelectorAll(".panel")[1];
+
+      chartWrap.style.display = "";
+      tabelaPanel.style.display = "";
+
+      const indicador = document.getElementById("indicador").value;
+      const indicadorLabel = document.getElementById("indicador")
+        .options[document.getElementById("indicador").selectedIndex]
+        .text;
+
+      document.getElementById("titulo").textContent = programa;
+
+      const nomesMeses = [
+        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+      ];
+
+      let txtPeriodo = "";
+      if (mesesFiltro.length === 1) {
+        txtPeriodo = ` • Mês: ${nomesMeses[mesesFiltro[0] - 1]}`;
+      } else {
+        const inicio = nomesMeses[Math.min(...mesesFiltro) - 1];
+        const fim = nomesMeses[Math.max(...mesesFiltro) - 1];
+        txtPeriodo = ` • Período: ${inicio} - ${fim}`;
+      }
+
+      let subTxt = "";
+      if (subregioes) {
+        const s = decodeURIComponent(String(subregioes)).trim();
+        const nomes = await resolverSubRegioes(s);
+        subTxt = ` • Sub-região(ões): ${nomes}`;
+      }
+
+      document.getElementById("subtitulo").textContent =
+        `Ano: ${ano}${txtPeriodo} • Indicador: ${indicadorLabel}${subTxt}`;
+
+        const qs = new URLSearchParams({
+          programa_id: String(programa_id),
+          ano: String(ano),
+          indicador: indicador
+        });
+        if(subregioes) qs.set("subregioes", subregioes);
+
+        const url = API + "/performance/programa/serie?" + qs.toString();
+        const dataSerie = await (await fetch(url)).json();
+        const resumoAcumulado = await buscarResumoAcumulado(programa_id, ano, indicador, subregioes);
+        const dataCardsSerie = await buscarSerieCards(programa_id, ano, indicador, subregioes);
+
+      const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+      const dataFiltrada = (dataSerie || []).filter(r => Number(r.mes || 0) <= mesReferencia);
+
+      // gráfico passa a usar a série correta da rota /performance/cards
+      const labels = (dataCardsSerie || []).map(r => meses[(r.mes||1)-1] || "");
+      const meta = (dataCardsSerie || []).map(r => Number(r.meta||0));
+      const real = (dataCardsSerie || []).map(r => Number(r.realizado||0));
+
+      const somaMeta = meta.reduce((acc, v) => acc + Number(v || 0), 0);
+      const somaReal = real.reduce((acc, v) => acc + Number(v || 0), 0);
+
+      const realAcum = [];
+      real.reduce((acc, v) => {
+        const total = acc + Number(v || 0);
+        realAcum.push(total);
+        return total;
+      }, 0);
+
+      const isReceitaCard = indicador === "receita";
+
+      function arredondarInteiro(n){
+        return Math.round(Number(n || 0));
+      }
+
+      const formatCard = (v) => {
+        const valor = arredondarInteiro(v);
+
+        if (indicador === "receita") {
+          return valor.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          });
+        }
+
+        if (indicador === "hora_aluno") {
+          return valor.toLocaleString("pt-BR");
+        }
+
+        return format(v);
+      };
+
+      const metaResumo = Number(resumoAcumulado?.meta || 0);
+      const projetadoResumo = Number(resumoAcumulado?.projetado || 0);
+      const realizadoResumo = Number(resumoAcumulado?.realizado || 0);
+      const elLabelReal = document.getElementById("cardRealizadoAcum")
+        .closest(".summary-card")
+        .querySelector(".label");
+
+      const elSubReal = document.getElementById("cardRealizadoAcum")
+        .closest(".summary-card")
+        .querySelector(".sub");
+      document.getElementById("cardRealizadoAcum").textContent = formatCard(realizadoResumo);
+      if (isMesUnico) {
+        elLabelReal.textContent = "Realizado";
+        elSubReal.textContent = "No mês";
+      } else {
+        elLabelReal.textContent = "Realizado acumulado";
+        elSubReal.textContent = "No período";
+      }
+      const elLabelMeta = document.getElementById("cardMetaAcum")
+        .closest(".summary-card")
+        .querySelector(".label");
+
+      const elSubMeta = document.getElementById("cardMetaAcum")
+        .closest(".summary-card")
+        .querySelector(".sub");
+      document.getElementById("cardMetaAcum").textContent = formatCard(metaResumo);
+      if (isMesUnico) {
+        elLabelMeta.textContent = "Meta";
+        elSubMeta.textContent = "No mês";
+      } else {
+        elLabelMeta.textContent = "Meta acumulada";
+        elSubMeta.textContent = "No período";
+      }
+
+      const elPct = document.getElementById("cardPctMeta");
+      const elDiff = document.getElementById("cardDiffMeta");
+
+      // títulos e subtítulos dos cards
+      const pctCard = elPct.closest(".summary-card");
+      const diffCard = elDiff.closest(".summary-card");
+
+      const pctTitle = pctCard.querySelector(".label");
+      const pctSub = pctCard.querySelector(".sub");
+
+      const diffTitle = diffCard.querySelector(".label");
+      const diffSub = diffCard.querySelector(".sub");
+
+      if (metaResumo > 0) {
+        const pctMeta = (realizadoResumo / metaResumo) * 100;
+        const diffMeta = realizadoResumo - metaResumo;
+
+        pctTitle.textContent = "% atingimento";
+        pctSub.textContent = "Realizado x meta";
+        elPct.textContent = `${pctMeta.toFixed(1).replace(".", ",")}%`;
+
+        diffTitle.textContent = "Diferença para meta";
+        diffSub.textContent = "Acumulado";
+        elDiff.textContent = formatCard(diffMeta);
+
+      } else if (projetadoResumo > 0) {
+        const pctProj = (realizadoResumo / projetadoResumo) * 100;
+        const diffProj = realizadoResumo - projetadoResumo;
+
+        pctTitle.textContent = "% realizado x projetado";
+        pctSub.textContent = "Sem meta definida";
+        elPct.textContent = `${pctProj.toFixed(1).replace(".", ",")}%`;
+
+        diffTitle.textContent = "Diferença para projetado";
+        diffSub.textContent = "Sem meta definida";
+        elDiff.textContent = formatCard(diffProj);
+
+      } else {
+        pctTitle.textContent = "% atingimento";
+        pctSub.textContent = "Sem base de comparação";
+        elPct.textContent = "—";
+
+        diffTitle.textContent = "Diferença para meta";
+        diffSub.textContent = "Meta não definida";
+        elDiff.textContent = "—";
+      }
+
+      const isReceita = indicador === "receita";
+      const tickFmt = (v) => isReceita ? moeda(v) : format(v);
+
+      const canvas = document.getElementById("grafico");
+      const ctx = canvas.getContext("2d");
+
+      if(chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Meta (mês)",
+              data: meta,
+              backgroundColor: "#cbd5f5",
+              borderRadius: 6
+            },
+            {
+              label: "Realizado (mês)",
+              data: real,
+              backgroundColor: "#2563eb",
+              borderRadius: 8
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: { top: 40 } },
+
+          // ✅ mata qualquer comportamento de hover
+          events: [],
+
+          // ✅ desliga tooltip
+          plugins: {
+            tooltip: { enabled: false },
+            legend: {
+              position: "top",
+              labels: {
+                padding: 12
+              }
+            },
+
+            // ✅ passa config pro plugin
+            valueLabelsPlugin: { indicador }
+          },
+
+          // ✅ deixa o render “instantâneo” (evita depender de hover/frames)
+          animation: false,
+
+          scales: {
+            y: {
+              grace: "20%",
+              ticks: { callback: (value) => tickFmt(value) }
+            }
+          }
+        }
+      });
+
+      // ✅ força redesenho imediato (garante rótulos já no load)
+      chart.update("none");
+      
+      renderTabelaMensal(dataCardsSerie, indicador, programa);
+      console.log("Chamando Market Share com:", {
+        programa_id,
+        programa,
+        ano,
+        subregioes,
+        url: window.location.href
+      });
+
+      try {
+        await carregarMarketShareAprendizagem(programa, ano, subregioes);
+      } catch (e) {
+        console.error("Falha ao carregar Market Share:", e);
+      }
+    }
+
+    (function init(){
+      const ano = qp("ano") || "2026";
+      const indicador = qp("indicador") || "matriculas";
+      document.getElementById("ano").value = ano;
+      document.getElementById("indicador").value = indicador;
+
+      document.getElementById("btnAtualizar").addEventListener("click", carregar);
+
+      carregar();
+    })();
+    function arredondarInteiro(n){
+      return Math.round(Number(n || 0));
+    }
+
+    async function logout(){
+      try{
+        await fetch("http://localhost:8000/auth/logout", {
+          method: "POST",
+          credentials: "include"
+        });
+      } catch(e) {}
+
+      window.location.href = "/login.html";
+    }
+
+  </script>
+</body>
+</html>

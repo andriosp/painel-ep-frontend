@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Painel • Unidades</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow: 0 10px 24px rgba(15,23,42,.08);
+      --radius:14px;
+      --radius-sm:12px;
+
+      --brand:#2563eb;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container{
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 18px 18px 36px;
+    }
+
+    .topnav{
+      display:flex;
+      gap:10px;
+      padding:10px 0 14px;
+      align-items:center;
+    }
+    .navlink{
+      text-decoration:none;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 13px;
+      padding:8px 12px;
+      border-radius: 12px;
+      border:1px solid transparent;
+    }
+    .navlink:hover{
+      background:#fff;
+      border-color: var(--border);
+    }
+    .navlink.active{
+      background: rgba(37,99,235,.10);
+      color: var(--text);
+      border-color: rgba(37,99,235,.25);
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .title h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+    .title p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size:13px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      font-size:12px;
+      box-shadow: 0 6px 14px rgba(15,23,42,.06);
+      white-space:nowrap;
+      max-width: 55vw;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+      flex: 0 0 auto;
+    }
+
+    .panel{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .field{
+      flex:1;
+      min-width:320px;
+    }
+
+    /* Selects grandes */
+    #subregioes, #uos{
+      height: 140px;
+    }
+
+    /* Selects pequenos */
+    .field.small select{
+      height: 44px;      /* padrão “profissional” */
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color: var(--muted);
+      margin-bottom:8px;
+    }
+
+    select{
+      width:100%;
+      height:140px;
+      border:1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding:10px;
+      background:#fff;
+      outline:none;
+    }
+
+    .field.sm select{
+      height: 44px;
+    }
+
+    select:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    select[multiple]{
+      height:140px;
+    }
+
+    #periodoMeses{
+      height:140px;
+    }
+
+    .field.sm{
+      flex:0 0 160px;
+      min-width:160px;
+      max-width:160px;
+      align-self:flex-end;
+    }
+
+    .field.field-meses{
+      flex: 0 0 160px;
+      min-width: 160px;
+      max-width: 160px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      align-self:flex-end;
+    }
+
+    button{
+      appearance:none;
+      border:1px solid var(--border);
+      background:#fff;
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 650;
+      font-size:13px;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+    }
+    button:hover{ background:#f8fafc; border-color:#dbe3ef; }
+    button:active{ transform: translateY(1px); }
+    .btn-primary{
+      background: var(--brand);
+      color:#fff;
+      border-color: rgba(37,99,235,.65);
+    }
+    .btn-primary:hover{ background:#1d4ed8; }
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 1180px){
+      .cards{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px){
+      .cards{ grid-template-columns: 1fr; }
+      .field{ min-width: 100%; }
+    }
+
+    .card{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .card h3{
+      margin:0;
+      font-size:13px;
+      color: var(--muted);
+      font-weight: 750;
+      letter-spacing: .2px;
+    }
+    .big{
+      margin-top: 10px;
+      font-size: 26px;
+      font-weight: 820;
+      letter-spacing: .2px;
+    }
+    .sub{
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .chips{
+      display:flex;
+      gap:8px;
+      margin-top: 12px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .chips::-webkit-scrollbar{ height: 6px; }
+    .chips::-webkit-scrollbar-thumb{ background:#dbe3ef; border-radius:999px; }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#fff;
+      font-size:11px;
+      line-height:1.1;
+      white-space:nowrap;
+      flex:0 0 auto;
+    }
+
+    .chip .k{
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    .chip.status-low{
+      background: rgba(220, 38, 38, .12);
+      border-color: rgba(220, 38, 38, .28);
+      color: #b91c1c;
+    }
+
+    .chip.status-mid{
+      background: rgba(245, 158, 11, .14);
+      border-color: rgba(245, 158, 11, .30);
+      color: #b45309;
+    }
+
+    .chip.status-high{
+      background: rgba(22, 163, 74, .12);
+      border-color: rgba(22, 163, 74, .28);
+      color: #15803d;
+    }
+
+    .chip.status-blue{
+      background: rgba(37, 99, 235, .10);
+      border-color: rgba(37, 99, 235, .25);
+      color: #1d4ed8;
+    }
+
+    .legend{
+      display:flex;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin:6px 4px 16px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .legend-item{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      color:var(--muted);
+      font-weight:500;
+    }
+
+    .section-title{
+      margin: 16px 2px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+    }
+
+    .table-card{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      margin-bottom: 14px;
+    }
+    .table-wrap{ overflow:auto; }
+    table{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 0;
+    }
+    thead th{
+      position: sticky;
+      top:0;
+      background: #fbfcfe;
+      border-bottom:1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .28px;
+      padding: 12px 10px;
+      text-align:right;
+      white-space:nowrap;
+    }
+    thead th:first-child{ text-align:left; }
+    tbody td{
+      border-bottom:1px solid #eef2f7;
+      padding: 10px;
+      text-align:right;
+      white-space:nowrap;
+    }
+    tbody td:first-child{ text-align:left; }
+    tbody tr:nth-child(odd){ background:#fcfdff; }
+    tbody tr:hover{ background: rgba(37,99,235,.06); }
+
+    .status{
+      margin-top: 10px;
+      font-size:12px;
+      color: var(--muted);
+    }
+
+    /* 🔽 Ajuste geral da tabela */
+    #tabela-unidades {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    /* 🔽 Reduz levemente a fonte */
+    #tabela-unidades th,
+    #tabela-unidades td {
+      font-size: 12px;
+      padding: 8px 6px;
+    }
+
+    /* 🔽 Coluna UO */
+    #tabela-unidades th:nth-child(1),
+    #tabela-unidades td:nth-child(1){
+      width: 280px;
+      white-space: nowrap;
+    }
+
+    #tabela-unidades th:nth-child(n+2),
+    #tabela-unidades td:nth-child(n+2){
+      width: 90px;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .chip.status-neutral{
+      background: #f3f4f6;
+      border-color: #d1d5db;
+      color: #374151;
+    }
+
+    .sem-meta-zero{
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .topnav{
+      display:flex;
+      gap:10px;
+      padding:10px 0 14px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .topnav-right{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <script>
+    (async function validarSessao(){
+      try{
+        const resp = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include"
+        });
+
+        if(!resp.ok){
+          window.location.href = "/login.html";
+          return;
+        }
+
+        const data = await resp.json();
+
+        // 🔥 AQUI é o que faltava
+        if(data.deve_trocar_senha){
+          window.location.href = "/alterar_senha.html";
+          return;
+        }
+
+      }catch(e){
+        window.location.href = "/login.html";
+      }
+    })();
+  </script>
+
+  <div class="container">
+
+    <nav class="topnav">
+      <a href="index.html" class="navlink">Dashboard</a>
+      <a href="po.html" class="navlink">PO</a>
+      <a href="programas.html" class="navlink">Programas</a>
+      <a href="performance.html" class="navlink">Performance</a>
+      <a href="modalidades.html" class="navlink">Modalidades</a>
+      <a href="unidades.html" class="navlink active">Unidades</a>
+      <a href="sge_turmas.html" class="navlink">Turmas</a>
+      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
+      <a href="relatorio_programa.html" class="navlink">Relatório Executivo</a>
+    
+      <div class="topnav-right">
+        <a href="alterar_senha.html" class="navlink">
+          Alterar senha
+        </a>
+        <div id="usuario-logado" class="badge">
+          <span class="dot"></span>
+          Usuário: —
+        </div>
+    
+        <button onclick="logout()">Sair</button>
+      </div>
+    </nav>
+
+    <div class="header">
+      <div class="title">
+        <h1>Painel • Unidades</h1>
+        <p>Visão por Sub-região e Unidade Operacional • Matrículas, Hora-Aluno e Receita (meta/projetado/realizado)</p><br>
+        <p>Pressione Ctrl + clique para múltiplas seleções nos filtros.</p>
+      </div>
+      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões • todas as UOs • 2026/01</div>
+    </div>
+
+    <div class="panel">
+      <div class="filters">
+    
+        <div class="field">
+          <label for="subregioes">Sub-regiões</label>
+          <select id="subregioes" multiple></select>
+        </div>
+    
+        <div class="field">
+          <label for="uos">Unidades Operacionais</label>
+          <select id="uos" multiple></select>
+        </div>
+
+        <div class="field field-meses">
+          <label for="periodoMeses">Meses</label>
+          <select id="periodoMeses" multiple>
+            <option value="1">Janeiro</option>
+            <option value="2">Fevereiro</option>
+            <option value="3">Março</option>
+            <option value="4">Abril</option>
+            <option value="5">Maio</option>
+            <option value="6">Junho</option>
+            <option value="7">Julho</option>
+            <option value="8">Agosto</option>
+            <option value="9">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+          </select>
+        </div>
+    
+        <div class="field sm">
+          <label for="ano">Ano</label>
+          <select id="ano"></select>
+        </div>
+    
+        <div class="actions">
+          <button class="btn-primary" onclick="resetPagina()">Limpar</button>
+        </div>
+    
+      </div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Matrículas Realizadas</h3>
+        <div class="big" id="mat-real">—</div>
+        <div class="sub" id="mat-sub">Meta: — • Projetado: —</div>
+        <div class="chips" id="mat-chips"></div>
+      </div>
+
+      <div class="card">
+        <h3>Hora-Aluno Realizada</h3>
+        <div class="big" id="ha-real">—</div>
+        <div class="sub" id="ha-sub">Meta: — • Projetado: —</div>
+        <div class="chips" id="ha-chips"></div>
+      </div>
+
+      <div class="card">
+        <h3>Receita Realizada</h3>
+        <div class="big" id="rec-real">—</div>
+        <div class="sub" id="rec-sub">Meta: — • Projetado: —</div>
+        <div class="chips" id="rec-chips"></div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item">
+        <span class="chip status-high"><strong>≥ 100%</strong></span>
+        <span>Meta atingida</span>
+      </span>
+    
+      <span class="legend-item">
+        <span class="chip status-blue"><strong>75% – 99,9%</strong></span>
+        <span>No caminho</span>
+      </span>
+    
+      <span class="legend-item">
+        <span class="chip status-mid"><strong>51% – 74,9%</strong></span>
+        <span>Atenção</span>
+      </span>
+    
+      <span class="legend-item">
+        <span class="chip status-low"><strong>&lt; 51%</strong></span>
+        <span>Crítico</span>
+      </span>
+
+      <span class="legend-item">
+        <span class="chip status-neutral"><strong>100%</strong></span>
+        <span>Sem meta (com realizado)</span>
+      </span>
+      
+      <span class="legend-item">
+        <span class="sem-meta-zero"><strong>–</strong></span>
+        <span>Sem dados (meta = 0 e realizado = 0)</span>
+      </span>
+    </div>
+
+    <div class="section-title">Por Unidade</div>
+    <div class="table-card">
+      <div class="table-wrap">
+        <table id="tabela-unidades"></table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const API = "http://localhost:8000";
+
+    let ALL_SUB_OPTIONS = []; // [{value,text}]
+    let ALL_UO_OPTIONS  = []; // [{value,text}]
+    let INIT_DONE = false;
+
+    function snapshotOptions(sel){
+    return Array.from(sel.options).map(o => ({ value: o.value, text: o.textContent }));
+    }
+
+    function restoreOptions(sel, snap, clearSelection=false){
+      const selected = clearSelection
+        ? new Set()
+        : new Set(Array.from(sel.selectedOptions).map(o => o.value));
+
+      sel.innerHTML = "";
+      snap.forEach(it=>{
+        const opt = document.createElement("option");
+        opt.value = it.value;
+        opt.textContent = it.text;
+        opt.selected = selected.has(it.value);
+        sel.appendChild(opt);
+      });
+    }
+
+    function format(n){ return Number(n||0).toLocaleString("pt-BR"); }
+    function moeda(n){ return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+
+    function setStatus(msg){
+      const el = document.getElementById("status");
+      if(el) el.textContent = msg || "";
+    }
+
+    function selecionados(id){
+      const sel = document.getElementById(id);
+      const vals = Array.from(sel.selectedOptions).map(o => String(o.value).trim()).filter(Boolean);
+      return vals.join(",");
+    }
+
+    function atualizarBadgeFiltro(){
+      const badge = document.getElementById("badge-filtro");
+      if(!badge) return;
+
+      const selSub = document.getElementById("subregioes");
+      const selUo = document.getElementById("uos");
+
+      const subs = Array.from(selSub?.selectedOptions || [])
+        .map(o => o.textContent.trim());
+
+      const uos = Array.from(selUo?.selectedOptions || [])
+        .map(o => o.textContent.trim());
+
+      let subTxt = "";
+      if (subs.length) {
+        const resumo = subs.length <= 2
+          ? subs.join(", ")
+          : `${subs.slice(0,2).join(", ")} +${subs.length-2}`;
+        subTxt = `Sub-regiões: ${resumo}`;
+      } else {
+        subTxt = "Sub-regiões: todas";
+      }
+
+      let uoTxt = "";
+      if (uos.length) {
+        const resumo = uos.length <= 2
+          ? uos.join(", ")
+          : `${uos.slice(0,2).join(", ")} +${uos.length-2}`;
+        uoTxt = `UOs: ${resumo}`;
+      } else {
+        uoTxt = "UOs: todas";
+      }
+
+      const ano = document.getElementById("ano")?.value || "2026";
+
+      const meses = Array.from(document.getElementById("periodoMeses")?.selectedOptions || [])
+        .map(o => Number(o.value));
+
+      const nomesMeses = [
+        "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+      ];
+
+      let periodoTxt = "";
+
+      if (meses.length > 0) {
+        const mesesOrdenados = [...meses].sort((a, b) => a - b);
+
+        if (mesesOrdenados.length <= 3) {
+          periodoTxt = mesesOrdenados.map(m => nomesMeses[m]).join(", ");
+        } else {
+          periodoTxt = `${nomesMeses[mesesOrdenados[0]]} - ${nomesMeses[mesesOrdenados[mesesOrdenados.length - 1]]}`;
+        }
+      } else {
+        periodoTxt = "todos";
+      }
+
+      badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${uoTxt} • Ano: ${ano} • Meses: ${periodoTxt}`;
+    }
+
+    function chipPct(real, meta){
+      real = Number(real || 0);
+      meta = Number(meta || 0);
+
+      // 🆕 Regra nova
+      if (meta <= 0 && real <= 0) {
+        return `<span class="sem-meta-zero">-</span>`;
+      }
+
+      if (meta <= 0 && real > 0) {
+        return `<span class="chip status-neutral"><span class="k">Real/Meta</span>100,0%</span>`;
+      }
+
+      const pct = (real / meta) * 100;
+
+      let cls = "status-low";
+
+      if (pct >= 100) {
+        cls = "status-high";
+      } else if (pct >= 75) {
+        cls = "status-blue";
+      } else if (pct >= 51) {
+        cls = "status-mid";
+      } else {
+        cls = "status-low";
+      }
+
+      const t = pct.toLocaleString("pt-BR", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      }) + "%";
+
+      return `<span class="chip ${cls}"><span class="k">Real/Meta</span>${t}</span>`;
+    }
+
+    async function carregarSubregioes(){
+      const ano = Number(document.getElementById("ano").value || 2026);
+
+      const res = await fetch(API + `/planejamento/filtros/subregioes?ano=${ano}`);
+      const data = await res.json();
+
+      const sel = document.getElementById("subregioes");
+      const prev = new Set(Array.from(sel.selectedOptions).map(o => String(o.value)));
+
+      sel.innerHTML = "";
+
+      data.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.codigo;
+        opt.textContent = r.nome;
+        if (prev.has(String(r.codigo))) opt.selected = true;
+        sel.appendChild(opt);
+      });
+
+      ALL_SUB_OPTIONS = snapshotOptions(sel);
+    }
+
+    // Cascata: se sub-região selecionada, lista UOs daquela(s) sub-região(ões)
+    async function carregarUOs(){
+      const subs = selecionados("subregioes");
+      const ano = Number(document.getElementById("ano").value || 2026);
+
+      const qs = new URLSearchParams();
+      if (subs) qs.set("subregioes", subs);
+      if (ano) qs.set("ano", String(ano));
+
+      const url = API + "/uo/list" + (qs.toString() ? "?" + qs.toString() : "");
+      const res = await fetch(url);
+      const data = await res.json();
+
+      const sel = document.getElementById("uos");
+      const prev = new Set(Array.from(sel.selectedOptions).map(o=> String(o.value)));
+
+      sel.innerHTML = "";
+      data.forEach(r=>{
+        const opt = document.createElement("option");
+        opt.value = r.codigo;
+        opt.textContent = r.nome;
+        if(prev.has(String(r.codigo))) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      if(!ALL_UO_OPTIONS.length){
+        ALL_UO_OPTIONS = snapshotOptions(document.getElementById("uos"));
+      }
+    }
+
+    async function carregarCards(){
+      atualizarBadgeFiltro();
+
+      const ano = Number(document.getElementById("ano").value || 2026);
+      const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
+        .map(o => o.value);
+
+      const subs = selecionados("subregioes");
+      const uos  = selecionados("uos");
+
+      const qs = new URLSearchParams({ ano: String(ano) });
+
+      if (meses.length) qs.set("meses", meses.join(","));
+      if (subs) qs.set("subregioes", subs);
+      if (uos)  qs.set("uos", uos);
+
+      // Usa a MESMA fonte da tabela para garantir números idênticos
+      const url = API + "/unidades/tabela?" + qs.toString();
+      const data = await (await fetch(url)).json();
+
+      const totais = data.reduce((acc, r) => {
+        acc.mat_meta += Number(r.mat_meta || 0);
+        acc.mat_proj += Number(r.mat_proj || 0);
+        acc.mat_real += Number(r.mat_real || 0);
+
+        acc.ha_meta += Number(r.ha_meta || 0);
+        acc.ha_proj += Number(r.ha_proj || 0);
+        acc.ha_real += Number(r.ha_real || 0);
+
+        acc.rec_meta += Number(r.rec_meta || 0);
+        acc.rec_proj += Number(r.rec_proj || 0);
+        acc.rec_real += Number(r.rec_real || 0);
+        return acc;
+      }, {
+        mat_meta: 0, mat_proj: 0, mat_real: 0,
+        ha_meta: 0, ha_proj: 0, ha_real: 0,
+        rec_meta: 0, rec_proj: 0, rec_real: 0
+      });
+
+      // Matrículas
+      document.getElementById("mat-real").textContent = format(totais.mat_real);
+      document.getElementById("mat-sub").textContent =
+        `Meta: ${format(totais.mat_meta)}`;
+      document.getElementById("mat-chips").innerHTML = chipPct(totais.mat_real, totais.mat_meta);
+
+      // Hora-aluno
+      document.getElementById("ha-real").textContent = format(totais.ha_real);
+      document.getElementById("ha-sub").textContent =
+        `Meta: ${format(totais.ha_meta)}`;
+      document.getElementById("ha-chips").innerHTML = chipPct(totais.ha_real, totais.ha_meta);
+
+      // Receita
+      document.getElementById("rec-real").textContent = moeda(totais.rec_real);
+      document.getElementById("rec-sub").textContent =
+        `Meta: ${moeda(totais.rec_meta)}`;
+      document.getElementById("rec-chips").innerHTML = chipPct(totais.rec_real, totais.rec_meta);
+    }
+
+    function montarTabela(id, colunas, linhas){
+      const t = document.getElementById(id);
+      t.innerHTML = "";
+
+      const thead = document.createElement("thead");
+      const trh = document.createElement("tr");
+      colunas.forEach(c=>{
+        const th = document.createElement("th");
+        th.textContent = c;
+        trh.appendChild(th);
+      });
+      thead.appendChild(trh);
+
+      const tbody = document.createElement("tbody");
+      linhas.forEach(l=>{
+        const tr = document.createElement("tr");
+        colunas.forEach(c=>{
+          const td = document.createElement("td");
+          td.innerHTML = l[c] ?? "";
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+
+      t.appendChild(thead);
+      t.appendChild(tbody);
+    }
+
+    function statusBadge(real, meta){
+      real = Number(real || 0);
+      meta = Number(meta || 0);
+
+      // 🆕 Regra nova
+      if (meta <= 0 && real <= 0) {
+        return `<span class="sem-meta-zero">-</span>`;
+      }
+
+      if (meta <= 0 && real > 0) {
+        return `<span class="chip status-neutral">100,0%</span>`;
+      }
+
+      const pct = (real / meta) * 100;
+
+      let cls = "status-low";
+
+      if (pct >= 100) {
+        cls = "status-high";
+      } else if (pct >= 75) {
+        cls = "status-blue";
+      } else if (pct >= 51) {
+        cls = "status-mid";
+      }
+
+      const t = pct.toLocaleString("pt-BR", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1
+      }) + "%";
+
+      return `<span class="chip ${cls}">${t}</span>`;
+    }
+
+    async function carregarTabela(){
+      const ano = Number(document.getElementById("ano").value || 2026);
+      const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
+        .map(o => o.value);
+
+      const subs = selecionados("subregioes");
+      const uos  = selecionados("uos");
+
+      const qs = new URLSearchParams({ ano: String(ano) });
+      if (meses.length) qs.set("meses", meses.join(","));
+      if (subs) qs.set("subregioes", subs);
+      if (uos)  qs.set("uos", uos);
+
+      const url = API + "/unidades/tabela?" + qs.toString();
+      const data = await (await fetch(url)).json();
+
+      montarTabela(
+        "tabela-unidades",
+        [
+          "UO",
+          "MAT META","MAT REAL","MAT STATUS",
+          "HA META","HA REAL","HA STATUS",
+          "REC META","REC REAL","REC STATUS"
+        ],
+        data.map(r => ({
+          "UO": r.uo,
+
+          "MAT META": format(r.mat_meta),
+          "MAT REAL": format(r.mat_real),
+          "MAT STATUS": statusBadge(r.mat_real, r.mat_meta),
+
+          "HA META": format(r.ha_meta),
+          "HA REAL": format(r.ha_real),
+          "HA STATUS": statusBadge(r.ha_real, r.ha_meta),
+
+          "REC META": moeda(r.rec_meta),
+          "REC REAL": moeda(r.rec_real),
+          "REC STATUS": statusBadge(r.rec_real, r.rec_meta),
+        }))
+      );
+    }
+
+    async function carregarTudo(){
+      try{
+        setStatus("Carregando visão de unidades…");
+        await carregarCards();
+        await carregarTabela();
+        setStatus("");
+      } catch(e){
+        console.error(e);
+        setStatus("Erro ao carregar dados. Verifique endpoints /unidades/* e /uo/list.");
+      }
+    }
+
+    document.getElementById("uos").addEventListener("change", async ()=>{
+      
+      atualizarBadgeFiltro();
+
+      // Se usuário escolheu UO e NÃO escolheu sub-região, preencher sub-região automaticamente
+      const subsSelecionadas = selecionados("subregioes");
+      const uosSelecionadas  = selecionados("uos");
+      // Se o usuário limpou a seleção de UOs (Ctrl+clique), volta ao padrão
+      if(!uosSelecionadas){
+        // restaura sub-regiões se estava restrito
+        const selSub = document.getElementById("subregioes");
+        if(ALL_SUB_OPTIONS.length && selSub.options.length !== ALL_SUB_OPTIONS.length){
+          restoreOptions(selSub, ALL_SUB_OPTIONS);
+        }
+
+        // recarrega UOs sem filtro (todas)
+        await carregarUOs();
+
+        atualizarBadgeFiltro();
+        await carregarTudo();
+        return;
+      }
+      if(!subsSelecionadas && uosSelecionadas){
+          try{
+          const res = await fetch(API + "/uo/subregioes?uos=" + encodeURIComponent(uosSelecionadas));
+          const subIds = await res.json(); // [20000003, ...]
+
+          const selSub = document.getElementById("subregioes");
+          const setIds = new Set(subIds.map(String));
+
+          // RESTRINGE LISTA (mostra só as sub-regiões possíveis)
+          selSub.innerHTML = "";
+          ALL_SUB_OPTIONS
+          .filter(it => setIds.has(String(it.value)))
+          .forEach(it=>{
+              const opt = document.createElement("option");
+              opt.value = it.value;
+              opt.textContent = it.text;
+              opt.selected = true; // já seleciona automaticamente
+              selSub.appendChild(opt);
+          });
+
+          // Agora que sub-região foi preenchida, atualiza lista de UOs (mas mantendo as já selecionadas)
+          await carregarUOs();
+          }catch(e){
+          console.error("Falha ao inferir sub-região pela UO", e);
+          }
+      }
+
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+    document.getElementById("ano").addEventListener("change", async ()=>{
+      salvarAnoMesPreferidos();
+      await carregarUOs();
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
+    document.getElementById("periodoMeses").addEventListener("change", async ()=>{
+      salvarAnoMesPreferidos();
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
+    function pad2(n){ return String(n).padStart(2,"0"); }
+
+    function nomeMesPT(m){
+      const nomes = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+      return nomes[m-1] || "";
+    }
+
+    function carregarAnoMes(){
+      const anoSel = document.getElementById("ano");
+      const mesesSel = document.getElementById("periodoMeses");
+
+      const agora = new Date();
+      const anoAtual = agora.getFullYear();
+      const mesAtual = String(agora.getMonth() + 1);
+
+      anoSel.innerHTML = "";
+      for(let y = anoAtual - 1; y <= anoAtual + 1; y++){
+        const opt = document.createElement("option");
+        opt.value = String(y);
+        opt.textContent = String(y);
+        if(y === anoAtual) opt.selected = true;
+        anoSel.appendChild(opt);
+      }
+
+      const pref = getAnoMesPreferidos();
+
+      if (pref?.ano) {
+        anoSel.value = String(pref.ano);
+      }
+
+      Array.from(mesesSel.options).forEach(o => {
+        o.selected = false;
+      });
+
+      if (pref?.meses?.length) {
+        Array.from(mesesSel.options).forEach(o => {
+          o.selected = pref.meses.includes(o.value);
+        });
+      } else {
+        Array.from(mesesSel.options).forEach(o => {
+          o.selected = o.value === mesAtual;
+        });
+      }
+    }
+
+    function getAnoMesPreferidos() {
+      const url = new URL(window.location.href);
+      const anoUrl = Number(url.searchParams.get("ano"));
+      const mesesUrl = (url.searchParams.get("meses") || "")
+        .split(",")
+        .map(v => v.trim())
+        .filter(Boolean);
+
+      if (anoUrl && mesesUrl.length) return { ano: anoUrl, meses: mesesUrl };
+
+      const anoLs = Number(localStorage.getItem("filtro_ano"));
+      const mesesLs = JSON.parse(localStorage.getItem("filtro_meses") || "[]");
+
+      if (anoLs && mesesLs.length) return { ano: anoLs, meses: mesesLs };
+
+      return null;
+    }
+
+    function salvarAnoMesPreferidos() {
+      const ano = Number(document.getElementById("ano").value);
+      const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
+        .map(o => o.value);
+
+      localStorage.setItem("filtro_ano", String(ano));
+      localStorage.setItem("filtro_meses", JSON.stringify(meses));
+    }
+
+    (async function init(){
+      await carregarUsuario();
+      try{
+        setStatus("Carregando filtros…");
+        carregarAnoMes();
+        await carregarSubregioes(); 
+        await carregarUOs(); // sem filtro -> todas
+        atualizarBadgeFiltro();
+        await carregarTudo();
+        setStatus("");
+      } catch(e){
+        console.error(e);
+        setStatus("Erro ao iniciar. Verifique endpoints no backend.");
+      }
+    })();
+
+    window.addEventListener("pageshow", async (e) => {
+      carregarAnoMes();
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
+    async function resetPagina(){
+      const selSub = document.getElementById("subregioes");
+      const selUo  = document.getElementById("uos");
+
+      if (ALL_SUB_OPTIONS.length) restoreOptions(selSub, ALL_SUB_OPTIONS);
+      if (ALL_UO_OPTIONS.length)  restoreOptions(selUo,  ALL_UO_OPTIONS);
+
+      Array.from(selSub.options).forEach(o => o.selected = false);
+      Array.from(selUo.options).forEach(o => o.selected = false);
+
+      localStorage.removeItem("filtro_ano");
+      localStorage.removeItem("filtro_meses");
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete("ano");
+      url.searchParams.delete("mes");
+      url.searchParams.delete("meses");
+      window.history.replaceState({}, "", url.toString());
+
+      carregarAnoMes();
+
+      await carregarUOs();
+      if(!ALL_UO_OPTIONS.length){
+        ALL_UO_OPTIONS = snapshotOptions(selUo);
+      }
+
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    }
+    document.getElementById("subregioes").addEventListener("change", async () => {
+      const selSub = document.getElementById("subregioes");
+      const temSelecao = selSub.selectedOptions.length > 0;
+
+      // Se estava restrito e agora ficou vazio (Ctrl+clique) -> volta todas sub-regiões
+      if (!temSelecao && ALL_SUB_OPTIONS.length && selSub.options.length !== ALL_SUB_OPTIONS.length) {
+        restoreOptions(selSub, ALL_SUB_OPTIONS, true);
+      }
+
+      // Sempre que sub-região muda, atualiza UOs
+      await carregarUOs();
+
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
+    async function carregarUsuario(){
+      try{
+        const resp = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include"
+        });
+
+        if(!resp.ok) return;
+
+        const data = await resp.json();
+
+        const el = document.getElementById("usuario-logado");
+        if(el){
+          el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+        }
+      }catch(e){
+        console.error(e);
+      }
+    }
+
+    async function logout(){
+      try{
+        await fetch("http://localhost:8000/auth/logout", {
+          method: "POST",
+          credentials: "include"
+        });
+      } catch(e) {}
+
+      window.location.href = "/login.html";
+    }
+
+  </script>
+</body>
+</html>

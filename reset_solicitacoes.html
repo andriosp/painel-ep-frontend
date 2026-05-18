@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Solicitações de reset • Painel Educação Profissional</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow: 0 10px 24px rgba(15,23,42,.08);
+      --radius:14px;
+      --radius-sm:12px;
+      --brand:#2563eb;
+      --brand-dark:#1d4ed8;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container{
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 18px 18px 36px;
+    }
+
+    .topnav{
+      display:flex;
+      gap:10px;
+      padding:10px 0 14px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .navlink{
+      text-decoration:none;
+      color: var(--muted);
+      font-weight:750;
+      font-size:13px;
+      padding:8px 12px;
+      border-radius:12px;
+      border:1px solid transparent;
+    }
+
+    .navlink:hover{
+      background:#fff;
+      border-color: var(--border);
+    }
+
+    .navlink.active{
+      background: rgba(37,99,235,.10);
+      color: var(--text);
+      border-color: rgba(37,99,235,.25);
+    }
+
+    .topnav-right{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:#fff;
+      color: var(--muted);
+      font-size:12px;
+      box-shadow: 0 6px 14px rgba(15,23,42,.06);
+      white-space:nowrap;
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .title h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+
+    .title p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size:13px;
+    }
+
+    .panel,
+    .table-card{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .panel{
+      padding:14px;
+      margin-bottom:14px;
+    }
+
+    .table-card{
+      overflow:hidden;
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .status{
+      font-size:12px;
+      color: var(--muted);
+      min-height:18px;
+    }
+
+    button{
+      appearance:none;
+      border:1px solid var(--border);
+      background:#fff;
+      color: var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:650;
+      font-size:13px;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+    }
+
+    button:hover{
+      background:#f8fafc;
+      border-color:#dbe3ef;
+    }
+
+    button:active{
+      transform: translateY(1px);
+    }
+
+    .btn-primary{
+      background: var(--brand);
+      color:#fff;
+      border-color: rgba(37,99,235,.65);
+    }
+
+    .btn-primary:hover{
+      background: var(--brand-dark);
+    }
+
+    .btn-ok{
+      color:#166534;
+      border-color:#bbf7d0;
+      background:#f0fdf4;
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+
+    thead th{
+      background:#fbfcfe;
+      border-bottom:1px solid var(--border);
+      color: var(--muted);
+      font-size:11px;
+      text-transform: uppercase;
+      letter-spacing: .15px;
+      padding: 10px 12px;
+      text-align:left;
+      white-space:nowrap;
+    }
+
+    tbody td{
+      border-bottom:1px solid #eef2f7;
+      padding: 12px;
+      font-size: 13px;
+      vertical-align:top;
+    }
+
+    tbody tr:nth-child(odd){
+      background:#fcfdff;
+    }
+
+    tbody tr:hover{
+      background: rgba(37,99,235,.05);
+    }
+
+    .muted{
+      color: var(--muted);
+      font-size:12px;
+      margin-top:4px;
+    }
+
+    .empty{
+      padding:24px;
+      text-align:center;
+      color: var(--muted);
+      font-size:14px;
+    }
+  </style>
+</head>
+<body>
+
+  <script>
+  (async function validarSessao(){
+    try{
+      const resp = await fetch("http://localhost:8000/auth/me", {
+        credentials: "include"
+      });
+
+      if(!resp.ok){
+        window.location.href = "/login.html";
+        return;
+      }
+
+      const data = await resp.json();
+      if(data.perfil !== "admin"){
+        alert("Acesso restrito a administradores.");
+        window.location.href = "/index.html";
+      }
+    }catch(e){
+      window.location.href = "/login.html";
+    }
+  })();
+  </script>
+
+  <div class="container">
+    <nav class="topnav">
+      <a href="index.html" class="navlink">Dashboard</a>
+      <a href="reset_solicitacoes.html" class="navlink active">Solicitações de reset</a>
+
+      <div class="topnav-right">
+        <a href="alterar_senha.html" class="navlink">Alterar senha</a>
+
+        <div id="usuario-logado" class="badge">
+          <span class="dot"></span>
+          Usuário: —
+        </div>
+
+        <button onclick="logout()">Sair</button>
+      </div>
+    </nav>
+
+    <div class="header">
+      <div class="title">
+        <h1>Solicitações de reset de senha</h1>
+        <p>Lista de solicitações pendentes registradas pelos usuários.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="toolbar">
+        <div class="status" id="status">Carregando solicitações...</div>
+        <button class="btn-primary" onclick="carregarSolicitacoes()">Atualizar</button>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-wrap" id="tableWrap"></div>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://localhost:8000";
+
+    async function carregarUsuario(){
+      try{
+        const resp = await fetch(`${API}/auth/me`, {
+          credentials: "include"
+        });
+
+        if(!resp.ok) return;
+
+        const data = await resp.json();
+        const el = document.getElementById("usuario-logado");
+
+        if(el){
+          el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+        }
+      }catch(e){
+        console.error(e);
+      }
+    }
+
+    async function logout(){
+      try{
+        await fetch(`${API}/auth/logout`, {
+          method: "POST",
+          credentials: "include"
+        });
+      }catch(e){}
+
+      window.location.href = "/login.html";
+    }
+
+    function formatarData(valor){
+      if(!valor) return "—";
+      const d = new Date(valor);
+      return d.toLocaleString("pt-BR");
+    }
+
+    function montarTabela(items){
+      const wrap = document.getElementById("tableWrap");
+
+      if(!items.length){
+        wrap.innerHTML = `<div class="empty">Nenhuma solicitação pendente.</div>`;
+        return;
+      }
+
+      const html = `
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Identificador informado</th>
+              <th>Usuário localizado</th>
+              <th>E-mail</th>
+              <th>Data da solicitação</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(item => `
+              <tr>
+                <td>${item.id}</td>
+                <td>${item.identificador || "—"}</td>
+                <td>
+                  ${item.usuario_nome ? `<strong>${item.usuario_nome}</strong>` : "Não localizado"}
+                  <div class="muted">${item.usuario_login || "—"}</div>
+                </td>
+                <td>${item.usuario_email || "—"}</td>
+                <td>${formatarData(item.criado_em)}</td>
+                <td>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                        <input
+                        type="text"
+                        id="senha-temp-${item.id}"
+                        placeholder="Senha temporária"
+                        style="width:170px; border:1px solid #e5e7eb; border-radius:10px; padding:10px;"
+                        />
+                        <button class="btn-primary" onclick="definirSenhaTemporaria(${item.id})">
+                        Definir senha
+                        </button>
+                        <button class="btn-ok" onclick="marcarAtendido(${item.id})">
+                        Marcar atendido
+                        </button>
+                    </div>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+
+      wrap.innerHTML = html;
+    }
+
+    async function carregarSolicitacoes(){
+      const status = document.getElementById("status");
+      status.textContent = "Carregando solicitações...";
+
+      try{
+        const resp = await fetch(`${API}/auth/reset-solicitacoes`, {
+          credentials: "include"
+        });
+
+        const data = await resp.json().catch(() => ({}));
+
+        if(!resp.ok){
+          throw new Error(data.detail || "Não foi possível carregar as solicitações.");
+        }
+
+        montarTabela(data.items || []);
+        status.textContent = `${(data.items || []).length} solicitação(ões) pendente(s).`;
+      }catch(err){
+        console.error(err);
+        document.getElementById("tableWrap").innerHTML =
+          `<div class="empty">${err.message || "Erro ao carregar solicitações."}</div>`;
+        status.textContent = "Erro ao carregar solicitações.";
+      }
+    }
+
+    async function marcarAtendido(id){
+        const confirmar = confirm("Deseja marcar esta solicitação como atendida?");
+        if(!confirmar) return;
+
+        try{
+            const resp = await fetch(`${API}/auth/reset-solicitacoes/atender`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({ id })
+            });
+
+            const data = await resp.json().catch(() => ({}));
+
+            if(!resp.ok){
+            throw new Error(data.detail || "Não foi possível atualizar a solicitação.");
+            }
+
+            await carregarSolicitacoes();
+        }catch(err){
+            console.error(err);
+            alert(err.message || "Erro ao marcar solicitação como atendida.");
+        }
+    }
+
+    (async function init(){
+      await carregarUsuario();
+      await carregarSolicitacoes();
+    })();
+
+    async function definirSenhaTemporaria(id){
+        const input = document.getElementById(`senha-temp-${id}`);
+        const nova_senha = (input?.value || "").trim();
+
+        if(!nova_senha){
+            alert("Informe a senha temporária.");
+            return;
+        }
+
+        if(nova_senha.length < 4){
+            alert("A senha temporária deve ter pelo menos 4 caracteres.");
+            return;
+        }
+
+        const confirmar = confirm("Deseja definir esta senha temporária e marcar a solicitação como atendida?");
+        if(!confirmar) return;
+
+        try{
+            const resp = await fetch(`${API}/auth/reset-solicitacoes/definir-senha-temporaria`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                solicitacao_id: id,
+                nova_senha
+            })
+            });
+
+            const data = await resp.json().catch(() => ({}));
+
+            if(!resp.ok){
+            throw new Error(data.detail || "Não foi possível definir a senha temporária.");
+            }
+
+            alert("Senha temporária definida com sucesso.");
+            await carregarSolicitacoes();
+        }catch(err){
+            console.error(err);
+            alert(err.message || "Erro ao definir senha temporária.");
+        }
+    }
+  </script>
+</body>
+</html>

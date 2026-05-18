@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cadastro • Programas</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb; --panel:#fff; --text:#0f172a; --muted:#64748b; --border:#e5e7eb;
+      --shadow:0 10px 24px rgba(15,23,42,.08); --radius:14px; --radius-sm:12px; --brand:#2563eb;
+      --bad:#ef4444;
+    }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text);}
+    .container{ max-width:1200px; margin:0 auto; padding:18px 18px 36px; }
+    .header{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+    h1{ margin:0; font-size:26px; }
+    .muted{ color:var(--muted); font-size:13px; margin-top:6px; }
+    .panel{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px; margin-top:14px; }
+    .grid{ display:grid; grid-template-columns: 1fr 280px; gap:12px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns:1fr; } }
+    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:8px; }
+    input, select{
+      width:100%; border:1px solid var(--border); border-radius:var(--radius-sm);
+      padding:10px; height:40px; background:#fff; outline:none;
+    }
+    input:focus, select:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+    .actions{ display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+    button{
+      appearance:none; border:1px solid var(--border); background:#fff; color:var(--text);
+      padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:650; font-size:13px;
+    }
+    .btn-primary{ background:var(--brand); color:#fff; border-color: rgba(37,99,235,.65); }
+    .btn-primary:hover{ background:#1d4ed8; }
+    .status{ margin-top:10px; font-size:12px; color:var(--muted); }
+    .status.err{ color:var(--bad); }
+
+    table{ width:100%; border-collapse:collapse; }
+    th, td{ padding:10px; border-bottom:1px solid var(--border); font-size:13px; }
+    th{ text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.25px; color:var(--muted); }
+    .linkbtn{ border:1px solid var(--border); background:#fff; padding:6px 10px; border-radius:10px; cursor:pointer; }
+    .linkbtn:hover{ background:#f8fafc; }
+    .searchbar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .searchbar input{ max-width: 420px; }
+
+    .actions-cell{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .iconbtn{
+      width: 34px;
+      height: 34px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .iconbtn:hover{ background: rgba(37,99,235,.06); }
+
+    .iconbtn.danger{
+      color:#991b1b;
+      background: rgba(239,68,68,.08);
+      border-color: rgba(239,68,68,.25);
+    }
+    .iconbtn.danger:hover{ background: rgba(239,68,68,.14); }
+
+    .iconbtn svg { display:block; fill: currentColor; }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>Cadastro de Programas</h1>
+        <div class="muted">Criar, editar e excluir programas (com interlocutor vinculado).</div>
+      </div>
+
+      <div class="searchbar">
+        <input id="q" placeholder="Buscar por nome ou código…" />
+        <button onclick="carregarProgramas()">Buscar</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="grid">
+        <div>
+          <label for="nome_programa">Nome do programa</label>
+          <input id="nome_programa" type="text" placeholder="Ex.: CURSOS TÉCNICOS PRESENCIAIS" />
+        </div>
+
+        <div>
+          <label for="cod_interlocutor">Interlocutor</label>
+          <select id="cod_interlocutor"></select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" onclick="salvar()">Salvar</button>
+        <button onclick="limparForm()">Limpar</button>
+      </div>
+
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:140px;">Código</th>
+            <th>Programa</th>
+            <th style="width:260px;">Interlocutor</th>
+            <th style="width:170px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://127.0.0.1:8000";
+    let modoEdicao = false;
+    let codigoEdicao = null;
+
+    function setStatus(msg, isErr=false){
+      const el = document.getElementById("status");
+      el.textContent = msg || "";
+      el.className = "status" + (isErr ? " err" : "");
+    }
+
+    async function carregarInterlocutores(){
+      const sel = document.getElementById("cod_interlocutor");
+      sel.innerHTML = "";
+      const data = await (await fetch(API + "/interlocutores/list")).json();
+
+      data.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.codigo;
+        opt.textContent = r.nome; // se for outro campo, ajuste aqui
+        sel.appendChild(opt);
+      });
+    }
+
+    async function carregarProgramas(){
+      const q = (document.getElementById("q").value || "").trim();
+      const url = API + "/programas/admin/list" + (q ? "?q=" + encodeURIComponent(q) : "");
+      const data = await (await fetch(url)).json();
+
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.codigo}</td>
+          <td>${p.nome_programa}</td>
+          <td>${p.interlocutor || "-"}</td>
+          <td>
+            <div class="actions-cell">
+              <button class="iconbtn" title="Editar"
+                onclick='editar(${JSON.stringify(p.codigo)}, ${JSON.stringify(p.cod_interlocutor)}, ${JSON.stringify(p.nome_programa)})'>
+                ✏️
+              </button>
+
+              <button class="iconbtn danger" title="Excluir"
+                onclick='excluir(${JSON.stringify(p.codigo)})'>
+                🗑️
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function editar(codigo, cod_interlocutor, nome_programa){
+      modoEdicao = true;
+      codigoEdicao = codigo;
+      document.getElementById("cod_interlocutor").value = String(cod_interlocutor);
+      document.getElementById("nome_programa").value = nome_programa;
+      setStatus("Modo edição: altere os campos e clique em Salvar.");
+    }
+
+    function limparForm(){
+      modoEdicao = false;
+      codigoEdicao = null;
+      document.getElementById("nome_programa").value = "";
+      setStatus("");
+    }
+
+    async function salvar(){
+      try{
+        setStatus("Salvando…");
+        const codigo = document.getElementById("codigo").value;
+        const cod_interlocutor = document.getElementById("cod_interlocutor").value;
+        const nome_programa = document.getElementById("nome_programa").value;
+
+        const payload = {
+          codigo: Number(codigo),
+          cod_interlocutor: Number(cod_interlocutor),
+          nome_programa: nome_programa
+        };
+
+        let res;
+        if(modoEdicao){
+          res = await fetch(API + "/programas/" + encodeURIComponent(codigoEdicao), {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch(API + "/programas", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if(!res.ok){
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || "Erro ao salvar.");
+        }
+
+        setStatus("Salvo com sucesso!");
+        limparForm();
+        await carregarProgramas();
+      } catch(e){
+        console.error(e);
+        setStatus(e.message || "Erro ao salvar.", true);
+      }
+    }
+
+    async function excluir(codigo){
+      if(!confirm("Confirma excluir o programa " + codigo + "?")) return;
+      try{
+        setStatus("Excluindo…");
+        const res = await fetch(API + "/programas/" + encodeURIComponent(codigo), { method:"DELETE" });
+
+        if(!res.ok){
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || "Erro ao excluir.");
+        }
+
+        setStatus("Excluído com sucesso!");
+        await carregarProgramas();
+      } catch(e){
+        console.error(e);
+        setStatus(e.message || "Erro ao excluir.", true);
+      }
+    }
+
+    (async function init(){
+      try{
+        await carregarInterlocutores();
+        await carregarProgramas();
+      } catch(e){
+        console.error(e);
+        setStatus("Erro ao iniciar cadastro. Verifique endpoints no backend.", true);
+      }
+    })();
+  </script>
+</body>
+</html>

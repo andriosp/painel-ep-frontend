@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Redefinir senha</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow: 0 10px 24px rgba(15,23,42,.08);
+      --radius:14px;
+      --brand:#2563eb;
+      --ok:#16a34a;
+      --bad:#ef4444;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: system-ui;
+      background: var(--bg);
+    }
+
+    .card{
+      width:100%;
+      max-width:420px;
+      background:#fff;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+    }
+
+    h1{ margin:0 0 10px; }
+
+    .alert{
+      display:none;
+      margin-bottom:14px;
+      padding:12px;
+      border-radius:10px;
+      font-size:13px;
+    }
+
+    .alert.show{ display:block; }
+    .alert.error{ background:#fff5f5; color:#b91c1c; }
+    .alert.ok{ background:#f0fdf4; color:#166534; }
+
+    input{
+      width:100%;
+      padding:12px;
+      margin-bottom:12px;
+      border:1px solid var(--border);
+      border-radius:10px;
+    }
+
+    button{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      background:var(--brand);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Nova senha</h1>
+
+    <div id="alerta" class="alert error"></div>
+
+    <input type="password" id="senha" placeholder="Nova senha" />
+    <input type="password" id="senha2" placeholder="Confirmar senha" />
+
+    <button onclick="redefinir()">Redefinir senha</button>
+  </div>
+
+  <script>
+    const API = "http://localhost:8000";
+    const alerta = document.getElementById("alerta");
+
+    function mostrar(msg, tipo="error"){
+      alerta.className = `alert show ${tipo}`;
+      alerta.textContent = msg;
+    }
+
+    function getToken(){
+      const url = new URL(window.location.href);
+      return url.searchParams.get("token");
+    }
+
+    async function redefinir(){
+      const senha = document.getElementById("senha").value;
+      const senha2 = document.getElementById("senha2").value;
+      const token = getToken();
+
+      if(!token){
+        mostrar("Token inválido.");
+        return;
+      }
+
+      if(!senha || senha.length < 4){
+        mostrar("Senha muito curta.");
+        return;
+      }
+
+      if(senha !== senha2){
+        mostrar("As senhas não coincidem.");
+        return;
+      }
+
+      try{
+        const resp = await fetch(`${API}/auth/redefinir-senha`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ token, senha })
+        });
+
+        const data = await resp.json();
+
+        if(!resp.ok){
+          throw new Error(data.detail || "Erro ao redefinir senha.");
+        }
+
+        mostrar("Senha redefinida com sucesso!", "ok");
+
+        setTimeout(() => {
+          window.location.href = "/login.html";
+        }, 1200);
+
+      }catch(err){
+        mostrar(err.message);
+      }
+    }
+  </script>
+</body>
+</html>

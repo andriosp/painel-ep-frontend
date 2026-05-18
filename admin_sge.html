@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin • Planejamento</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow: 0 10px 24px rgba(15,23,42,.08);
+      --radius:14px;
+      --radius-sm:12px;
+      --brand:#2563eb;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container{
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 12px 18px 28px;
+    }
+
+    .topnav{
+      display:flex;
+      gap:10px;
+      padding:4px 0 10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .navlink{
+      text-decoration:none;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 13px;
+      padding:8px 12px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+    }
+    .navlink.active{
+      color: var(--text);
+      border-color: rgba(37,99,235,.35);
+      background: rgba(37,99,235,.08);
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin: 4px 0 10px;
+      flex-wrap:wrap;
+    }
+
+    .title{
+      margin: 6px 0 6px;
+      font-size: 28px;
+      letter-spacing: -.2px;
+    }
+
+    .subtitle{
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 850;
+    }
+
+    .panel{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      margin-bottom: 18px;
+    }
+
+    .filters{
+      display:flex;
+      gap:12px;
+      align-items:flex-end;
+      flex-wrap:wrap;
+    }
+    .field{
+      flex: 1;
+      min-width: 260px;
+    }
+    .field.xs{
+      flex: 0 0 120px;
+      min-width: 120px;
+      max-width: 120px;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color: var(--muted);
+      margin-bottom:8px;
+      font-weight: 800;
+    }
+    input{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 10px;
+      font-size: 13px;
+      background: #fff;
+      outline:none;
+    }
+    input:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    button{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 850;
+      font-size: 13px;
+      cursor:pointer;
+    }
+    .btn-primary{
+      background: var(--brand);
+      border-color: rgba(37,99,235,.35);
+      color:#fff;
+    }
+
+    .status{
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 12px;
+      min-height: 16px;
+    }
+
+    .result-box{
+      margin-top:12px;
+      padding:14px 16px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#f8fafc;
+      line-height:1.5;
+    }
+    .result-box strong{
+      display:block;
+      margin-bottom:6px;
+      color: var(--text);
+    }
+    .result-box.ok{
+      border-color: rgba(22,163,74,.25);
+      background: rgba(22,163,74,.06);
+    }
+    .result-box.info{
+      border-color: rgba(37,99,235,.25);
+      background: rgba(37,99,235,.05);
+    }
+  </style>
+</head>
+<body>
+
+  <script>
+    (async function validarSessao(){
+      try{
+        const resp = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include"
+        });
+    
+        if(!resp.ok){
+          window.location.href = "/login.html";
+        }
+      }catch(e){
+        window.location.href = "/login.html";
+      }
+    })();
+    </script>
+
+  <div class="container">
+    <div class="topnav">
+      <a class="navlink" href="index.html">Dashboard</a>
+      <a class="navlink" href="programas.html">Programas</a>
+      <a class="navlink" href="performance.html">Performance</a>
+      <a class="navlink" href="modalidades.html">Modalidades</a>
+      <a class="navlink" href="unidades.html">Unidades</a>
+      <a class="navlink" href="sge_turmas.html">Turmas</a>
+      <a class="navlink active" href="admin_sge.html">Admin</a>
+      <button onclick="logout()" style="margin-left:auto;">Sair</button>
+    </div>
+
+    <div class="header">
+      <div>
+        <div class="badge">Admin SGE</div>
+        <h1 class="title">Importação de Planejamento</h1>
+        <div class="subtitle">Carga e processamento do arquivo de planejamento anual</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="badge">Planejamento</div>
+      <h2 style="margin:8px 0 12px;">Importar Planejamento</h2>
+
+      <div class="filters">
+        <div class="field">
+          <label for="arquivoPlanejamento">Arquivo Excel</label>
+          <input type="file" id="arquivoPlanejamento" accept=".xlsx,.xls" />
+        </div>
+
+        <div class="field xs">
+          <label for="anoPlanejamento">Ano</label>
+          <input type="number" id="anoPlanejamento" value="2026" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-primary" onclick="importarPlanejamento()">Importar planejamento</button>
+        <button type="button" onclick="processarPlanejamento()">Processar lote</button>
+      </div>
+
+      <div id="resultadoPlanejamento" class="status"></div>
+    </div>
+
+    <div class="panel">
+      <div class="badge">Data</div>
+      <h2 style="margin:8px 0 12px;">Importar Data</h2>
+    
+      <div class="filters">
+        <div class="field">
+          <label for="arquivoData">Arquivo Excel</label>
+          <input type="file" id="arquivoData" accept=".xlsx,.xls" />
+        </div>
+      </div>
+    
+      <div class="actions" style="justify-content:flex-start;">
+        <button type="button" class="btn-primary" onclick="importarData()">Importar data</button>
+        <button type="button" onclick="processarData()">Processar lote</button>
+      </div>
+    
+      <div id="resultadoData" class="status" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="badge">Matrículas</div>
+      <h2 style="margin:8px 0 12px;">Importar Matrículas Realizadas</h2>
+    
+      <div class="filters">
+        <div class="field">
+          <label for="arquivoMatriculas">Arquivo Excel</label>
+          <input type="file" id="arquivoMatriculas" accept=".xlsx,.xls" />
+        </div>
+    
+        <div class="field xs">
+          <label for="anoMatriculas">Ano</label>
+          <input type="number" id="anoMatriculas" value="2026" />
+        </div>
+      </div>
+    
+      <div class="actions" style="justify-content:flex-start;">
+        <button type="button" class="btn-primary" onclick="importarMatriculas()">Importar matrículas</button>
+        <button type="button" onclick="processarMatriculas()">Processar lote</button>
+      </div>
+    
+      <div id="resultadoMatriculas" class="status" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="badge">Receita</div>
+      <h2 style="margin:8px 0 12px;">Importar Receita Realizada</h2>
+    
+      <div class="filters">
+        <div class="field">
+          <label for="arquivoReceita">Arquivo Excel</label>
+          <input type="file" id="arquivoReceita" accept=".xlsx,.xls" />
+        </div>
+    
+        <div class="field xs">
+          <label for="anoReceita">Ano</label>
+          <input type="number" id="anoReceita" value="2026" />
+        </div>
+      </div>
+    
+      <div class="actions" style="justify-content:flex-start;">
+        <button type="button" class="btn-primary" onclick="importarReceita()">Importar receita</button>
+        <button type="button" onclick="processarReceita()">Processar lote</button>
+      </div>
+    
+      <div id="resultadoReceita" class="status" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="badge">Hora-Aluno</div>
+      <h2 style="margin:8px 0 12px;">Importar Hora-Aluno Realizado</h2>
+    
+      <div class="filters">
+        <div class="field">
+          <label for="arquivoHoraAluno">Arquivo Excel</label>
+          <input type="file" id="arquivoHoraAluno" accept=".xlsx,.xls" />
+        </div>
+    
+        <div class="field xs">
+          <label for="anoHoraAluno">Ano</label>
+          <input type="number" id="anoHoraAluno" value="2026" />
+        </div>
+      </div>
+    
+      <div class="actions" style="justify-content:flex-start;">
+        <button type="button" class="btn-primary" onclick="importarHoraAluno()">Importar hora-aluno</button>
+        <button type="button" onclick="processarHoraAluno()">Processar lote</button>
+      </div>
+    
+      <div id="resultadoHoraAluno" class="status" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="badge">Cotas</div>
+      <h2 style="margin:8px 0 12px;">Importar Cotas</h2>
+    
+      <div class="filters">
+        <div class="field">
+          <label for="arquivoCotas">Arquivo Excel</label>
+          <input type="file" id="arquivoCotas" accept=".xlsx,.xls" />
+        </div>
+      </div>
+    
+      <div class="actions" style="justify-content:flex-start;">
+        <button type="button" class="btn-primary" onclick="importarCotas()">Importar cotas</button>
+        <button type="button" onclick="processarCotas()">Processar lote</button>
+      </div>
+    
+      <div id="resultadoCotas" class="status" style="margin-top:12px;"></div>
+    </div>
+    
+  </div>
+
+<script>
+  const API = "http://localhost:8000";
+
+  async function importarPlanejamento() {
+    const input = document.getElementById("arquivoPlanejamento");
+    const ano = document.getElementById("anoPlanejamento").value || 2026;
+
+    if (!input.files.length) {
+      alert("Selecione o arquivo de planejamento.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("arquivo", input.files[0]);
+
+    const resp = await fetch(`${API}/importacoes/planejamento?ano_referencia=${ano}`, {
+      method: "POST",
+      body: formData
+    });
+
+    if (!resp.ok) {
+      let msg = "Erro ao importar planejamento.";
+      try {
+        const erro = await resp.json();
+        if (erro?.detail) msg = erro.detail;
+      } catch {}
+      alert(msg);
+      return;
+    }
+
+    const data = await resp.json();
+
+    document.getElementById("resultadoPlanejamento").innerHTML = `
+      <div class="result-box ok">
+        <strong>Importação concluída</strong>
+        Lote ID: ${data.lote_id}<br>
+        Linhas importadas: ${data.linhas_importadas}<br>
+        Válidas: ${data.validas}<br>
+        Inválidas: ${data.invalidas}
+      </div>
+    `;
+
+    window._lotePlanejamento = data.lote_id;
+    console.log("Lote planejamento salvo:", window._lotePlanejamento);
+    localStorage.setItem("lotePlanejamento", data.lote_id);
+  }
+
+  async function processarPlanejamento() {
+    const lote = window._lotePlanejamento || localStorage.getItem("lotePlanejamento");
+
+    console.log("Tentando processar planejamento. Lote:", lote);
+
+    if (!lote) {
+      alert("Importe um arquivo primeiro.");
+      return;
+    }
+
+    const out = document.getElementById("resultadoPlanejamento");
+
+    try {
+      out.innerHTML += `
+        <div class="result-box info">
+          <strong>Processando lote...</strong>
+          Lote ID: ${lote}
+        </div>
+      `;
+
+      const resp = await fetch(`${API}/importacoes/planejamento/processar/${lote}`, {
+        method: "POST"
+      });
+
+      console.log("Resposta processamento planejamento:", resp.status);
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(data.detail || "Erro ao processar lote.");
+      }
+
+      out.innerHTML += `
+        <div class="result-box info">
+          <strong>Processamento concluído</strong>
+          Lote ID: ${lote}<br>
+          Linhas avaliadas: ${data.linhas_avaliadas}
+        </div>
+      `;
+    } catch (e) {
+      console.error("Erro ao processar planejamento:", e);
+      out.innerHTML += `
+        <div class="result-box">
+          <strong>Erro no processamento</strong>
+          ${e.message || e}
+        </div>
+      `;
+    }
+  }
+
+  async function importarData(){
+    const out = document.getElementById("resultadoData");
+    const fileInput = document.getElementById("arquivoData");
+    const file = fileInput?.files?.[0];
+
+    if(!file){
+      out.textContent = "Selecione o arquivo data.xlsx antes de importar.";
+      return;
+    }
+
+    try{
+      out.textContent = "Importando arquivo...";
+      const fd = new FormData();
+      fd.append("arquivo", file);
+
+      const resp = await fetch(`${API}/importacoes/data`, {
+        method: "POST",
+        body: fd
+      });
+
+      const json = await resp.json();
+
+      if(!resp.ok){
+        throw new Error(json.detail || "Erro ao importar arquivo.");
+      }
+
+      out.textContent = `Importação concluída. Lote ID: ${json.lote_id}`;
+    }catch(e){
+      console.error(e);
+      out.textContent = `Erro: ${e.message || e}`;
+    }
+  }
+
+  async function processarData(){
+    const out = document.getElementById("resultadoData");
+    const texto = out.textContent || "";
+    const match = texto.match(/Lote ID:\s*(\d+)/i);
+
+    if(!match){
+      out.textContent = "Importe um arquivo primeiro para gerar o lote.";
+      return;
+    }
+
+    const loteId = match[1];
+
+    try{
+      out.textContent = `Processando lote ${loteId}...`;
+
+      const resp = await fetch(`${API}/importacoes/data/processar/${loteId}`, {
+        method: "POST"
+      });
+
+      const json = await resp.json();
+
+      if(!resp.ok){
+        throw new Error(json.detail || "Erro ao processar lote.");
+      }
+
+      out.textContent = `Lote ${loteId} processado com sucesso.`;
+    }catch(e){
+      console.error(e);
+      out.textContent = `Erro: ${e.message || e}`;
+    }
+  }
+
+  async function importarMatriculas() {
+    const input = document.getElementById("arquivoMatriculas");
+    const ano = document.getElementById("anoMatriculas").value || 2026;
+    const out = document.getElementById("resultadoMatriculas");
+
+    if (!input.files.length) {
+      out.textContent = "Selecione o arquivo de matrículas.";
+      return;
+    }
+
+    try {
+      out.textContent = "Importando arquivo...";
+      const formData = new FormData();
+      formData.append("arquivo", input.files[0]);
+
+      const resp = await fetch(`${API}/importacoes/matriculas-realizadas?ano_referencia=${ano}`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(data.detail || "Erro ao importar matrículas.");
+      }
+
+      window._loteMatriculas = data.lote_id;
+      localStorage.setItem("loteMatriculas", data.lote_id);
+
+      out.innerHTML = `
+        <div class="result-box ok">
+          <strong>Importação concluída</strong>
+          Lote ID: ${data.lote_id}<br>
+          Linhas importadas: ${data.linhas_importadas}<br>
+          Válidas: ${data.validas}<br>
+          Inválidas: ${data.invalidas}
+        </div>
+      `;
+    } catch (e) {
+      console.error(e);
+      out.textContent = `Erro: ${e.message || e}`;
+    }
+  }
+
+
+  async function processarMatriculas() {
+    const lote = window._loteMatriculas || localStorage.getItem("loteMatriculas");
+    const out = document.getElementById("resultadoMatriculas");
+
+    if (!lote) {
+      out.textContent = "Importe um arquivo primeiro.";
+      return;
+    }
+
+    try {
+      let totalAvaliado = 0;
+      let totalAtualizadas = 0;
+      let totalAmbiguas = 0;
+      let totalErros = 0;
+      let rodada = 0;
+      let continuar = true;
+
+      out.innerHTML = `
+        <div class="result-box info">
+          <strong>Iniciando processamento...</strong>
+          Lote ID: ${lote}
+        </div>
+      `;
+
+      while (continuar) {
+        rodada += 1;
+
+        const resp = await fetch(`${API}/importacoes/matriculas-realizadas/processar/${lote}`, {
+          method: "POST"
+        });
+
+        const data = await resp.json();
+
+        if (!resp.ok) {
+          throw new Error(data.detail || "Erro ao processar lote.");
+        }
+
+        const linhas = Number(data.linhas_avaliadas || 0);
+        const atualizadas = Number(data.atualizadas || 0);
+        const ambiguas = Number(data.ambiguas || 0);
+        const erros = Number(data.erros || 0);
+
+        totalAvaliado += linhas;
+        totalAtualizadas += atualizadas;
+        totalAmbiguas += ambiguas;
+        totalErros += erros;
+
+        out.innerHTML = `
+          <div class="result-box info">
+            <strong>Processando lote...</strong>
+            Lote ID: ${lote}<br>
+            Rodada: ${rodada}<br>
+            Linhas avaliadas: ${totalAvaliado}<br>
+            Atualizadas: ${totalAtualizadas}<br>
+            Ambíguas: ${totalAmbiguas}<br>
+            Erros: ${totalErros}
+          </div>
+        `;
+
+        if (linhas === 0) {
+          continuar = false;
+        }
+      }
+
+      out.innerHTML = `
+        <div class="result-box ok">
+          <strong>Processamento concluído</strong>
+          Lote ID: ${lote}<br>
+          Linhas avaliadas: ${totalAvaliado}<br>
+          Atualizadas: ${totalAtualizadas}<br>
+          Ambíguas: ${totalAmbiguas}<br>
+          Erros: ${totalErros}
+        </div>
+      `;
+    } catch (e) {
+      console.error(e);
+      out.innerHTML = `
+        <div class="result-box">
+          <strong>Erro no processamento</strong>
+          ${e.message || e}
+        </div>
+      `;
+    }
+  }
+
+  async function importarReceita() {
+    const input = document.getElementById("arquivoReceita");
+    const ano = document.getElementById("anoReceita").value || 2026;
+    const out = document.getElementById("resultadoReceita");
+
+    if (!input.files.length) {
+      out.textContent = "Selecione o arquivo de receita.";
+      return;
+    }
+
+    try {
+      out.textContent = "Importando arquivo...";
+      const formData = new FormData();
+      formData.append("arquivo", input.files[0]);
+
+      const resp = await fetch(`${API}/importacoes/receita?ano_referencia=${ano}`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(data.detail || "Erro ao importar receita.");
+      }
+
+      window._loteReceita = data.lote_id;
+
+      out.innerHTML = `
+        <div class="result-box ok">
+          <strong>Importação concluída</strong>
+          Lote ID: ${data.lote_id}<br>
+          Linhas importadas: ${data.linhas_importadas}<br>
+          Válidas: ${data.validas}<br>
+          Inválidas: ${data.invalidas}
+        </div>
+      `;
+    } catch (e) {
+      console.error(e);
+      out.textContent = `Erro: ${e.message || e}`;
+    }
+  }
+
+  async function processarReceita() {
+    const lote = window._loteReceita;
+    const out = document.getElementById("resultadoReceita");
+
+    if (!lote) {
+      out.textContent = "Importe um arquivo primeiro.";
+      return;
+    }
+
+    try {
+      let totalAvaliado = 0;
+      let totalAtualizadas = 0;
+      let totalAmbiguas = 0;
+      let totalErros = 0;
+      let rodada = 0;
+      let continuar = true;
+
+      out.innerHTML = `
+        <div class="result-box info">
+          <strong>Iniciando processamento...</strong>
+          Lote ID: ${lote}
+        </div>
+      `;
+
+      while (continuar) {
+        rodada += 1;
+
+        const resp = await fetch(`${API}/importacoes/receita/processar/${lote}`, {
+          method: "POST"
+        });
+
+        const data = await resp.json();
+
+        if (!resp.ok) {
+          throw new Error(data.detail || "Erro ao processar lote.");
+        }
+
+        const linhas = Number(data.linhas_avaliadas || 0);
+        const atualizadas = Number(data.atualizadas || 0);
+        const ambiguas = Number(data.ambiguas || 0);
+        const erros = Number(data.erros || 0);
+
+        totalAvaliado += linhas;
+        totalAtualizadas += atualizadas;
+        totalAmbiguas += ambiguas;
+        totalErros += erros;
+
+        out.innerHTML = `
+          <div class="result-box info">
+            <strong>Processando lote...</strong>
+            Lote ID: ${lote}<br>
+            Rodadas executadas: ${rodada}<br>
+            Linhas avaliadas nesta rodada: ${linhas}<br>
+            Atualizadas nesta rodada: ${atualizadas}<br>
+            Ambíguas nesta rodada: ${ambiguas}<br>
+            Erros nesta rodada: ${erros}<br><br>
+
+            <strong>Acumulado</strong>
+            Linhas avaliadas: ${totalAvaliado}<br>
+            Atualizadas: ${totalAtualizadas}<br>
+            Ambíguas: ${totalAmbiguas}<br>
+            Erros: ${totalErros}
+          </div>
+        `;
+
+        if (linhas === 0) {
+          continuar = false;
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
+      }
+
+      out.innerHTML += `
+        <div class="result-box ok">
+          <strong>Processamento concluído</strong>
+          Lote ID: ${lote}<br>
+          Total de linhas avaliadas: ${totalAvaliado}<br>
+          Total atualizadas: ${totalAtualizadas}<br>
+          Total ambíguas: ${totalAmbiguas}<br>
+          Total erros: ${totalErros}
+        </div>
+      `;
+    } catch (e) {
+      console.error(e);
+      out.innerHTML += `
+        <div class="result-box">
+          <strong>Erro no processamento</strong>
+          ${e.message || e}
+        </div>
+      `;
+    }
+  }
+
+  async function importarHoraAluno() {
+    const input = document.getElementById("arquivoHoraAluno");
+    const ano = document.getElementById("anoHoraAluno").value || 2026;
+    const out = document.getElementById("resultadoHoraAluno");
+
+    if (!input.files.length) {
+      out.textContent = "Selecione o arquivo de hora-aluno.";
+      return;
+    }
+
+    try {
+      out.textContent = "Importando arquivo...";
+      const formData = new FormData();
+      formData.append("arquivo", input.files[0]);
+
+      const resp = await fetch(`${API}/importacoes/hora-aluno?ano_referencia=${ano}`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(data.detail || "Erro ao importar hora-aluno.");
+      }
+
+      window._loteHoraAluno = data.lote_id;
+
+      out.innerHTML = `
+        <div class="result-box ok">
+          <strong>Importação concluída</strong>
+          Lote ID: ${data.lote_id}<br>
+          Linhas importadas: ${data.linhas_importadas}<br>
+          Válidas: ${data.validas}<br>
+          Inválidas: ${data.invalidas}
+        </div>
+      `;
+    } catch (e) {
+      console.error(e);
+      out.textContent = `Erro: ${e.message || e}`;
+    }
+  }
+
+  async function processarHoraAluno() {
+    const lote = window._loteHoraAluno;
+    const out = document.getElementById("resultadoHoraAluno");
+
+    if (!lote) {
+      out.textContent = "Importe um arquivo primeiro.";
+      return;
+    }
+
+    try {
+      let totalAvaliado = 0;
+      let totalAtualizadas = 0;
+      let totalAmbiguas = 0;
+      let totalErros = 0;
+      let rodada = 0;
+      let continuar = true;
+
+      out.innerHTML = `
+        <div class="result-box info">
+          <strong>Iniciando processamento...</strong>
+          Lote ID: ${lote}
+        </div>
+      `;
+
+      while (continuar) {
+        rodada += 1;
+
+        const resp = await fetch(`${API}/importacoes/hora-aluno/processar/${lote}`, {
+          method: "POST"
+        });
+
+        const data = await resp.json();
+
+        if (!resp.ok) {
+          throw new Error(data.detail || "Erro ao processar lote.");
+        }
+
+        const linhas = Number(data.linhas_avaliadas || 0);
+        const atualizadas = Number(data.atualizadas || 0);
+        const ambiguas = Number(data.ambiguas || 0);
+        const erros = Number(data.erros || 0);
+
+        totalAvaliado += linhas;
+        totalAtualizadas += atualizadas;
+        totalAmbiguas += ambiguas;
+        totalErros += erros;
+
+        out.innerHTML = `
+          <div class="result-box info">
+            <strong>Processando lote...</strong>
+            Lote ID: ${lote}<br>
+            Rodadas executadas: ${rodada}<br>
+            Linhas avaliadas nesta rodada: ${linhas}<br>
+            Atualizadas nesta rodada: ${atualizadas}<br>
+            Ambíguas nesta rodada: ${ambiguas}<br>
+            Erros nesta rodada: ${erros}<br><br>
+
+            <strong>Acumulado</strong>
+            Linhas avaliadas: ${totalAvaliado}<br>
+            Atualizadas: ${totalAtualizadas}<br>
+            Ambíguas: ${totalAmbiguas}<br>
+            Erros: ${totalErros}
+          </div>
+        `;
+
+        if (linhas === 0) {
+          continuar = false;
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
+      }
+
+      out.innerHTML += `
+        <div class="result-box ok">
+          <strong>Processamento concluído</strong>
+          Lote ID: ${lote}<br>
+          Total de linhas avaliadas: ${totalAvaliado}<br>
+          Total atualizadas: ${totalAtualizadas}<br>
+          Total ambíguas: ${totalAmbiguas}<br>
+          Total erros: ${totalErros}
+        </div>
+      `;
+    } catch (e) {
+      console.error(e);
+      out.innerHTML += `
+        <div class="result-box">
+          <strong>Erro no processamento</strong>
+          ${e.message || e}
+        </div>
+      `;
+    }
+  }
+
+  async function importarCotas() {
+    const input = document.getElementById("arquivoCotas");
+    const out = document.getElementById("resultadoCotas");
+
+    if (!input.files.length) {
+      out.textContent = "Selecione o arquivo cotas.xlsx.";
+      return;
+    }
+
+    try {
+      out.textContent = "Importando arquivo...";
+
+      const formData = new FormData();
+      formData.append("arquivo", input.files[0]);
+
+      const resp = await fetch(`${API}/importacoes/cotas`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(data.detail || "Erro ao importar cotas.");
+      }
+
+      window._loteCotas = data.lote_id;
+      localStorage.setItem("loteCotas", data.lote_id);
+
+      out.innerHTML = `
+        <div class="result-box ok">
+          <strong>Importação concluída</strong>
+          Lote ID: ${data.lote_id}<br>
+          Linhas importadas: ${data.linhas_importadas}<br>
+          Válidas: ${data.validas}<br>
+          Inválidas: ${data.invalidas}
+        </div>
+      `;
+    } catch (e) {
+      console.error(e);
+      out.textContent = `Erro: ${e.message || e}`;
+    }
+  }
+
+  async function processarCotas() {
+    const lote = window._loteCotas || localStorage.getItem("loteCotas");
+    const out = document.getElementById("resultadoCotas");
+
+    if (!lote) {
+      out.textContent = "Importe um arquivo primeiro.";
+      return;
+    }
+
+    try {
+      out.innerHTML += `
+        <div class="result-box info">
+          <strong>Processando lote...</strong>
+          Lote ID: ${lote}
+        </div>
+      `;
+
+      const resp = await fetch(`${API}/importacoes/cotas/processar/${lote}`, {
+        method: "POST"
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        throw new Error(data.detail || "Erro ao processar cotas.");
+      }
+
+      out.innerHTML += `
+        <div class="result-box ok">
+          <strong>Processamento concluído</strong>
+          Lote ID: ${data.lote_id}<br>
+          Processadas: ${data.processadas}
+        </div>
+      `;
+    } catch (e) {
+      console.error(e);
+      out.innerHTML += `
+        <div class="result-box">
+          <strong>Erro no processamento</strong>
+          ${e.message || e}
+        </div>
+      `;
+    }
+  }
+
+  async function logout(){
+      try{
+        await fetch("http://localhost:8000/auth/logout", {
+          method: "POST",
+          credentials: "include"
+        });
+      } catch(e) {}
+
+      window.location.href = "/login.html";
+    }
+
+</script>
+</body>
+</html>

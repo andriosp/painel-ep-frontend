@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Login • Painel Educação Profissional</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow: 0 10px 24px rgba(15,23,42,.08);
+      --radius:14px;
+      --radius-sm:12px;
+
+      --brand:#2563eb;
+      --brand-dark:#1d4ed8;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.08), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(37,99,235,.06), transparent 24%),
+        var(--bg);
+      color: var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+
+    .auth-shell{
+        width:min(420px, 100%);
+        display:flex;
+        justify-content:center;
+    }
+
+    .hero,
+    .login-card{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero{
+      padding:32px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:580px;
+      background:
+        linear-gradient(135deg, rgba(37,99,235,.06), rgba(37,99,235,.01)),
+        #fff;
+    }
+
+    .brand-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:fit-content;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:#fff;
+      color: var(--muted);
+      font-size:12px;
+      box-shadow: 0 6px 14px rgba(15,23,42,.06);
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+    }
+
+    .hero-copy h1{
+      margin:18px 0 10px;
+      font-size:38px;
+      line-height:1.08;
+      letter-spacing:.2px;
+    }
+
+    .hero-copy p{
+      margin:0;
+      font-size:15px;
+      line-height:1.65;
+      color: var(--muted);
+      max-width:560px;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:12px;
+      margin-top:28px;
+    }
+
+    .mini-card{
+      border:1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background:#fff;
+      padding:14px;
+    }
+
+    .mini-card .k{
+      font-size:12px;
+      color: var(--muted);
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.3px;
+      margin-bottom:8px;
+    }
+
+    .mini-card .v{
+      font-size:16px;
+      font-weight:800;
+      line-height:1.35;
+    }
+
+    .hero-footer{
+      margin-top:22px;
+      padding-top:18px;
+      border-top:1px solid #eef2f7;
+      color: var(--muted);
+      font-size:13px;
+    }
+
+    .login-card{
+      padding:28px;
+      width:100%;
+    }
+
+    .login-head{
+      margin-bottom:18px;
+    }
+
+    .login-head h2{
+      margin:0 0 8px;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+
+    .login-head p{
+      margin:0;
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .alert{
+      display:none;
+      margin-bottom:14px;
+      padding:12px 14px;
+      border-radius:12px;
+      font-size:13px;
+      line-height:1.45;
+      border:1px solid transparent;
+    }
+
+    .alert.show{ display:block; }
+    .alert.error{
+      background:#fff5f5;
+      border-color:#fecaca;
+      color:#b91c1c;
+    }
+    .alert.ok{
+      background:#f0fdf4;
+      border-color:#bbf7d0;
+      color:#166534;
+    }
+
+    .field{
+      margin-bottom:14px;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color: var(--muted);
+      margin-bottom:8px;
+      font-weight:700;
+    }
+
+    input{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding:12px 14px;
+      background:#fff;
+      outline:none;
+      height:46px;
+      font-size:14px;
+      color: var(--text);
+    }
+
+    input:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    .password-wrap{
+      position:relative;
+    }
+
+    .toggle-pass{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:1px solid transparent;
+      background:transparent;
+      color: var(--muted);
+      cursor:pointer;
+      font-size:12px;
+      font-weight:700;
+      padding:6px 8px;
+      border-radius:10px;
+    }
+
+    .toggle-pass:hover{
+      background:#f8fafc;
+      border-color:#e2e8f0;
+    }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin:4px 0 18px;
+      flex-wrap:wrap;
+    }
+
+    .checkbox{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color: var(--muted);
+      font-size:13px;
+    }
+
+    .checkbox input{
+      width:auto;
+      height:auto;
+      margin:0;
+    }
+
+    .link{
+      color: var(--brand);
+      text-decoration:none;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .link:hover{
+      text-decoration:underline;
+    }
+
+    .btn-primary{
+      width:100%;
+      appearance:none;
+      border:1px solid rgba(37,99,235,.65);
+      background: var(--brand);
+      color:#fff;
+      padding:12px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:750;
+      font-size:14px;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .btn-primary:hover{
+      background: var(--brand-dark);
+    }
+
+    .btn-primary:active{
+      transform:translateY(1px);
+    }
+
+    .btn-primary[disabled]{
+      opacity:.7;
+      cursor:wait;
+    }
+
+    .support{
+      margin-top:16px;
+      padding-top:16px;
+      border-top:1px solid #eef2f7;
+      color: var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    @media (max-width: 980px){
+      .auth-shell{
+        grid-template-columns: 1fr;
+      }
+
+      .hero{
+        min-height:auto;
+      }
+
+      .hero-copy h1{
+        font-size:30px;
+      }
+
+      .hero-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-shell">
+
+    <section class="login-card">
+      <div class="login-head">
+        <h2>Entrar</h2>
+        <p>Informe suas credenciais para acessar o sistema.</p>
+      </div>
+
+      <div id="alerta" class="alert error"></div>
+
+      <form id="formLogin">
+        <div class="field">
+          <label for="usuario">Usuário</label>
+          <input id="usuario" name="usuario" type="text" autocomplete="username" placeholder="Seu usuário" required />
+        </div>
+
+        <div class="field">
+          <label for="senha">Senha</label>
+          <div class="password-wrap">
+            <input id="senha" name="senha" type="password" autocomplete="current-password" placeholder="Sua senha" required />
+            <button type="button" class="toggle-pass" id="btnToggleSenha">Mostrar</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="checkbox">
+            <input type="checkbox" id="lembrar" />
+            Manter conectado
+          </label>
+
+          <a class="link" href="/esqueci_senha.html">Esqueci minha senha</a>
+        </div>
+
+        <button type="submit" class="btn-primary" id="btnEntrar">Entrar no sistema</button>
+      </form>
+
+      <div class="support">
+        Em caso de dificuldade de acesso, contate o admin do sistema.
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const API = "http://localhost:8000";
+
+    const alerta = document.getElementById("alerta");
+    const form = document.getElementById("formLogin");
+    const btnEntrar = document.getElementById("btnEntrar");
+    const btnToggleSenha = document.getElementById("btnToggleSenha");
+    const senha = document.getElementById("senha");
+
+    function mostrarAlerta(msg, tipo = "error"){
+        alerta.className = `alert show ${tipo}`;
+        alerta.textContent = msg;
+    }
+
+    function esconderAlerta(){
+        alerta.className = "alert";
+        alerta.textContent = "";
+    }
+
+    btnToggleSenha.addEventListener("click", () => {
+        const visivel = senha.type === "text";
+        senha.type = visivel ? "password" : "text";
+        btnToggleSenha.textContent = visivel ? "Mostrar" : "Ocultar";
+    });
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        esconderAlerta();
+
+        const usuario = document.getElementById("usuario").value.trim();
+        const senhaValor = document.getElementById("senha").value;
+        const lembrar = document.getElementById("lembrar").checked;
+
+        if(!usuario || !senhaValor){
+        mostrarAlerta("Preencha usuário e senha.");
+        return;
+        }
+
+        btnEntrar.disabled = true;
+        btnEntrar.textContent = "Entrando...";
+
+        try{
+        const resp = await fetch(`${API}/auth/login`, {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+            usuario,
+            senha: senhaValor,
+            lembrar
+            })
+        });
+
+        const data = await resp.json().catch(() => ({}));
+
+        if(!resp.ok){
+            throw new Error(data.detail || "Não foi possível autenticar.");
+        }
+
+        mostrarAlerta("Login realizado com sucesso. Redirecionando...", "ok");
+
+        if(data.deve_trocar_senha){
+            window.location.href = "/alterar_senha.html";
+            return;
+        }
+
+        setTimeout(() => {
+            window.location.href = "/index.html";
+        }, 500);
+        }catch(err){
+        console.error(err);
+        mostrarAlerta(err.message || "Erro ao tentar entrar.");
+        }finally{
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = "Entrar no sistema";
+        }
+    });
+</script>
+</body>
+</html>

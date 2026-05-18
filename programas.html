@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Painel • Programas</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --shadow: 0 10px 24px rgba(15,23,42,.08);
+      --radius:14px;
+      --radius-sm:12px;
+
+      --brand:#2563eb;  /* azul executivo */
+      --ok:#16a34a;
+      --warn:#f59e0b;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container{
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 18px 18px 36px;
+    }
+
+    .topnav{
+      display:flex;
+      gap:10px;
+      padding:10px 0 14px;
+      align-items:center;
+    }
+    .navlink{
+      text-decoration:none;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 13px;
+      padding:8px 12px;
+      border-radius: 12px;
+      border:1px solid transparent;
+    }
+    .navlink:hover{
+      background:#fff;
+      border-color: var(--border);
+    }
+    .navlink.active{
+      background: rgba(37,99,235,.10);
+      color: var(--text);
+      border-color: rgba(37,99,235,.25);
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .title h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.2px;
+    }
+    .title p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size:13px;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      font-size:12px;
+      box-shadow: 0 6px 14px rgba(15,23,42,.06);
+      white-space:nowrap;
+      max-width: 55vw;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+      flex: 0 0 auto;
+    }
+
+    .panel{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .filters{
+      display:grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr) auto;
+      gap:18px;
+      align-items:start;
+    }
+
+    .field{ flex:1; min-width: 320px; }
+
+    .field.sm{
+      flex:0 0 160px;
+      min-width:160px;
+      max-width:160px;
+      align-self:flex-end;
+    }
+
+    .field select{
+      height: 150px;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color: var(--muted);
+      margin-bottom:8px;
+    }
+    select{
+      width:100%;
+      height: 150px;
+      border:1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding:10px;
+      background:#fff;
+      outline:none;
+    }
+    select:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+
+    .actions{
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-start;
+      height: calc(150px + 22px);
+      padding:0;
+      margin: 0;
+    }
+
+    button{
+      appearance:none;
+      border:1px solid var(--border);
+      background:#fff;
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-weight: 650;
+      font-size:13px;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+    }
+    button:hover{ background:#f8fafc; border-color:#dbe3ef; }
+    button:active{ transform: translateY(1px); }
+
+    .btn-primary{
+      background: var(--brand);
+      color:#fff;
+      border-color: rgba(37,99,235,.65);
+    }
+    .btn-primary:hover{ background:#1d4ed8; }
+
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 1180px){
+      .cards{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px){
+      .cards{ grid-template-columns: 1fr; }
+      .field{ min-width: 100%; }
+    }
+
+    .card{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .card h3{
+      margin:0;
+      font-size:13px;
+      color: var(--muted);
+      font-weight: 750;
+      letter-spacing: .2px;
+    }
+    .big{
+      margin-top: 10px;
+      font-size: 26px;
+      font-weight: 820;
+      letter-spacing: .2px;
+    }
+    .sub{
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .chips{
+      display:flex;
+      gap:8px;
+      margin-top: 12px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .chips::-webkit-scrollbar{ height: 6px; }
+    .chips::-webkit-scrollbar-thumb{ background:#dbe3ef; border-radius:999px; }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background:#fff;
+      font-size:11px;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+
+    .chip.gr{
+      background:#e8f3ff;
+      border:1px solid #b9d7ff;
+      color:#1d4ed8;
+    }
+
+    .chip.gnr{
+      background:#fffbeb;
+      border:1px solid #fde68a;
+      color:#b45309;
+    }
+
+    .chip.pago{
+      background:#ecfdf3;
+      border:1px solid #b7ebc6;
+      color:#15803d;
+    }
+
+    .chip .k{
+      font-weight: 800;
+      color: var(--muted);
+      letter-spacing:.2px;
+    }
+
+    .legend{
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 6px 4px 14px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .legend-item{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-title{
+      margin: 16px 2px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: .35px;
+      text-transform: uppercase;
+    }
+
+    .table-card{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      margin-bottom: 14px;
+    }
+    .table-wrap{ 
+      overflow:hidden;
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      table-layout: auto;
+    }
+
+    table th,
+    table td{
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    thead th{
+      position: sticky;
+      top:0;
+      background: #fbfcfe;
+      border-bottom:1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .2px;
+      padding: 6px 6px;
+      text-align:right;
+      white-space: nowrap;
+      line-height: 1.15;
+    }
+
+    thead th:first-child{ text-align:left; }
+
+    tbody td{
+      border-bottom:1px solid #eef2f7;
+      font-size: 12px;
+      padding: 5px 6px;
+      text-align:right;
+      white-space: nowrap;
+      word-break: break-word;
+      line-height: 1.15;
+    }
+
+    td{
+      font-variant-numeric: tabular-nums;
+    }
+
+    td, th{
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    thead th:first-child,
+    tbody td:first-child{
+      width: 180px;
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: left;
+    }
+
+    tbody tr:nth-child(odd){ background:#fcfdff; }
+    tbody tr:hover{ background: rgba(37,99,235,.06); }
+
+    .status{
+      margin-top: 10px;
+      font-size:12px;
+      color: var(--muted);
+      min-height: 0;
+    }
+
+    @media (max-width: 1366px){
+
+      thead th{
+        font-size: 9px;
+        padding: 5px 5px;
+      }
+
+      tbody td{
+        font-size: 9px;
+        padding: 5px 5px;
+      }
+
+      .table-card{
+        overflow-x: hidden;
+      }
+
+    }
+
+    .topnav{
+      display:flex;
+      gap:10px;
+      padding:10px 0 14px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .topnav-right{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <script>
+    (async function validarSessao(){
+      try{
+        const resp = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include"
+        });
+
+        if(!resp.ok){
+          window.location.href = "/login.html";
+          return;
+        }
+
+        const data = await resp.json();
+
+        // 🔥 AQUI é o que faltava
+        if(data.deve_trocar_senha){
+          window.location.href = "/alterar_senha.html";
+          return;
+        }
+
+      }catch(e){
+        window.location.href = "/login.html";
+      }
+    })();
+  </script>
+
+  <div class="container">
+
+    <nav class="topnav">
+      <a href="index.html" class="navlink">Dashboard</a>
+      <a href="po.html" class="navlink">PO</a>
+      <a href="programas.html" class="navlink active">Programas</a>
+      <a href="performance.html" class="navlink">Performance</a>
+      <a href="modalidades.html" class="navlink">Modalidades</a>
+      <a href="unidades.html" class="navlink">Unidades</a>
+      <a href="sge_turmas.html" class="navlink">Turmas</a>
+      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
+      <a href="relatorio_programa.html" class="navlink">Relatório Executivo</a>
+    
+      <div class="topnav-right">
+        <a href="alterar_senha.html" class="navlink">
+          Alterar senha
+        </a>
+        <div id="usuario-logado" class="badge">
+          <span class="dot"></span>
+          Usuário: —
+        </div>
+    
+        <button onclick="logout()">Sair</button>
+      </div>
+    </nav>
+
+    <div class="header">
+      <div class="title">
+        <h1>Painel • Programas</h1>
+        <p>Visão por programas (com recorte de sub-regiões) • Matrículas, Hora-Aluno, Receita e financiamentos</p>
+      </div>
+      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões • todos os programas</div>
+    </div>
+
+    <div class="panel">
+      <div class="filters">
+
+        <div class="field">
+          <label for="subregioes">Sub-regiões (Ctrl + clique para múltiplas)</label>
+          <select id="subregioes" multiple></select>
+        </div>
+
+        <div class="field">
+          <label for="programas">Programas (Ctrl + clique para múltiplas)</label>
+          <select id="programas" multiple></select>
+          <div class="status" id="status"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" onclick="limparSelecao()">Limpar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Programas Distintos</h3>
+        <div class="big" id="prog-distintos">—</div>
+        <div class="sub">Total de Programas</div>
+      </div>
+
+      <div class="card">
+        <h3>Matrículas</h3>
+        <div class="big" id="mat-total">—</div>
+        <div class="sub">Total consolidado</div>
+        <div class="chips" id="mat-chips"></div>
+      </div>
+
+      <div class="card">
+        <h3>Hora-Aluno</h3>
+        <div class="big" id="ha-total">—</div>
+        <div class="sub">Total consolidado</div>
+        <div class="chips" id="ha-chips"></div>
+      </div>
+
+      <div class="card">
+        <h3>Receita</h3>
+        <div class="big" id="rec-total">—</div>
+        <div class="sub">Total consolidado</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item">
+        <span class="chip gr"><strong>GR</strong></span>
+        <span>Gratuidade Regimental</span>
+      </span>
+      <span class="legend-item">
+        <span class="chip gnr"><strong>GNR</strong></span>
+        <span>Gratuidade Não Regimental</span>
+      </span>
+      <span class="legend-item">
+        <span class="chip pago"><strong>PG</strong></span>
+        <span>Pago</span>
+      </span>
+    </div>
+
+    <div class="section-title" id="titulo-tabela">Por Programa</div>
+    <div class="table-card" id="tbl-programas">
+      <div class="table-wrap">
+        <table id="tabela-programas"></table>
+      </div>
+    </div>
+
+    <div class="table-card" id="tbl-subregioes" style="display:none;">
+      <div class="table-wrap">
+        <table id="tabela-subregioes"></table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const API = "http://localhost:8000";
+
+    function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
+    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" }); }
+    function compact(n) {
+      return Number(n || 0).toLocaleString("pt-BR", {
+        notation: "compact",
+        maximumFractionDigits: 1
+      });
+    }
+
+    function moedaCompacta(n) {
+      return Number(n || 0).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        notation: "compact",
+        maximumFractionDigits: 1
+      });
+    }
+    function pct(parte, total){
+      total = Number(total || 0);
+      parte = Number(parte || 0);
+      if(!total) return 0;
+      return (parte/total)*100;
+    }
+
+    function setStatus(msg){
+      const el = document.getElementById("status");
+      if(el) el.textContent = msg || "";
+    }
+
+    function selecionados(id){
+      const sel = document.getElementById(id);
+      return Array.from(sel.selectedOptions).map(o => o.value).join(",");
+    }
+
+    function atualizarBadgeFiltro() {
+      const badge = document.getElementById("badge-filtro");
+      if (!badge) return;
+
+      const selSub = document.getElementById("subregioes");
+      const selProg = document.getElementById("programas");
+
+      const subs = Array.from(selSub?.selectedOptions || [])
+        .map(o => o.textContent.trim());
+
+      const progs = Array.from(selProg?.selectedOptions || [])
+        .map(o => o.textContent.trim());
+
+      let subTxt = "";
+      if (subs.length) {
+        const resumo = subs.length <= 2
+          ? subs.join(", ")
+          : `${subs.slice(0, 2).join(", ")} +${subs.length - 2}`;
+        subTxt = `Sub-regiões: ${resumo}`;
+      } else {
+        subTxt = "Sub-regiões: todas";
+      }
+
+      let progTxt = "";
+      if (progs.length) {
+        const resumo = progs.length <= 2
+          ? progs.join(", ")
+          : `${progs.slice(0, 2).join(", ")} +${progs.length - 2}`;
+        progTxt = `Programas: ${resumo}`;
+      } else {
+        progTxt = "Programas: todos";
+      }
+
+      badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${progTxt}`;
+    }
+
+    function selecionarTudo(id){
+      const sel = document.getElementById(id);
+      Array.from(sel.options).forEach(o => o.selected = true);
+      atualizarBadgeFiltro();
+    }
+
+    async function limparSelecao(){
+      ["subregioes","programas"].forEach(id => {
+        const sel = document.getElementById(id);
+        Array.from(sel.options).forEach(o => o.selected = false);
+      });
+
+      await carregarSubregioes();
+      await carregarProgramas();
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    }
+
+    async function carregarSubregioes() {
+      const ano = 2026;
+      const res = await fetch(API + `/planejamento/filtros/subregioes?ano=${ano}`);
+      const data = await res.json();
+
+      const sel = document.getElementById("subregioes");
+      sel.innerHTML = "";
+
+      data.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.codigo;
+        opt.textContent = r.nome;
+        sel.appendChild(opt);
+      });
+    }
+
+    async function carregarProgramas() {
+      const subs = selecionados("subregioes");
+
+      const url = API + "/programas/list" + (subs ? "?subregioes=" + encodeURIComponent(subs) : "");
+      const res = await fetch(url);
+      const data = await res.json();
+
+      const sel = document.getElementById("programas");
+      sel.innerHTML = "";
+
+      data.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.codigo;
+        opt.textContent = r.nome;
+        sel.appendChild(opt);
+      });
+    }
+
+    function montarTabela(id, colunas, linhas) {
+      const t = document.getElementById(id);
+      t.innerHTML = "";
+
+      const thead = document.createElement("thead");
+      const trh = document.createElement("tr");
+      colunas.forEach(c => {
+        const th = document.createElement("th");
+        th.textContent = c;
+        trh.appendChild(th);
+      });
+      thead.appendChild(trh);
+
+      const tbody = document.createElement("tbody");
+      linhas.forEach(l => {
+        const tr = document.createElement("tr");
+        colunas.forEach(c => {
+          const td = document.createElement("td");
+          td.textContent = l[c] ?? "";
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+
+      t.appendChild(thead);
+      t.appendChild(tbody);
+    }
+
+    async function carregarCards() {
+      atualizarBadgeFiltro();
+
+      const subs = selecionados("subregioes");
+      const progs = selecionados("programas");
+
+      const qs = new URLSearchParams();
+      if (subs) qs.set("subregioes", subs);
+      if (progs) qs.set("programas", progs);
+
+      const url = API + "/programas/summary" + (qs.toString() ? "?" + qs.toString() : "");
+      const d = await (await fetch(url)).json();
+
+      document.getElementById("prog-distintos").textContent = format(d.programas_distintos || 0);
+
+      document.getElementById("mat-total").textContent = format(d.matriculas?.total || 0);
+      document.getElementById("mat-chips").innerHTML = `
+        <span class="chip gr"><strong>GR</strong> ${format(d.matriculas?.gr || 0)} (${Number(d.matriculas?.gr_pct || 0).toFixed(2)}%)</span>
+        <span class="chip gnr"><strong>GNR</strong> ${format(d.matriculas?.g || 0)} (${Number(d.matriculas?.g_pct || 0).toFixed(2)}%)</span>
+        <span class="chip pago"><strong>PG</strong> ${format(d.matriculas?.p || 0)} (${Number(d.matriculas?.p_pct || 0).toFixed(2)}%)</span>
+      `;
+
+      document.getElementById("ha-total").textContent = format(d.hora_aluno?.total || 0);
+      document.getElementById("ha-chips").innerHTML = `
+        <span class="chip gr"><strong>GR</strong> ${compact(d.hora_aluno?.gr || 0)} (${Number(d.hora_aluno?.gr_pct || 0).toFixed(2)}%)</span>
+        <span class="chip gnr"><strong>GNR</strong> ${compact(d.hora_aluno?.g || 0)} (${Number(d.hora_aluno?.g_pct || 0).toFixed(2)}%)</span>
+        <span class="chip pago"><strong>PG</strong> ${compact(d.hora_aluno?.p || 0)} (${Number(d.hora_aluno?.p_pct || 0).toFixed(2)}%)</span>
+      `;
+
+      document.getElementById("rec-total").textContent = moeda(d.receita?.total || 0);
+    }
+
+    async function carregarTabelaProgramas() {
+      const subs = selecionados("subregioes");
+      const progs = selecionados("programas");
+
+      const qs = new URLSearchParams();
+      if(subs) qs.set("subregioes", subs);
+      if(progs) qs.set("programas", progs);
+
+      const url = API + "/programas/tabela/programas" + (qs.toString() ? "?" + qs.toString() : "");
+      const data = await (await fetch(url)).json();
+
+      montarTabela(
+        "tabela-programas",
+        ["Programa","Matrículas","Hora-Aluno","Receita",
+         "GR MAT","GR HA","% GR (MAT)",
+         "GNR MAT","GNR HA","% GNR (MAT)",
+         "PG MAT","PG HA","% PG (MAT)"],
+        data.map(r => ({
+          "Programa": r.programa,
+          "Matrículas": format(r.matriculas_total),
+          "Hora-Aluno": format(r.hora_aluno_total),
+          "Receita": moeda(r.receita_total),
+
+          "GR MAT": format(r.gr_matriculas),
+          "GR HA": format(r.gr_hora_aluno),
+          "% GR (MAT)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+
+          "GNR MAT": format(r.g_matriculas),
+          "GNR HA": format(r.g_hora_aluno),
+          "% GNR (MAT)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+
+          "PG MAT": format(r.p_matriculas),
+          "PG HA": format(r.p_hora_aluno),
+          "% PG (MAT)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+        }))
+      );
+    }
+
+    async function carregarTabelaSubregioesPorPrograma(){
+      const subs = selecionados("subregioes");
+      const progs = selecionados("programas");
+
+      const qs = new URLSearchParams();
+      if(subs) qs.set("subregioes", subs);
+      if(progs) qs.set("programas", progs);
+
+      const url = API + "/programas/tabela/subregioes" + (qs.toString() ? "?" + qs.toString() : "");
+      const data = await (await fetch(url)).json();
+
+      montarTabela(
+        "tabela-subregioes",
+        ["Sub-região","Matrículas","Hora-Aluno","Receita","Despesa",
+        "GR Matrículas","GR Hora-Aluno","% GR (Mat)",
+        "GNR Matrículas","GNR Hora-Aluno","% GNR (Mat)",
+        "PG Matrículas","PG Hora-Aluno","% PG (Mat)"],
+        data.map(r => ({
+          "Sub-região": r.subregiao,
+          "Matrículas": format(r.matriculas_total),
+          "Hora-Aluno": format(r.hora_aluno_total),
+          "Receita": moeda(r.receita_total),
+          "Despesa": moeda(r.despesa_total),
+
+          "GR Matrículas": format(r.gr_matriculas),
+          "GR Hora-Aluno": format(r.gr_hora_aluno),
+          "% GR (Mat)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+
+          "GNR Matrículas": format(r.g_matriculas),
+          "GNR Hora-Aluno": format(r.g_hora_aluno),
+          "% GNR (Mat)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+
+          "PG Matrículas": format(r.p_matriculas),
+          "PG Hora-Aluno": format(r.p_hora_aluno),
+          "% PG (Mat)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+        }))
+      );
+    }
+
+    async function carregarTabelaProgramasOuSubregioes(){
+      const subs = selecionados("subregioes");
+      const progs = selecionados("programas");
+
+      const temSubs = !!subs;
+      const temProgs = !!progs;
+
+      const blocoProg = document.getElementById("tbl-programas");
+      const blocoSub  = document.getElementById("tbl-subregioes");
+      const titulo    = document.getElementById("titulo-tabela");
+
+      // ✅ Se tem programa selecionado e NÃO tem sub-região selecionada:
+      // troca para "Por Sub-regiões"
+      if(temProgs && !temSubs){
+        if(titulo) titulo.textContent = "Por Sub-regiões (do(s) programa(s) selecionado(s))";
+        if(blocoProg) blocoProg.style.display = "none";
+        if(blocoSub)  blocoSub.style.display  = "block";
+
+        await carregarTabelaSubregioesPorPrograma();
+        return;
+      }
+
+      // padrão: Por Programa
+      if(titulo) titulo.textContent = "Por Programa";
+      if(blocoSub)  blocoSub.style.display  = "none";
+      if(blocoProg) blocoProg.style.display = "block";
+
+      await carregarTabelaProgramas();
+    }
+
+    async function carregarTudo() {
+      try{
+        setStatus("Carregando visão de programas…");
+        await carregarCards();
+        await carregarTabelaProgramasOuSubregioes();
+        setStatus("");
+      } catch(e){
+        console.error(e);
+        setStatus("Erro ao carregar dados. Verifique se os endpoints /programas/* estão ativos no backend.");
+      }
+    }
+
+    (async function init(){
+      await carregarUsuario();
+      try{
+        setStatus("Carregando filtros…");
+        await carregarSubregioes();
+
+        // carrega programas (sem seleção de sub-região ainda => lista completa)
+        await carregarProgramas();
+
+        atualizarBadgeFiltro();
+
+        // carrega cards + tabela
+        await carregarTudo();
+
+        setStatus("");
+      } catch(e){
+        console.error(e);
+        setStatus("Erro ao iniciar. Abra o Console (F12) e veja a falha.");
+      }
+    })();
+
+    document.getElementById("subregioes").addEventListener("change", async () => {
+      try{
+        setStatus("Atualizando programas do recorte…");
+
+        await carregarProgramas();      // <- atualiza opções conforme sub-região
+        atualizarBadgeFiltro();
+        await carregarTudo();           // <- recarrega cards e tabela
+
+        setStatus("");
+      } catch(e){
+        console.error(e);
+        setStatus("Erro ao atualizar. Veja o Console (F12).");
+      }
+    });
+
+    document.getElementById("programas").addEventListener("change", async () => {
+      try{
+        setStatus("Atualizando visão…");
+        atualizarBadgeFiltro();
+        await carregarTudo(); // recarrega cards + (tabela por programa ou por sub-região)
+        setStatus("");
+      } catch(e){
+        console.error(e);
+        setStatus("Erro ao atualizar. Veja o Console (F12).");
+      }
+    });
+
+    async function carregarUsuario(){
+      try{
+        const resp = await fetch("http://localhost:8000/auth/me", {
+          credentials: "include"
+        });
+
+        if(!resp.ok) return;
+
+        const data = await resp.json();
+
+        const el = document.getElementById("usuario-logado");
+        if(el){
+          el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+        }
+      }catch(e){
+        console.error(e);
+      }
+    }
+
+    async function logout(){
+      try{
+        await fetch("http://localhost:8000/auth/logout", {
+          method: "POST",
+          credentials: "include"
+        });
+      } catch(e) {}
+
+      window.location.href = "/login.html";
+    }
+
+  </script>
+</body>
+</html>

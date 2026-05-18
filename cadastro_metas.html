@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cadastro • Metas Mensais (Matrículas)</title>
+
+  <style>
+    :root{ --bg:#f6f7fb; --panel:#fff; --text:#0f172a; --muted:#64748b; --border:#e5e7eb; --shadow:0 10px 24px rgba(15,23,42,.08); --r:14px; --r2:12px; --brand:#2563eb; --bad:#ef4444; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text);}
+    .container{ max-width:1200px; margin:0 auto; padding:18px 18px 36px; }
+    h1{ margin:0; font-size:26px; }
+    .muted{ color:var(--muted); font-size:13px; margin-top:6px; }
+    .panel{ background:var(--panel); border:1px solid var(--border); border-radius:var(--r); box-shadow:var(--shadow); padding:14px; margin-top:14px; }
+    .grid{ display:grid; grid-template-columns: 140px 1fr 140px 1fr 1fr 1fr; gap:12px; align-items:end; }
+    @media (max-width: 1000px){ .grid{ grid-template-columns:1fr; } }
+    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:8px; }
+    input, select{
+      width:100%; border:1px solid var(--border); border-radius:var(--r2);
+      padding:10px; height:40px; background:#fff; outline:none;
+    }
+    input:focus, select:focus{ border-color: rgba(37,99,235,.45); box-shadow: 0 0 0 4px rgba(37,99,235,.12); }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+    button{ border:1px solid var(--border); background:#fff; color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:650; font-size:13px; }
+    .btn-primary{ background:var(--brand); color:#fff; border-color: rgba(37,99,235,.65); }
+    .btn-primary:hover{ background:#1d4ed8; }
+    .status{ margin-top:10px; font-size:12px; color:var(--muted); }
+    .status.err{ color:var(--bad); }
+    table{ width:100%; border-collapse:collapse; }
+    th, td{ padding:10px; border-bottom:1px solid var(--border); font-size:13px; vertical-align:top; }
+    th{ text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.25px; color:var(--muted); }
+    .row-actions{ display:flex; gap:8px; }
+    .linkbtn{ border:1px solid var(--border); background:#fff; padding:6px 10px; border-radius:10px; cursor:pointer; }
+    .linkbtn:hover{ background:#f8fafc; }
+    .small{ font-size:12px; color:var(--muted); }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div>
+      <h1>Cadastro de Metas Mensais</h1>
+      <div class="muted">Meta mensal por Oferta (cod_oferta), Ano e Mês — Matrículas, Hora-Aluno e Receita.</div>
+    </div>
+
+    <div class="panel">
+      <div class="grid">
+        <div>
+          <label for="ano">Ano</label>
+          <input id="ano" type="number" min="2000" max="2100" value="2026" />
+        </div>
+
+        <div>
+          <label for="cod_oferta">Oferta (Programa / UO)</label>
+          <select id="cod_oferta"></select>
+          <div class="small" id="ofertaHint"></div>
+        </div>
+
+        <div>
+          <label for="mes">Mês</label>
+          <select id="mes">
+            <option value="1">1 - Jan</option><option value="2">2 - Fev</option><option value="3">3 - Mar</option><option value="4">4 - Abr</option>
+            <option value="5">5 - Mai</option><option value="6">6 - Jun</option><option value="7">7 - Jul</option><option value="8">8 - Ago</option>
+            <option value="9">9 - Set</option><option value="10">10 - Out</option><option value="11">11 - Nov</option><option value="12">12 - Dez</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="matriculas_meta">Matrículas (meta)</label>
+          <input id="matriculas_meta" type="number" step="0.01" value="0" />
+        </div>
+
+        <div>
+          <label for="ha_meta">Hora-aluno (meta)</label>
+          <input id="ha_meta" type="number" step="0.01" value="0" />
+        </div>
+
+        <div>
+          <label for="receita_meta">Receita (meta)</label>
+          <input id="receita_meta" type="number" step="0.01" value="0" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" onclick="salvar()">Salvar</button>
+        <button onclick="limpar()">Limpar</button>
+        <button onclick="carregarLista()">Atualizar lista</button>
+      </div>
+
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:90px;">Ano</th>
+            <th style="width:90px;">Mês</th>
+            <th style="width:130px;">Oferta</th>
+            <th>Programa / UO</th>
+            <th style="width:140px;">Matrículas</th>
+            <th style="width:140px;">Hora-aluno</th>
+            <th style="width:160px;">Receita</th>
+            <th style="width:110px;">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://127.0.0.1:8000";
+
+    function setStatus(msg, isErr=false){
+      const el = document.getElementById("status");
+      el.textContent = msg || "";
+      el.className = "status" + (isErr ? " err" : "");
+    }
+
+    function n(v){ return Number(v || 0); }
+
+    async function carregarOfertas(){
+      const ano = n(document.getElementById("ano").value);
+      const sel = document.getElementById("cod_oferta");
+      sel.innerHTML = "";
+      document.getElementById("ofertaHint").textContent = "";
+
+      const url = API + "/ofertas/list?ano=" + encodeURIComponent(String(ano));
+      const data = await (await fetch(url)).json();
+
+      data.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.cod_oferta;
+        opt.textContent = `${r.cod_oferta} • ${r.nome_programa} • ${r.uo}`;
+        sel.appendChild(opt);
+      });
+
+      if(!data.length){
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Nenhuma oferta encontrada para o ano selecionado";
+        sel.appendChild(opt);
+      }
+    }
+
+    async function salvar(){
+      try{
+        setStatus("Salvando…");
+        const payload = {
+          cod_oferta: n(document.getElementById("cod_oferta").value),
+          ano: n(document.getElementById("ano").value),
+          mes: n(document.getElementById("mes").value),
+          matriculas_meta: n(document.getElementById("matriculas_meta").value),
+          ha_meta: n(document.getElementById("ha_meta").value),
+          receita_meta: n(document.getElementById("receita_meta").value),
+        };
+
+        const res = await fetch(API + "/meta_programas/upsert", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(payload)
+        });
+
+        if(!res.ok){
+          const err = await res.json().catch(()=> ({}));
+          throw new Error(err.detail || "Erro ao salvar.");
+        }
+
+        const out = await res.json();
+        setStatus("Salvo com sucesso! (código: " + out.codigo + ")");
+        await carregarLista();
+      } catch(e){
+        console.error(e);
+        setStatus(e.message || "Erro ao salvar.", true);
+      }
+    }
+
+    async function carregarLista(){
+      const ano = n(document.getElementById("ano").value);
+      const mes = n(document.getElementById("mes").value);
+      const cod_oferta = n(document.getElementById("cod_oferta").value);
+
+      const qs = new URLSearchParams();
+      if(ano) qs.set("ano", String(ano));
+      if(mes) qs.set("mes", String(mes));
+      if(cod_oferta) qs.set("cod_oferta", String(cod_oferta));
+
+      const url = API + "/meta_programas/list?" + qs.toString();
+      const data = await (await fetch(url)).json();
+
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${r.ano}</td>
+          <td>${r.mes}</td>
+          <td>${r.cod_oferta}</td>
+          <td>${r.nome_programa} <div class="small">${r.uo}</div></td>
+          <td>${Number(r.matriculas_meta||0).toLocaleString("pt-BR")}</td>
+          <td>${Number(r.ha_meta||0).toLocaleString("pt-BR")}</td>
+          <td>${Number(r.receita_meta||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}</td>
+          <td>
+            <div class="row-actions">
+              <button class="linkbtn" onclick="carregarNoForm(${r.cod_oferta}, ${r.ano}, ${r.mes}, ${Number(r.matriculas_meta||0)}, ${Number(r.ha_meta||0)}, ${Number(r.receita_meta||0)})">Editar</button>
+              <button class="linkbtn" onclick="excluir(${r.codigo})">Excluir</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function carregarNoForm(cod_oferta, ano, mes, matriculas, ha, receita){
+      document.getElementById("ano").value = ano;
+      document.getElementById("mes").value = String(mes);
+      document.getElementById("cod_oferta").value = String(cod_oferta);
+      document.getElementById("matriculas_meta").value = String(matriculas);
+      document.getElementById("ha_meta").value = String(ha);
+      document.getElementById("receita_meta").value = String(receita);
+      setStatus("Editando: oferta " + cod_oferta + " • " + ano + "/" + mes + " (Salvar atualiza).");
+    }
+
+    async function excluir(codigo){
+      if(!confirm("Excluir registro de meta? (código " + codigo + ")")) return;
+      try{
+        setStatus("Excluindo…");
+        const res = await fetch(API + "/meta_programas/" + encodeURIComponent(String(codigo)), { method:"DELETE" });
+        if(!res.ok){
+          const err = await res.json().catch(()=> ({}));
+          throw new Error(err.detail || "Erro ao excluir.");
+        }
+        setStatus("Excluído com sucesso!");
+        await carregarLista();
+      } catch(e){
+        console.error(e);
+        setStatus(e.message || "Erro ao excluir.", true);
+      }
+    }
+
+    function limpar(){
+      document.getElementById("matriculas_meta").value = "0";
+      document.getElementById("ha_meta").value = "0";
+      document.getElementById("receita_meta").value = "0";
+      setStatus("");
+    }
+
+    // listeners
+    document.getElementById("ano").addEventListener("change", async () => {
+      await carregarOfertas();
+      await carregarLista();
+    });
+    document.getElementById("cod_oferta").addEventListener("change", carregarLista);
+    document.getElementById("mes").addEventListener("change", carregarLista);
+
+    (async function init(){
+      await carregarOfertas();
+      await carregarLista();
+    })();
+  </script>
+</body>
+</html>

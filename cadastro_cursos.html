@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin • Cadastro de Cursos</title>
+
+  <style>
+    :root{
+      --bg:#f6f7fb; --panel:#fff; --text:#0f172a; --muted:#64748b; --border:#e5e7eb;
+      --shadow:0 10px 24px rgba(15,23,42,.08); --radius:14px; --radius-sm:12px; --brand:#2563eb;
+      --bad:#ef4444;
+    }
+    *{ box-sizing:border-box; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text);}
+    .container{ max-width:1200px; margin:0 auto; padding:18px 18px 36px; }
+    .header{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+    h1{ margin:0; font-size:26px; }
+    .muted{ color:var(--muted); font-size:13px; margin-top:6px; }
+    .panel{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px; margin-top:14px; }
+
+    .grid{ display:grid; grid-template-columns: 1fr; gap:12px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns:1fr; } }
+
+    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:8px; }
+    input{
+      width:100%; border:1px solid var(--border); border-radius:var(--radius-sm);
+      padding:10px; height:40px; background:#fff; outline:none;
+    }
+    input:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+    select{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:var(--radius-sm);
+      padding:10px;
+      height:40px;
+      background:#fff;
+      outline:none;
+      color:var(--text);
+      font-size:14px;
+      appearance:none;
+      -webkit-appearance:none;
+      -moz-appearance:none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) calc(50% - 3px),
+        calc(100% - 12px) calc(50% - 3px);
+      background-size:6px 6px, 6px 6px;
+      background-repeat:no-repeat;
+      padding-right:36px;
+    }
+
+    select:focus{
+      border-color: rgba(37,99,235,.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+    select:invalid{
+      color: var(--muted);
+    }
+    .actions{ display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+    button{
+      appearance:none; border:1px solid var(--border); background:#fff; color:var(--text);
+      padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:650; font-size:13px;
+    }
+    .btn-primary{ background:var(--brand); color:#fff; border-color: rgba(37,99,235,.65); }
+    .btn-primary:hover{ background:#1d4ed8; }
+    .status{ margin-top:10px; font-size:12px; color:var(--muted); }
+    .status.err{ color:var(--bad); }
+
+    table{ width:100%; border-collapse:collapse; }
+    th, td{ padding:10px; border-bottom:1px solid var(--border); font-size:13px; }
+    th{ text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.25px; color:var(--muted); }
+
+    .searchbar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .searchbar input{ max-width: 420px; }
+
+    .actions-cell{ display:flex; gap:8px; align-items:center; }
+    .iconbtn{
+      width: 34px;
+      height: 34px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .iconbtn:hover{ background: rgba(37,99,235,.06); }
+    .iconbtn.danger{
+      color:#991b1b;
+      background: rgba(239,68,68,.08);
+      border-color: rgba(239,68,68,.25);
+    }
+    .iconbtn.danger:hover{ background: rgba(239,68,68,.14); }
+
+    /* Admin gate */
+    .gate{
+      background: #fff;
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .hidden{ display:none !important; }
+    code{ background:#f1f5f9; padding:2px 6px; border-radius:8px; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>Cadastro de Cursos</h1>
+        <div class="muted">Criar, editar e excluir cursos.</div>
+      </div>
+
+      <div class="searchbar" id="searchbar">
+        <input id="q" placeholder="Buscar por nome ou código…" />
+        <button onclick="carregarCursos()">Buscar</button>
+      </div>
+    </div>
+
+    <!-- Conteúdo admin -->
+    <div id="adminContent">
+      <div class="panel">
+        <div class="grid">
+          <div>
+            <label for="nome_curso">Nome do curso</label>
+            <input id="nome_curso" type="text" placeholder="Ex.: TÉCNICO EM MECÂNICA" />
+            <label for="cod_programa">Programa</label>
+            <select id="cod_programa"></select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-primary" onclick="salvar()">Salvar</button>
+          <button onclick="limparForm()">Limpar</button>
+        </div>
+
+        <div class="status" id="status"></div>
+      </div>
+
+      <div class="panel">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:140px;">Código</th>
+              <th>Curso</th>
+              <th style="width:170px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://127.0.0.1:8000";
+    let modoEdicao = false;
+    let codigoEdicao = null;
+
+    function setStatus(msg, isErr=false){
+      const el = document.getElementById("status");
+      el.textContent = msg || "";
+      el.className = "status" + (isErr ? " err" : "");
+    }
+
+    async function carregarCursos(){
+      const q = (document.getElementById("q").value || "").trim();
+      const url = API + "/cursos/admin/list" + (q ? "?q=" + encodeURIComponent(q) : "");
+      const res = await fetch(url);
+      const data = await res.json().catch(() => []);
+
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      (data || []).forEach(c => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${c.codigo ?? ""}</td>
+          <td>${c.nome_curso ?? c.nome ?? "-"}</td>
+          <td>
+            <div class="actions-cell">
+              <button class="iconbtn" title="Editar"
+                onclick='editar(${JSON.stringify(c.codigo)}, ${JSON.stringify(c.nome_curso ?? c.nome ?? "")})'>
+                ✏️
+              </button>
+              <button class="iconbtn danger" title="Excluir"
+                onclick='excluir(${JSON.stringify(c.codigo)})'>
+                🗑️
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function carregarProgramas() {
+      const res = await fetch(`${API}/programas/list`);
+      const dados = await res.json();
+
+      const sel = document.getElementById("cod_programa");
+
+      sel.innerHTML =
+        `<option value="" disabled selected>Selecione...</option>` +
+        dados.map(p => `<option value="${p.codigo}">${p.nome}</option>`).join("");
+    }
+
+    function editar(codigo, nome){
+      modoEdicao = true;
+      codigoEdicao = codigo;
+      document.getElementById("nome_curso").value = nome;
+      setStatus("Editando curso código: " + codigo);
+    }
+
+    function limparForm(){
+      modoEdicao = false;
+      codigoEdicao = null;
+      document.getElementById("nome_curso").value = "";
+      setStatus("");
+    }
+
+    async function salvar(){
+      try{
+        setStatus("Salvando…");
+        const nome_curso = document.getElementById("nome_curso").value;
+        if(!nome_curso.trim()){
+          setStatus("Informe o nome do curso.", true);
+          return;
+        }
+        const payload = {
+          nome_curso: nome_curso.trim(),
+          cod_programa: Number(document.getElementById("cod_programa").value)
+        };
+
+        let res;
+        if(modoEdicao){
+          res = await fetch(API + "/cursos/" + encodeURIComponent(codigoEdicao), {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch(API + "/cursos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if(!res.ok){
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || "Erro ao salvar.");
+        }
+
+        const data = await res.json();
+
+        if(modoEdicao){
+        setStatus("Atualizado com sucesso!");
+        } else {
+        setStatus("Curso criado com código: " + data.codigo);
+        }
+
+        limparForm();
+        await carregarCursos();
+      } catch(e){
+        console.error(e);
+        setStatus(e.message || "Erro ao salvar.", true);
+      }
+    }
+
+    async function excluir(codigo){
+      if(!confirm("Confirma excluir o curso " + codigo + "?")) return;
+      try{
+        setStatus("Excluindo…");
+        const res = await fetch(API + "/cursos/" + encodeURIComponent(codigo), { method:"DELETE" });
+
+        if(!res.ok){
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || "Erro ao excluir.");
+        }
+
+        setStatus("Excluído com sucesso!");
+        await carregarCursos();
+      } catch(e){
+        console.error(e);
+        setStatus(e.message || "Erro ao excluir.", true);
+      }
+    }
+
+    (async function init(){
+        await carregarProgramas();
+        await carregarCursos();
+    })();
+  </script>
+</body>
+</html>
