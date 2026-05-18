@@ -386,7 +386,9 @@
 </head>
 
 <body>
-
+  <script>
+    const API = "https://painel-ep-backend.onrender.com";
+  </script>
   <script>
     (async function validarSessao(){
       try{
@@ -516,7 +518,6 @@
   </div>
 
   <script>
-    const API = "https://painel-ep-backend.onrender.com";
 
     function format(n) { return Number(n).toLocaleString("pt-BR"); }
     function moeda(n) { return Number(n).toLocaleString("pt-BR", { style:"currency", currency:"BRL" }); }
