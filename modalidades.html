@@ -396,8 +396,12 @@
 
 <body>
   <script>
-    const API = "https://painel-ep-backend.onrender.com";
+    const API =
+      window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+        ? "http://localhost:8000"
+        : "https://painel-ep-backend.onrender.com";
   </script>
+  
   <script>
     (async function validarSessao(){
       try{
@@ -406,20 +410,19 @@
         });
 
         if(!resp.ok){
-          window.location.href = "/login.html";
+          window.location.href = "login.html";
           return;
         }
 
         const data = await resp.json();
 
-        // 🔥 AQUI é o que faltava
         if(data.deve_trocar_senha){
-          window.location.href = "/alterar_senha.html";
+          window.location.href = "alterar_senha.html";
           return;
         }
 
       }catch(e){
-        window.location.href = "/login.html";
+        window.location.href = "login.html";
       }
     })();
   </script>
@@ -429,7 +432,7 @@
     <nav class="topnav">
       <a href="index.html" class="navlink">Dashboard</a>
       <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html" class="navlink">Programas</a>
+      <a href="programas.html?v=2" class="navlink">Programas</a>
       <a href="performance.html" class="navlink">Performance</a>
       <a href="modalidades.html" class="navlink active">Modalidades</a>
       <a href="unidades.html" class="navlink">Unidades</a>
@@ -465,6 +468,11 @@
         <div class="field">
           <label for="modalidades">Modalidades</label>
           <select id="modalidades" multiple></select>
+        </div>
+
+        <div class="field">
+          <label for="financiamentos">Financiamento</label>
+          <select id="financiamentos" multiple></select>
         </div>
 
         <div class="field sm">
@@ -751,6 +759,7 @@
         .map(o => o.value);
 
       const mods = selecionados("modalidades");
+      const fins = selecionados("financiamentos");
 
       const qs = new URLSearchParams({ ano: String(ano) });
 
@@ -759,6 +768,7 @@
       }
 
       if (mods) qs.set("modalidades", mods);
+      if (fins) qs.set("financiamentos", fins);
 
       const url = API + "/modalidades/summary?" + qs.toString();
       const d = await (await fetch(url)).json();
@@ -822,6 +832,7 @@
         .map(o => o.value);
 
       const mods = selecionados("modalidades");
+      const fins = selecionados("financiamentos");
 
       const ids = (mods ? mods.split(",").filter(Boolean) : []);
       const lista = ids.length ? ids : [null];
@@ -838,6 +849,7 @@
         }
 
         if (modalidade_id) qs.set("modalidades", modalidade_id);
+        if (fins) qs.set("financiamentos", fins);
 
         const url = API + "/modalidades/tabela/programas?" + qs.toString();
         const data = await (await fetch(url)).json();
@@ -934,6 +946,7 @@
         }
 
         await carregarModalidades();
+        await carregarFinanciamentos();
         atualizarBadgeFiltro();
         await carregarTudo();
         setStatus("");
@@ -961,23 +974,39 @@
       await carregarTudo();
     });
 
+    document.getElementById("financiamentos").addEventListener("change", async ()=>{
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
+    document.getElementById("modalidades").addEventListener("change", async ()=>{
+      await carregarFinanciamentos();
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
     function chipPct(real, meta){
       real = Number(real || 0);
       meta = Number(meta || 0);
 
-      const pct = meta <= 0 ? 0 : (real / meta) * 100;
-
-      let cls = "status-low"; // padrão
-
-      if (pct >= 100) {
-        cls = "status-high";   // verde
-      } else if (pct >= 75) {
-        cls = "status-blue";   // azul
-      } else if (pct >= 51) {
-        cls = "status-mid";    // amarelo
-      } else {
-        cls = "status-low";    // vermelho
+      if (meta <= 0 && real > 0) {
+        return `<span class="chip status-neutral">
+                  <span class="k">Sem meta</span>
+                  realizado
+                </span>`;
       }
+
+      if (meta <= 0 && real <= 0) {
+        return `<span class="sem-meta-zero">–</span>`;
+      }
+
+      const pct = (real / meta) * 100;
+
+      let cls = "status-low";
+
+      if (pct >= 100) cls = "status-high";
+      else if (pct >= 75) cls = "status-blue";
+      else if (pct >= 51) cls = "status-mid";
 
       const t = pct.toLocaleString("pt-BR", {
         minimumFractionDigits: 1,
@@ -999,7 +1028,7 @@
       }
 
       if (meta <= 0 && real > 0) {
-        return `<span class="chip status-neutral">100,0%</span>`;
+        return `<span class="chip status-neutral">Sem meta</span>`;
       }
 
       const pct = (real / meta) * 100;
@@ -1022,6 +1051,40 @@
       }) + "%";
 
       return `<span class="chip ${cls}">${t}</span>`;
+    }
+
+    async function carregarFinanciamentos(){
+      const ano = document.getElementById("ano").value || "2026";
+
+      const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
+        .map(opt => opt.value);
+
+      const modalidades = selecionados("modalidades");
+
+      const qs = new URLSearchParams({ ano });
+
+      if (meses.length) qs.set("meses", meses.join(","));
+      if (modalidades) qs.set("modalidades", modalidades);
+
+      const res = await fetch(`${API}/modalidades/financiamentos?${qs.toString()}`);
+      const data = await res.json();
+
+      const sel = document.getElementById("financiamentos");
+      const selecionadosAntes = Array.from(sel.selectedOptions).map(o => o.value);
+
+      sel.innerHTML = "";
+
+      data.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.codigo;
+        opt.textContent = r.financiamento;
+
+        if (selecionadosAntes.includes(String(r.codigo))) {
+          opt.selected = true;
+        }
+
+        sel.appendChild(opt);
+      });
     }
 
     async function carregarUsuario(){
@@ -1051,7 +1114,7 @@
         });
       } catch(e) {}
 
-      window.location.href = "/login.html";
+      window.location.href = "login.html";
     }
 
   </script>

@@ -68,7 +68,10 @@
 
 <body>
   <script>
-    const API = "https://painel-ep-backend.onrender.com";
+    const API =
+      window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+        ? "http://localhost:8000"
+        : "https://painel-ep-backend.onrender.com";
   </script>
   <script>
     (async function validarSessao(){
@@ -370,14 +373,14 @@
 
         const url = API + "/performance/cards?" + qs.toString();
         const data = await (await fetch(url)).json();
-        const item = (data && data.length) ? data[0] : null;
+        const item = data?.[0] || {};
 
         resultados.push({
           mes,
-          meta: Number(item?.meta || 0),
-          projetado: Number(item?.projetado || 0),
-          realizado: Number(item?.realizado || 0),
-          sem_contrato: Number(item?.sem_contrato || 0)
+          meta: Number(item.meta || 0),
+          projetado: Number(item.projetado || 0),
+          realizado: Number(item.realizado || 0),
+          sem_contrato: Number(item.sem_contrato || 0)
         });
       }
 
@@ -429,6 +432,7 @@
       const isReceita = indicador === "receita";
       const fmt = (v) => isReceita ? moeda(v) : format(v);
       const isJovemAprendiz =
+        indicador === "matriculas" &&
         String(programa || "")
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
@@ -526,11 +530,10 @@
       }
 
       const meses = mesesSelecionadosUrl();
-      const mes = Math.max(...meses);
 
       const qs = new URLSearchParams({
         ano: String(ano),
-        mes: String(mes)
+        meses: meses.join(",")
       });
 
       if (subregioes) {

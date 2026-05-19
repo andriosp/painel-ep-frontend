@@ -466,32 +466,40 @@
 
 <body>
   <script>
-    const API = "https://painel-ep-backend.onrender.com";
+    const API =
+      window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+        ? "http://localhost:8000"
+        : "https://painel-ep-backend.onrender.com";
   </script>
   <script>
-    (async function validarSessao(){
+    async function validarSessao(){
       try{
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
+        console.log("auth/me index:", resp.status);
+
         if(!resp.ok){
-          window.location.href = "/login.html";
-          return;
+          window.location.href = "login.html";
+          return null;
         }
 
         const data = await resp.json();
 
-        // 🔥 AQUI é o que faltava
         if(data.deve_trocar_senha){
-          window.location.href = "/alterar_senha.html";
-          return;
+          window.location.href = "alterar_senha.html";
+          return null;
         }
 
+        return data;
+
       }catch(e){
-        window.location.href = "/login.html";
+        console.error("Erro validarSessao index:", e);
+        window.location.href = "login.html";
+        return null;
       }
-    })();
+    }
   </script>
 
   <div class="container">
@@ -499,9 +507,9 @@
     <nav class="topnav">
       <a href="index.html" class="navlink active">Dashboard</a>
       <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html" class="navlink">Programas</a>
+      <a href="programas.html?v=2" class="navlink">Programas</a>
       <a href="performance.html" class="navlink">Performance</a>
-      <a href="modalidades.html" class="navlink">Modalidades</a>
+      <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
       <a href="unidades.html" class="navlink">Unidades</a>
       <a href="sge_turmas.html" class="navlink">Turmas</a>
       <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
@@ -1279,7 +1287,14 @@
     });
 
     (async function init(){
-      await carregarUsuario();
+      const usuario = await validarSessao();
+      if(!usuario) return;
+
+      const el = document.getElementById("usuario-logado");
+      if(el){
+        el.innerHTML = `<span class="dot"></span> Usuário: ${usuario.usuario}`;
+      }
+
       await carregarSubregioes();
 
       const periodo = document.getElementById("periodoMeses");
@@ -1440,25 +1455,6 @@
       document.getElementById("mat-total").textContent = format(matTotal);
       document.getElementById("ha-total").textContent = format(haTotal);
       document.getElementById("rec-total").textContent = moeda(recTotal);
-    }
-
-    async function carregarUsuario(){
-      try{
-        const resp = await fetch(`${API}/auth/me`, {
-          credentials: "include"
-        });
-
-        if(!resp.ok) return;
-
-        const data = await resp.json();
-
-        const el = document.getElementById("usuario-logado");
-        if(el){
-          el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
-        }
-      }catch(e){
-        console.error(e);
-      }
     }
 
     async function logout(){

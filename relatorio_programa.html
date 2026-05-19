@@ -568,7 +568,10 @@
 
 <body>
   <script>
-    const API = "https://painel-ep-backend.onrender.com";
+    const API =
+      window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+        ? "http://localhost:8000"
+        : "https://painel-ep-backend.onrender.com";
   </script>
   <script>
     (async function validarSessao(){
@@ -601,9 +604,9 @@
     <nav class="topnav">
       <a href="index.html" class="navlink">Dashboard</a>
       <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html" class="navlink">Programas</a>
+      <a href="programas.html?v=2" class="navlink">Programas</a>
       <a href="performance.html" class="navlink">Performance</a>
-      <a href="modalidades.html" class="navlink">Modalidades</a>
+      <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
       <a href="unidades.html" class="navlink">Unidades</a>
       <a href="sge_turmas.html" class="navlink">Turmas</a>
       <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
