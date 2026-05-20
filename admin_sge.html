@@ -197,7 +197,7 @@
   <script>
     (async function validarSessao(){
       try{
-        const resp = await fetch("https://painel-ep-backend.onrender.com/auth/me", {
+        const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
     

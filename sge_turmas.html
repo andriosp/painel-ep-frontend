@@ -1011,7 +1011,10 @@
     const s = await fetchJson(`${API}/sge_turmas/summary?${q}`);
     console.log("SUMMARY SGE TURMAS:", s);
 
-    const vagasRestantes = (s.total_vagas ?? 0) - (s.total_matriculados ?? 0) - (s.total_pre_matriculados ?? 0);
+    const vagasRestantes = Math.max(
+      0,
+      (s.total_vagas ?? 0) - (s.total_matriculados ?? 0) - (s.total_pre_matriculados ?? 0)
+    );
 
     document.getElementById("cards").innerHTML = [
       card("Total de Turmas", formatInt(s.total_turmas ?? 0)),
@@ -1313,16 +1316,6 @@
       await carregarDataImportacao();
       try{
         setStatus("Carregando...");
-
-        const hoje = new Date();
-        const ano = hoje.getFullYear();
-        const mes = hoje.getMonth();
-
-        const primeiroDia = new Date(ano, mes, 1);
-        const ultimoDia = new Date(ano, mes + 1, 0);
-
-        document.getElementById("dt_mat_de").value = primeiroDia.toISOString().slice(0, 10);
-        document.getElementById("dt_mat_ate").value = ultimoDia.toISOString().slice(0, 10);
         atualizarBadge();
 
         await Promise.all([
