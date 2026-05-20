@@ -456,7 +456,7 @@
     <div class="header">
       <div class="title">
         <h1>Painel • Modalidades</h1>
-        <p>Visão por modalidade • Matrículas, Hora-Aluno e Receita (meta/projetado/realizado) + tabela por programas</p><br>
+        <p>Visão por modalidade • Matrículas, Hora-Aluno e Receita (meta/realizado) + tabela por programas</p><br>
         <p>Pressione Ctrl + clique para múltiplas seleções nos filtros.</p>
       </div>
       <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as modalidades • 2026/01</div>
@@ -660,16 +660,22 @@
       badge.innerHTML = `<span class="dot"></span>Filtro: ${modTxt} • Ano: ${ano} • Meses: ${periodoTxt}`;
     }
 
-    function limparSelecao(){
-      const sel = document.getElementById("modalidades");
-      Array.from(sel.options).forEach(o => o.selected = false);
+    async function limparSelecao(){
+      ["modalidades", "financiamentos"].forEach(id => {
+        const sel = document.getElementById(id);
+        Array.from(sel.options).forEach(o => o.selected = false);
+      });
 
       localStorage.removeItem("modalidades_ano");
       localStorage.removeItem("modalidades_meses");
 
       aplicarAnoMesPadrao();
+
+      await carregarModalidades();
+      await carregarFinanciamentos();
+
       atualizarBadgeFiltro();
-      carregarTudo();
+      await carregarTudo();
     }
 
     async function carregarModalidades(){
@@ -682,9 +688,14 @@
       ).map(o => o.value);
 
       const qs = new URLSearchParams({ ano });
+      const financiamentos = selecionados("financiamentos");
 
       if (meses.length) {
         qs.set("meses", meses.join(","));
+      }
+
+      if (financiamentos) {
+        qs.set("financiamentos", financiamentos);
       }
 
       const res = await fetch(`${API}/modalidades/list?${qs.toString()}`);
@@ -795,6 +806,25 @@
     function montarTabela(id, colunas, linhas){
       const t = document.getElementById(id);
       t.innerHTML = "";
+
+      if (!linhas || linhas.length === 0) {
+        t.innerHTML = `
+          <tbody>
+            <tr>
+              <td style="
+                padding:24px;
+                text-align:center;
+                color:#64748b;
+                font-size:13px;
+                font-weight:600;
+              ">
+                Nenhum dado encontrado para os filtros selecionados.
+              </td>
+            </tr>
+          </tbody>
+        `;
+        return;
+      }
 
       const thead = document.createElement("thead");
       const trh = document.createElement("tr");
@@ -928,31 +958,56 @@
 
     (async function init(){
       await carregarUsuario();
+
       try{
         setStatus("Carregando filtros…");
-        const anoSalvo = localStorage.getItem("modalidades_ano");
-        const mesesSalvos = JSON.parse(localStorage.getItem("modalidades_meses") || "[]");
 
-        if (anoSalvo) {
-          document.getElementById("ano").value = anoSalvo;
+        const anoSalvo =
+          localStorage.getItem("modalidades_ano");
+
+        const mesesSalvos =
+          JSON.parse(
+            localStorage.getItem("modalidades_meses")
+            || "[]"
+          );
+
+        if (anoSalvo){
+          document.getElementById("ano").value =
+            anoSalvo;
         }
 
-        if (mesesSalvos.length) {
-          Array.from(document.getElementById("periodoMeses").options).forEach(o => {
-            o.selected = mesesSalvos.includes(o.value);
+        if (mesesSalvos.length){
+          Array.from(
+            document.getElementById("periodoMeses").options
+          ).forEach(o=>{
+            o.selected =
+              mesesSalvos.includes(o.value);
           });
-        } else {
+        }else{
           aplicarAnoMesPadrao();
         }
 
         await carregarModalidades();
-        await carregarFinanciamentos();
-        atualizarBadgeFiltro();
-        await carregarTudo();
-        setStatus("");
-      } catch(e){
+
+        // força atualização depois do DOM estabilizar
+        setTimeout(async ()=>{
+
+          await carregarFinanciamentos();
+
+          atualizarBadgeFiltro();
+
+          await carregarTudo();
+
+          setStatus("");
+
+        },0);
+
+      }catch(e){
         console.error(e);
-        setStatus("Erro ao carregar dados. Verifique se os endpoints /modalidades/* estão ativos no backend.");
+
+        setStatus(
+          "Erro ao carregar dados."
+        );
       }
     })();
 
@@ -960,9 +1015,11 @@
       atualizarBadgeFiltro();
       await carregarTudo();
     });
+
     document.getElementById("ano").addEventListener("change", async ()=>{
       salvarAnoMesPreferidos();
       await carregarModalidades();
+      await carregarFinanciamentos();
       atualizarBadgeFiltro();
       await carregarTudo();
     });
@@ -970,11 +1027,13 @@
     document.getElementById("periodoMeses").addEventListener("change", async ()=>{
       salvarAnoMesPreferidos();
       await carregarModalidades();
+      await carregarFinanciamentos();
       atualizarBadgeFiltro();
       await carregarTudo();
     });
 
     document.getElementById("financiamentos").addEventListener("change", async ()=>{
+      await carregarModalidades();
       atualizarBadgeFiltro();
       await carregarTudo();
     });

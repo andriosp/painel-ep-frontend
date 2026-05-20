@@ -336,6 +336,76 @@
       align-items:center;
       gap:10px;
     }
+
+    .table-card{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .table-wrap{
+      overflow:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    thead th{
+      background:#fbfcfe;
+      border-bottom:1px solid var(--border);
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.28px;
+      padding:12px 10px;
+      text-align:right;
+      white-space:nowrap;
+    }
+
+    thead th:first-child{
+      text-align:left;
+    }
+
+    tbody td{
+      border-bottom:1px solid #eef2f7;
+      padding:10px;
+      text-align:right;
+      white-space:nowrap;
+      font-size:12px;
+    }
+
+    tbody td:first-child{
+      text-align:left;
+    }
+
+    tbody tr:nth-child(odd){
+      background:#fcfdff;
+    }
+
+    .table-header{
+      padding:18px 18px 10px;
+      border-bottom:1px solid var(--border);
+      background:#fff;
+    }
+
+    .table-header h3{
+      margin:0;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .table-header p{
+      margin:6px 0 0;
+      font-size:14px;
+      color:#5f6f89;
+    }
   </style>
 </head>
 
@@ -456,6 +526,22 @@
     </div>
 
     <div id="cards" class="cards"></div>
+
+    <div id="financiamento-resumo-wrap" class="table-card" style="display:none; margin-top:14px;">
+      <div class="table-header">
+        <h3>
+          Realizado por Financiamento
+        </h3>
+      
+        <p
+          id="financiamento-resumo-subtitulo">
+        </p>
+      </div>
+    
+      <div class="table-wrap">
+        <table id="tabela-financiamento-resumo"></table>
+      </div>
+    </div>
 
   </div>
 
@@ -784,12 +870,91 @@
       Array.from(sel.options).forEach(o => o.hidden = false);
     }
 
+    async function carregarResumoFinanciamento(){
+      const wrap = document.getElementById("financiamento-resumo-wrap");
+      const tabela = document.getElementById("tabela-financiamento-resumo");
+      const subtitulo = document.getElementById("financiamento-resumo-subtitulo");
+
+      const progs = selecionados("programas");
+
+      if(!progs || indicadorAtual === "receita"){
+        wrap.style.display = "none";
+        tabela.innerHTML = "";
+        return;
+      }
+
+      const atual = getDataAtual();
+      const ano = document.getElementById("ano").value || String(atual.ano);
+      const meses = mesesSelecionados();
+      const subs = selecionados("subregioes");
+
+      const qs = new URLSearchParams({
+        indicador: indicadorAtual,
+        ano: String(ano),
+        meses: meses.join(","),
+        programas: progs
+      });
+
+      if(subs) qs.set("subregioes", subs);
+
+      const res = await fetch(API + "/performance/financiamento-resumo?" + qs.toString());
+      const data = await res.json();
+
+      if(!data.length){
+        wrap.style.display = "none";
+        tabela.innerHTML = "";
+        return;
+      }
+
+      wrap.style.display = "block";
+
+      subtitulo.textContent =
+        indicadorAtual === "matriculas"
+          ? "Matrículas realizadas no período por tipo de financiamento"
+          : "Hora-aluno realizada no período por tipo de financiamento";
+
+      const total = data.reduce((acc, r) => acc + Number(r.realizado || 0), 0);
+
+      tabela.innerHTML = `
+        <thead>
+          <tr>
+            <th>Financiamento</th>
+            <th>Realizado</th>
+            <th>% Participação</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.map(r => {
+            const valor = Number(r.realizado || 0);
+            const pct = total > 0 ? (valor / total) * 100 : 0;
+
+            return `
+              <tr>
+                <td>${r.financiamento}</td>
+                <td>${format(valor)}</td>
+                <td>${pct.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1
+                })}%</td>
+              </tr>
+            `;
+          }).join("")}
+          <tr>
+            <td><strong>Total</strong></td>
+            <td><strong>${format(total)}</strong></td>
+            <td><strong>100,0%</strong></td>
+          </tr>
+        </tbody>
+      `;
+    }
+
     async function aplicarFiltros(){
       try{
         setStatus("Aplicando filtros…");
         atualizarBadgeFiltro();
         await carregarProgramas();
         await carregarCards();
+        await carregarResumoFinanciamento();
         setStatus("");
       } catch(e){
         console.error(e);

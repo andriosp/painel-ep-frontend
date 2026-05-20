@@ -63,10 +63,57 @@
       color:#64748b;
     }
     #grafico{ width:100%; height:100%; display:block; }
+
+    .loading-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(246,247,251,.78);
+      backdrop-filter: blur(3px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+
+    .loading-box{
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      box-shadow:0 10px 24px rgba(15,23,42,.12);
+      padding:18px 22px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      color:#64748b;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .spinner{
+      width:28px;
+      height:28px;
+      border:4px solid #e5e7eb;
+      border-top-color:#2563eb;
+      border-radius:50%;
+      animation:spin .8s linear infinite;
+    }
+
+    @keyframes spin{
+      to{ transform:rotate(360deg); }
+    }
+
   </style>
 </head>
 
 <body>
+
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <span>Carregando dados do programa...</span>
+    </div>
+  </div>
+
   <script>
     const API =
       window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
@@ -605,274 +652,289 @@
       });
     }
 
+    function mostrarLoading(){
+      const el = document.getElementById("loadingOverlay");
+      if(el) el.style.display = "flex";
+    }
+
+    function esconderLoading(){
+      const el = document.getElementById("loadingOverlay");
+      if(el) el.style.display = "none";
+    }
+
     async function carregar(){
-      const programa_id = qp("programa_id");
-      const programa = qp("programa") || "Programa";
-      const subregioes = qp("subregioes") || "";
-      const ano = document.getElementById("ano").value || "2026";
-      const mesesFiltro = mesesSelecionadosUrl();
-      const mesReferencia = Math.max(...mesesFiltro);
-      const isMesUnico = mesesFiltro.length === 1;
+      mostrarLoading();
+        try {
+          const programa_id = qp("programa_id");
+          const programa = qp("programa") || "Programa";
+          const subregioes = qp("subregioes") || "";
+          const ano = document.getElementById("ano").value || "2026";
+          const mesesFiltro = mesesSelecionadosUrl();
+          const mesReferencia = Math.max(...mesesFiltro);
+          const isMesUnico = mesesFiltro.length === 1;
 
-      let resultados;
-      try {
-        resultados = await atualizarIndicadoresDisponiveis(programa_id, ano, subregioes);
-      } catch (e) {
-        console.error("ERRO atualizarIndicadoresDisponiveis:", e);
-        resultados = [];
-      }
-
-      const chartWrap = document.querySelector(".chart-wrap");
-      const tabelaPanel = document.querySelectorAll(".panel")[1];
-
-      chartWrap.style.display = "";
-      tabelaPanel.style.display = "";
-
-      const indicador = document.getElementById("indicador").value;
-      const indicadorLabel = document.getElementById("indicador")
-        .options[document.getElementById("indicador").selectedIndex]
-        .text;
-
-      document.getElementById("titulo").textContent = programa;
-
-      const nomesMeses = [
-        "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-        "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-      ];
-
-      let txtPeriodo = "";
-      if (mesesFiltro.length === 1) {
-        txtPeriodo = ` • Mês: ${nomesMeses[mesesFiltro[0] - 1]}`;
-      } else {
-        const inicio = nomesMeses[Math.min(...mesesFiltro) - 1];
-        const fim = nomesMeses[Math.max(...mesesFiltro) - 1];
-        txtPeriodo = ` • Período: ${inicio} - ${fim}`;
-      }
-
-      let subTxt = "";
-      if (subregioes) {
-        const s = decodeURIComponent(String(subregioes)).trim();
-        const nomes = await resolverSubRegioes(s);
-        subTxt = ` • Sub-região(ões): ${nomes}`;
-      }
-
-      document.getElementById("subtitulo").textContent =
-        `Ano: ${ano}${txtPeriodo} • Indicador: ${indicadorLabel}${subTxt}`;
-
-        const qs = new URLSearchParams({
-          programa_id: String(programa_id),
-          ano: String(ano),
-          indicador: indicador
-        });
-        if(subregioes) qs.set("subregioes", subregioes);
-
-        const url = API + "/performance/programa/serie?" + qs.toString();
-        const dataSerie = await (await fetch(url)).json();
-        const resumoAcumulado = await buscarResumoAcumulado(programa_id, ano, indicador, subregioes);
-        const dataCardsSerie = await buscarSerieCards(programa_id, ano, indicador, subregioes);
-
-      const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-      const dataFiltrada = (dataSerie || []).filter(r => Number(r.mes || 0) <= mesReferencia);
-
-      // gráfico passa a usar a série correta da rota /performance/cards
-      const labels = (dataCardsSerie || []).map(r => meses[(r.mes||1)-1] || "");
-      const meta = (dataCardsSerie || []).map(r => Number(r.meta||0));
-      const real = (dataCardsSerie || []).map(r => Number(r.realizado||0));
-
-      const somaMeta = meta.reduce((acc, v) => acc + Number(v || 0), 0);
-      const somaReal = real.reduce((acc, v) => acc + Number(v || 0), 0);
-
-      const realAcum = [];
-      real.reduce((acc, v) => {
-        const total = acc + Number(v || 0);
-        realAcum.push(total);
-        return total;
-      }, 0);
-
-      const isReceitaCard = indicador === "receita";
-
-      function arredondarInteiro(n){
-        return Math.round(Number(n || 0));
-      }
-
-      const formatCard = (v) => {
-        const valor = arredondarInteiro(v);
-
-        if (indicador === "receita") {
-          return valor.toLocaleString("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0
-          });
-        }
-
-        if (indicador === "hora_aluno") {
-          return valor.toLocaleString("pt-BR");
-        }
-
-        return format(v);
-      };
-
-      const metaResumo = Number(resumoAcumulado?.meta || 0);
-      const projetadoResumo = Number(resumoAcumulado?.projetado || 0);
-      const realizadoResumo = Number(resumoAcumulado?.realizado || 0);
-      const elLabelReal = document.getElementById("cardRealizadoAcum")
-        .closest(".summary-card")
-        .querySelector(".label");
-
-      const elSubReal = document.getElementById("cardRealizadoAcum")
-        .closest(".summary-card")
-        .querySelector(".sub");
-      document.getElementById("cardRealizadoAcum").textContent = formatCard(realizadoResumo);
-      if (isMesUnico) {
-        elLabelReal.textContent = "Realizado";
-        elSubReal.textContent = "No mês";
-      } else {
-        elLabelReal.textContent = "Realizado acumulado";
-        elSubReal.textContent = "No período";
-      }
-      const elLabelMeta = document.getElementById("cardMetaAcum")
-        .closest(".summary-card")
-        .querySelector(".label");
-
-      const elSubMeta = document.getElementById("cardMetaAcum")
-        .closest(".summary-card")
-        .querySelector(".sub");
-      document.getElementById("cardMetaAcum").textContent = formatCard(metaResumo);
-      if (isMesUnico) {
-        elLabelMeta.textContent = "Meta";
-        elSubMeta.textContent = "No mês";
-      } else {
-        elLabelMeta.textContent = "Meta acumulada";
-        elSubMeta.textContent = "No período";
-      }
-
-      const elPct = document.getElementById("cardPctMeta");
-      const elDiff = document.getElementById("cardDiffMeta");
-
-      // títulos e subtítulos dos cards
-      const pctCard = elPct.closest(".summary-card");
-      const diffCard = elDiff.closest(".summary-card");
-
-      const pctTitle = pctCard.querySelector(".label");
-      const pctSub = pctCard.querySelector(".sub");
-
-      const diffTitle = diffCard.querySelector(".label");
-      const diffSub = diffCard.querySelector(".sub");
-
-      if (metaResumo > 0) {
-        const pctMeta = (realizadoResumo / metaResumo) * 100;
-        const diffMeta = realizadoResumo - metaResumo;
-
-        pctTitle.textContent = "% atingimento";
-        pctSub.textContent = "Realizado x meta";
-        elPct.textContent = `${pctMeta.toFixed(1).replace(".", ",")}%`;
-
-        diffTitle.textContent = "Diferença para meta";
-        diffSub.textContent = "Acumulado";
-        elDiff.textContent = formatCard(diffMeta);
-
-      } else if (projetadoResumo > 0) {
-        const pctProj = (realizadoResumo / projetadoResumo) * 100;
-        const diffProj = realizadoResumo - projetadoResumo;
-
-        pctTitle.textContent = "% realizado x projetado";
-        pctSub.textContent = "Sem meta definida";
-        elPct.textContent = `${pctProj.toFixed(1).replace(".", ",")}%`;
-
-        diffTitle.textContent = "Diferença para projetado";
-        diffSub.textContent = "Sem meta definida";
-        elDiff.textContent = formatCard(diffProj);
-
-      } else {
-        pctTitle.textContent = "% atingimento";
-        pctSub.textContent = "Sem base de comparação";
-        elPct.textContent = "—";
-
-        diffTitle.textContent = "Diferença para meta";
-        diffSub.textContent = "Meta não definida";
-        elDiff.textContent = "—";
-      }
-
-      const isReceita = indicador === "receita";
-      const tickFmt = (v) => isReceita ? moeda(v) : format(v);
-
-      const canvas = document.getElementById("grafico");
-      const ctx = canvas.getContext("2d");
-
-      if(chart) chart.destroy();
-
-      chart = new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels,
-          datasets: [
-            {
-              label: "Meta (mês)",
-              data: meta,
-              backgroundColor: "#cbd5f5",
-              borderRadius: 6
-            },
-            {
-              label: "Realizado (mês)",
-              data: real,
-              backgroundColor: "#2563eb",
-              borderRadius: 8
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          layout: { padding: { top: 40 } },
-
-          // ✅ mata qualquer comportamento de hover
-          events: [],
-
-          // ✅ desliga tooltip
-          plugins: {
-            tooltip: { enabled: false },
-            legend: {
-              position: "top",
-              labels: {
-                padding: 12
-              }
-            },
-
-            // ✅ passa config pro plugin
-            valueLabelsPlugin: { indicador }
-          },
-
-          // ✅ deixa o render “instantâneo” (evita depender de hover/frames)
-          animation: false,
-
-          scales: {
-            y: {
-              grace: "20%",
-              ticks: { callback: (value) => tickFmt(value) }
-            }
+          let resultados;
+          try {
+            resultados = await atualizarIndicadoresDisponiveis(programa_id, ano, subregioes);
+          } catch (e) {
+            console.error("ERRO atualizarIndicadoresDisponiveis:", e);
+            resultados = [];
           }
+
+          const chartWrap = document.querySelector(".chart-wrap");
+          const tabelaPanel = document.querySelectorAll(".panel")[1];
+
+          chartWrap.style.display = "";
+          tabelaPanel.style.display = "";
+
+          const indicador = document.getElementById("indicador").value;
+          const indicadorLabel = document.getElementById("indicador")
+            .options[document.getElementById("indicador").selectedIndex]
+            .text;
+
+          document.getElementById("titulo").textContent = programa;
+
+          const nomesMeses = [
+            "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+            "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+          ];
+
+          let txtPeriodo = "";
+          if (mesesFiltro.length === 1) {
+            txtPeriodo = ` • Mês: ${nomesMeses[mesesFiltro[0] - 1]}`;
+          } else {
+            const inicio = nomesMeses[Math.min(...mesesFiltro) - 1];
+            const fim = nomesMeses[Math.max(...mesesFiltro) - 1];
+            txtPeriodo = ` • Período: ${inicio} - ${fim}`;
+          }
+
+          let subTxt = "";
+          if (subregioes) {
+            const s = decodeURIComponent(String(subregioes)).trim();
+            const nomes = await resolverSubRegioes(s);
+            subTxt = ` • Sub-região(ões): ${nomes}`;
+          }
+
+          document.getElementById("subtitulo").textContent =
+            `Ano: ${ano}${txtPeriodo} • Indicador: ${indicadorLabel}${subTxt}`;
+
+            const qs = new URLSearchParams({
+              programa_id: String(programa_id),
+              ano: String(ano),
+              indicador: indicador
+            });
+            if(subregioes) qs.set("subregioes", subregioes);
+
+            const url = API + "/performance/programa/serie?" + qs.toString();
+            const dataSerie = await (await fetch(url)).json();
+            const resumoAcumulado = await buscarResumoAcumulado(programa_id, ano, indicador, subregioes);
+            const dataCardsSerie = await buscarSerieCards(programa_id, ano, indicador, subregioes);
+
+          const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+          const dataFiltrada = (dataSerie || []).filter(r => Number(r.mes || 0) <= mesReferencia);
+
+          // gráfico passa a usar a série correta da rota /performance/cards
+          const labels = (dataCardsSerie || []).map(r => meses[(r.mes||1)-1] || "");
+          const meta = (dataCardsSerie || []).map(r => Number(r.meta||0));
+          const real = (dataCardsSerie || []).map(r => Number(r.realizado||0));
+
+          const somaMeta = meta.reduce((acc, v) => acc + Number(v || 0), 0);
+          const somaReal = real.reduce((acc, v) => acc + Number(v || 0), 0);
+
+          const realAcum = [];
+          real.reduce((acc, v) => {
+            const total = acc + Number(v || 0);
+            realAcum.push(total);
+            return total;
+          }, 0);
+
+          const isReceitaCard = indicador === "receita";
+
+          function arredondarInteiro(n){
+            return Math.round(Number(n || 0));
+          }
+
+          const formatCard = (v) => {
+            const valor = arredondarInteiro(v);
+
+            if (indicador === "receita") {
+              return valor.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+              });
+            }
+
+            if (indicador === "hora_aluno") {
+              return valor.toLocaleString("pt-BR");
+            }
+
+            return format(v);
+          };
+
+          const metaResumo = Number(resumoAcumulado?.meta || 0);
+          const projetadoResumo = Number(resumoAcumulado?.projetado || 0);
+          const realizadoResumo = Number(resumoAcumulado?.realizado || 0);
+          const elLabelReal = document.getElementById("cardRealizadoAcum")
+            .closest(".summary-card")
+            .querySelector(".label");
+
+          const elSubReal = document.getElementById("cardRealizadoAcum")
+            .closest(".summary-card")
+            .querySelector(".sub");
+          document.getElementById("cardRealizadoAcum").textContent = formatCard(realizadoResumo);
+          if (isMesUnico) {
+            elLabelReal.textContent = "Realizado";
+            elSubReal.textContent = "No mês";
+          } else {
+            elLabelReal.textContent = "Realizado acumulado";
+            elSubReal.textContent = "No período";
+          }
+          const elLabelMeta = document.getElementById("cardMetaAcum")
+            .closest(".summary-card")
+            .querySelector(".label");
+
+          const elSubMeta = document.getElementById("cardMetaAcum")
+            .closest(".summary-card")
+            .querySelector(".sub");
+          document.getElementById("cardMetaAcum").textContent = formatCard(metaResumo);
+          if (isMesUnico) {
+            elLabelMeta.textContent = "Meta";
+            elSubMeta.textContent = "No mês";
+          } else {
+            elLabelMeta.textContent = "Meta acumulada";
+            elSubMeta.textContent = "No período";
+          }
+
+          const elPct = document.getElementById("cardPctMeta");
+          const elDiff = document.getElementById("cardDiffMeta");
+
+          // títulos e subtítulos dos cards
+          const pctCard = elPct.closest(".summary-card");
+          const diffCard = elDiff.closest(".summary-card");
+
+          const pctTitle = pctCard.querySelector(".label");
+          const pctSub = pctCard.querySelector(".sub");
+
+          const diffTitle = diffCard.querySelector(".label");
+          const diffSub = diffCard.querySelector(".sub");
+
+          if (metaResumo > 0) {
+            const pctMeta = (realizadoResumo / metaResumo) * 100;
+            const diffMeta = realizadoResumo - metaResumo;
+
+            pctTitle.textContent = "% atingimento";
+            pctSub.textContent = "Realizado x meta";
+            elPct.textContent = `${pctMeta.toFixed(1).replace(".", ",")}%`;
+
+            diffTitle.textContent = "Diferença para meta";
+            diffSub.textContent = "Acumulado";
+            elDiff.textContent = formatCard(diffMeta);
+
+          } else if (projetadoResumo > 0) {
+            const pctProj = (realizadoResumo / projetadoResumo) * 100;
+            const diffProj = realizadoResumo - projetadoResumo;
+
+            pctTitle.textContent = "% realizado x projetado";
+            pctSub.textContent = "Sem meta definida";
+            elPct.textContent = `${pctProj.toFixed(1).replace(".", ",")}%`;
+
+            diffTitle.textContent = "Diferença para projetado";
+            diffSub.textContent = "Sem meta definida";
+            elDiff.textContent = formatCard(diffProj);
+
+          } else {
+            pctTitle.textContent = "% atingimento";
+            pctSub.textContent = "Sem base de comparação";
+            elPct.textContent = "—";
+
+            diffTitle.textContent = "Diferença para meta";
+            diffSub.textContent = "Meta não definida";
+            elDiff.textContent = "—";
+          }
+
+          const isReceita = indicador === "receita";
+          const tickFmt = (v) => isReceita ? moeda(v) : format(v);
+
+          const canvas = document.getElementById("grafico");
+          const ctx = canvas.getContext("2d");
+
+          if(chart) chart.destroy();
+
+          chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Meta (mês)",
+                  data: meta,
+                  backgroundColor: "#cbd5f5",
+                  borderRadius: 6
+                },
+                {
+                  label: "Realizado (mês)",
+                  data: real,
+                  backgroundColor: "#2563eb",
+                  borderRadius: 8
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              layout: { padding: { top: 40 } },
+
+              // ✅ mata qualquer comportamento de hover
+              events: [],
+
+              // ✅ desliga tooltip
+              plugins: {
+                tooltip: { enabled: false },
+                legend: {
+                  position: "top",
+                  labels: {
+                    padding: 12
+                  }
+                },
+
+                // ✅ passa config pro plugin
+                valueLabelsPlugin: { indicador }
+              },
+
+              // ✅ deixa o render “instantâneo” (evita depender de hover/frames)
+              animation: false,
+
+              scales: {
+                y: {
+                  grace: "20%",
+                  ticks: { callback: (value) => tickFmt(value) }
+                }
+              }
+            }
+          });
+
+          // ✅ força redesenho imediato (garante rótulos já no load)
+          chart.update("none");
+          
+          renderTabelaMensal(dataCardsSerie, indicador, programa);
+          console.log("Chamando Market Share com:", {
+            programa_id,
+            programa,
+            ano,
+            subregioes,
+            url: window.location.href
+          });
+
+          try {
+            await carregarMarketShareAprendizagem(programa, ano, subregioes);
+          } catch (e) {
+            console.error("Falha ao carregar Market Share:", e);
+          }
+        } finally {
+          esconderLoading();
         }
-      });
-
-      // ✅ força redesenho imediato (garante rótulos já no load)
-      chart.update("none");
-      
-      renderTabelaMensal(dataCardsSerie, indicador, programa);
-      console.log("Chamando Market Share com:", {
-        programa_id,
-        programa,
-        ano,
-        subregioes,
-        url: window.location.href
-      });
-
-      try {
-        await carregarMarketShareAprendizagem(programa, ano, subregioes);
-      } catch (e) {
-        console.error("Falha ao carregar Market Share:", e);
-      }
     }
 
     (function init(){
