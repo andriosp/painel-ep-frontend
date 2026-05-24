@@ -1,294 +1,339 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel • Modalidades</title>
 
   <style>
-    :root{
-      --bg:#f6f7fb;
-      --panel:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:#e5e7eb;
-      --shadow: 0 10px 24px rgba(15,23,42,.08);
-      --radius:14px;
-      --radius-sm:12px;
+    :root {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e5e7eb;
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --radius: 14px;
+      --radius-sm: 12px;
 
-      --brand:#2563eb;  /* azul executivo */
-      --ok:#16a34a;
-      --warn:#f59e0b;
+      --brand: #2563eb;
+      /* azul executivo */
+      --ok: #16a34a;
+      --warn: #f59e0b;
     }
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
-    .container{
+    .container {
       max-width: 1800px;
       margin: 0 auto;
       padding: 18px 18px 36px;
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
+    .topnav {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0 14px;
+      align-items: center;
     }
-    .navlink{
-      text-decoration:none;
+
+    .navlink {
+      text-decoration: none;
       color: var(--muted);
       font-weight: 750;
       font-size: 13px;
-      padding:8px 12px;
+      padding: 8px 12px;
       border-radius: 12px;
-      border:1px solid transparent;
+      border: 1px solid transparent;
     }
-    .navlink:hover{
-      background:#fff;
+
+    .navlink:hover {
+      background: #fff;
       border-color: var(--border);
     }
-    .navlink.active{
-      background: rgba(37,99,235,.10);
+
+    .navlink.active {
+      background: rgba(37, 99, 235, .10);
       color: var(--text);
-      border-color: rgba(37,99,235,.25);
+      border-color: rgba(37, 99, 235, .25);
     }
 
-    .header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-    .title h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.2px;
+
+    .title h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: .2px;
     }
-    .title p{
-      margin:6px 0 0;
+
+    .title p {
+      margin: 6px 0 0;
       color: var(--muted);
-      font-size:13px;
+      font-size: 13px;
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border:1px solid var(--border);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
       border-radius: 999px;
       background: #fff;
       color: var(--muted);
-      font-size:12px;
-      box-shadow: 0 6px 14px rgba(15,23,42,.06);
-      white-space:nowrap;
+      font-size: 12px;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+      white-space: nowrap;
       max-width: 55vw;
-      overflow:hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
     }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
       background: var(--brand);
-      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
       flex: 0 0 auto;
     }
 
-    .panel{
+    .panel {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
       margin-bottom: 14px;
     }
 
-    .filters{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      align-items:flex-start;
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
     }
 
-    .field{
-      flex:1;
-      min-width:320px;
+    .field {
+      flex: 1;
+      min-width: 320px;
       align-self: flex-end;
     }
 
-    .field.sm{
-      flex:0 0 160px;
-      min-width:160px;
-      max-width:160px;
-      align-self:flex-end;
+    .field.sm {
+      flex: 0 0 160px;
+      min-width: 160px;
+      max-width: 160px;
+      align-self: flex-end;
     }
 
-    label{
-      display:block;
-      font-size:12px;
+    label {
+      display: block;
+      font-size: 12px;
       color: var(--muted);
-      margin-bottom:8px;
+      margin-bottom: 8px;
     }
-    select{
-      width:100%;
-      height:40px;
-      border:1px solid var(--border);
+
+    select {
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding:10px;
-      background:#fff;
-      outline:none;
-    }
-    select:focus{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
-    }
-    select[multiple]{
-      height:150px;
+      padding: 10px;
+      background: #fff;
+      outline: none;
     }
 
-    #periodoMeses{
-      height:150px;
+    select:focus {
+      border-color: rgba(37, 99, 235, .45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
     }
 
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      align-self:flex-end;
+    select[multiple] {
+      height: 150px;
     }
 
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background:#fff;
+    #periodoMeses {
+      height: 150px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      align-self: flex-end;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
       color: var(--text);
-      padding:10px 12px;
+      padding: 10px 12px;
       border-radius: 12px;
-      cursor:pointer;
+      cursor: pointer;
       font-weight: 650;
-      font-size:13px;
+      font-size: 13px;
       transition: transform .05s ease, background .15s ease, border-color .15s ease;
     }
-    button:hover{ background:#f8fafc; border-color:#dbe3ef; }
-    button:active{ transform: translateY(1px); }
 
-    .btn-primary{
-      background: var(--brand);
-      color:#fff;
-      border-color: rgba(37,99,235,.65);
+    button:hover {
+      background: #f8fafc;
+      border-color: #dbe3ef;
     }
-    .btn-primary:hover{ background:#1d4ed8; }
 
-    .cards{
-      display:grid;
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: rgba(37, 99, 235, .65);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .cards {
+      display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
       margin-bottom: 10px;
     }
-    @media (max-width: 1180px){
-      .cards{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 720px){
-      .cards{ grid-template-columns: 1fr; }
-      .field{ min-width: 100%; }
+
+    @media (max-width: 1180px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .card{
+    @media (max-width: 720px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .field {
+        min-width: 100%;
+      }
+    }
+
+    .card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
     }
-    .card h3{
-      margin:0;
-      font-size:13px;
+
+    .card h3 {
+      margin: 0;
+      font-size: 13px;
       color: var(--muted);
       font-weight: 750;
       letter-spacing: .2px;
     }
-    .big{
+
+    .big {
       margin-top: 10px;
       font-size: 26px;
       font-weight: 820;
       letter-spacing: .2px;
     }
-    .sub{
+
+    .sub {
       margin-top: 4px;
       font-size: 12px;
       color: var(--muted);
     }
 
-    .chips{
-      display:flex;
-      gap:8px;
+    .chips {
+      display: flex;
+      gap: 8px;
       margin-top: 12px;
       flex-wrap: nowrap;
       overflow-x: auto;
       padding-bottom: 2px;
     }
-    .chips::-webkit-scrollbar{ height: 6px; }
-    .chips::-webkit-scrollbar-thumb{ background:#dbe3ef; border-radius:999px; }
 
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
+    .chips::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .chips::-webkit-scrollbar-thumb {
+      background: #dbe3ef;
       border-radius: 999px;
-      border:1px solid var(--border);
-      background:#fff;
-      font-size:11px;
-      line-height:1.1;
-      white-space:nowrap;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 11px;
+      line-height: 1.1;
+      white-space: nowrap;
       flex: 0 0 auto;
     }
 
-    .chip.gr{
-      background:#e8f3ff;
-      border:1px solid #b9d7ff;
-      color:#1d4ed8;
+    .chip.gr {
+      background: #e8f3ff;
+      border: 1px solid #b9d7ff;
+      color: #1d4ed8;
     }
 
-    .chip.gnr{
-      background:#fffbeb;
-      border:1px solid #fde68a;
-      color:#b45309;
+    .chip.gnr {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #b45309;
     }
 
-    .chip.pago{
-      background:#ecfdf3;
-      border:1px solid #b7ebc6;
-      color:#15803d;
+    .chip.pago {
+      background: #ecfdf3;
+      border: 1px solid #b7ebc6;
+      color: #15803d;
     }
 
-    .legend{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin:6px 4px 16px;
-      font-size:12px;
-      color:var(--muted);
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 6px 4px 16px;
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    .legend-item{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      color:var(--muted);
-      font-weight:500;
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-weight: 500;
     }
 
-    .section-title{
+    .section-title {
       margin: 16px 2px 10px;
       font-size: 12px;
       color: var(--muted);
@@ -297,100 +342,117 @@
       text-transform: uppercase;
     }
 
-    .table-card{
+    .table-card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      overflow:hidden;
+      overflow: hidden;
       margin-bottom: 14px;
     }
-    .table-wrap{ overflow:auto; }
-    table{
-      width:100%;
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
       border-collapse: collapse;
       min-width: 0;
     }
-    thead th{
+
+    thead th {
       position: sticky;
-      top:0;
+      top: 0;
       background: #fbfcfe;
-      border-bottom:1px solid var(--border);
+      border-bottom: 1px solid var(--border);
       color: var(--muted);
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: .28px;
       padding: 12px 10px;
-      text-align:right;
-      white-space:nowrap;
+      text-align: right;
+      white-space: nowrap;
     }
-    thead th:first-child{ text-align:left; }
-    tbody td{
-      border-bottom:1px solid #eef2f7;
+
+    thead th:first-child {
+      text-align: left;
+    }
+
+    tbody td {
+      border-bottom: 1px solid #eef2f7;
       padding: 10px;
-      text-align:right;
-      white-space:nowrap;
+      text-align: right;
+      white-space: nowrap;
       font-size: 12px;
     }
-    tbody td:first-child{ text-align:left; }
-    tbody tr:nth-child(odd){ background:#fcfdff; }
-    tbody tr:hover{ background: rgba(37,99,235,.06); }
 
-    .chip .k{
-      font-weight:800;
-      letter-spacing:.2px;
+    tbody td:first-child {
+      text-align: left;
     }
 
-    .chip.status-low{
+    tbody tr:nth-child(odd) {
+      background: #fcfdff;
+    }
+
+    tbody tr:hover {
+      background: rgba(37, 99, 235, .06);
+    }
+
+    .chip .k {
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .chip.status-low {
       background: rgba(220, 38, 38, .12);
       border-color: rgba(220, 38, 38, .28);
       color: #b91c1c;
     }
 
-    .chip.status-mid{
+    .chip.status-mid {
       background: rgba(245, 158, 11, .14);
       border-color: rgba(245, 158, 11, .30);
       color: #b45309;
     }
 
-    .chip.status-high{
+    .chip.status-high {
       background: rgba(22, 163, 74, .12);
       border-color: rgba(22, 163, 74, .28);
       color: #15803d;
     }
 
-    .chip.status-blue{
+    .chip.status-blue {
       background: rgba(37, 99, 235, .10);
       border-color: rgba(37, 99, 235, .25);
       color: #1d4ed8;
     }
 
-    .chip.status-neutral{
+    .chip.status-neutral {
       background: #f3f4f6;
       border-color: #d1d5db;
       color: #374151;
     }
 
-    .sem-meta-zero{
+    .sem-meta-zero {
       color: #111827;
       font-weight: 600;
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
-      flex-wrap:wrap;
+    .topnav {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0 14px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    .topnav-right{
-      margin-left:auto;
-      display:flex;
-      align-items:center;
-      gap:10px;
+    .topnav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-
   </style>
 </head>
 
@@ -401,27 +463,27 @@
         ? "http://localhost:8000"
         : "/api";
   </script>
-  
+
   <script>
-    (async function validarSessao(){
-      try{
+    (async function validarSessao() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok){
+        if (!resp.ok) {
           window.location.href = "login.html";
           return;
         }
 
         const data = await resp.json();
 
-        if(data.deve_trocar_senha){
+        if (data.deve_trocar_senha) {
           window.location.href = "alterar_senha.html";
           return;
         }
 
-      }catch(e){
+      } catch (e) {
         window.location.href = "login.html";
       }
     })();
@@ -439,7 +501,7 @@
       <a href="sge_turmas.html" class="navlink">Turmas</a>
       <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
       <a href="relatorio_programa.html" class="navlink">Relatório Executivo</a>
-    
+
       <div class="topnav-right">
         <a href="alterar_senha.html" class="navlink">
           Alterar senha
@@ -448,7 +510,7 @@
           <span class="dot"></span>
           Usuário: —
         </div>
-    
+
         <button onclick="logout()">Sair</button>
       </div>
     </nav>
@@ -536,17 +598,17 @@
         <span class="chip status-high"><strong>≥ 100%</strong></span>
         <span>Meta atingida</span>
       </span>
-    
+
       <span class="legend-item">
         <span class="chip status-blue"><strong>75% – 99,9%</strong></span>
         <span>No caminho</span>
       </span>
-    
+
       <span class="legend-item">
         <span class="chip status-mid"><strong>51% – 74,9%</strong></span>
         <span>Atenção</span>
       </span>
-    
+
       <span class="legend-item">
         <span class="chip status-low"><strong>&lt; 51%</strong></span>
         <span>Crítico</span>
@@ -556,7 +618,7 @@
         <span class="chip status-neutral"><strong>100%</strong></span>
         <span>Sem meta (com realizado)</span>
       </span>
-      
+
       <span class="legend-item">
         <span class="sem-meta-zero"><strong>–</strong></span>
         <span>Sem dados (meta = 0 e realizado = 0)</span>
@@ -575,9 +637,9 @@
   <script>
 
     function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
-    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" }); }
+    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
 
-    function aplicarAnoMesPadrao(){
+    function aplicarAnoMesPadrao() {
       const agora = new Date();
       const anoAtual = String(agora.getFullYear());
       const mesAtual = String(agora.getMonth() + 1);
@@ -594,7 +656,7 @@
       });
     }
 
-    function salvarAnoMesPreferidos(){
+    function salvarAnoMesPreferidos() {
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(o => o.value);
 
@@ -602,20 +664,20 @@
       localStorage.setItem("modalidades_meses", JSON.stringify(meses));
     }
 
-    function setStatus(msg){
+    function setStatus(msg) {
       const el = document.getElementById("status");
-      if(el) el.textContent = msg || "";
+      if (el) el.textContent = msg || "";
     }
 
-    function selecionados(id){
+    function selecionados(id) {
       const sel = document.getElementById(id);
       return Array.from(sel.selectedOptions).map(o => o.value).join(",");
     }
 
-    function atualizarBadgeFiltro(){
+    function atualizarBadgeFiltro() {
       const selMod = document.getElementById("modalidades");
       const badge = document.getElementById("badge-filtro");
-      if(!badge) return;
+      if (!badge) return;
 
       const selecionadas = Array.from(selMod.selectedOptions)
         .map(o => o.textContent.trim());
@@ -623,17 +685,17 @@
       const disponiveis = Array.from(selMod.options)
         .map(o => o.textContent.trim());
 
-        let modTxt = "";
+      let modTxt = "";
 
-        if (selecionadas.length) {
-          modTxt = selecionadas.length <= 2
-            ? selecionadas.join(", ")
-            : `${selecionadas.slice(0,2).join(", ")} +${selecionadas.length - 2}`;
+      if (selecionadas.length) {
+        modTxt = selecionadas.length <= 2
+          ? selecionadas.join(", ")
+          : `${selecionadas.slice(0, 2).join(", ")} +${selecionadas.length - 2}`;
 
-          modTxt = `Modalidades: ${modTxt}`;
-        } else {
-          modTxt = "Modalidades: todas com resultados no período";
-        }
+        modTxt = `Modalidades: ${modTxt}`;
+      } else {
+        modTxt = "Modalidades: todas com resultados no período";
+      }
 
       const ano = document.getElementById("ano").value || "2026";
 
@@ -660,7 +722,7 @@
       badge.innerHTML = `<span class="dot"></span>Filtro: ${modTxt} • Ano: ${ano} • Meses: ${periodoTxt}`;
     }
 
-    async function limparSelecao(){
+    async function limparSelecao() {
       ["modalidades", "financiamentos"].forEach(id => {
         const sel = document.getElementById(id);
         Array.from(sel.options).forEach(o => o.selected = false);
@@ -678,7 +740,7 @@
       await carregarTudo();
     }
 
-    async function carregarModalidades(){
+    async function carregarModalidades() {
       const ano = document.getElementById("ano").value || "2026";
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(opt => opt.value);
@@ -717,52 +779,52 @@
       });
     }
 
-    function chipPct(pct){
+    function chipPct(pct) {
       const v = Number(pct || 0);
       const cls = (v >= 100) ? "ok" : (v >= 70 ? "warn" : "");
-      const t = v.toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1}) + "%";
+      const t = v.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
       return `<span class="chip ${cls}"><span class="k">Real/Meta</span><span class="pill">${t}</span></span>`;
     }
 
-    function pctParte(parte, total){
-        total = Number(total || 0);
-        parte = Number(parte || 0);
-        return total <= 0 ? 0 : (parte / total) * 100;
-        }
+    function pctParte(parte, total) {
+      total = Number(total || 0);
+      parte = Number(parte || 0);
+      return total <= 0 ? 0 : (parte / total) * 100;
+    }
 
-        function chipGrupo(label, valor, pct, cls=""){
-        const pctTxt = Number(pct||0).toLocaleString("pt-BR",{minimumFractionDigits:1, maximumFractionDigits:1}) + "%";
-        return `
+    function chipGrupo(label, valor, pct, cls = "") {
+      const pctTxt = Number(pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
+      return `
             <span class="chip ${cls}">
             <span class="k">${label}</span>
             ${valor}
             <span class="pill">${pctTxt}</span>
             </span>
         `;
-        }
+    }
 
-    function renderChipsGRGP({gr=0,g=0,p=0,total=0}, isMoney=false){
+    function renderChipsGRGP({ gr = 0, g = 0, p = 0, total = 0 }, isMoney = false) {
       total = Number(total || 0);
-      if(total <= 0) total = 1;
+      if (total <= 0) total = 1;
 
-      const fmtVal = (v)=> isMoney ? moeda(v) : format(v);
+      const fmtVal = (v) => isMoney ? moeda(v) : format(v);
 
       return `
         <span class="chip gr">
-          <strong>GR</strong> ${fmtVal(gr)} (${pctParte(gr,total).toFixed(1)}%)
+          <strong>GR</strong> ${fmtVal(gr)} (${pctParte(gr, total).toFixed(1)}%)
         </span>
 
         <span class="chip gnr">
-          <strong>GNR</strong> ${fmtVal(g)} (${pctParte(g,total).toFixed(1)}%)
+          <strong>GNR</strong> ${fmtVal(g)} (${pctParte(g, total).toFixed(1)}%)
         </span>
 
         <span class="chip pago">
-          <strong>PG</strong> ${fmtVal(p)} (${pctParte(p,total).toFixed(1)}%)
+          <strong>PG</strong> ${fmtVal(p)} (${pctParte(p, total).toFixed(1)}%)
         </span>
       `;
     }
 
-    async function carregarCards(){
+    async function carregarCards() {
       atualizarBadgeFiltro();
 
       const ano = Number(document.getElementById("ano").value || 2026);
@@ -803,7 +865,7 @@
         chipPct(d.receita?.realizado || 0, d.receita?.meta || 0);
     }
 
-    function montarTabela(id, colunas, linhas){
+    function montarTabela(id, colunas, linhas) {
       const t = document.getElementById(id);
       t.innerHTML = "";
 
@@ -828,7 +890,7 @@
 
       const thead = document.createElement("thead");
       const trh = document.createElement("tr");
-      colunas.forEach(c=>{
+      colunas.forEach(c => {
         const th = document.createElement("th");
         th.textContent = c;
         trh.appendChild(th);
@@ -836,9 +898,9 @@
       thead.appendChild(trh);
 
       const tbody = document.createElement("tbody");
-      linhas.forEach(l=>{
+      linhas.forEach(l => {
         const tr = document.createElement("tr");
-        colunas.forEach(c=>{
+        colunas.forEach(c => {
           const td = document.createElement("td");
 
           if (typeof l[c] === "string" && l[c].includes("<span")) {
@@ -856,7 +918,7 @@
       t.appendChild(tbody);
     }
 
-    async function carregarTabela(){
+    async function carregarTabela() {
       const ano = Number(document.getElementById("ano").value || 2026);
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(o => o.value);
@@ -915,17 +977,23 @@
         }
       }
 
-      const dataFinal = Array.from(mapa.values()).sort((a, b) =>
-        String(a.programa).localeCompare(String(b.programa), "pt-BR")
-      );
+      const dataFinal = Array.from(mapa.values())
+        .filter(r =>
+          Number(r.matriculas_meta || 0) !== 0 ||
+          Number(r.ha_meta || 0) !== 0 ||
+          Number(r.receita_meta || 0) !== 0
+        )
+        .sort((a, b) =>
+          String(a.programa).localeCompare(String(b.programa), "pt-BR")
+        );
 
       montarTabela(
         "tabela-programas",
         [
           "Programa",
-          "Mat Meta","Mat Real","Status Mat",
-          "HA Meta","HA Real","Status HA",
-          "Rec Meta","Rec Real","Status Rec"
+          "Mat Meta", "Mat Real", "Status Mat",
+          "HA Meta", "HA Real", "Status HA",
+          "Rec Meta", "Rec Real", "Status Rec"
         ],
         dataFinal.map(r => ({
           "Programa": r.programa,
@@ -944,22 +1012,22 @@
       );
     }
 
-    async function carregarTudo(){
-      try{
+    async function carregarTudo() {
+      try {
         setStatus("Carregando visão de modalidades…");
         await carregarCards();
         await carregarTabela();
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao carregar dados. Verifique se os endpoints /modalidades/* estão ativos no backend.");
       }
     }
 
-    (async function init(){
+    (async function init() {
       await carregarUsuario();
 
-      try{
+      try {
         setStatus("Carregando filtros…");
 
         const anoSalvo =
@@ -971,26 +1039,26 @@
             || "[]"
           );
 
-        if (anoSalvo){
+        if (anoSalvo) {
           document.getElementById("ano").value =
             anoSalvo;
         }
 
-        if (mesesSalvos.length){
+        if (mesesSalvos.length) {
           Array.from(
             document.getElementById("periodoMeses").options
-          ).forEach(o=>{
+          ).forEach(o => {
             o.selected =
               mesesSalvos.includes(o.value);
           });
-        }else{
+        } else {
           aplicarAnoMesPadrao();
         }
 
         await carregarModalidades();
 
         // força atualização depois do DOM estabilizar
-        setTimeout(async ()=>{
+        setTimeout(async () => {
 
           await carregarFinanciamentos();
 
@@ -1000,9 +1068,9 @@
 
           setStatus("");
 
-        },0);
+        }, 0);
 
-      }catch(e){
+      } catch (e) {
         console.error(e);
 
         setStatus(
@@ -1011,12 +1079,12 @@
       }
     })();
 
-    document.getElementById("modalidades").addEventListener("change", async ()=>{
+    document.getElementById("modalidades").addEventListener("change", async () => {
       atualizarBadgeFiltro();
       await carregarTudo();
     });
 
-    document.getElementById("ano").addEventListener("change", async ()=>{
+    document.getElementById("ano").addEventListener("change", async () => {
       salvarAnoMesPreferidos();
       await carregarModalidades();
       await carregarFinanciamentos();
@@ -1024,7 +1092,7 @@
       await carregarTudo();
     });
 
-    document.getElementById("periodoMeses").addEventListener("change", async ()=>{
+    document.getElementById("periodoMeses").addEventListener("change", async () => {
       salvarAnoMesPreferidos();
       await carregarModalidades();
       await carregarFinanciamentos();
@@ -1032,19 +1100,19 @@
       await carregarTudo();
     });
 
-    document.getElementById("financiamentos").addEventListener("change", async ()=>{
+    document.getElementById("financiamentos").addEventListener("change", async () => {
       await carregarModalidades();
       atualizarBadgeFiltro();
       await carregarTudo();
     });
 
-    document.getElementById("modalidades").addEventListener("change", async ()=>{
+    document.getElementById("modalidades").addEventListener("change", async () => {
       await carregarFinanciamentos();
       atualizarBadgeFiltro();
       await carregarTudo();
     });
 
-    function chipPct(real, meta){
+    function chipPct(real, meta) {
       real = Number(real || 0);
       meta = Number(meta || 0);
 
@@ -1078,7 +1146,7 @@
               </span>`;
     }
 
-    function badgeStatusTabela(real, meta){
+    function badgeStatusTabela(real, meta) {
       real = Number(real || 0);
       meta = Number(meta || 0);
 
@@ -1112,7 +1180,7 @@
       return `<span class="chip ${cls}">${t}</span>`;
     }
 
-    async function carregarFinanciamentos(){
+    async function carregarFinanciamentos() {
       const ano = document.getElementById("ano").value || "2026";
 
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
@@ -1146,36 +1214,37 @@
       });
     }
 
-    async function carregarUsuario(){
-      try{
+    async function carregarUsuario() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok) return;
+        if (!resp.ok) return;
 
         const data = await resp.json();
 
         const el = document.getElementById("usuario-logado");
-        if(el){
+        if (el) {
           el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
         }
-      }catch(e){
+      } catch (e) {
         console.error(e);
       }
     }
 
-    async function logout(){
-      try{
+    async function logout() {
+      try {
         await fetch(`${API}/auth/logout`, {
           method: "POST",
           credentials: "include"
         });
-      } catch(e) {}
+      } catch (e) { }
 
       window.location.href = "login.html";
     }
 
   </script>
 </body>
+
 </html>

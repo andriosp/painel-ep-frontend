@@ -1,107 +1,183 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Programa • Performance Mensal</title>
 
   <style>
-    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f6f7fb; color:#0f172a; }
-    .container{ max-width: 1200px; margin: 0 auto; padding: 18px; }
-    .panel{ background:#fff; border:1px solid #e5e7eb; border-radius:14px; box-shadow:0 10px 24px rgba(15,23,42,.08); padding:14px; }
-    .h{ display:flex; justify-content:space-between; gap:12px; align-items:flex-end; flex-wrap:wrap; }
-    h1{ margin:0; font-size:22px; }
-    .muted{ color:#64748b; font-size:13px; margin-top:6px; }
-    .controls{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #f6f7fb;
+      color: #0f172a;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      padding: 14px;
+    }
+
+    .h {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .muted {
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     .controls input,
     .controls select,
     .controls button {
       height: 44px;
-      min-width: 140px;     /* 👈 força o mesmo “tamanho visual” */
+      min-width: 140px;
+      /* 👈 força o mesmo “tamanho visual” */
       padding: 10px 14px;
       border-radius: 12px;
       box-sizing: border-box;
     }
 
     .controls button {
-      min-width: 120px;     /* botão pode ser um pouco menor */
+      min-width: 120px;
+      /* botão pode ser um pouco menor */
     }
-    select, input{ border:1px solid #e5e7eb; border-radius:12px; padding:10px; height:40px; background:#fff; }
-    button{ border:1px solid #e5e7eb; background:#fff; border-radius:12px; padding:10px 12px; cursor:pointer; font-weight:650; }
-    button:hover{ background:#f8fafc; }
-    .chart-wrap{ height:520px; }
-    .summary-grid{
-      display:grid;
+
+    select,
+    input {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 10px;
+      height: 40px;
+      background: #fff;
+    }
+
+    button {
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 650;
+    }
+
+    button:hover {
+      background: #f8fafc;
+    }
+
+    .chart-wrap {
+      height: 520px;
+    }
+
+    .summary-grid {
+      display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap:12px;
-      margin-top:14px;
-      margin-bottom:14px;
+      gap: 12px;
+      margin-top: 14px;
+      margin-bottom: 14px;
     }
-    .summary-card{
-      background:#f8fafc;
-      border:1px solid #e5e7eb;
-      border-radius:14px;
-      padding:14px;
+
+    .summary-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
     }
-    .summary-card .label{
-      font-size:12px;
-      color:#64748b;
-      margin-bottom:6px;
-      font-weight:600;
+
+    .summary-card .label {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 6px;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing:.02em;
+      letter-spacing: .02em;
     }
-    .summary-card .value{
-      font-size:24px;
-      font-weight:800;
-      color:#0f172a;
-      line-height:1.1;
-    }
-    .summary-card .sub{
-      margin-top:6px;
-      font-size:12px;
-      color:#64748b;
-    }
-    #grafico{ width:100%; height:100%; display:block; }
 
-    .loading-overlay{
-      position:fixed;
-      inset:0;
-      background:rgba(246,247,251,.78);
+    .summary-card .value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.1;
+    }
+
+    .summary-card .sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    #grafico {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(246, 247, 251, .78);
       backdrop-filter: blur(3px);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
     }
 
-    .loading-box{
-      background:#fff;
-      border:1px solid #e5e7eb;
-      border-radius:14px;
-      box-shadow:0 10px 24px rgba(15,23,42,.12);
-      padding:18px 22px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      color:#64748b;
-      font-size:14px;
-      font-weight:700;
+    .loading-box {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, .12);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 700;
     }
 
-    .spinner{
-      width:28px;
-      height:28px;
-      border:4px solid #e5e7eb;
-      border-top-color:#2563eb;
-      border-radius:50%;
-      animation:spin .8s linear infinite;
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
     }
 
-    @keyframes spin{
-      to{ transform:rotate(360deg); }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
-
   </style>
 </head>
 
@@ -121,20 +197,20 @@
         : "/api";
   </script>
   <script>
-    (async function validarSessao(){
-      try{
+    (async function validarSessao() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
-    
-        if(!resp.ok){
+
+        if (!resp.ok) {
           window.location.href = "/login.html";
         }
-      }catch(e){
+      } catch (e) {
         window.location.href = "/login.html";
       }
     })();
-    </script>
+  </script>
 
   <div class="container">
     <div class="panel">
@@ -222,19 +298,19 @@
               <div class="value" id="cardMarketShareTotal">0%</div>
               <div class="sub">No mês selecionado</div>
             </div>
-          
+
             <div class="summary-card">
               <div class="label">Total de Cotas</div>
               <div class="value" id="cardTotalCotas">0</div>
               <div class="sub">Todas as regiões</div>
             </div>
-          
+
             <div class="summary-card">
               <div class="label">Total de Aprendizes</div>
               <div class="value" id="cardTotalAprendizes">0</div>
               <div class="sub">No mês selecionado</div>
             </div>
-          
+
             <div class="summary-card">
               <div class="label">Total de CNPJs</div>
               <div class="value" id="cardTotalCnpjs">0</div>
@@ -242,8 +318,8 @@
             </div>
           </div>
         </div>
-      
-        <div style="overflow:auto; padding:14px;">
+
+        <div id="marketShareTabelaWrap" style="overflow:auto; padding:14px;">
           <table style="width:100%; border-collapse:collapse; font-size:14px;">
             <thead>
               <tr style="background:#f8fafc; text-align:left;">
@@ -254,7 +330,7 @@
                 <th style="padding:10px; border-bottom:1px solid #e5e7eb;">% Market Share</th>
               </tr>
             </thead>
-      
+
             <tbody id="tbodyMarketShare"></tbody>
           </table>
         </div>
@@ -268,7 +344,7 @@
   <script>
     let chart = null;
 
-    function qp(name){
+    function qp(name) {
       return new URLSearchParams(window.location.search).get(name);
     }
 
@@ -279,14 +355,14 @@
         .filter(n => Number.isInteger(n) && n >= 1 && n <= 12)
         .sort((a, b) => a - b);
 
-      return meses.length ? meses : [1,2,3,4,5,6,7,8,9,10,11,12];
+      return meses.length ? meses : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     }
 
-    function moeda(n){
-      return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+    function moeda(n) {
+      return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
     }
-    function format(n){
-      return Number(n||0).toLocaleString("pt-BR");
+    function format(n) {
+      return Number(n || 0).toLocaleString("pt-BR");
     }
 
     // ✅ Plugin de rótulos fixos (Chart.js v4)
@@ -475,7 +551,7 @@
       const tbody = document.getElementById("tbodyDetalhamentoMensal");
       tbody.innerHTML = "";
 
-      const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+      const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
       const isReceita = indicador === "receita";
       const fmt = (v) => isReceita ? moeda(v) : format(v);
       const isJovemAprendiz =
@@ -497,8 +573,11 @@
         const pct = meta > 0 ? (realizado / meta) * 100 : null;
 
         let status = "Crítico";
+
         if (meta === 0 && realizado === 0) {
           status = "Ainda não iniciado";
+        } else if (meta > 0 && realizado === 0) {
+          status = "Sem movimento";
         } else if (meta === 0 && realizado > 0) {
           status = "Realizado sem meta";
         } else if (realizado >= meta) {
@@ -514,22 +593,24 @@
         const tr = document.createElement("tr");
         const corStatus =
           status === "Meta atingida" ? "#16a34a" :
-          status === "Atenção" ? "#f59e0b" :
-          status === "Realizado sem meta" ? "#7c3aed" :
-          status === "Planejado sem meta" ? "#2563eb" :
-          status === "Em execução sem meta" ? "#7c3aed" :
-          status === "Ainda não iniciado" ? "#64748b" :
-          "#dc2626";
+            status === "Atenção" ? "#f59e0b" :
+              status === "Realizado sem meta" ? "#7c3aed" :
+                status === "Planejado sem meta" ? "#2563eb" :
+                  status === "Em execução sem meta" ? "#7c3aed" :
+                    status === "Ainda não iniciado" ? "#64748b" :
+                      status === "Sem movimento" ? "#64748b" :
+                        "#dc2626";
 
         const bgStatus =
           status === "Meta atingida" ? "#dcfce7" :
-          status === "Atenção" ? "#fef3c7" :
-          status === "Realizado sem meta" ? "#ede9fe" :
-          status === "Planejado sem meta" ? "#dbeafe" :
-          status === "Em execução sem meta" ? "#ede9fe" :
-          status === "Ainda não iniciado" ? "#f1f5f9" :
-          "#fee2e2";
-            tr.innerHTML = `
+            status === "Atenção" ? "#fef3c7" :
+              status === "Realizado sem meta" ? "#ede9fe" :
+                status === "Planejado sem meta" ? "#dbeafe" :
+                  status === "Em execução sem meta" ? "#ede9fe" :
+                    status === "Ainda não iniciado" ? "#f1f5f9" :
+                      status === "Sem movimento" ? "#f1f5f9" :
+                        "#fee2e2";
+        tr.innerHTML = `
               <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${meses[(r.mes || 1) - 1]}</td>
               <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fmt(meta)}</td>
               <td style="padding:10px; border-bottom:1px solid #e5e7eb;">${fmt(realizado)}</td>
@@ -605,6 +686,17 @@
 
       panel.style.display = "";
 
+      const idsSubSelecionadas = String(subregioes || "")
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      const tabelaWrap = document.getElementById("marketShareTabelaWrap");
+
+      if (tabelaWrap) {
+        tabelaWrap.style.display = idsSubSelecionadas.length === 1 ? "none" : "";
+      }
+
       document.getElementById("cardMarketShareTotal").textContent =
         Number(cards.market_share_total || 0).toLocaleString("pt-BR", {
           minimumFractionDigits: 2,
@@ -642,9 +734,9 @@
 
           <td style="padding:10px; border-bottom:1px solid #e5e7eb; font-weight:700;">
             ${Number(r.market_share || 0).toLocaleString("pt-BR", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            })}%
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })}%
           </td>
         `;
 
@@ -652,292 +744,292 @@
       });
     }
 
-    function mostrarLoading(){
+    function mostrarLoading() {
       const el = document.getElementById("loadingOverlay");
-      if(el) el.style.display = "flex";
+      if (el) el.style.display = "flex";
     }
 
-    function esconderLoading(){
+    function esconderLoading() {
       const el = document.getElementById("loadingOverlay");
-      if(el) el.style.display = "none";
+      if (el) el.style.display = "none";
     }
 
-    async function carregar(){
+    async function carregar() {
       mostrarLoading();
+      try {
+        const programa_id = qp("programa_id");
+        const programa = qp("programa") || "Programa";
+        const subregioes = qp("subregioes") || "";
+        const ano = document.getElementById("ano").value || "2026";
+        const mesesFiltro = mesesSelecionadosUrl();
+        const mesReferencia = Math.max(...mesesFiltro);
+        const isMesUnico = mesesFiltro.length === 1;
+
+        let resultados;
         try {
-          const programa_id = qp("programa_id");
-          const programa = qp("programa") || "Programa";
-          const subregioes = qp("subregioes") || "";
-          const ano = document.getElementById("ano").value || "2026";
-          const mesesFiltro = mesesSelecionadosUrl();
-          const mesReferencia = Math.max(...mesesFiltro);
-          const isMesUnico = mesesFiltro.length === 1;
+          resultados = await atualizarIndicadoresDisponiveis(programa_id, ano, subregioes);
+        } catch (e) {
+          console.error("ERRO atualizarIndicadoresDisponiveis:", e);
+          resultados = [];
+        }
 
-          let resultados;
-          try {
-            resultados = await atualizarIndicadoresDisponiveis(programa_id, ano, subregioes);
-          } catch (e) {
-            console.error("ERRO atualizarIndicadoresDisponiveis:", e);
-            resultados = [];
-          }
+        const chartWrap = document.querySelector(".chart-wrap");
+        const tabelaPanel = document.querySelectorAll(".panel")[1];
 
-          const chartWrap = document.querySelector(".chart-wrap");
-          const tabelaPanel = document.querySelectorAll(".panel")[1];
+        chartWrap.style.display = "";
+        tabelaPanel.style.display = "";
 
-          chartWrap.style.display = "";
-          tabelaPanel.style.display = "";
+        const indicador = document.getElementById("indicador").value;
+        const indicadorLabel = document.getElementById("indicador")
+          .options[document.getElementById("indicador").selectedIndex]
+          .text;
 
-          const indicador = document.getElementById("indicador").value;
-          const indicadorLabel = document.getElementById("indicador")
-            .options[document.getElementById("indicador").selectedIndex]
-            .text;
+        document.getElementById("titulo").textContent = programa;
 
-          document.getElementById("titulo").textContent = programa;
+        const nomesMeses = [
+          "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+          "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
 
-          const nomesMeses = [
-            "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-            "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-          ];
+        let txtPeriodo = "";
+        if (mesesFiltro.length === 1) {
+          txtPeriodo = ` • Mês: ${nomesMeses[mesesFiltro[0] - 1]}`;
+        } else {
+          const inicio = nomesMeses[Math.min(...mesesFiltro) - 1];
+          const fim = nomesMeses[Math.max(...mesesFiltro) - 1];
+          txtPeriodo = ` • Período: ${inicio} - ${fim}`;
+        }
 
-          let txtPeriodo = "";
-          if (mesesFiltro.length === 1) {
-            txtPeriodo = ` • Mês: ${nomesMeses[mesesFiltro[0] - 1]}`;
-          } else {
-            const inicio = nomesMeses[Math.min(...mesesFiltro) - 1];
-            const fim = nomesMeses[Math.max(...mesesFiltro) - 1];
-            txtPeriodo = ` • Período: ${inicio} - ${fim}`;
-          }
+        let subTxt = "";
+        if (subregioes) {
+          const s = decodeURIComponent(String(subregioes)).trim();
+          const nomes = await resolverSubRegioes(s);
+          subTxt = ` • Sub-região(ões): ${nomes}`;
+        }
 
-          let subTxt = "";
-          if (subregioes) {
-            const s = decodeURIComponent(String(subregioes)).trim();
-            const nomes = await resolverSubRegioes(s);
-            subTxt = ` • Sub-região(ões): ${nomes}`;
-          }
+        document.getElementById("subtitulo").textContent =
+          `Ano: ${ano}${txtPeriodo} • Indicador: ${indicadorLabel}${subTxt}`;
 
-          document.getElementById("subtitulo").textContent =
-            `Ano: ${ano}${txtPeriodo} • Indicador: ${indicadorLabel}${subTxt}`;
+        const qs = new URLSearchParams({
+          programa_id: String(programa_id),
+          ano: String(ano),
+          indicador: indicador
+        });
+        if (subregioes) qs.set("subregioes", subregioes);
 
-            const qs = new URLSearchParams({
-              programa_id: String(programa_id),
-              ano: String(ano),
-              indicador: indicador
+        const url = API + "/performance/programa/serie?" + qs.toString();
+        const dataSerie = await (await fetch(url)).json();
+        const resumoAcumulado = await buscarResumoAcumulado(programa_id, ano, indicador, subregioes);
+        const dataCardsSerie = await buscarSerieCards(programa_id, ano, indicador, subregioes);
+
+        const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        const dataFiltrada = (dataSerie || []).filter(r => Number(r.mes || 0) <= mesReferencia);
+
+        // gráfico passa a usar a série correta da rota /performance/cards
+        const labels = (dataCardsSerie || []).map(r => meses[(r.mes || 1) - 1] || "");
+        const meta = (dataCardsSerie || []).map(r => Number(r.meta || 0));
+        const real = (dataCardsSerie || []).map(r => Number(r.realizado || 0));
+
+        const somaMeta = meta.reduce((acc, v) => acc + Number(v || 0), 0);
+        const somaReal = real.reduce((acc, v) => acc + Number(v || 0), 0);
+
+        const realAcum = [];
+        real.reduce((acc, v) => {
+          const total = acc + Number(v || 0);
+          realAcum.push(total);
+          return total;
+        }, 0);
+
+        const isReceitaCard = indicador === "receita";
+
+        function arredondarInteiro(n) {
+          return Math.round(Number(n || 0));
+        }
+
+        const formatCard = (v) => {
+          const valor = Number(v || 0);
+
+          if (indicador === "receita") {
+            return valor.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
             });
-            if(subregioes) qs.set("subregioes", subregioes);
-
-            const url = API + "/performance/programa/serie?" + qs.toString();
-            const dataSerie = await (await fetch(url)).json();
-            const resumoAcumulado = await buscarResumoAcumulado(programa_id, ano, indicador, subregioes);
-            const dataCardsSerie = await buscarSerieCards(programa_id, ano, indicador, subregioes);
-
-          const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-          const dataFiltrada = (dataSerie || []).filter(r => Number(r.mes || 0) <= mesReferencia);
-
-          // gráfico passa a usar a série correta da rota /performance/cards
-          const labels = (dataCardsSerie || []).map(r => meses[(r.mes||1)-1] || "");
-          const meta = (dataCardsSerie || []).map(r => Number(r.meta||0));
-          const real = (dataCardsSerie || []).map(r => Number(r.realizado||0));
-
-          const somaMeta = meta.reduce((acc, v) => acc + Number(v || 0), 0);
-          const somaReal = real.reduce((acc, v) => acc + Number(v || 0), 0);
-
-          const realAcum = [];
-          real.reduce((acc, v) => {
-            const total = acc + Number(v || 0);
-            realAcum.push(total);
-            return total;
-          }, 0);
-
-          const isReceitaCard = indicador === "receita";
-
-          function arredondarInteiro(n){
-            return Math.round(Number(n || 0));
           }
 
-          const formatCard = (v) => {
-            const valor = arredondarInteiro(v);
+          return valor.toLocaleString("pt-BR", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          });
+        };
 
-            if (indicador === "receita") {
-              return valor.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-              });
-            }
+        const metaResumo = Number(resumoAcumulado?.meta || 0);
+        const projetadoResumo = Number(resumoAcumulado?.projetado || 0);
+        const realizadoResumo = Number(resumoAcumulado?.realizado || 0);
+        const elLabelReal = document.getElementById("cardRealizadoAcum")
+          .closest(".summary-card")
+          .querySelector(".label");
 
-            if (indicador === "hora_aluno") {
-              return valor.toLocaleString("pt-BR");
-            }
+        const elSubReal = document.getElementById("cardRealizadoAcum")
+          .closest(".summary-card")
+          .querySelector(".sub");
+        document.getElementById("cardRealizadoAcum").textContent = formatCard(realizadoResumo);
+        if (isMesUnico) {
+          elLabelReal.textContent = "Realizado";
+          elSubReal.textContent = "No mês";
+        } else {
+          elLabelReal.textContent = "Realizado acumulado";
+          elSubReal.textContent = "No período";
+        }
+        const elLabelMeta = document.getElementById("cardMetaAcum")
+          .closest(".summary-card")
+          .querySelector(".label");
 
-            return format(v);
-          };
+        const elSubMeta = document.getElementById("cardMetaAcum")
+          .closest(".summary-card")
+          .querySelector(".sub");
+        document.getElementById("cardMetaAcum").textContent = formatCard(metaResumo);
+        if (isMesUnico) {
+          elLabelMeta.textContent = "Meta";
+          elSubMeta.textContent = "No mês";
+        } else {
+          elLabelMeta.textContent = "Meta acumulada";
+          elSubMeta.textContent = "No período";
+        }
 
-          const metaResumo = Number(resumoAcumulado?.meta || 0);
-          const projetadoResumo = Number(resumoAcumulado?.projetado || 0);
-          const realizadoResumo = Number(resumoAcumulado?.realizado || 0);
-          const elLabelReal = document.getElementById("cardRealizadoAcum")
-            .closest(".summary-card")
-            .querySelector(".label");
+        const elPct = document.getElementById("cardPctMeta");
+        const elDiff = document.getElementById("cardDiffMeta");
 
-          const elSubReal = document.getElementById("cardRealizadoAcum")
-            .closest(".summary-card")
-            .querySelector(".sub");
-          document.getElementById("cardRealizadoAcum").textContent = formatCard(realizadoResumo);
-          if (isMesUnico) {
-            elLabelReal.textContent = "Realizado";
-            elSubReal.textContent = "No mês";
-          } else {
-            elLabelReal.textContent = "Realizado acumulado";
-            elSubReal.textContent = "No período";
-          }
-          const elLabelMeta = document.getElementById("cardMetaAcum")
-            .closest(".summary-card")
-            .querySelector(".label");
+        // títulos e subtítulos dos cards
+        const pctCard = elPct.closest(".summary-card");
+        const diffCard = elDiff.closest(".summary-card");
 
-          const elSubMeta = document.getElementById("cardMetaAcum")
-            .closest(".summary-card")
-            .querySelector(".sub");
-          document.getElementById("cardMetaAcum").textContent = formatCard(metaResumo);
-          if (isMesUnico) {
-            elLabelMeta.textContent = "Meta";
-            elSubMeta.textContent = "No mês";
-          } else {
-            elLabelMeta.textContent = "Meta acumulada";
-            elSubMeta.textContent = "No período";
-          }
+        const pctTitle = pctCard.querySelector(".label");
+        const pctSub = pctCard.querySelector(".sub");
 
-          const elPct = document.getElementById("cardPctMeta");
-          const elDiff = document.getElementById("cardDiffMeta");
+        const diffTitle = diffCard.querySelector(".label");
+        const diffSub = diffCard.querySelector(".sub");
 
-          // títulos e subtítulos dos cards
-          const pctCard = elPct.closest(".summary-card");
-          const diffCard = elDiff.closest(".summary-card");
+        if (metaResumo > 0) {
+          const pctMeta = (realizadoResumo / metaResumo) * 100;
+          const diffMeta = realizadoResumo - metaResumo;
 
-          const pctTitle = pctCard.querySelector(".label");
-          const pctSub = pctCard.querySelector(".sub");
+          pctTitle.textContent = "% atingimento";
+          pctSub.textContent = "Realizado x meta";
+          elPct.textContent = `${pctMeta.toFixed(1).replace(".", ",")}%`;
 
-          const diffTitle = diffCard.querySelector(".label");
-          const diffSub = diffCard.querySelector(".sub");
+          diffTitle.textContent = "Diferença para meta";
+          diffSub.textContent = "Acumulado";
+          elDiff.textContent = formatCard(diffMeta);
 
-          if (metaResumo > 0) {
-            const pctMeta = (realizadoResumo / metaResumo) * 100;
-            const diffMeta = realizadoResumo - metaResumo;
+        } else if (projetadoResumo > 0) {
+          const pctProj = (realizadoResumo / projetadoResumo) * 100;
+          const diffProj = realizadoResumo - projetadoResumo;
 
-            pctTitle.textContent = "% atingimento";
-            pctSub.textContent = "Realizado x meta";
-            elPct.textContent = `${pctMeta.toFixed(1).replace(".", ",")}%`;
+          pctTitle.textContent = "% realizado x projetado";
+          pctSub.textContent = "Sem meta definida";
+          elPct.textContent = `${pctProj.toFixed(1).replace(".", ",")}%`;
 
-            diffTitle.textContent = "Diferença para meta";
-            diffSub.textContent = "Acumulado";
-            elDiff.textContent = formatCard(diffMeta);
+          diffTitle.textContent = "Diferença para projetado";
+          diffSub.textContent = "Sem meta definida";
+          elDiff.textContent = formatCard(diffProj);
 
-          } else if (projetadoResumo > 0) {
-            const pctProj = (realizadoResumo / projetadoResumo) * 100;
-            const diffProj = realizadoResumo - projetadoResumo;
+        } else {
+          pctTitle.textContent = "% atingimento";
+          pctSub.textContent = "Sem base de comparação";
+          elPct.textContent = "—";
 
-            pctTitle.textContent = "% realizado x projetado";
-            pctSub.textContent = "Sem meta definida";
-            elPct.textContent = `${pctProj.toFixed(1).replace(".", ",")}%`;
+          diffTitle.textContent = "Diferença para meta";
+          diffSub.textContent = "Meta não definida";
+          elDiff.textContent = "—";
+        }
 
-            diffTitle.textContent = "Diferença para projetado";
-            diffSub.textContent = "Sem meta definida";
-            elDiff.textContent = formatCard(diffProj);
+        const isReceita = indicador === "receita";
+        const tickFmt = (v) => isReceita ? moeda(v) : format(v);
 
-          } else {
-            pctTitle.textContent = "% atingimento";
-            pctSub.textContent = "Sem base de comparação";
-            elPct.textContent = "—";
+        const canvas = document.getElementById("grafico");
+        const ctx = canvas.getContext("2d");
 
-            diffTitle.textContent = "Diferença para meta";
-            diffSub.textContent = "Meta não definida";
-            elDiff.textContent = "—";
-          }
+        if (chart) chart.destroy();
 
-          const isReceita = indicador === "receita";
-          const tickFmt = (v) => isReceita ? moeda(v) : format(v);
+        chart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Meta (mês)",
+                data: meta,
+                backgroundColor: "#cbd5f5",
+                borderRadius: 6
+              },
+              {
+                label: "Realizado (mês)",
+                data: real,
+                backgroundColor: "#2563eb",
+                borderRadius: 8
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { top: 40 } },
 
-          const canvas = document.getElementById("grafico");
-          const ctx = canvas.getContext("2d");
+            // ✅ mata qualquer comportamento de hover
+            events: [],
 
-          if(chart) chart.destroy();
-
-          chart = new Chart(ctx, {
-            type: "bar",
-            data: {
-              labels,
-              datasets: [
-                {
-                  label: "Meta (mês)",
-                  data: meta,
-                  backgroundColor: "#cbd5f5",
-                  borderRadius: 6
-                },
-                {
-                  label: "Realizado (mês)",
-                  data: real,
-                  backgroundColor: "#2563eb",
-                  borderRadius: 8
+            // ✅ desliga tooltip
+            plugins: {
+              tooltip: { enabled: false },
+              legend: {
+                position: "top",
+                labels: {
+                  padding: 12
                 }
-              ]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              layout: { padding: { top: 40 } },
-
-              // ✅ mata qualquer comportamento de hover
-              events: [],
-
-              // ✅ desliga tooltip
-              plugins: {
-                tooltip: { enabled: false },
-                legend: {
-                  position: "top",
-                  labels: {
-                    padding: 12
-                  }
-                },
-
-                // ✅ passa config pro plugin
-                valueLabelsPlugin: { indicador }
               },
 
-              // ✅ deixa o render “instantâneo” (evita depender de hover/frames)
-              animation: false,
+              // ✅ passa config pro plugin
+              valueLabelsPlugin: { indicador }
+            },
 
-              scales: {
-                y: {
-                  grace: "20%",
-                  ticks: { callback: (value) => tickFmt(value) }
-                }
+            // ✅ deixa o render “instantâneo” (evita depender de hover/frames)
+            animation: false,
+
+            scales: {
+              y: {
+                grace: "20%",
+                ticks: { callback: (value) => tickFmt(value) }
               }
             }
-          });
-
-          // ✅ força redesenho imediato (garante rótulos já no load)
-          chart.update("none");
-          
-          renderTabelaMensal(dataCardsSerie, indicador, programa);
-          console.log("Chamando Market Share com:", {
-            programa_id,
-            programa,
-            ano,
-            subregioes,
-            url: window.location.href
-          });
-
-          try {
-            await carregarMarketShareAprendizagem(programa, ano, subregioes);
-          } catch (e) {
-            console.error("Falha ao carregar Market Share:", e);
           }
-        } finally {
-          esconderLoading();
+        });
+
+        // ✅ força redesenho imediato (garante rótulos já no load)
+        chart.update("none");
+
+        renderTabelaMensal(dataCardsSerie, indicador, programa);
+
+        console.log("Chamando Market Share com:", {
+          programa_id,
+          programa,
+          ano,
+          subregioes,
+          url: window.location.href
+        });
+
+        try {
+          await carregarMarketShareAprendizagem(programa, ano, subregioes);
+        } catch (e) {
+          console.error("Falha ao carregar Market Share:", e);
         }
+      } finally {
+        esconderLoading();
+      }
     }
 
-    (function init(){
+    (function init() {
       const ano = qp("ano") || "2026";
       const indicador = qp("indicador") || "matriculas";
       document.getElementById("ano").value = ano;
@@ -947,21 +1039,22 @@
 
       carregar();
     })();
-    function arredondarInteiro(n){
+    function arredondarInteiro(n) {
       return Math.round(Number(n || 0));
     }
 
-    async function logout(){
-      try{
+    async function logout() {
+      try {
         await fetch(`${API}/auth/logout`, {
           method: "POST",
           credentials: "include"
         });
-      } catch(e) {}
+      } catch (e) { }
 
       window.location.href = "/login.html";
     }
 
   </script>
 </body>
+
 </html>

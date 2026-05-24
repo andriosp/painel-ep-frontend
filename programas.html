@@ -183,7 +183,7 @@
 
     .cards{
       display:grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 0.78fr 1.22fr 1.22fr 0.78fr;
       gap: 12px;
       margin-bottom: 10px;
     }
@@ -498,7 +498,7 @@
 
     <div class="cards">
       <div class="card">
-        <h3>Programas Distintos</h3>
+        <h3>Programas</h3>
         <div class="big" id="prog-distintos">—</div>
         <div class="sub">Total de Programas</div>
       </div>
@@ -730,9 +730,9 @@
 
       document.getElementById("ha-total").textContent = format(d.hora_aluno?.total || 0);
       document.getElementById("ha-chips").innerHTML = `
-        <span class="chip gr"><strong>GR</strong> ${compact(d.hora_aluno?.gr || 0)} (${Number(d.hora_aluno?.gr_pct || 0).toFixed(2)}%)</span>
-        <span class="chip gnr"><strong>GNR</strong> ${compact(d.hora_aluno?.g || 0)} (${Number(d.hora_aluno?.g_pct || 0).toFixed(2)}%)</span>
-        <span class="chip pago"><strong>PG</strong> ${compact(d.hora_aluno?.p || 0)} (${Number(d.hora_aluno?.p_pct || 0).toFixed(2)}%)</span>
+        <span class="chip gr"><strong>GR</strong> ${format(d.hora_aluno?.gr || 0)} (${Number(d.hora_aluno?.gr_pct || 0).toFixed(2)}%)</span>
+        <span class="chip gnr"><strong>GNR</strong> ${format(d.hora_aluno?.g || 0)} (${Number(d.hora_aluno?.g_pct || 0).toFixed(2)}%)</span>
+        <span class="chip pago"><strong>PG</strong> ${format(d.hora_aluno?.p || 0)} (${Number(d.hora_aluno?.p_pct || 0).toFixed(2)}%)</span>
       `;
 
       document.getElementById("rec-total").textContent = moeda(d.receita?.total || 0);

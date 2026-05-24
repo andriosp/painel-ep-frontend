@@ -1,355 +1,416 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel • Análise Preditiva</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    :root{
-      --bg:#f6f7fb;
-      --panel:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:#e5e7eb;
-      --shadow: 0 10px 24px rgba(15,23,42,.08);
-      --radius:14px;
-      --radius-sm:12px;
+    :root {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e5e7eb;
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --radius: 14px;
+      --radius-sm: 12px;
 
-      --brand:#2563eb;
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --bad:#ef4444;
+      --brand: #2563eb;
+      --ok: #16a34a;
+      --warn: #f59e0b;
+      --bad: #ef4444;
     }
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
-    .container{
+    .container {
       max-width: 1800px;
       margin: 0 auto;
       padding: 18px 18px 36px;
     }
 
     /* Top nav */
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
+    .topnav {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0 14px;
+      align-items: center;
     }
-    .navlink{
-      text-decoration:none;
+
+    .navlink {
+      text-decoration: none;
       color: var(--muted);
       font-weight: 750;
       font-size: 13px;
-      padding:8px 12px;
+      padding: 8px 12px;
       border-radius: 12px;
-      border:1px solid transparent;
+      border: 1px solid transparent;
     }
-    .navlink:hover{
-      background:#fff;
+
+    .navlink:hover {
+      background: #fff;
       border-color: var(--border);
     }
-    .navlink.active{
-      background: rgba(37,99,235,.10);
+
+    .navlink.active {
+      background: rgba(37, 99, 235, .10);
       color: var(--text);
-      border-color: rgba(37,99,235,.25);
+      border-color: rgba(37, 99, 235, .25);
     }
 
-    .header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-    .title h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.2px;
+
+    .title h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: .2px;
     }
-    .title p{
-      margin:6px 0 0;
+
+    .title p {
+      margin: 6px 0 0;
       color: var(--muted);
-      font-size:13px;
+      font-size: 13px;
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border:1px solid var(--border);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
       border-radius: 999px;
       background: #fff;
       color: var(--muted);
-      font-size:12px;
-      box-shadow: 0 6px 14px rgba(15,23,42,.06);
-      white-space:nowrap;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background: var(--brand);
-      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+      font-size: 12px;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+      white-space: nowrap;
     }
 
-    .panel{
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
+    }
+
+    .panel {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
       margin-bottom: 14px;
     }
 
-    .filters{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      align-items:flex-end;
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
     }
 
-    .field{ flex:1; min-width: 320px; }
-    .field:first-child{
-      display:flex;
-      flex-direction:column;
+    .field {
+      flex: 1;
+      min-width: 320px;
     }
-    .field.sm{ flex:0 0 160px; min-width: 160px; }
-    label{
-      display:block;
-      font-size:12px;
+
+    .field:first-child {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field.sm {
+      flex: 0 0 160px;
+      min-width: 160px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
       color: var(--muted);
-      margin-bottom:8px;
+      margin-bottom: 8px;
     }
-    select, input{
-      width:100%;
-      border:1px solid var(--border);
+
+    select,
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding:10px;
-      background:#fff;
-      outline:none;
+      padding: 10px;
+      background: #fff;
+      outline: none;
       height: 40px;
     }
-    select[multiple]{
+
+    select[multiple] {
       height: 140px;
     }
-    select:focus, input:focus{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+
+    select:focus,
+    input:focus {
+      border-color: rgba(37, 99, 235, .45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
     }
 
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
       align-self: flex-end;
     }
 
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background:#fff;
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
       color: var(--text);
-      padding:10px 12px;
+      padding: 10px 12px;
       border-radius: 12px;
-      cursor:pointer;
+      cursor: pointer;
       font-weight: 650;
-      font-size:13px;
+      font-size: 13px;
       transition: transform .05s ease, background .15s ease, border-color .15s ease;
     }
-    button:hover{ background:#f8fafc; border-color:#dbe3ef; }
-    button:active{ transform: translateY(1px); }
 
-    .btn-primary{
-      background: var(--brand);
-      color:#fff;
-      border-color: rgba(37,99,235,.65);
+    button:hover {
+      background: #f8fafc;
+      border-color: #dbe3ef;
     }
-    .btn-primary:hover{ background:#1d4ed8; }
 
-    .status-bar{
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: rgba(37, 99, 235, .65);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .status-bar {
       margin-top: 10px;
-      font-size:12px;
+      font-size: 12px;
       color: var(--muted);
       min-height: 16px;
     }
 
     /* Tabs */
-    .tabs{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
       margin: 2px 0 10px;
     }
-    .tab{
-      border:1px solid var(--border);
-      background:#fff;
-      padding:10px 12px;
+
+    .tab {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 10px 12px;
       border-radius: 999px;
       font-size: 13px;
       font-weight: 800;
       color: var(--muted);
-      cursor:pointer;
-      user-select:none;
+      cursor: pointer;
+      user-select: none;
     }
-    .tab.active{
-      background: rgba(37,99,235,.10);
-      border-color: rgba(37,99,235,.25);
+
+    .tab.active {
+      background: rgba(37, 99, 235, .10);
+      border-color: rgba(37, 99, 235, .25);
       color: var(--text);
     }
 
     /* Cards grid */
-    .cards{
-      display:grid;
+    .cards {
+      display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
-    @media (max-width: 1200px){
-      .cards{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 720px){
-      .cards{ grid-template-columns: 1fr; }
-      .field{ min-width: 100%; }
-      .field.sm{ flex: 1; min-width: 100%; }
+
+    @media (max-width: 1200px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .card{
+    @media (max-width: 720px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .field {
+        min-width: 100%;
+      }
+
+      .field.sm {
+        flex: 1;
+        min-width: 100%;
+      }
+    }
+
+    .card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
       position: relative;
-      overflow:hidden;
+      overflow: hidden;
     }
 
-    .card .h{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
+    .card .h {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
       margin-bottom: 10px;
     }
-    .prog{
+
+    .prog {
       font-weight: 900;
       letter-spacing: .2px;
       line-height: 1.15;
     }
-    .emoji{
+
+    .emoji {
       font-size: 22px;
       line-height: 1;
       margin-top: -2px;
     }
 
-    .kv{
-      display:grid;
+    .kv {
+      display: grid;
       grid-template-columns: 1fr 1fr;
-      gap:8px 12px;
+      gap: 8px 12px;
       margin-top: 6px;
     }
-    .k{
+
+    .k {
       font-size: 11px;
       color: var(--muted);
       font-weight: 850;
       letter-spacing: .25px;
       text-transform: uppercase;
     }
-    .v{
+
+    .v {
       font-weight: 900;
-      text-align:right;
+      text-align: right;
     }
 
-    .bar{
+    .bar {
       margin-top: 12px;
       height: 10px;
       border-radius: 999px;
       background: #eef2f7;
-      overflow:hidden;
+      overflow: hidden;
       border: 1px solid #e9eef6;
     }
-    .fill{
+
+    .fill {
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      background: rgba(37,99,235,.85);
+      background: rgba(37, 99, 235, .85);
       transition: width .25s ease;
     }
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      margin-top:10px;
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       color: var(--muted);
-      background:#fff;
+      background: #fff;
       width: fit-content;
     }
-    .pill strong{ color: var(--text); }
 
-    .muted{ color: var(--muted); }
+    .pill strong {
+      color: var(--text);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
 
     /* Cards clicáveis */
-    .card{
+    .card {
       cursor: pointer;
       transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
     }
 
-    .card:hover{
+    .card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 30px rgba(15,23,42,.14);
-      border-color: rgba(37,99,235,.35);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+      border-color: rgba(37, 99, 235, .35);
     }
 
     /* Dá um feedback visual no header do card */
-    .card:hover .prog{
+    .card:hover .prog {
       color: #2563eb;
     }
 
     /* Emoji reage levemente ao hover */
-    .card:hover .emoji{
+    .card:hover .emoji {
       transform: scale(1.05);
     }
 
-    .cards-fechamento{
-      display:grid;
+    .cards-fechamento {
+      display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap:12px;
-      margin-bottom:14px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
-    @media (max-width: 1180px){
-      .cards-fechamento{
+    @media (max-width: 1180px) {
+      .cards-fechamento {
         grid-template-columns: 1fr;
       }
     }
 
-    .card-fechamento{
+    .card-fechamento {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 16px 18px;
       min-height: 120px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .card-fechamento .titulo{
-      font-size:12px;
+    .card-fechamento .titulo {
+      font-size: 12px;
       color: var(--muted);
       font-weight: 800;
       text-transform: uppercase;
@@ -357,7 +418,7 @@
       margin-bottom: 10px;
     }
 
-    .card-fechamento .valor{
+    .card-fechamento .valor {
       font-size: 32px;
       font-weight: 900;
       line-height: 1.05;
@@ -365,72 +426,71 @@
       margin-bottom: 6px;
     }
 
-    .card-fechamento .sub{
+    .card-fechamento .sub {
       font-size: 13px;
       color: var(--muted);
     }
 
-    .card-fechamento .sub strong{
+    .card-fechamento .sub strong {
       color: var(--text);
     }
 
-    .card-fechamento.matriculas{
+    .card-fechamento.matriculas {
       border-top: 4px solid #2563eb;
     }
 
-    .card-fechamento.hora-aluno{
+    .card-fechamento.hora-aluno {
       border-top: 4px solid #16a34a;
     }
 
-    .card-fechamento.receita{
+    .card-fechamento.receita {
       border-top: 4px solid #f59e0b;
     }
 
-    .card-fechamento.status-critico{
+    .card-fechamento.status-critico {
       border-top: 4px solid #dc2626;
     }
 
-    .card-fechamento.status-atencao{
+    .card-fechamento.status-atencao {
       border-top: 4px solid #f59e0b;
     }
 
-    .card-fechamento.status-ok{
+    .card-fechamento.status-ok {
       border-top: 4px solid #16a34a;
     }
 
-    .card-fechamento .status-fechamento{
+    .card-fechamento .status-fechamento {
       font-size: 13px;
       font-weight: 700;
       margin-bottom: 6px;
     }
 
-    .card-fechamento .status-fechamento.status-ok{
+    .card-fechamento .status-fechamento.status-ok {
       color: #16a34a;
     }
 
-    .card-fechamento .status-fechamento.status-atencao{
+    .card-fechamento .status-fechamento.status-atencao {
       color: #f59e0b;
     }
 
-    .card-fechamento .status-fechamento.status-critico{
+    .card-fechamento .status-fechamento.status-critico {
       color: #dc2626;
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
-      flex-wrap:wrap;
+    .topnav {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0 14px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    .topnav-right{
-      margin-left:auto;
-      display:flex;
-      align-items:center;
-      gap:10px;
+    .topnav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-
   </style>
 </head>
 
@@ -442,13 +502,13 @@
         : "/api";
   </script>
   <script>
-    (async function validarSessao(){
-      try{
+    (async function validarSessao() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok){
+        if (!resp.ok) {
           window.location.href = "/login.html";
           return;
         }
@@ -456,12 +516,12 @@
         const data = await resp.json();
 
         // 🔥 AQUI é o que faltava
-        if(data.deve_trocar_senha){
+        if (data.deve_trocar_senha) {
           window.location.href = "/alterar_senha.html";
           return;
         }
 
-      }catch(e){
+      } catch (e) {
         window.location.href = "/login.html";
       }
     })();
@@ -479,7 +539,7 @@
       <a href="sge_turmas.html" class="navlink">Turmas</a>
       <a href="analise_preditiva.html" class="navlink active">Análise Preditiva</a>
       <a href="relatorio_programa.html" class="navlink">Relatório Executivo</a>
-    
+
       <div class="topnav-right">
         <a href="alterar_senha.html" class="navlink">
           Alterar senha
@@ -488,7 +548,7 @@
           <span class="dot"></span>
           Usuário: —
         </div>
-    
+
         <button onclick="logout()">Sair</button>
       </div>
     </nav>
@@ -507,7 +567,7 @@
         <div class="field">
           <label for="subregioes">Sub-regiões (Ctrl + clique para múltiplas)</label>
           <select id="subregioes" multiple></select>
-        
+
         </div>
 
         <div class="field">
@@ -535,7 +595,7 @@
 
         <div class="field sm">
           <label for="ano">Ano</label>
-          <input id="ano" type="number" min="2000" max="2100"/>
+          <input id="ano" type="number" min="2000" max="2100" />
         </div>
 
         <div class="actions">
@@ -549,12 +609,12 @@
       <div class="card-fechamento matriculas">
         <div class="titulo">Fechamento previsto • Matrículas</div>
         <div class="valor" id="fechamentoMatriculas">0</div>
-      
+
         <div class="status-fechamento" id="statusMatriculas">🔴 Crítico</div>
-      
+
         <div class="sub" id="fechamentoMatriculasSub">0% da meta anual</div>
       </div>
-    
+
       <div class="card-fechamento hora-aluno">
         <div class="titulo">Fechamento previsto • Hora-Aluno</div>
         <div class="valor" id="fechamentoHoraAluno">0</div>
@@ -563,7 +623,7 @@
 
         <div class="sub" id="fechamentoHoraAlunoSub">0% da meta anual</div>
       </div>
-    
+
       <div class="card-fechamento receita">
         <div class="titulo">Fechamento previsto • Receita</div>
         <div class="valor" id="fechamentoReceita">R$ 0,00</div>
@@ -572,32 +632,32 @@
 
         <div class="sub" id="fechamentoReceitaSub">0% da meta anual</div>
       </div>
-    
+
     </div>
 
     <div class="panel">
-        <h2 style="margin:0 0 6px; font-size:20px;">Matrículas</h2>
-        <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-        <div style="height:360px;">
-          <canvas id="graficoMatriculas"></canvas>
-        </div>
+      <h2 style="margin:0 0 6px; font-size:20px;">Matrículas</h2>
+      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
+      <div style="height:360px;">
+        <canvas id="graficoMatriculas"></canvas>
       </div>
-      
-      <div class="panel">
-        <h2 style="margin:0 0 6px; font-size:20px;">Hora-Aluno</h2>
-        <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-        <div style="height:360px;">
-          <canvas id="graficoHoraAluno"></canvas>
-        </div>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin:0 0 6px; font-size:20px;">Hora-Aluno</h2>
+      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
+      <div style="height:360px;">
+        <canvas id="graficoHoraAluno"></canvas>
       </div>
-      
-      <div class="panel">
-        <h2 style="margin:0 0 6px; font-size:20px;">Receita</h2>
-        <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-        <div style="height:360px;">
-          <canvas id="graficoReceita"></canvas>
-        </div>
+    </div>
+
+    <div class="panel">
+      <h2 style="margin:0 0 6px; font-size:20px;">Receita</h2>
+      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
+      <div style="height:360px;">
+        <canvas id="graficoReceita"></canvas>
       </div>
+    </div>
 
     <div id="cards" class="cards"></div>
 
@@ -605,7 +665,7 @@
 
   <script>
 
-    function getDataAtual(){
+    function getDataAtual() {
       const agora = new Date();
       return {
         ano: agora.getFullYear(),
@@ -613,7 +673,7 @@
       };
     }
 
-    function aplicarAnoMesPadrao(){
+    function aplicarAnoMesPadrao() {
       const atual = getDataAtual();
       document.getElementById("ano").value = atual.ano;
 
@@ -625,131 +685,240 @@
       });
     }
 
-    function format(n){ return Number(n || 0).toLocaleString("pt-BR"); }
-    function moeda(n){ return Number(n || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+    function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
+    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
 
     let chartMatriculas = null;
     let chartHoraAluno = null;
     let chartReceita = null;
     let ultimoRequestId = 0;
 
-    function destruirGraficos(){
-    if (chartMatriculas) {
+    function destruirGraficos() {
+      if (chartMatriculas) {
         chartMatriculas.destroy();
         chartMatriculas = null;
-    }
-    if (chartHoraAluno) {
+      }
+      if (chartHoraAluno) {
         chartHoraAluno.destroy();
         chartHoraAluno = null;
-    }
-    if (chartReceita) {
+      }
+      if (chartReceita) {
         chartReceita.destroy();
         chartReceita = null;
-    }
+      }
     }
 
-    function criarGrafico(idCanvas, titulo, labels, meta, realizado, previsao, ehMoeda = false){
-    const ctx = document.getElementById(idCanvas).getContext("2d");
+    function acumuladoSerie(lista) {
+      let soma = 0;
 
-    return new Chart(ctx, {
-        type: "line",
+      return (lista || []).map(v => {
+        if (v === null || v === undefined) {
+          return null;
+        }
+
+        soma += Number(v || 0);
+        return soma;
+      });
+    }
+
+    function mesAtingimentoMeta(labels, previsaoAcum, metaAnual) {
+      metaAnual = Number(metaAnual || 0);
+      if (metaAnual <= 0) return null;
+
+      for (let i = 0; i < previsaoAcum.length; i++) {
+        const v = Number(previsaoAcum[i] || 0);
+        if (v >= metaAnual) {
+          return {
+            index: i,
+            mes: labels[i],
+            valor: v
+          };
+        }
+      }
+
+      return null;
+    }
+
+    function criarGrafico(idCanvas, titulo, labels, meta, realizado, previsao, ehMoeda = false, metaAnual = 0) {
+      const ctx = document.getElementById(idCanvas).getContext("2d");
+
+      const metaAcum = acumuladoSerie(meta);
+      const realizadoAcum = acumuladoSerie(realizado);
+      function acumuladoPrevisaoComRealizado(realizado, previsao) {
+        let soma = 0;
+        let ultimoRealizadoIndex = -1;
+
+        // acumula realizado até o último mês com dado
+        (realizado || []).forEach((r, i) => {
+          if (r !== null && r !== undefined) {
+            soma += Number(r || 0);
+            ultimoRealizadoIndex = i;
+          }
+        });
+
+        let acumulado = 0;
+
+        return (previsao || []).map((p, i) => {
+          const r = realizado?.[i];
+
+          if (r !== null && r !== undefined) {
+            acumulado += Number(r || 0);
+            return acumulado; // mantém a linha visível no período realizado
+          }
+
+          if (i > ultimoRealizadoIndex && p !== null && p !== undefined) {
+            acumulado += Number(p || 0);
+            return acumulado;
+          }
+
+          return null;
+        });
+      }
+
+      const previsaoAcum = acumuladoPrevisaoComRealizado(realizado, previsao);
+      const pontoMeta = mesAtingimentoMeta(labels, previsaoAcum, metaAnual);
+      const valoresEscala = [
+        ...metaAcum,
+        ...realizadoAcum,
+        ...previsaoAcum
+      ].filter(v => v !== null && v !== undefined && Number(v) > 0);
+
+      const maxEscala = Math.max(...valoresEscala, 0);
+
+      return new Chart(ctx, {
+        type: "bar",
         data: {
-        labels,
-        datasets: [
+          labels,
+          datasets: [
             {
-            label: "Meta",
-            data: meta,
-            borderColor: "#2563eb",
-            backgroundColor: "transparent",
-            borderWidth: 3,
-            tension: 0.25
+              label: "Meta acumulada",
+              type: "bar",
+              data: metaAcum,
+              backgroundColor: "#cbd5f5",
+              borderRadius: 8
             },
             {
-            label: "Realizado",
-            data: realizado,
-            borderColor: "#16a34a",
-            backgroundColor: "transparent",
-            borderWidth: 3,
-            tension: 0.25
+              label: "Realizado acumulado",
+              type: "bar",
+              data: realizadoAcum,
+              backgroundColor: "#2563eb",
+              borderRadius: 8
             },
             {
-            label: "Previsão",
-            data: previsao,
-            borderColor: "#f59e0b",
-            backgroundColor: "transparent",
-            borderWidth: 3,
-            tension: 0.25,
-            borderDash: [6, 6]
+              label: "Previsão acumulada",
+              type: "line",
+              data: previsaoAcum,
+              borderColor: "#f59e0b",
+              backgroundColor: "transparent",
+              borderWidth: 3,
+              tension: 0.25,
+              borderDash: [6, 6],
+              pointRadius: 4,
+              pointHoverRadius: 5
+            },
+            {
+              label: "Meta anual",
+              type: "line",
+              clip: false,
+              data: labels.map(() => Number(metaAnual || 0)),
+              borderColor: "#16a34a",
+              backgroundColor: "transparent",
+              borderWidth: 1.5,
+              borderDash: [3, 5],
+              pointRadius: 0,
+              tension: 0
+            },
+            {
+              label: pontoMeta ? `Meta anual atingida em ${pontoMeta.mes}` : "",
+              type: "scatter",
+              data: pontoMeta ? [{
+                x: pontoMeta.mes,
+                y: pontoMeta.valor
+              }] : [],
+              backgroundColor: "#16a34a",
+              borderColor: "#ffffff",
+              borderWidth: 3,
+              pointRadius: 8,
+              pointHoverRadius: 10,
+              showLine: false
             }
-        ]
+          ]
         },
         options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
             mode: "index",
             intersect: false
-        },
-        plugins: {
+          },
+          plugins: {
             legend: {
-            position: "top"
+              position: "top"
             },
             tooltip: {
-            callbacks: {
-                label: function(context){
-                const valor = context.raw ?? 0;
-                if (ehMoeda) {
+              callbacks: {
+                label: function (context) {
+                  const valor = context.raw ?? 0;
+                  if (ehMoeda) {
                     return `${context.dataset.label}: ${moeda(valor)}`;
+                  }
+                  return `${context.dataset.label}: ${format(valor)}`;
                 }
-                return `${context.dataset.label}: ${format(valor)}`;
-                }
+              }
             }
-            }
-        },
-        scales: {
+          },
+          scales: {
             y: {
-            beginAtZero: true,
-            ticks: {
-                callback: function(value){
-                if (ehMoeda) return moeda(value);
-                return format(value);
+              beginAtZero: true,
+              suggestedMax: maxEscala * 1.15,
+
+              ticks: {
+                stepSize: ehMoeda
+                  ? 5000000
+                  : (titulo === "Hora-Aluno"
+                    ? 1000000
+                    : 50000),
+
+                callback: function (value) {
+                  if (ehMoeda) return moeda(value);
+                  return format(value);
                 }
+              }
             }
-            }
+          }
         }
-        }
-    });
+      });
     }
 
-    function setStatus(msg){
+    function setStatus(msg) {
       const el = document.getElementById("status");
-      if(el) el.textContent = msg || "";
+      if (el) el.textContent = msg || "";
     }
 
-    function selecionados(id){
+    function selecionados(id) {
       const sel = document.getElementById(id);
       return Array.from(sel.selectedOptions).map(o => o.value).join(",");
     }
 
     function mesesSelecionados() {
       const sel = document.getElementById("meses");
-      if (!sel) return [1,2,3,4,5,6,7,8,9,10,11,12];
+      if (!sel) return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
       const valores = Array.from(sel.selectedOptions)
         .map(o => Number(o.value))
         .filter(Boolean)
         .sort((a, b) => a - b);
 
-      return valores.length ? valores : [1,2,3,4,5,6,7,8,9,10,11,12];
+      return valores.length ? valores : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     }
 
-    function selecionarTudo(id){
+    function selecionarTudo(id) {
       const sel = document.getElementById(id);
       Array.from(sel.options).forEach(o => o.selected = true);
       atualizarBadgeFiltro();
     }
 
-    async function limparFiltros(){
+    async function limparFiltros() {
       ["subregioes", "programas", "meses"].forEach(id => {
         const sel = document.getElementById(id);
         if (sel) Array.from(sel.options).forEach(o => o.selected = false);
@@ -760,9 +929,9 @@
       await aplicarFiltros();
     }
 
-    function atualizarBadgeFiltro(){
+    function atualizarBadgeFiltro() {
       const badge = document.getElementById("badge-filtro");
-      if(!badge) return;
+      if (!badge) return;
 
       const selSub = document.getElementById("subregioes");
       const selProg = document.getElementById("programas");
@@ -775,15 +944,15 @@
       const progs = Array.from(selProg?.selectedOptions || [])
         .map(o => o.textContent.trim());
 
-        const mesesValores = Array.from(selMes?.selectedOptions || [])
-          .map(o => Number(o.value))
-          .filter(Boolean)
-          .sort((a, b) => a - b);
+      const mesesValores = Array.from(selMes?.selectedOptions || [])
+        .map(o => Number(o.value))
+        .filter(Boolean)
+        .sort((a, b) => a - b);
 
-        const nomesMeses = [
-          "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-          "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-        ];
+      const nomesMeses = [
+        "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+      ];
 
       const resumo = (lista, limite = 2) => {
         return lista.length <= limite
@@ -799,40 +968,40 @@
         ? `Programas: ${resumo(progs)}`
         : "Programas: todos";
 
-        let mesTxt = "";
+      let mesTxt = "";
 
-        if (mesesValores.length) {
+      if (mesesValores.length) {
 
-          const ehContinuo = mesesValores.every((m, i, arr) =>
-            i === 0 || m === arr[i - 1] + 1
-          );
+        const ehContinuo = mesesValores.every((m, i, arr) =>
+          i === 0 || m === arr[i - 1] + 1
+        );
 
-          if (mesesValores.length === 1) {
-            mesTxt = `Meses: ${nomesMeses[mesesValores[0]]}`;
-          }
-          else if (ehContinuo) {
-            const primeiro = nomesMeses[mesesValores[0]];
-            const ultimo = nomesMeses[mesesValores[mesesValores.length - 1]];
-            mesTxt = `Meses: ${primeiro} - ${ultimo}`;
-          }
-          else {
-            const lista = mesesValores.map(m => nomesMeses[m]);
-
-            const resumo = lista.length <= 3
-              ? lista.join(", ")
-              : `${lista.slice(0,3).join(", ")} +${lista.length - 3}`;
-
-            mesTxt = `Meses: ${resumo}`;
-          }
-
-        } else {
-        mesTxt = "Meses: todos";
+        if (mesesValores.length === 1) {
+          mesTxt = `Meses: ${nomesMeses[mesesValores[0]]}`;
         }
+        else if (ehContinuo) {
+          const primeiro = nomesMeses[mesesValores[0]];
+          const ultimo = nomesMeses[mesesValores[mesesValores.length - 1]];
+          mesTxt = `Meses: ${primeiro} - ${ultimo}`;
+        }
+        else {
+          const lista = mesesValores.map(m => nomesMeses[m]);
+
+          const resumo = lista.length <= 3
+            ? lista.join(", ")
+            : `${lista.slice(0, 3).join(", ")} +${lista.length - 3}`;
+
+          mesTxt = `Meses: ${resumo}`;
+        }
+
+      } else {
+        mesTxt = "Meses: todos";
+      }
 
       badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${progTxt} • ${mesTxt} • Ano: ${ano}`;
     }
 
-    async function carregarSubregioes(){
+    async function carregarSubregioes() {
       setStatus("Carregando sub-regiões…");
 
       const atual = getDataAtual();
@@ -873,7 +1042,7 @@
       atualizarBadgeFiltro();
     }
 
-    async function carregarProgramas(){
+    async function carregarProgramas() {
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
@@ -885,7 +1054,7 @@
         meses: meses.join(","),
       });
 
-      if(subs) qs.set("subregioes", subs);
+      if (subs) qs.set("subregioes", subs);
 
       const res = await fetch(API + "/performance/cards?" + qs.toString());
       const data = await res.json();
@@ -915,15 +1084,15 @@
           const opt = document.createElement("option");
           opt.value = r.codigo;
           opt.textContent = r.nome;
-          if(prev.has(String(r.codigo))) opt.selected = true;
+          if (prev.has(String(r.codigo))) opt.selected = true;
           sel.appendChild(opt);
         });
     }
 
-    async function aplicarFiltros(){
+    async function aplicarFiltros() {
       const requestId = ++ultimoRequestId;
 
-      try{
+      try {
         setStatus("Aplicando filtros…");
         atualizarBadgeFiltro();
 
@@ -936,7 +1105,7 @@
         if (requestId !== ultimoRequestId) return;
 
         setStatus("");
-      } catch(e){
+      } catch (e) {
         if (requestId !== ultimoRequestId) return;
         console.error(e);
         setStatus("Erro ao carregar performance. Veja o Console (F12).");
@@ -964,22 +1133,22 @@
       await aplicarFiltros();
     });
 
-    (async function init(){
+    (async function init() {
       await carregarUsuario();
-      try{
+      try {
         setStatus("Carregando…");
         aplicarAnoMesPadrao();
         await carregarSubregioes();
         atualizarBadgeFiltro();
         await aplicarFiltros();
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao iniciar. Verifique endpoints no backend.");
       }
     })();
 
-    async function carregarDadosPreditivos(){
+    async function carregarDadosPreditivos() {
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
@@ -991,8 +1160,8 @@
         meses: meses.join(",")
       });
 
-      if(subs) qs.set("subregioes", subs);
-      if(progs) qs.set("programas", progs);
+      if (subs) qs.set("subregioes", subs);
+      if (progs) qs.set("programas", progs);
 
       const res = await fetch(API + "/performance/preditiva?" + qs.toString());
       return await res.json();
@@ -1022,7 +1191,7 @@
       };
     }
 
-    async function renderizarGraficos(requestId = null){
+    async function renderizarGraficos(requestId = null) {
       destruirGraficos();
 
       const data = await carregarDadosPreditivos();
@@ -1040,7 +1209,8 @@
         data.matriculas.meta,
         data.matriculas.realizado,
         data.matriculas.previsao,
-        false
+        false,
+        totaisOficiais.matriculas
       );
 
       chartHoraAluno = criarGrafico(
@@ -1050,7 +1220,8 @@
         data.hora_aluno.meta,
         data.hora_aluno.realizado,
         data.hora_aluno.previsao,
-        false
+        false,
+        totaisOficiais.hora_aluno
       );
 
       chartReceita = criarGrafico(
@@ -1060,7 +1231,8 @@
         data.receita.meta,
         data.receita.realizado,
         data.receita.previsao,
-        true
+        true,
+        totaisOficiais.receita
       );
     }
 
@@ -1091,9 +1263,9 @@
       };
     }
 
-    function obterClasseStatus(percentual){
-      if(percentual >= 100) return "status-ok";
-      if(percentual >= 70) return "status-atencao";
+    function obterClasseStatus(percentual) {
+      if (percentual >= 100) return "status-ok";
+      if (percentual >= 70) return "status-atencao";
       return "status-critico";
     }
 
@@ -1135,14 +1307,14 @@
       document.getElementById("fechamentoReceita").textContent = moeda(fr.totalPrevisto);
       document.getElementById("fechamentoReceitaSub").innerHTML =
         `Meta anual: <strong>${moeda(fr.totalMeta)}</strong> • ${fr.percentual.toFixed(1).replace(".", ",")}% de atingimento`;
-      
+
       const cardM = document.querySelector(".card-fechamento.matriculas");
       const cardH = document.querySelector(".card-fechamento.hora-aluno");
       const cardR = document.querySelector(".card-fechamento.receita");
 
-      cardM.classList.remove("status-ok","status-atencao","status-critico");
-      cardH.classList.remove("status-ok","status-atencao","status-critico");
-      cardR.classList.remove("status-ok","status-atencao","status-critico");
+      cardM.classList.remove("status-ok", "status-atencao", "status-critico");
+      cardH.classList.remove("status-ok", "status-atencao", "status-critico");
+      cardR.classList.remove("status-ok", "status-atencao", "status-critico");
 
       cardM.classList.add(obterClasseStatus(fm.percentual));
       cardH.classList.add(obterClasseStatus(fha.percentual));
@@ -1165,46 +1337,47 @@
       elR.className = `status-fechamento ${statusR.classe}`;
     }
 
-    function obterStatusTexto(percentual){
-      if(percentual >= 100){
+    function obterStatusTexto(percentual) {
+      if (percentual >= 100) {
         return { texto: "🟢 Atingido", classe: "status-ok" };
       }
-      if(percentual >= 70){
+      if (percentual >= 70) {
         return { texto: "🟡 Em risco", classe: "status-atencao" };
       }
       return { texto: "🔴 Crítico", classe: "status-critico" };
     }
 
-    async function carregarUsuario(){
-      try{
+    async function carregarUsuario() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok) return;
+        if (!resp.ok) return;
 
         const data = await resp.json();
 
         const el = document.getElementById("usuario-logado");
-        if(el){
+        if (el) {
           el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
         }
-      }catch(e){
+      } catch (e) {
         console.error(e);
       }
     }
 
-    async function logout(){
-      try{
+    async function logout() {
+      try {
         await fetch(`${API}/auth/logout`, {
           method: "POST",
           credentials: "include"
         });
-      } catch(e) {}
+      } catch (e) { }
 
       window.location.href = "/login.html";
     }
 
   </script>
 </body>
+
 </html>
