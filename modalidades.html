@@ -763,7 +763,15 @@
       const res = await fetch(`${API}/modalidades/list?${qs.toString()}`);
       const data = await res.json();
 
+      const fins = selecionados("financiamentos");
       const sel = document.getElementById("modalidades");
+
+      if ((!data || data.length === 0)
+        && fins
+        && sel.options.length > 0) {
+        return;
+      }
+
       sel.innerHTML = "";
 
       data.forEach(r => {
@@ -777,6 +785,11 @@
 
         sel.appendChild(opt);
       });
+
+      // ✅ se só existe uma modalidade disponível, seleciona automaticamente
+      if (data.length === 1) {
+        Array.from(sel.options).forEach(o => o.selected = true);
+      }
     }
 
     function chipPct(pct) {
@@ -978,11 +991,6 @@
       }
 
       const dataFinal = Array.from(mapa.values())
-        .filter(r =>
-          Number(r.matriculas_meta || 0) !== 0 ||
-          Number(r.ha_meta || 0) !== 0 ||
-          Number(r.receita_meta || 0) !== 0
-        )
         .sort((a, b) =>
           String(a.programa).localeCompare(String(b.programa), "pt-BR")
         );
@@ -1078,11 +1086,6 @@
         );
       }
     })();
-
-    document.getElementById("modalidades").addEventListener("change", async () => {
-      atualizarBadgeFiltro();
-      await carregarTudo();
-    });
 
     document.getElementById("ano").addEventListener("change", async () => {
       salvarAnoMesPreferidos();

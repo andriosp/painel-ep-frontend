@@ -1,410 +1,471 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel • Performance</title>
 
   <style>
-    :root{
-      --bg:#f6f7fb;
-      --panel:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:#e5e7eb;
-      --shadow: 0 10px 24px rgba(15,23,42,.08);
-      --radius:14px;
-      --radius-sm:12px;
+    :root {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e5e7eb;
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --radius: 14px;
+      --radius-sm: 12px;
 
-      --brand:#2563eb;
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --bad:#ef4444;
+      --brand: #2563eb;
+      --ok: #16a34a;
+      --warn: #f59e0b;
+      --bad: #ef4444;
     }
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
-    .container{
+    .container {
       max-width: 1800px;
       margin: 0 auto;
       padding: 18px 18px 36px;
     }
 
     /* Top nav */
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
+    .topnav {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0 14px;
+      align-items: center;
     }
-    .navlink{
-      text-decoration:none;
+
+    .navlink {
+      text-decoration: none;
       color: var(--muted);
       font-weight: 750;
       font-size: 13px;
-      padding:8px 12px;
+      padding: 8px 12px;
       border-radius: 12px;
-      border:1px solid transparent;
+      border: 1px solid transparent;
     }
-    .navlink:hover{
-      background:#fff;
+
+    .navlink:hover {
+      background: #fff;
       border-color: var(--border);
     }
-    .navlink.active{
-      background: rgba(37,99,235,.10);
+
+    .navlink.active {
+      background: rgba(37, 99, 235, .10);
       color: var(--text);
-      border-color: rgba(37,99,235,.25);
+      border-color: rgba(37, 99, 235, .25);
     }
 
-    .header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-    .title h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.2px;
+
+    .title h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: .2px;
     }
-    .title p{
-      margin:6px 0 0;
+
+    .title p {
+      margin: 6px 0 0;
       color: var(--muted);
-      font-size:13px;
+      font-size: 13px;
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border:1px solid var(--border);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
       border-radius: 999px;
       background: #fff;
       color: var(--muted);
-      font-size:12px;
-      box-shadow: 0 6px 14px rgba(15,23,42,.06);
-      white-space:nowrap;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background: var(--brand);
-      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+      font-size: 12px;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+      white-space: nowrap;
     }
 
-    .panel{
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
+    }
+
+    .panel {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
       margin-bottom: 14px;
     }
 
-    .filters{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      align-items:flex-end;
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
     }
 
-    .field{ flex:1; min-width: 320px; }
-    .field:first-child{
-      display:flex;
-      flex-direction:column;
+    .field {
+      flex: 1;
+      min-width: 320px;
     }
-    .field.sm{ flex:0 0 160px; min-width: 160px; }
-    label{
-      display:block;
-      font-size:12px;
+
+    .field:first-child {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field.sm {
+      flex: 0 0 160px;
+      min-width: 160px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
       color: var(--muted);
-      margin-bottom:8px;
+      margin-bottom: 8px;
     }
-    select, input{
-      width:100%;
-      border:1px solid var(--border);
+
+    select,
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding:10px;
-      background:#fff;
-      outline:none;
+      padding: 10px;
+      background: #fff;
+      outline: none;
       height: 40px;
     }
-    select[multiple]{
+
+    select[multiple] {
       height: 140px;
     }
-    select:focus, input:focus{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+
+    select:focus,
+    input:focus {
+      border-color: rgba(37, 99, 235, .45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
     }
 
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
       align-self: flex-end;
     }
 
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background:#fff;
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
       color: var(--text);
-      padding:10px 12px;
+      padding: 10px 12px;
       border-radius: 12px;
-      cursor:pointer;
+      cursor: pointer;
       font-weight: 650;
-      font-size:13px;
+      font-size: 13px;
       transition: transform .05s ease, background .15s ease, border-color .15s ease;
     }
-    button:hover{ background:#f8fafc; border-color:#dbe3ef; }
-    button:active{ transform: translateY(1px); }
 
-    .btn-primary{
-      background: var(--brand);
-      color:#fff;
-      border-color: rgba(37,99,235,.65);
+    button:hover {
+      background: #f8fafc;
+      border-color: #dbe3ef;
     }
-    .btn-primary:hover{ background:#1d4ed8; }
 
-    .status{
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: rgba(37, 99, 235, .65);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .status {
       margin-top: 10px;
-      font-size:12px;
+      font-size: 12px;
       color: var(--muted);
       height: 0;
       overflow: hidden;
     }
 
     /* Tabs */
-    .tabs{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
       margin: 2px 0 10px;
     }
-    .tab{
-      border:1px solid var(--border);
-      background:#fff;
-      padding:10px 12px;
+
+    .tab {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 10px 12px;
       border-radius: 999px;
       font-size: 13px;
       font-weight: 800;
       color: var(--muted);
-      cursor:pointer;
-      user-select:none;
+      cursor: pointer;
+      user-select: none;
     }
-    .tab.active{
-      background: rgba(37,99,235,.10);
-      border-color: rgba(37,99,235,.25);
+
+    .tab.active {
+      background: rgba(37, 99, 235, .10);
+      border-color: rgba(37, 99, 235, .25);
       color: var(--text);
     }
 
     /* Cards grid */
-    .cards{
-      display:grid;
+    .cards {
+      display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
-    @media (max-width: 1200px){
-      .cards{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 720px){
-      .cards{ grid-template-columns: 1fr; }
-      .field{ min-width: 100%; }
-      .field.sm{ flex: 1; min-width: 100%; }
+
+    @media (max-width: 1200px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .card{
+    @media (max-width: 720px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .field {
+        min-width: 100%;
+      }
+
+      .field.sm {
+        flex: 1;
+        min-width: 100%;
+      }
+    }
+
+    .card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
       position: relative;
-      overflow:hidden;
+      overflow: hidden;
     }
 
-    .card .h{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
+    .card .h {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
       margin-bottom: 10px;
     }
-    .prog{
+
+    .prog {
       font-weight: 900;
       letter-spacing: .2px;
       line-height: 1.15;
     }
-    .emoji{
+
+    .emoji {
       font-size: 22px;
       line-height: 1;
       margin-top: -2px;
     }
 
-    .kv{
-      display:grid;
+    .kv {
+      display: grid;
       grid-template-columns: 1fr 1fr;
-      gap:8px 12px;
+      gap: 8px 12px;
       margin-top: 6px;
     }
-    .k{
+
+    .k {
       font-size: 11px;
       color: var(--muted);
       font-weight: 850;
       letter-spacing: .25px;
       text-transform: uppercase;
     }
-    .v{
+
+    .v {
       font-weight: 900;
-      text-align:right;
+      text-align: right;
     }
 
-    .bar{
+    .bar {
       margin-top: 12px;
       height: 10px;
       border-radius: 999px;
       background: #eef2f7;
-      overflow:hidden;
+      overflow: hidden;
       border: 1px solid #e9eef6;
     }
-    .fill{
+
+    .fill {
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      background: rgba(37,99,235,.85);
+      background: rgba(37, 99, 235, .85);
       transition: width .25s ease;
     }
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      margin-top:10px;
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       color: var(--muted);
-      background:#fff;
+      background: #fff;
       width: fit-content;
     }
-    .pill strong{ color: var(--text); }
 
-    .muted{ color: var(--muted); }
+    .pill strong {
+      color: var(--text);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
 
     /* Cards clicáveis */
-    .card{
+    .card {
       cursor: pointer;
       transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
     }
 
-    .card:hover{
+    .card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 30px rgba(15,23,42,.14);
-      border-color: rgba(37,99,235,.35);
+      box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+      border-color: rgba(37, 99, 235, .35);
     }
 
     /* Dá um feedback visual no header do card */
-    .card:hover .prog{
+    .card:hover .prog {
       color: #2563eb;
     }
 
     /* Emoji reage levemente ao hover */
-    .card:hover .emoji{
+    .card:hover .emoji {
       transform: scale(1.05);
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
-      flex-wrap:wrap;
+    .topnav {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0 14px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    .topnav-right{
-      margin-left:auto;
-      display:flex;
-      align-items:center;
-      gap:10px;
+    .topnav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .table-card{
+    .table-card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      overflow:hidden;
+      overflow: hidden;
     }
 
-    .table-wrap{
-      overflow:auto;
+    .table-wrap {
+      overflow: auto;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
-    thead th{
-      background:#fbfcfe;
-      border-bottom:1px solid var(--border);
-      color:var(--muted);
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.28px;
-      padding:12px 10px;
-      text-align:right;
-      white-space:nowrap;
+    thead th {
+      background: #fbfcfe;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .28px;
+      padding: 12px 10px;
+      text-align: right;
+      white-space: nowrap;
     }
 
-    thead th:first-child{
-      text-align:left;
+    thead th:first-child {
+      text-align: left;
     }
 
-    tbody td{
-      border-bottom:1px solid #eef2f7;
-      padding:10px;
-      text-align:right;
-      white-space:nowrap;
-      font-size:12px;
+    tbody td {
+      border-bottom: 1px solid #eef2f7;
+      padding: 10px;
+      text-align: right;
+      white-space: nowrap;
+      font-size: 12px;
     }
 
-    tbody td:first-child{
-      text-align:left;
+    tbody td:first-child {
+      text-align: left;
     }
 
-    tbody tr:nth-child(odd){
-      background:#fcfdff;
+    tbody tr:nth-child(odd) {
+      background: #fcfdff;
     }
 
-    .table-header{
-      padding:18px 18px 10px;
-      border-bottom:1px solid var(--border);
-      background:#fff;
+    .table-header {
+      padding: 18px 18px 10px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
     }
 
-    .table-header h3{
-      margin:0;
-      font-size:13px;
-      font-weight:800;
-      letter-spacing:.4px;
-      text-transform:uppercase;
-      color:var(--muted);
+    .table-header h3 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
-    .table-header p{
-      margin:6px 0 0;
-      font-size:14px;
-      color:#5f6f89;
+    .table-header p {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: #5f6f89;
     }
   </style>
 </head>
@@ -417,13 +478,13 @@
         : "/api";
   </script>
   <script>
-    (async function validarSessao(){
-      try{
+    (async function validarSessao() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok){
+        if (!resp.ok) {
           window.location.href = "/login.html";
           return;
         }
@@ -431,12 +492,12 @@
         const data = await resp.json();
 
         // 🔥 AQUI é o que faltava
-        if(data.deve_trocar_senha){
+        if (data.deve_trocar_senha) {
           window.location.href = "/alterar_senha.html";
           return;
         }
 
-      }catch(e){
+      } catch (e) {
         window.location.href = "/login.html";
       }
     })();
@@ -454,7 +515,7 @@
       <a href="sge_turmas.html" class="navlink">Turmas</a>
       <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
       <a href="relatorio_programa.html" class="navlink">Relatório Executivo</a>
-    
+
       <div class="topnav-right">
         <a href="alterar_senha.html" class="navlink">
           Alterar senha
@@ -463,7 +524,7 @@
           <span class="dot"></span>
           Usuário: —
         </div>
-    
+
         <button onclick="logout()">Sair</button>
       </div>
     </nav>
@@ -482,7 +543,7 @@
         <div class="field">
           <label for="subregioes">Sub-regiões (Ctrl + clique para múltiplas)</label>
           <select id="subregioes" multiple></select>
-        
+
         </div>
 
         <div class="field">
@@ -510,7 +571,7 @@
 
         <div class="field sm">
           <label for="ano">Ano</label>
-          <input id="ano" type="number" min="2000" max="2100"/>
+          <input id="ano" type="number" min="2000" max="2100" />
         </div>
 
         <div class="actions">
@@ -532,12 +593,11 @@
         <h3>
           Realizado por Financiamento
         </h3>
-      
-        <p
-          id="financiamento-resumo-subtitulo">
+
+        <p id="financiamento-resumo-subtitulo">
         </p>
       </div>
-    
+
       <div class="table-wrap">
         <table id="tabela-financiamento-resumo"></table>
       </div>
@@ -549,7 +609,7 @@
     let indicadorAtual = "matriculas";
     let programasValidosReceita = new Set();
 
-    function getDataAtual(){
+    function getDataAtual() {
       const agora = new Date();
       return {
         ano: agora.getFullYear(),
@@ -557,7 +617,7 @@
       };
     }
 
-    function aplicarAnoMesPadrao(){
+    function aplicarAnoMesPadrao() {
       const atual = getDataAtual();
       document.getElementById("ano").value = atual.ano;
 
@@ -569,38 +629,38 @@
       });
     }
 
-    function format(n){ return Number(n || 0).toLocaleString("pt-BR"); }
-    function moeda(n){ return Number(n || 0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+    function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
+    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
 
-    function setStatus(msg){
+    function setStatus(msg) {
       const el = document.getElementById("status");
-      if(el) el.textContent = msg || "";
+      if (el) el.textContent = msg || "";
     }
 
-    function selecionados(id){
+    function selecionados(id) {
       const sel = document.getElementById(id);
       return Array.from(sel.selectedOptions).map(o => o.value).join(",");
     }
 
     function mesesSelecionados() {
       const sel = document.getElementById("meses");
-      if (!sel) return [1,2,3,4,5,6,7,8,9,10,11,12];
+      if (!sel) return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
       const valores = Array.from(sel.selectedOptions)
         .map(o => Number(o.value))
         .filter(Boolean)
         .sort((a, b) => a - b);
 
-      return valores.length ? valores : [1,2,3,4,5,6,7,8,9,10,11,12];
+      return valores.length ? valores : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     }
 
-    function selecionarTudo(id){
+    function selecionarTudo(id) {
       const sel = document.getElementById(id);
       Array.from(sel.options).forEach(o => o.selected = true);
       atualizarBadgeFiltro();
     }
 
-    async function limparFiltros(){
+    async function limparFiltros() {
       ["subregioes", "programas", "meses"].forEach(id => {
         const sel = document.getElementById(id);
         if (sel) Array.from(sel.options).forEach(o => o.selected = false);
@@ -616,9 +676,9 @@
       await aplicarFiltros();
     }
 
-    function atualizarBadgeFiltro(){
+    function atualizarBadgeFiltro() {
       const badge = document.getElementById("badge-filtro");
-      if(!badge) return;
+      if (!badge) return;
 
       const subSel = document.getElementById("subregioes");
       const progSel = document.getElementById("programas");
@@ -631,45 +691,44 @@
 
       const filtros = [];
 
-      if(subs.length){
+      if (subs.length) {
         const resumo = subs.length <= 3
           ? subs.join(", ")
-          : `${subs.slice(0,3).join(", ")} +${subs.length - 3}`;
+          : `${subs.slice(0, 3).join(", ")} +${subs.length - 3}`;
 
         filtros.push(`Sub-região: ${resumo}`);
       } else {
         filtros.push("Sub-regiões: todas");
       }
 
-      if(progs.length){
+      if (progs.length) {
         const resumo = progs.length <= 3
           ? progs.join(", ")
-          : `${progs.slice(0,3).join(", ")} +${progs.length - 3}`;
+          : `${progs.slice(0, 3).join(", ")} +${progs.length - 3}`;
 
         filtros.push(`Programas: ${resumo}`);
       } else {
         filtros.push("Programas: todos");
       }
 
-      if(meses.length){
+      if (meses.length) {
         const resumo = meses.length <= 3
           ? meses.join(", ")
-          : `${meses.slice(0,3).join(", ")} +${meses.length - 3}`;
+          : `${meses.slice(0, 3).join(", ")} +${meses.length - 3}`;
         filtros.push(`Meses: ${resumo}`);
       }
 
-      if(ano){
+      if (ano) {
         filtros.push(`Ano: ${ano}`);
       }
 
-      badge.innerHTML = `<span class="dot"></span> ${
-        filtros.length
-          ? `Filtro: ${filtros.join(" • ")}`
-          : "Filtro: todas as sub-regiões • programas • meses"
-      }`;
+      badge.innerHTML = `<span class="dot"></span> ${filtros.length
+        ? `Filtro: ${filtros.join(" • ")}`
+        : "Filtro: todas as sub-regiões • programas • meses"
+        }`;
     }
 
-    async function carregarSubregioes(){
+    async function carregarSubregioes() {
       setStatus("Carregando sub-regiões…");
 
       const atual = getDataAtual();
@@ -695,7 +754,71 @@
       atualizarBadgeFiltro();
     }
 
-    async function carregarProgramas(){
+    function nomeProgramaOficial(nome) {
+      const s = String(nome || "")
+        .trim()
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+      if (s === "SEJA PRO+" || s === "SEJA PRO +") {
+        return "SEJA PRÓ+";
+      }
+
+      if (
+        s === "TECNICOS EAD INDUSTRIA" ||
+        s === "TECNICO EAD INDUSTRIA" ||
+        s === "TECNICO EAD PARA A INDUSTRIA" ||
+        s === "TECNICOS EAD PARA A INDUSTRIA"
+      ) {
+        return "TÉCNICO EAD PARA A INDÚSTRIA";
+      }
+
+      return String(nome || "").trim();
+    }
+
+    function chavePrograma(nome) {
+      return nomeProgramaOficial(nome)
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function consolidarProgramas(lista) {
+      const mapa = new Map();
+
+      (lista || []).forEach(item => {
+        const chave = chavePrograma(item.programa);
+        const nome = nomeProgramaOficial(item.programa);
+
+        if (!mapa.has(chave)) {
+          mapa.set(chave, {
+            ...item,
+            programa: nome,
+            programa_ids: [String(item.programa_id)],
+            meta: 0,
+            projetado: 0,
+            realizado: 0
+          });
+        }
+
+        const acc = mapa.get(chave);
+        acc.meta += Number(item.meta || 0);
+        acc.projetado += Number(item.projetado || 0);
+        acc.realizado += Number(item.realizado || 0);
+
+        const id = String(item.programa_id);
+        if (!acc.programa_ids.includes(id)) {
+          acc.programa_ids.push(id);
+        }
+
+        acc.programa_id = acc.programa_ids[0];
+      });
+
+      return Array.from(mapa.values());
+    }
+
+    async function carregarProgramas() {
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
@@ -707,12 +830,14 @@
         meses: meses.join(","),
       });
 
-      if(subs) qs.set("subregioes", subs);
+      if (subs) qs.set("subregioes", subs);
 
       const res = await fetch(API + "/performance/cards?" + qs.toString());
       const data = await res.json();
 
-      const validos = (data || []).filter(item =>
+      const dataConsolidada = consolidarProgramas(data);
+
+      const validos = (dataConsolidada || []).filter(item =>
         Number(item.meta || 0) > 0 ||
         Number(item.projetado || 0) > 0 ||
         Number(item.realizado || 0) > 0
@@ -737,37 +862,37 @@
           const opt = document.createElement("option");
           opt.value = r.codigo;
           opt.textContent = r.nome;
-          if(prev.has(String(r.codigo))) opt.selected = true;
+          if (prev.has(String(r.codigo))) opt.selected = true;
           sel.appendChild(opt);
         });
     }
 
-    function emojiStatus(status){
-      if(status === "Ainda não iniciado") return "⏳";
-      if(status === "Meta atingida") return "🙂";
-      if(status === "Atenção") return "😐";
+    function emojiStatus(status) {
+      if (status === "Ainda não iniciado") return "⏳";
+      if (status === "Meta atingida") return "🙂";
+      if (status === "Atenção") return "😐";
       return "🙁"; // red
     }
 
-    function fmtIndicador(v){
-      if(indicadorAtual === "receita") return moeda(v);
+    function fmtIndicador(v) {
+      if (indicadorAtual === "receita") return moeda(v);
       return format(v);
     }
 
-    function renderCards(lista){
+    function renderCards(lista) {
       const root = document.getElementById("cards");
       root.innerHTML = "";
 
       lista = (lista || [])
         .sort((a, b) => (a.programa || "").localeCompare(b.programa || "", "pt-BR"));
-        
+
       lista = (lista || []).filter(item =>
         Number(item.meta || 0) > 0 ||
         Number(item.projetado || 0) > 0 ||
         Number(item.realizado || 0) > 0
       );
 
-      if(!lista || !lista.length){
+      if (!lista || !lista.length) {
         root.innerHTML = `<div class="muted">Sem dados para os filtros selecionados.</div>`;
         return;
       }
@@ -830,7 +955,7 @@
           url.searchParams.set("meta_resumo", String(item.meta || 0));
           url.searchParams.set("projetado_resumo", String(item.projetado || 0));
           url.searchParams.set("realizado_resumo", String(item.realizado || 0));
-          if(subs) url.searchParams.set("subregioes", subs);
+          if (subs) url.searchParams.set("subregioes", subs);
           window.open(url.toString(), "_blank");
         });
 
@@ -838,7 +963,7 @@
       });
     }
 
-    async function carregarCards(){
+    async function carregarCards() {
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
@@ -851,33 +976,34 @@
         ano: String(ano),
         meses: meses.join(","),
       });
-      if(subs) qs.set("subregioes", subs);
-      if(progs) qs.set("programas", progs);
+      if (subs) qs.set("subregioes", subs);
+      if (progs) qs.set("programas", progs);
 
       setStatus("Carregando performance…");
       const res = await fetch(API + "/performance/cards?" + qs.toString());
       let data = await res.json();
+      data = consolidarProgramas(data);
 
       renderCards(data);
       filtrarSelectProgramas();
       setStatus("");
     }
 
-    function filtrarSelectProgramas(){
+    function filtrarSelectProgramas() {
       const sel = document.getElementById("programas");
-      if(!sel) return;
+      if (!sel) return;
 
       Array.from(sel.options).forEach(o => o.hidden = false);
     }
 
-    async function carregarResumoFinanciamento(){
+    async function carregarResumoFinanciamento() {
       const wrap = document.getElementById("financiamento-resumo-wrap");
       const tabela = document.getElementById("tabela-financiamento-resumo");
       const subtitulo = document.getElementById("financiamento-resumo-subtitulo");
 
       const progs = selecionados("programas");
 
-      if(!progs || indicadorAtual === "receita"){
+      if (!progs || indicadorAtual === "receita") {
         wrap.style.display = "none";
         tabela.innerHTML = "";
         return;
@@ -895,12 +1021,12 @@
         programas: progs
       });
 
-      if(subs) qs.set("subregioes", subs);
+      if (subs) qs.set("subregioes", subs);
 
       const res = await fetch(API + "/performance/financiamento-resumo?" + qs.toString());
       const data = await res.json();
 
-      if(!data.length){
+      if (!data.length) {
         wrap.style.display = "none";
         tabela.innerHTML = "";
         return;
@@ -925,20 +1051,20 @@
         </thead>
         <tbody>
           ${data.map(r => {
-            const valor = Number(r.realizado || 0);
-            const pct = total > 0 ? (valor / total) * 100 : 0;
+        const valor = Number(r.realizado || 0);
+        const pct = total > 0 ? (valor / total) * 100 : 0;
 
-            return `
+        return `
               <tr>
                 <td>${r.financiamento}</td>
                 <td>${format(valor)}</td>
                 <td>${pct.toLocaleString("pt-BR", {
-                  minimumFractionDigits: 1,
-                  maximumFractionDigits: 1
-                })}%</td>
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        })}%</td>
               </tr>
             `;
-          }).join("")}
+      }).join("")}
           <tr>
             <td><strong>Total</strong></td>
             <td><strong>${format(total)}</strong></td>
@@ -948,21 +1074,21 @@
       `;
     }
 
-    async function aplicarFiltros(){
-      try{
+    async function aplicarFiltros() {
+      try {
         setStatus("Aplicando filtros…");
         atualizarBadgeFiltro();
         await carregarProgramas();
         await carregarCards();
         await carregarResumoFinanciamento();
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao carregar performance. Veja o Console (F12).");
       }
     }
 
-    async function trocarAba(el){
+    async function trocarAba(el) {
       document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
       el.classList.add("active");
       indicadorAtual = el.getAttribute("data-ind");
@@ -984,51 +1110,52 @@
     });
     document.getElementById("ano").addEventListener("change", aplicarFiltros);
 
-    (async function init(){
+    (async function init() {
       await carregarUsuario();
-      try{
+      try {
         setStatus("Carregando…");
         aplicarAnoMesPadrao();
         await carregarSubregioes();
         atualizarBadgeFiltro();
         await aplicarFiltros();
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao iniciar. Verifique endpoints no backend.");
       }
     })();
 
-    async function carregarUsuario(){
-      try{
+    async function carregarUsuario() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok) return;
+        if (!resp.ok) return;
 
         const data = await resp.json();
 
         const el = document.getElementById("usuario-logado");
-        if(el){
+        if (el) {
           el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
         }
-      }catch(e){
+      } catch (e) {
         console.error(e);
       }
     }
 
-    async function logout(){
-      try{
+    async function logout() {
+      try {
         await fetch(`${API}/auth/logout`, {
           method: "POST",
           credentials: "include"
         });
-      } catch(e) {}
+      } catch (e) { }
 
       window.location.href = "/login.html";
     }
 
   </script>
 </body>
+
 </html>
