@@ -528,21 +528,21 @@
       <div class="card">
         <h3>Matrículas</h3>
         <div class="big" id="mat-total">—</div>
-        <div class="sub">Total consolidado</div>
+        <div class="sub">Meta consolidada</div>
         <div class="chips" id="mat-chips"></div>
       </div>
 
       <div class="card">
         <h3>Hora-Aluno</h3>
         <div class="big" id="ha-total">—</div>
-        <div class="sub">Total consolidado</div>
+        <div class="sub">Meta consolidada</div>
         <div class="chips" id="ha-chips"></div>
       </div>
 
       <div class="card">
         <h3>Receita</h3>
         <div class="big" id="rec-total">—</div>
-        <div class="sub">Total consolidado</div>
+        <div class="sub">Meta consolidada</div>
       </div>
     </div>
 
@@ -673,23 +673,28 @@
       const d = await (await fetch(url)).json();
 
       // Matrículas
-      document.getElementById("mat-total").textContent = format(d?.matriculas?.total || 0);
+      document.getElementById("mat-total").textContent =
+        format(d?.matriculas?.meta_total || 0);
+
       document.getElementById("mat-chips").innerHTML = `
-        <span class="chip gr"><strong>GR</strong> ${format(d?.matriculas?.gr || 0)} (${Number(d?.matriculas?.gr_pct || 0).toFixed(2)}%)</span>
-        <span class="chip gnr"><strong>GNR</strong> ${format(d?.matriculas?.g || 0)} (${Number(d?.matriculas?.g_pct || 0).toFixed(2)}%)</span>
-        <span class="chip pago"><strong>PG</strong> ${format(d?.matriculas?.p || 0)} (${Number(d?.matriculas?.p_pct || 0).toFixed(2)}%)</span>
+        <span class="chip gr"><strong>GR</strong> ${format(d?.matriculas?.meta_gr || 0)}</span>
+        <span class="chip gnr"><strong>GNR</strong> ${format(d?.matriculas?.meta_g || 0)}</span>
+        <span class="chip pago"><strong>PG</strong> ${format(d?.matriculas?.meta_p || 0)}</span>
       `;
 
       // Hora-Aluno
-      document.getElementById("ha-total").textContent = format(d?.hora_aluno?.total || 0);
+      document.getElementById("ha-total").textContent =
+        format(d?.hora_aluno?.meta_total || 0);
+
       document.getElementById("ha-chips").innerHTML = `
-        <span class="chip gr"><strong>GR</strong> ${format(d?.hora_aluno?.gr || 0)} (${Number(d?.hora_aluno?.gr_pct || 0).toFixed(2)}%)</span>
-        <span class="chip gnr"><strong>GNR</strong> ${format(d?.hora_aluno?.g || 0)} (${Number(d?.hora_aluno?.g_pct || 0).toFixed(2)}%)</span>
-        <span class="chip pago"><strong>PG</strong> ${format(d?.hora_aluno?.p || 0)} (${Number(d?.hora_aluno?.p_pct || 0).toFixed(2)}%)</span>
+        <span class="chip gr"><strong>GR</strong> ${format(d?.hora_aluno?.meta_gr || 0)}</span>
+        <span class="chip gnr"><strong>GNR</strong> ${format(d?.hora_aluno?.meta_g || 0)}</span>
+        <span class="chip pago"><strong>PG</strong> ${format(d?.hora_aluno?.meta_p || 0)}</span>
       `;
 
       // Receita
-      document.getElementById("rec-total").textContent = moeda(d?.receita?.total || 0);
+      document.getElementById("rec-total").textContent =
+        moeda(d?.receita?.meta_total || 0);
 
       setStatus("");
     }

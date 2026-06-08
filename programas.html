@@ -1,275 +1,322 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel • Programas</title>
 
   <style>
-    :root{
-      --bg:#f6f7fb;
-      --panel:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:#e5e7eb;
-      --shadow: 0 10px 24px rgba(15,23,42,.08);
-      --radius:14px;
-      --radius-sm:12px;
+    :root {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e5e7eb;
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --radius: 14px;
+      --radius-sm: 12px;
 
-      --brand:#2563eb;  /* azul executivo */
-      --ok:#16a34a;
-      --warn:#f59e0b;
+      --brand: #2563eb;
+      /* azul executivo */
+      --ok: #16a34a;
+      --warn: #f59e0b;
     }
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
-    .container{
+    .container {
       max-width: 1800px;
       margin: 0 auto;
       padding: 18px 18px 36px;
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
+    .topnav {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0 14px;
+      align-items: center;
     }
-    .navlink{
-      text-decoration:none;
+
+    .navlink {
+      text-decoration: none;
       color: var(--muted);
       font-weight: 750;
       font-size: 13px;
-      padding:8px 12px;
+      padding: 8px 12px;
       border-radius: 12px;
-      border:1px solid transparent;
+      border: 1px solid transparent;
     }
-    .navlink:hover{
-      background:#fff;
+
+    .navlink:hover {
+      background: #fff;
       border-color: var(--border);
     }
-    .navlink.active{
-      background: rgba(37,99,235,.10);
+
+    .navlink.active {
+      background: rgba(37, 99, 235, .10);
       color: var(--text);
-      border-color: rgba(37,99,235,.25);
+      border-color: rgba(37, 99, 235, .25);
     }
 
-    .header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
     }
-    .title h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.2px;
+
+    .title h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: .2px;
     }
-    .title p{
-      margin:6px 0 0;
+
+    .title p {
+      margin: 6px 0 0;
       color: var(--muted);
-      font-size:13px;
+      font-size: 13px;
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border:1px solid var(--border);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
       border-radius: 999px;
       background: #fff;
       color: var(--muted);
-      font-size:12px;
-      box-shadow: 0 6px 14px rgba(15,23,42,.06);
-      white-space:nowrap;
+      font-size: 12px;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+      white-space: nowrap;
       max-width: 55vw;
-      overflow:hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
     }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
       background: var(--brand);
-      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
       flex: 0 0 auto;
     }
 
-    .panel{
+    .panel {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
       margin-bottom: 14px;
     }
 
-    .filters{
-      display:grid;
+    .filters {
+      display: grid;
       grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr) auto;
-      gap:18px;
-      align-items:start;
+      gap: 18px;
+      align-items: start;
     }
 
-    .field{ flex:1; min-width: 320px; }
-
-    .field.sm{
-      flex:0 0 160px;
-      min-width:160px;
-      max-width:160px;
-      align-self:flex-end;
+    .field {
+      flex: 1;
+      min-width: 320px;
     }
 
-    .field select{
+    .field.sm {
+      flex: 0 0 160px;
+      min-width: 160px;
+      max-width: 160px;
+      align-self: flex-end;
+    }
+
+    .field select {
       height: 150px;
     }
 
-    label{
-      display:block;
-      font-size:12px;
+    label {
+      display: block;
+      font-size: 12px;
       color: var(--muted);
-      margin-bottom:8px;
-    }
-    select{
-      width:100%;
-      height: 150px;
-      border:1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding:10px;
-      background:#fff;
-      outline:none;
-    }
-    select:focus{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+      margin-bottom: 8px;
     }
 
-    .actions{
-      display:flex;
-      align-items:flex-end;
-      justify-content:flex-start;
+    select {
+      width: 100%;
+      height: 150px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      background: #fff;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: rgba(37, 99, 235, .45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+    }
+
+    .actions {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
       height: calc(150px + 22px);
-      padding:0;
+      padding: 0;
       margin: 0;
     }
 
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background:#fff;
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
       color: var(--text);
-      padding:10px 12px;
+      padding: 10px 12px;
       border-radius: 12px;
-      cursor:pointer;
+      cursor: pointer;
       font-weight: 650;
-      font-size:13px;
+      font-size: 13px;
       transition: transform .05s ease, background .15s ease, border-color .15s ease;
     }
-    button:hover{ background:#f8fafc; border-color:#dbe3ef; }
-    button:active{ transform: translateY(1px); }
 
-    .btn-primary{
-      background: var(--brand);
-      color:#fff;
-      border-color: rgba(37,99,235,.65);
+    button:hover {
+      background: #f8fafc;
+      border-color: #dbe3ef;
     }
-    .btn-primary:hover{ background:#1d4ed8; }
 
-    .cards{
-      display:grid;
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: rgba(37, 99, 235, .65);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .cards {
+      display: grid;
       grid-template-columns: 0.78fr 1.22fr 1.22fr 0.78fr;
       gap: 12px;
       margin-bottom: 10px;
     }
-    @media (max-width: 1180px){
-      .cards{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 720px){
-      .cards{ grid-template-columns: 1fr; }
-      .field{ min-width: 100%; }
+
+    @media (max-width: 1180px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .card{
+    @media (max-width: 720px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .field {
+        min-width: 100%;
+      }
+    }
+
+    .card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
     }
-    .card h3{
-      margin:0;
-      font-size:13px;
+
+    .card h3 {
+      margin: 0;
+      font-size: 13px;
       color: var(--muted);
       font-weight: 750;
       letter-spacing: .2px;
     }
-    .big{
+
+    .big {
       margin-top: 10px;
       font-size: 26px;
       font-weight: 820;
       letter-spacing: .2px;
     }
-    .sub{
+
+    .sub {
       margin-top: 4px;
       font-size: 12px;
       color: var(--muted);
     }
 
-    .chips{
-      display:flex;
-      gap:8px;
+    .chips {
+      display: flex;
+      gap: 8px;
       margin-top: 12px;
       flex-wrap: nowrap;
       overflow-x: auto;
       padding-bottom: 2px;
     }
-    .chips::-webkit-scrollbar{ height: 6px; }
-    .chips::-webkit-scrollbar-thumb{ background:#dbe3ef; border-radius:999px; }
 
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
+    .chips::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .chips::-webkit-scrollbar-thumb {
+      background: #dbe3ef;
       border-radius: 999px;
-      border:1px solid var(--border);
-      background:#fff;
-      font-size:11px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 11px;
       line-height: 1.1;
       white-space: nowrap;
     }
 
-    .chip.gr{
-      background:#e8f3ff;
-      border:1px solid #b9d7ff;
-      color:#1d4ed8;
+    .chip.gr {
+      background: #e8f3ff;
+      border: 1px solid #b9d7ff;
+      color: #1d4ed8;
     }
 
-    .chip.gnr{
-      background:#fffbeb;
-      border:1px solid #fde68a;
-      color:#b45309;
+    .chip.gnr {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #b45309;
     }
 
-    .chip.pago{
-      background:#ecfdf3;
-      border:1px solid #b7ebc6;
-      color:#15803d;
+    .chip.pago {
+      background: #ecfdf3;
+      border: 1px solid #b7ebc6;
+      color: #15803d;
     }
 
-    .chip .k{
+    .chip .k {
       font-weight: 800;
       color: var(--muted);
-      letter-spacing:.2px;
+      letter-spacing: .2px;
     }
 
-    .legend{
+    .legend {
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
@@ -278,13 +325,14 @@
       font-size: 12px;
       color: var(--muted);
     }
-    .legend-item{
+
+    .legend-item {
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
 
-    .section-title{
+    .section-title {
       margin: 16px 2px 10px;
       font-size: 12px;
       color: var(--muted);
@@ -293,68 +341,72 @@
       text-transform: uppercase;
     }
 
-    .table-card{
+    .table-card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      overflow:hidden;
+      overflow: hidden;
       margin-bottom: 14px;
     }
-    .table-wrap{ 
-      overflow:hidden;
+
+    .table-wrap {
+      overflow: hidden;
     }
 
-    table{
-      width:100%;
+    table {
+      width: 100%;
       border-collapse: collapse;
       table-layout: auto;
     }
 
     table th,
-    table td{
+    table td {
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    thead th{
+    thead th {
       position: sticky;
-      top:0;
+      top: 0;
       background: #fbfcfe;
-      border-bottom:1px solid var(--border);
+      border-bottom: 1px solid var(--border);
       color: var(--muted);
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: .2px;
       padding: 6px 6px;
-      text-align:right;
+      text-align: right;
       white-space: nowrap;
       line-height: 1.15;
     }
 
-    thead th:first-child{ text-align:left; }
+    thead th:first-child {
+      text-align: left;
+    }
 
-    tbody td{
-      border-bottom:1px solid #eef2f7;
+    tbody td {
+      border-bottom: 1px solid #eef2f7;
       font-size: 12px;
       padding: 5px 6px;
-      text-align:right;
+      text-align: right;
       white-space: nowrap;
       word-break: break-word;
       line-height: 1.15;
     }
 
-    td{
+    td {
       font-variant-numeric: tabular-nums;
     }
 
-    td, th{
+    td,
+    th {
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     thead th:first-child,
-    tbody td:first-child{
+    tbody td:first-child {
       width: 180px;
       max-width: 180px;
       white-space: nowrap;
@@ -363,49 +415,53 @@
       text-align: left;
     }
 
-    tbody tr:nth-child(odd){ background:#fcfdff; }
-    tbody tr:hover{ background: rgba(37,99,235,.06); }
+    tbody tr:nth-child(odd) {
+      background: #fcfdff;
+    }
 
-    .status{
+    tbody tr:hover {
+      background: rgba(37, 99, 235, .06);
+    }
+
+    .status {
       margin-top: 10px;
-      font-size:12px;
+      font-size: 12px;
       color: var(--muted);
       min-height: 0;
     }
 
-    @media (max-width: 1366px){
+    @media (max-width: 1366px) {
 
-      thead th{
+      thead th {
         font-size: 9px;
         padding: 5px 5px;
       }
 
-      tbody td{
+      tbody td {
         font-size: 9px;
         padding: 5px 5px;
       }
 
-      .table-card{
+      .table-card {
         overflow-x: hidden;
       }
 
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
-      flex-wrap:wrap;
+    .topnav {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0 14px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    .topnav-right{
-      margin-left:auto;
-      display:flex;
-      align-items:center;
-      gap:10px;
+    .topnav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-
   </style>
 </head>
 
@@ -417,13 +473,13 @@
         : "/api";
   </script>
   <script>
-    (async function validarSessao(){
-      try{
+    (async function validarSessao() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok){
+        if (!resp.ok) {
           window.location.href = "login.html";
           return;
         }
@@ -431,12 +487,12 @@
         const data = await resp.json();
 
         // 🔥 AQUI é o que faltava
-        if(data.deve_trocar_senha){
+        if (data.deve_trocar_senha) {
           window.location.href = "alterar_senha.html";
           return;
         }
 
-      }catch(e){
+      } catch (e) {
         window.location.href = "login.html";
       }
     })();
@@ -454,7 +510,7 @@
       <a href="sge_turmas.html" class="navlink">Turmas</a>
       <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
       <a href="relatorio_programa.html" class="navlink">Relatório Executivo</a>
-    
+
       <div class="topnav-right">
         <a href="alterar_senha.html" class="navlink">
           Alterar senha
@@ -463,7 +519,7 @@
           <span class="dot"></span>
           Usuário: —
         </div>
-    
+
         <button onclick="logout()">Sair</button>
       </div>
     </nav>
@@ -473,7 +529,8 @@
         <h1>Painel • Programas</h1>
         <p>Visão por programas (com recorte de sub-regiões) • Matrículas, Hora-Aluno, Receita e financiamentos</p>
       </div>
-      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões • todos os programas</div>
+      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões • todos os programas
+      </div>
     </div>
 
     <div class="panel">
@@ -506,21 +563,21 @@
       <div class="card">
         <h3>Matrículas</h3>
         <div class="big" id="mat-total">—</div>
-        <div class="sub">Total consolidado</div>
+        <div class="sub">Meta consolidada</div>
         <div class="chips" id="mat-chips"></div>
       </div>
 
       <div class="card">
         <h3>Hora-Aluno</h3>
         <div class="big" id="ha-total">—</div>
-        <div class="sub">Total consolidado</div>
+        <div class="sub">Meta consolidada</div>
         <div class="chips" id="ha-chips"></div>
       </div>
 
       <div class="card">
         <h3>Receita</h3>
         <div class="big" id="rec-total">—</div>
-        <div class="sub">Total consolidado</div>
+        <div class="sub">Meta consolidada</div>
       </div>
     </div>
 
@@ -557,7 +614,7 @@
   <script>
 
     function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
-    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style:"currency", currency:"BRL" }); }
+    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
     function compact(n) {
       return Number(n || 0).toLocaleString("pt-BR", {
         notation: "compact",
@@ -573,19 +630,19 @@
         maximumFractionDigits: 1
       });
     }
-    function pct(parte, total){
+    function pct(parte, total) {
       total = Number(total || 0);
       parte = Number(parte || 0);
-      if(!total) return 0;
-      return (parte/total)*100;
+      if (!total) return 0;
+      return (parte / total) * 100;
     }
 
-    function setStatus(msg){
+    function setStatus(msg) {
       const el = document.getElementById("status");
-      if(el) el.textContent = msg || "";
+      if (el) el.textContent = msg || "";
     }
 
-    function selecionados(id){
+    function selecionados(id) {
       const sel = document.getElementById(id);
       return Array.from(sel.selectedOptions).map(o => o.value).join(",");
     }
@@ -626,14 +683,14 @@
       badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${progTxt}`;
     }
 
-    function selecionarTudo(id){
+    function selecionarTudo(id) {
       const sel = document.getElementById(id);
       Array.from(sel.options).forEach(o => o.selected = true);
       atualizarBadgeFiltro();
     }
 
-    async function limparSelecao(){
-      ["subregioes","programas"].forEach(id => {
+    async function limparSelecao() {
+      ["subregioes", "programas"].forEach(id => {
         const sel = document.getElementById(id);
         Array.from(sel.options).forEach(o => o.selected = false);
       });
@@ -721,21 +778,26 @@
 
       document.getElementById("prog-distintos").textContent = format(d.programas_distintos || 0);
 
-      document.getElementById("mat-total").textContent = format(d.matriculas?.total || 0);
+      document.getElementById("mat-total").textContent =
+        format(d.matriculas?.meta_total || 0);
+
       document.getElementById("mat-chips").innerHTML = `
-        <span class="chip gr"><strong>GR</strong> ${format(d.matriculas?.gr || 0)} (${Number(d.matriculas?.gr_pct || 0).toFixed(2)}%)</span>
-        <span class="chip gnr"><strong>GNR</strong> ${format(d.matriculas?.g || 0)} (${Number(d.matriculas?.g_pct || 0).toFixed(2)}%)</span>
-        <span class="chip pago"><strong>PG</strong> ${format(d.matriculas?.p || 0)} (${Number(d.matriculas?.p_pct || 0).toFixed(2)}%)</span>
+        <span class="chip gr"><strong>GR</strong> ${format(d.matriculas?.meta_gr || 0)}</span>
+        <span class="chip gnr"><strong>GNR</strong> ${format(d.matriculas?.meta_g || 0)}</span>
+        <span class="chip pago"><strong>PG</strong> ${format(d.matriculas?.meta_p || 0)}</span>
       `;
 
-      document.getElementById("ha-total").textContent = format(d.hora_aluno?.total || 0);
+      document.getElementById("ha-total").textContent =
+        format(d.hora_aluno?.meta_total || 0);
+
       document.getElementById("ha-chips").innerHTML = `
-        <span class="chip gr"><strong>GR</strong> ${format(d.hora_aluno?.gr || 0)} (${Number(d.hora_aluno?.gr_pct || 0).toFixed(2)}%)</span>
-        <span class="chip gnr"><strong>GNR</strong> ${format(d.hora_aluno?.g || 0)} (${Number(d.hora_aluno?.g_pct || 0).toFixed(2)}%)</span>
-        <span class="chip pago"><strong>PG</strong> ${format(d.hora_aluno?.p || 0)} (${Number(d.hora_aluno?.p_pct || 0).toFixed(2)}%)</span>
+        <span class="chip gr"><strong>GR</strong> ${format(d.hora_aluno?.meta_gr || 0)}</span>
+        <span class="chip gnr"><strong>GNR</strong> ${format(d.hora_aluno?.meta_g || 0)}</span>
+        <span class="chip pago"><strong>PG</strong> ${format(d.hora_aluno?.meta_p || 0)}</span>
       `;
 
-      document.getElementById("rec-total").textContent = moeda(d.receita?.total || 0);
+      document.getElementById("rec-total").textContent =
+        moeda(d.receita?.meta_total || 0);
     }
 
     async function carregarTabelaProgramas() {
@@ -743,18 +805,18 @@
       const progs = selecionados("programas");
 
       const qs = new URLSearchParams();
-      if(subs) qs.set("subregioes", subs);
-      if(progs) qs.set("programas", progs);
+      if (subs) qs.set("subregioes", subs);
+      if (progs) qs.set("programas", progs);
 
       const url = API + "/programas/tabela/programas" + (qs.toString() ? "?" + qs.toString() : "");
       const data = await (await fetch(url)).json();
 
       montarTabela(
         "tabela-programas",
-        ["Programa","Matrículas","Hora-Aluno","Receita",
-         "GR MAT","GR HA","% GR (MAT)",
-         "GNR MAT","GNR HA","% GNR (MAT)",
-         "PG MAT","PG HA","% PG (MAT)"],
+        ["Programa", "Matrículas", "Hora-Aluno", "Receita",
+          "GR MAT", "GR HA", "% GR (MAT)",
+          "GNR MAT", "GNR HA", "% GNR (MAT)",
+          "PG MAT", "PG HA", "% PG (MAT)"],
         data.map(r => ({
           "Programa": r.programa,
           "Matrículas": format(r.matriculas_total),
@@ -763,36 +825,36 @@
 
           "GR MAT": format(r.gr_matriculas),
           "GR HA": format(r.gr_hora_aluno),
-          "% GR (MAT)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+          "% GR (MAT)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
 
           "GNR MAT": format(r.g_matriculas),
           "GNR HA": format(r.g_hora_aluno),
-          "% GNR (MAT)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+          "% GNR (MAT)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
 
           "PG MAT": format(r.p_matriculas),
           "PG HA": format(r.p_hora_aluno),
-          "% PG (MAT)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+          "% PG (MAT)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
         }))
       );
     }
 
-    async function carregarTabelaSubregioesPorPrograma(){
+    async function carregarTabelaSubregioesPorPrograma() {
       const subs = selecionados("subregioes");
       const progs = selecionados("programas");
 
       const qs = new URLSearchParams();
-      if(subs) qs.set("subregioes", subs);
-      if(progs) qs.set("programas", progs);
+      if (subs) qs.set("subregioes", subs);
+      if (progs) qs.set("programas", progs);
 
       const url = API + "/programas/tabela/subregioes" + (qs.toString() ? "?" + qs.toString() : "");
       const data = await (await fetch(url)).json();
 
       montarTabela(
         "tabela-subregioes",
-        ["Sub-região","Matrículas","Hora-Aluno","Receita","Despesa",
-        "GR Matrículas","GR Hora-Aluno","% GR (Mat)",
-        "GNR Matrículas","GNR Hora-Aluno","% GNR (Mat)",
-        "PG Matrículas","PG Hora-Aluno","% PG (Mat)"],
+        ["Sub-região", "Matrículas", "Hora-Aluno", "Receita", "Despesa",
+          "GR Matrículas", "GR Hora-Aluno", "% GR (Mat)",
+          "GNR Matrículas", "GNR Hora-Aluno", "% GNR (Mat)",
+          "PG Matrículas", "PG Hora-Aluno", "% PG (Mat)"],
         data.map(r => ({
           "Sub-região": r.subregiao,
           "Matrículas": format(r.matriculas_total),
@@ -802,20 +864,20 @@
 
           "GR Matrículas": format(r.gr_matriculas),
           "GR Hora-Aluno": format(r.gr_hora_aluno),
-          "% GR (Mat)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+          "% GR (Mat)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
 
           "GNR Matrículas": format(r.g_matriculas),
           "GNR Hora-Aluno": format(r.g_hora_aluno),
-          "% GNR (Mat)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+          "% GNR (Mat)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
 
           "PG Matrículas": format(r.p_matriculas),
           "PG Hora-Aluno": format(r.p_hora_aluno),
-          "% PG (Mat)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",
+          "% PG (Mat)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
         }))
       );
     }
 
-    async function carregarTabelaProgramasOuSubregioes(){
+    async function carregarTabelaProgramasOuSubregioes() {
       const subs = selecionados("subregioes");
       const progs = selecionados("programas");
 
@@ -823,43 +885,43 @@
       const temProgs = !!progs;
 
       const blocoProg = document.getElementById("tbl-programas");
-      const blocoSub  = document.getElementById("tbl-subregioes");
-      const titulo    = document.getElementById("titulo-tabela");
+      const blocoSub = document.getElementById("tbl-subregioes");
+      const titulo = document.getElementById("titulo-tabela");
 
       // ✅ Se tem programa selecionado e NÃO tem sub-região selecionada:
       // troca para "Por Sub-regiões"
-      if(temProgs && !temSubs){
-        if(titulo) titulo.textContent = "Por Sub-regiões (do(s) programa(s) selecionado(s))";
-        if(blocoProg) blocoProg.style.display = "none";
-        if(blocoSub)  blocoSub.style.display  = "block";
+      if (temProgs && !temSubs) {
+        if (titulo) titulo.textContent = "Por Sub-regiões (do(s) programa(s) selecionado(s))";
+        if (blocoProg) blocoProg.style.display = "none";
+        if (blocoSub) blocoSub.style.display = "block";
 
         await carregarTabelaSubregioesPorPrograma();
         return;
       }
 
       // padrão: Por Programa
-      if(titulo) titulo.textContent = "Por Programa";
-      if(blocoSub)  blocoSub.style.display  = "none";
-      if(blocoProg) blocoProg.style.display = "block";
+      if (titulo) titulo.textContent = "Por Programa";
+      if (blocoSub) blocoSub.style.display = "none";
+      if (blocoProg) blocoProg.style.display = "block";
 
       await carregarTabelaProgramas();
     }
 
     async function carregarTudo() {
-      try{
+      try {
         setStatus("Carregando visão de programas…");
         await carregarCards();
         await carregarTabelaProgramasOuSubregioes();
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao carregar dados. Verifique se os endpoints /programas/* estão ativos no backend.");
       }
     }
 
-    (async function init(){
+    (async function init() {
       await carregarUsuario();
-      try{
+      try {
         setStatus("Carregando filtros…");
         await carregarSubregioes();
 
@@ -872,14 +934,14 @@
         await carregarTudo();
 
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao iniciar. Abra o Console (F12) e veja a falha.");
       }
     })();
 
     document.getElementById("subregioes").addEventListener("change", async () => {
-      try{
+      try {
         setStatus("Atualizando programas do recorte…");
 
         await carregarProgramas();      // <- atualiza opções conforme sub-região
@@ -887,54 +949,55 @@
         await carregarTudo();           // <- recarrega cards e tabela
 
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao atualizar. Veja o Console (F12).");
       }
     });
 
     document.getElementById("programas").addEventListener("change", async () => {
-      try{
+      try {
         setStatus("Atualizando visão…");
         atualizarBadgeFiltro();
         await carregarTudo(); // recarrega cards + (tabela por programa ou por sub-região)
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao atualizar. Veja o Console (F12).");
       }
     });
 
-    async function carregarUsuario(){
-      try{
+    async function carregarUsuario() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok) return;
+        if (!resp.ok) return;
 
         const data = await resp.json();
 
         const el = document.getElementById("usuario-logado");
-        if(el){
+        if (el) {
           el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
         }
-      }catch(e){
+      } catch (e) {
         console.error(e);
       }
     }
 
-    async function logout(){
-      try{
+    async function logout() {
+      try {
         await fetch(`${API}/auth/logout`, {
           method: "POST",
           credentials: "include"
         });
-      } catch(e) {}
+      } catch (e) { }
 
       window.location.href = "login.html";
     }
 
   </script>
 </body>
+
 </html>
