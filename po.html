@@ -284,7 +284,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1250px;
+      min-width: 1120px;
     }
 
     thead th {
@@ -487,7 +487,7 @@
       <a href="unidades.html" class="navlink">Unidades</a>
       <a href="sge_turmas.html" class="navlink">Turmas</a>
       <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-      <a href="relatorio_programa.html" class="navlink">Relatório Executivo</a>
+      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
 
       <div class="topnav-right">
         <a href="alterar_senha.html" class="navlink">
@@ -737,7 +737,7 @@
 
       montarTabela(
         "tabela-regioes",
-        ["Região", "Matrículas", "Hora-Aluno", "Receita", "Despesa",
+        ["Região", "Matrículas", "Hora-Aluno", "Receita",
           "GR MAT", "GR HA", "% GR (MAT)",
           "GNR MAT", "GNR HA", "% GNR (MAT)",
           "PG MAT", "PG HA", "PG REC", "% PG (MAT)"],
@@ -746,7 +746,6 @@
           "Matrículas": format(r.matriculas_total || 0),
           "Hora-Aluno": format(r.hora_aluno_total || 0),
           "Receita": moeda(r.receita_total || 0),
-          "Despesa": moeda(r.despesa_total || 0),
 
           "GR MAT": format(r.gr_matriculas || 0),
           "GR HA": format(r.gr_hora_aluno || 0),
@@ -776,7 +775,7 @@
 
       montarTabela(
         "tabela-subregioes",
-        ["Sub-região", "Matrículas", "Hora-Aluno", "Receita", "Despesa",
+        ["Sub-região", "Matrículas", "Hora-Aluno", "Receita",
           "GR MAT", "GR HA", "% GR (MAT)",
           "GNR MAT", "GNR HA", "% GNR (MAT)",
           "PG MAT", "PG HA", "PG REC", "% PG (MAT)"],
@@ -785,7 +784,6 @@
           "Matrículas": format(r.matriculas_total || 0),
           "Hora-Aluno": format(r.hora_aluno_total || 0),
           "Receita": moeda(r.receita_total || 0),
-          "Despesa": moeda(r.despesa_total || 0),
 
           "GR MAT": format(r.gr_matriculas || 0),
           "GR HA": format(r.gr_hora_aluno || 0),

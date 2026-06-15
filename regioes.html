@@ -1,0 +1,3074 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painel • Regiões</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js">
+    </script>
+
+    <style>
+        :root {
+            --bg: #f6f7fb;
+            --panel: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e5e7eb;
+            --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+            --radius: 14px;
+            --radius-sm: 12px;
+
+            --brand: #2563eb;
+            --ok: #16a34a;
+            --warn: #f59e0b;
+            --bad: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 18px 18px 36px;
+        }
+
+        /* Top nav */
+        .topnav {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0 14px;
+            align-items: center;
+        }
+
+        .navlink {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 750;
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+        }
+
+        .navlink:hover {
+            background: #fff;
+            border-color: var(--border);
+        }
+
+        .navlink.active {
+            background: rgba(37, 99, 235, .10);
+            color: var(--text);
+            border-color: rgba(37, 99, 235, .25);
+        }
+
+        .header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: .2px;
+        }
+
+        .title p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--muted);
+            font-size: 12px;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+            white-space: nowrap;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand);
+            box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .field {
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .field:first-child {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field.sm {
+            flex: 0 0 160px;
+            min-width: 160px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            background: #fff;
+            outline: none;
+            height: 40px;
+        }
+
+        select[multiple] {
+            height: 40px;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            align-self: flex-end;
+        }
+
+        button {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 650;
+            font-size: 13px;
+            transition: transform .05s ease, background .15s ease, border-color .15s ease;
+        }
+
+        button:hover {
+            background: #f8fafc;
+            border-color: #dbe3ef;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background: var(--brand);
+            color: #fff;
+            border-color: rgba(37, 99, 235, .65);
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .status-bar {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--muted);
+            min-height: 16px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 2px 0 10px;
+        }
+
+        .tab {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 10px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .tab.active {
+            background: rgba(37, 99, 235, .10);
+            border-color: rgba(37, 99, 235, .25);
+            color: var(--text);
+        }
+
+        /* Cards grid */
+        .cards {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit,
+                    minmax(180px,
+                        1fr));
+
+            gap: 16px;
+
+            margin-bottom: 20px;
+
+        }
+
+        #secao-metas .cards {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 1200px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .field {
+                min-width: 100%;
+            }
+
+            .field.sm {
+                flex: 1;
+                min-width: 100%;
+            }
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card .h {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .big {
+            font-size:
+                clamp(28px,
+                    2vw,
+                    42px);
+
+            font-weight: 700;
+            line-height: 1;
+            margin: 12px 0 6px;
+        }
+
+        .sub {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .prog {
+            font-weight: 900;
+            letter-spacing: .2px;
+            line-height: 1.15;
+        }
+
+        .emoji {
+            font-size: 22px;
+            line-height: 1;
+            margin-top: -2px;
+        }
+
+        .kv {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 12px;
+            margin-top: 6px;
+        }
+
+        .k {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .25px;
+            text-transform: uppercase;
+        }
+
+        .v {
+            font-weight: 900;
+            text-align: right;
+        }
+
+        .bar {
+            margin-top: 12px;
+            height: 10px;
+            border-radius: 999px;
+            background: #eef2f7;
+            overflow: hidden;
+            border: 1px solid #e9eef6;
+        }
+
+        .fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, .85);
+            transition: width .25s ease;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: #fff;
+            width: fit-content;
+        }
+
+        .pill strong {
+            color: var(--text);
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        /* Cards clicáveis */
+        .card {
+            cursor: pointer;
+            transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+            border-color: rgba(37, 99, 235, .35);
+        }
+
+        /* Dá um feedback visual no header do card */
+        .card:hover .prog {
+            color: #2563eb;
+        }
+
+        /* Emoji reage levemente ao hover */
+        .card:hover .emoji {
+            transform: scale(1.05);
+        }
+
+        .cards-fechamento {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        @media (max-width: 1180px) {
+            .cards-fechamento {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-fechamento {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 16px 18px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-fechamento .titulo {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            margin-bottom: 10px;
+        }
+
+        .card-fechamento .valor {
+            font-size: 32px;
+            font-weight: 900;
+            line-height: 1.05;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .card-fechamento .sub {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .card-fechamento .sub strong {
+            color: var(--text);
+        }
+
+        .card-fechamento.matriculas {
+            border-top: 4px solid #2563eb;
+        }
+
+        .card-fechamento.hora-aluno {
+            border-top: 4px solid #16a34a;
+        }
+
+        .card-fechamento.receita {
+            border-top: 4px solid #f59e0b;
+        }
+
+        .card-fechamento.status-critico {
+            border-top: 4px solid #dc2626;
+        }
+
+        .card-fechamento.status-atencao {
+            border-top: 4px solid #f59e0b;
+        }
+
+        .card-fechamento.status-ok {
+            border-top: 4px solid #16a34a;
+        }
+
+        .card-fechamento .status-fechamento {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-fechamento .status-fechamento.status-ok {
+            color: #16a34a;
+        }
+
+        .card-fechamento .status-fechamento.status-atencao {
+            color: #f59e0b;
+        }
+
+        .card-fechamento .status-fechamento.status-critico {
+            color: #dc2626;
+        }
+
+        .topnav {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .topnav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insights-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .insight-item {
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .ts-control {
+            height: 40px !important;
+            min-height: 40px !important;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 10px !important;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            box-shadow: none;
+        }
+
+        .ts-control:hover {
+            border-color: #dbe3ef;
+        }
+
+        .focus .ts-control {
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+        }
+
+        .ts-wrapper.multi .ts-control>div {
+            background:
+                rgba(37, 99, 235, .10);
+            border:
+                1px solid rgba(37, 99, 235, .25);
+            color:
+                var(--text);
+            border-radius:
+                999px;
+            padding:
+                2px 8px;
+            margin:
+                2px;
+            font-size:
+                12px;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: 800;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .status-ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-atencao {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-critico {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .mini-chart {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            height: 95px;
+        }
+
+        .chart-header {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .card-meta-detalhe {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .meta-info {
+            margin-top: 10px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        #secao-metas .meta-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meta-info strong {
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        /* ===== LAYOUT ===== */
+        .page-layout {
+            display: flex;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar-executiva {
+            width: 220px;
+            min-height: calc(100vh - 90px);
+            background: #003B8F;
+            border-radius: 20px;
+            padding: 20px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 18px;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-logo img {
+            width: 100px;
+            max-width: 100%;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: .2s;
+            font-size: 15px;
+        }
+
+        .sidebar-nav a:hover {
+            background:
+                rgba(255, 255, 255, .12);
+        }
+
+        .sidebar-nav a.active {
+            background: #0F5FFF;
+        }
+
+        /* ===== CONTEÚDO ===== */
+        .main-executiva {
+            flex: 1;
+        }
+
+        /* submenu */
+        .sidebar-nav a.submenu {
+            margin-left: 24px;
+            padding: 10px 14px;
+            font-size: 14px;
+            opacity: .85;
+        }
+
+        /* menu expansível */
+        .menu-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .arrow {
+            font-size: 12px;
+            transition: .2s;
+        }
+
+        .submenu-group {
+            display: none;
+            flex-direction: column;
+        }
+
+        .submenu-group.open {
+            display: flex;
+        }
+
+        .submenu {
+            margin-left: 20px;
+            padding: 10px 14px;
+            font-size: 14px;
+            opacity: .9;
+        }
+
+        .graficos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .grafico-card {
+            height: 320px;
+            padding: 24px;
+        }
+
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin-bottom: 24px;
+            padding-left: 6px;
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding-bottom: 12px;
+        }
+
+        .tab-ind.active {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        .graficos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .grafico-card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            min-height: 360px;
+            border: 1px solid var(--border);
+        }
+
+        .card-value-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-variation {
+            font-size: 18px;
+            font-weight: 900;
+            white-space: nowrap;
+            line-height: 1;
+            margin-left: auto;
+        }
+
+        #receitaTotal {
+            font-size: 30px;
+        }
+
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 290px;
+            margin-top: 10px;
+        }
+
+        .chart-box canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .grafico-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 15px;
+            font-weight: 700;
+            pointer-events: none;
+            padding: 20px;
+        }
+
+        .grafico-placeholder.hidden {
+            display: none;
+        }
+
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin-bottom: 24px;
+            padding-left: 6px;
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding-bottom: 12px;
+        }
+
+        .tab-ind.active {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        .metas-card {
+            padding: 24px;
+        }
+
+        .metas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .btn-exportar {
+            font-size: 13px;
+            padding: 9px 14px;
+        }
+
+        .tabela-metas-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .tabela-metas {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .tabela-metas th,
+        .tabela-metas td {
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .tabela-metas th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .tabela-metas td:first-child,
+        .tabela-metas th:first-child {
+            text-align: left;
+            font-weight: 800;
+        }
+
+        .status-meta {
+            display: inline-flex;
+            justify-content: center;
+            min-width: 115px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .status-meta.ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-meta.baixo {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-meta.sem-meta {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .nota-metas {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        #secao-historico .card {
+            min-height: 230px;
+        }
+
+        #secao-historico .card h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        #secao-historico .big {
+            font-size: 30px;
+            margin: 8px 0 2px;
+        }
+
+        #secao-historico .card-variation {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        #secao-historico .chart-box {
+            margin-top: 8px;
+        }
+
+        /* ===== HISTÓRICO MENSAL ===== */
+
+        .card-historico {
+            padding: 20px;
+            min-height: 240px;
+        }
+
+        .hist-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hist-titulo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hist-titulo h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .hist-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+        }
+
+        .hist-icon.azul {
+            background: #2563eb;
+        }
+
+        .hist-icon.roxo {
+            background: #a855f7;
+        }
+
+        .hist-icon.verde {
+            background: #16a34a;
+        }
+
+        .hist-icon.laranja {
+            background: #f59e0b;
+        }
+
+        .hist-valor {
+            font-size: 52px;
+            font-weight: 900;
+            line-height: 1;
+            margin-top: 14px;
+        }
+
+        .hist-variacao {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .mini-hist {
+            height: 110px;
+            margin-top: 12px;
+        }
+
+        #secao-historico .historico-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        #secao-historico .card-historico {
+            min-height: 240px;
+            padding: 22px;
+        }
+
+        #secao-historico .hist-valor {
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1;
+            margin: 12px 0 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #secao-historico .mini-hist {
+            height: 150px;
+            margin-top: 18px;
+        }
+
+        #secao-historico .chart-box.mini-hist {
+            height: 150px;
+        }
+
+        #histReceitaTotal {
+            font-size: 34px;
+        }
+
+        .cards-comparativos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .card-comparativo {
+            min-height: 160px;
+            padding: 24px 28px;
+        }
+
+        .comp-top {
+            margin-bottom: 18px;
+        }
+
+        .comp-valores {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: end;
+            gap: 28px;
+            margin-top: 22px;
+        }
+
+        .comp-valores>div:last-child {
+            text-align: right;
+        }
+
+        .comp-variacao {
+            position: static;
+            font-size: 20px;
+            font-weight: 900;
+            white-space: nowrap;
+            align-self: center;
+            padding-bottom: 24px;
+        }
+
+        .comp-numero,
+        .comp-numero.menor,
+        .comp-numero.receita,
+        .comp-numero.receita.menor {
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .comp-label {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .comp-variacao.ok {
+            color: #16a34a;
+        }
+
+        .comp-variacao.bad {
+            color: #ef4444;
+        }
+
+        .comp-variacao.neutro {
+            color: #64748b;
+        }
+
+        @media (max-width: 720px) {
+            .cards-comparativos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .cards-comparativos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .regioes-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .regioes-card,
+        .mapa-card {
+            padding: 20px;
+            min-height: auto;
+        }
+
+        .mapa-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabela-regioes {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .tabela-regioes th,
+        .tabela-regioes td {
+            padding: 18px 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .tabela-regioes tr:hover {
+            background: #f8fafc;
+        }
+
+        .tabela-regioes th {
+            color: #475569;
+            font-size: 12px;
+            font-weight: 900;
+            background: #f8fafc;
+        }
+
+        .rank {
+            display: inline-flex;
+            width: 26px;
+            height: 26px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            color: #fff;
+            font-weight: 900;
+            font-size: 13px;
+        }
+
+        .rank.ok,
+        .pin.ok,
+        .leg.ok {
+            background: #16a34a;
+        }
+
+        .rank.alvo,
+        .pin.alvo,
+        .leg.alvo {
+            background: #2563eb;
+        }
+
+        .rank.atencao,
+        .pin.atencao,
+        .leg.atencao {
+            background: #f59e0b;
+        }
+
+        .rank.critico,
+        .pin.critico,
+        .leg.critico {
+            background: #ef4444;
+        }
+
+        .rank.sem-dados,
+        .pin.sem-dados,
+        .leg.sem-dados {
+            background: #94a3b8;
+        }
+
+        .sem-dados-text {
+            color: #64748b;
+            font-weight: 900;
+        }
+
+        .status-regiao.sem-dados {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .ranking-table th,
+        .ranking-table td {
+            padding: 14px 12px;
+        }
+
+        .ok-text {
+            color: #16a34a;
+            font-weight: 900;
+        }
+
+        .alvo-text {
+            color: #2563eb;
+            font-weight: 900;
+        }
+
+        .atencao-text {
+            color: #f59e0b;
+            font-weight: 900;
+        }
+
+        .critico-text {
+            color: #ef4444;
+            font-weight: 900;
+        }
+
+        .status-regiao {
+            display: inline-flex;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .status-regiao.ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-regiao.alvo {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-regiao.atencao {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-regiao.critico {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .mapa-placeholder {
+            position: relative;
+            flex: 1;
+            min-height: 430px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        .mapa-img {
+            width: 150%;
+            max-height: 600px;
+            object-fit: contain;
+        }
+
+        #pinsMapa {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .pin {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, .25);
+            transform: translate(-50%, -50%);
+        }
+
+        .legenda-mapa {
+            margin-top: auto;
+            padding-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 26px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+
+        }
+
+        .legenda-mapa span {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .leg {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 1100px) {
+            .regioes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ranking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .ranking-header h3 {
+            margin: 0;
+        }
+
+        .ranking-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ranking-tab {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #475569;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .ranking-tab.active {
+            background: rgba(37, 99, 235, .10);
+            color: #2563eb;
+            border-color: rgba(37, 99, 235, .35);
+        }
+
+        .periodo-field {
+            flex: 0 0 auto;
+            min-width: 180px;
+            width: auto;
+        }
+
+        .periodo-field .ts-wrapper {
+            width: auto;
+            min-width: 180px;
+            max-width: 760px;
+        }
+
+        .periodo-field .ts-control {
+            width: max-content;
+            min-width: 180px;
+            max-width: 760px;
+            height: 40px !important;
+            min-height: 40px !important;
+            flex-wrap: nowrap !important;
+            overflow: visible !important;
+            white-space: nowrap;
+        }
+
+        .periodo-field .ts-wrapper.multi .ts-control>div {
+            flex-shrink: 0;
+        }
+
+        .periodo-field .ts-dropdown {
+            min-width: 220px;
+        }
+
+        .periodo-field .ts-wrapper.has-items .ts-control input::placeholder {
+            color: transparent !important;
+        }
+
+        .periodo-field .ts-wrapper.has-items .ts-control input {
+            width: 1px !important;
+            min-width: 1px !important;
+            max-width: 1px !important;
+            padding: 0 !important;
+            opacity: 0 !important;
+        }
+
+        .aba-regioes {
+            display: none;
+        }
+
+        .aba-regioes.active {
+            display: block;
+        }
+
+        #aba-mapa .regioes-grid {
+            grid-template-columns: 1.15fr 0.9fr;
+            align-items: start;
+        }
+
+        #aba-mapa .mapa-placeholder {
+            min-height: 520px;
+        }
+
+        #aba-mapa .mapa-img {
+            width: 125%;
+            max-height: 520px;
+        }
+
+        #aba-mapa .cards {
+            grid-template-columns: repeat(2, minmax(180px, 1fr));
+        }
+
+        #aba-mapa .card .big {
+            font-size: 34px;
+            white-space: nowrap;
+        }
+
+        #aba-mapa #tbodyMapa td {
+            padding: 12px;
+        }
+
+        .cards-ranking {
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+            margin-bottom: 16px;
+        }
+
+        .cards-ranking .card {
+            min-height: 120px;
+        }
+
+        .cards-ranking .big {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .detalhamento-grid {
+            display: grid;
+            grid-template-columns: 550px 1fr;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .detalhe-resumo-card {
+            padding: 22px;
+            min-width: 550px;
+        }
+
+        .detalhe-rank {
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            background: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .detalhe-indicador {
+            margin-top: 20px;
+        }
+
+        .detalhe-linha {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-weight: 800;
+        }
+
+        .detalhe-indicador small {
+            display: block;
+            margin-top: 6px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .detalhe-mini-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .detalhe-mini-cards div {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            background: #fff;
+        }
+
+        .detalhe-mini-cards span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .detalhe-mini-cards strong {
+            font-size: 26px;
+        }
+
+        .detalhe-tabela-card {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 1100px) {
+            .detalhamento-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        #detalheReceita {
+            white-space: nowrap;
+            font-size: inherit;
+        }
+
+        .detalhe-linha {
+            align-items: flex-start;
+        }
+
+        .detalhe-linha strong {
+            text-align: right;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .status-regiao.sem-meta {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <script>
+        const API =
+            window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                ? "http://localhost:8000"
+                : "/api";
+    </script>
+    <script>
+        (async function validarSessao() {
+            try {
+                const resp = await fetch(`${API}/auth/me`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+
+                const data = await resp.json();
+
+                // 🔥 AQUI é o que faltava
+                if (data.deve_trocar_senha) {
+                    window.location.href = "/alterar_senha.html";
+                    return;
+                }
+
+            } catch (e) {
+                window.location.href = "/login.html";
+            }
+        })();
+        let reqDetalhamentoId = 0;
+        let reqRankingId = 0;
+    </script>
+
+    <div class="container">
+
+        <nav class="topnav">
+            <a href="index.html" class="navlink">Dashboard</a>
+            <a href="po.html" class="navlink">PO</a>
+            <a href="programas.html?v=2" class="navlink">Programas</a>
+            <a href="performance.html" class="navlink">Performance</a>
+            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
+            <a href="unidades.html" class="navlink">Unidades</a>
+            <a href="sge_turmas.html" class="navlink">Turmas</a>
+            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
+            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
+
+            <div class="topnav-right">
+                <a href="alterar_senha.html" class="navlink">
+                    Alterar senha
+                </a>
+                <div id="usuario-logado" class="badge">
+                    <span class="dot"></span>
+                    Usuário: —
+                </div>
+                <button onclick="logout()">Sair</button>
+            </div>
+        </nav>
+        <div class="page-layout">
+            <aside class="sidebar-executiva">
+                <div class="sidebar-logo">
+                    <img src="/assets/logo.png" alt="SENAI">
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="visao_executiva.html">
+                        🏠
+                        <span>Visão Executiva</span>
+                    </a>
+                    <a href="indicadores.html">
+                        📊
+                        <span>Indicadores</span>
+                    </a>
+                    <a href="regioes.html" class="active">
+                        🌎
+                        <span>Regiões</span>
+                    </a>
+
+                    <a href="subregioes.html">
+                        📍
+                        <span>Sub-regiões</span>
+                    </a>
+                    <a href="turmas.html">
+                        👥
+                        <span>Turmas</span>
+                    </a>
+                    <a href="acoes.html">
+                        🎯
+                        <span>Ações</span>
+                    </a>
+                    <a href="relatoriosexecutivos.html">
+                        📄
+                        <span>Relatórios</span>
+                    </a>
+                </nav>
+            </aside>
+            <main class="main-executiva">
+
+                <div class="header">
+                    <div class="title">
+                        <h1>Desempenho Regional</h1>
+                        <p>Acompanhe resultados, metas e evolução das regiões do programa.</p>
+                    </div>
+
+                    <button class="btn-exportar" onclick="exportarDados()">
+
+                        ⬇ Exportar
+
+                    </button>
+                </div>
+
+                <div class="tabs-indicadores">
+                    <button class="tab-ind active" data-aba="ranking">Ranking</button>
+                    <button class="tab-ind" data-aba="detalhamento">Detalhamento</button>
+                </div>
+
+                <div class="panel">
+                    <div class="filters">
+                        <div class="field periodo-field">
+                            <label>Período</label>
+                            <select id="periodoRegiao" multiple>
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+
+                        <div class="field sm">
+                            <label>Ano</label>
+                            <select id="filtroAnoRegiao">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+
+                        <div class="field sm">
+                            <label>Região</label>
+                            <select id="filtroRegiao">
+                                <option value="">Todas as regiões</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <section id="aba-ranking" class="aba-regioes active">
+
+                    <div class="cards cards-ranking">
+                        <div class="card">
+                            <h4>Matrículas</h4>
+                            <div class="big" id="cardRankingMatriculas">—</div>
+                            <div id="cardRankingPctMatriculas">—</div>
+                        </div>
+
+                        <div class="card">
+                            <h4>Hora-Aluno</h4>
+                            <div class="big" id="cardRankingHA">—</div>
+                            <div id="cardRankingPctHA">—</div>
+                        </div>
+
+                        <div class="card">
+                            <h4>Receita</h4>
+                            <div class="big" id="cardRankingReceita">—</div>
+                            <div id="cardRankingPctReceita">—</div>
+                        </div>
+                    </div>
+
+                    <div class="regioes-grid">
+
+                        <section class="card regioes-card">
+                            <div class="ranking-header">
+                                <h3>Ranking de Regiões x Indicador</h3>
+
+                                <div class="ranking-tabs">
+                                    <button class="ranking-tab active" data-ranking="matriculas">Matrículas</button>
+                                    <button class="ranking-tab" data-ranking="ha">Hora-Aluno</button>
+                                    <button class="ranking-tab" data-ranking="receita">Receita</button>
+                                </div>
+                            </div>
+
+                            <table class="tabela-regioes">
+                                <thead>
+                                    <tr>
+                                        <th>Pos.</th>
+                                        <th>Região</th>
+                                        <th>Matrículas %</th>
+                                        <th>Hora-Aluno %</th>
+                                        <th>Receita</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="tbodyRankingRegioes">
+
+                                </tbody>
+                            </table>
+                        </section>
+
+                        <section class="card mapa-card">
+                            <h3>Mapa de Desempenho x Indicador</h3>
+                            <div class="mapa-placeholder">
+                                <img src="/assets/mapa-rs.png" class="mapa-img" alt="Mapa do RS">
+                                <div id="pinsMapa"></div>
+                            </div>
+
+                            <div class="legenda-mapa">
+                                <span><i class="leg ok"></i> Acima da meta</span>
+                                <span><i class="leg alvo"></i> No caminho</span>
+                                <span><i class="leg atencao"></i> Atenção</span>
+                                <span><i class="leg critico"></i> Crítico</span>
+                            </div>
+                        </section>
+                    </div>
+
+                </section>
+
+                <section id="aba-detalhamento" class="aba-regioes">
+
+                    <div class="detalhamento-grid">
+
+                        <aside class="card detalhe-resumo-card">
+                            <div class="detalhe-rank" id="detalheRank">—</div>
+
+                            <h3 id="detalheRegiaoNome">Selecione uma região</h3>
+                            <p class="muted" id="detalhePeriodo">Desempenho no período selecionado.</p>
+
+                            <div class="detalhe-indicador">
+                                <div class="detalhe-linha">
+                                    <span>Matrículas</span>
+                                    <strong id="detalheMatriculas">—</strong>
+                                </div>
+                                <div class="bar">
+                                    <div class="fill" id="detalheMatriculasBar"></div>
+                                </div>
+                                <small id="detalheMatriculasPct">—</small>
+                            </div>
+
+                            <div class="detalhe-indicador">
+                                <div class="detalhe-linha">
+                                    <span>Hora-Aluno</span>
+                                    <strong id="detalheHA">—</strong>
+                                </div>
+                                <div class="bar">
+                                    <div class="fill" id="detalheHABar"></div>
+                                </div>
+                                <small id="detalheHAPct">—</small>
+                            </div>
+
+                            <div class="detalhe-indicador">
+                                <div class="detalhe-linha">
+                                    <span>Receita</span>
+                                    <strong id="detalheReceita">—</strong>
+                                </div>
+                                <div class="bar">
+                                    <div class="fill" id="detalheReceitaBar"></div>
+                                </div>
+                                <small id="detalheReceitaPct">—</small>
+                            </div>
+
+                            <div class="detalhe-mini-cards">
+                                <div>
+                                    <span>Unidades</span>
+                                    <strong id="detalheQtdUnidades">—</strong>
+                                </div>
+                                <div>
+                                    <span>Turmas ativas</span>
+                                    <strong id="detalheTurmasAtivas">—</strong>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <section class="card detalhe-tabela-card">
+                            <div class="ranking-header">
+                                <h3 id="tituloTabelaDetalhe">Desempenho por Unidade</h3>
+
+                                <div class="ranking-tabs">
+                                    <button class="ranking-tab detalhe-tab active"
+                                        data-detalhe="matriculas">Matrículas</button>
+                                    <button class="ranking-tab detalhe-tab" data-detalhe="ha">Hora-Aluno</button>
+                                    <button class="ranking-tab detalhe-tab" data-detalhe="receita">Receita</button>
+                                </div>
+                            </div>
+
+                            <table class="tabela-regioes">
+                                <thead>
+                                    <tr>
+                                        <th>Unidade</th>
+                                        <th>Meta</th>
+                                        <th>Realizado</th>
+                                        <th>%</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyDetalhamento">
+                                    <tr>
+                                        <td colspan="5">Selecione uma região para visualizar o detalhamento.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </section>
+
+                    </div>
+
+                </section>
+            </main>
+        </div>
+    </div>
+    <script>
+        async function carregarUsuario() {
+            try {
+                const resp = await fetch(`${API}/auth/me`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) return;
+
+                const data = await resp.json();
+
+                const el = document.getElementById("usuario-logado");
+                if (el) {
+                    el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch(`${API}/auth/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } catch (e) { }
+
+            window.location.href = "/login.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarUsuario();
+        });
+    </script>
+
+    <script>
+        function moeda(n) {
+            return Number(n || 0).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        function classeStatusPorPct(pct, meta = 0, realizado = 0) {
+            pct = Number(pct || 0);
+            meta = Number(meta || 0);
+            realizado = Number(realizado || 0);
+
+            if (meta <= 0 && realizado > 0) return "sem-dados";
+            if (meta <= 0 && realizado <= 0) return "sem-dados";
+
+            if (pct >= 100) return "ok";
+            if (pct >= 75) return "alvo";
+            if (pct >= 51) return "atencao";
+            return "critico";
+        }
+
+        function textoStatusPorPct(pct, meta = 0, realizado = 0) {
+            pct = Number(pct || 0);
+            meta = Number(meta || 0);
+            realizado = Number(realizado || 0);
+
+            if (meta <= 0 && realizado > 0) return "Sem meta";
+            if (meta <= 0 && realizado <= 0) return "Sem dados";
+
+            if (pct >= 100) return "Meta atingida";
+            if (pct >= 75) return "No caminho";
+            if (pct >= 51) return "Atenção";
+            return "Crítico";
+        }
+
+        function classeStatusRegional(pctMatriculas, pctHoraAluno) {
+
+            pctMatriculas = Number(pctMatriculas || 0);
+            pctHoraAluno = Number(pctHoraAluno || 0);
+
+            const menorPct =
+                Math.min(
+                    pctMatriculas,
+                    pctHoraAluno
+                );
+
+            if (menorPct >= 100) return "ok";
+            if (menorPct >= 90) return "alvo";
+            if (menorPct >= 80) return "atencao";
+
+            return "critico";
+        }
+
+        function obterAnoRegiao() {
+            return document.getElementById("filtroAnoRegiao")?.value || "2026";
+        }
+
+        let rankingIndicadorAtual = "matriculas";
+
+        async function carregarRankingRegioes() {
+            const minhaReq = ++reqRankingId;
+            const tbody = document.getElementById("tbodyRankingRegioes");
+            if (!tbody) return;
+
+            tbody.innerHTML = `
+            <tr>
+                <td colspan="6">Carregando dados...</td>
+            </tr>
+        `;
+
+            const tomPeriodo = document.getElementById("periodoRegiao")?.tomselect;
+
+            let mesesSelecionados = tomPeriodo
+                ? tomPeriodo.getValue()
+                : Array.from(document.getElementById("periodoRegiao")?.selectedOptions || [])
+                    .map(o => o.value);
+
+            if (!Array.isArray(mesesSelecionados)) {
+                mesesSelecionados = mesesSelecionados ? [mesesSelecionados] : [];
+            }
+
+            mesesSelecionados = mesesSelecionados
+                .map(Number)
+                .filter(Boolean)
+                .sort((a, b) => a - b);
+
+            if (!mesesSelecionados.length) {
+                reqDetalhamentoId++;
+
+                tbody.innerHTML = `
+        <tr>
+            <td colspan="6">Selecione um ou mais meses para visualizar o ranking.</td>
+        </tr>
+    `;
+
+                document.getElementById("pinsMapa").innerHTML = "";
+                preencherDetalhamentoGeral([]);
+
+                document.getElementById("cardRankingMatriculas").innerText = "—";
+                document.getElementById("cardRankingPctMatriculas").innerText = "—";
+                document.getElementById("cardRankingHA").innerText = "—";
+                document.getElementById("cardRankingPctHA").innerText = "—";
+                document.getElementById("cardRankingReceita").innerText = "—";
+                document.getElementById("cardRankingPctReceita").innerText = "—";
+
+                return;
+            }
+
+            const meses = mesesSelecionados.join(",");
+            const ano = obterAnoRegiao();
+
+            const filtroRegiao =
+                document.getElementById("filtroRegiao")?.value || "";
+
+            const qs = new URLSearchParams({
+                ano: String(ano),
+                meses: meses
+            });
+
+            if (filtroRegiao) {
+                qs.append("regiao", filtroRegiao);
+            }
+
+            const resp = await fetch(`${API}/regioes/ranking?${qs.toString()}`);
+
+            if (minhaReq !== reqRankingId) return;
+
+            if (!resp.ok) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="6">Erro ao carregar ranking.</td>
+                </tr>
+            `;
+                return;
+            }
+
+            const dados = await resp.json();
+
+            if (minhaReq !== reqRankingId) return;
+
+            tbody.innerHTML = "";
+
+            if (!dados.length) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="6">Nenhuma sub-região encontrada.</td>
+                </tr>
+            `;
+                return;
+            }
+
+            const agrupado = new Map();
+
+            dados.forEach(item => {
+                const cod = item.cod_regiao || item.regiao;
+                const atual = agrupado.get(cod) || {
+                    cod_regiao: item.cod_regiao || cod,
+                    regiao: item.regiao || "-",
+                    meta_matriculas: 0,
+                    matriculas_real: 0,
+                    meta_ha: 0,
+                    ha_real: 0,
+                    receita_real: 0,
+                    receita_meta: 0
+                };
+
+                atual.meta_matriculas += Number(
+                    item.meta_matriculas ??
+                    item.matriculas_meta ??
+                    item.meta_matricula ??
+                    item.meta_matriculas_total ??
+                    item.meta_total_matriculas ??
+                    0
+                );
+
+                atual.matriculas_real += Number(
+                    item.matriculas_real ??
+                    item.matriculas_realizadas ??
+                    item.realizado_matriculas ??
+                    item.matriculas_total ??
+                    item.realizado_total_matriculas ??
+                    0
+                );
+
+                atual.meta_ha += Number(
+                    item.ha_meta ??
+                    item.meta_ha ??
+                    item.hora_aluno_meta ??
+                    item.meta_hora_aluno ??
+                    item.meta_hora_aluno_total ??
+                    0
+                );
+
+                atual.ha_real += Number(
+                    item.ha_real ??
+                    item.hora_aluno_real ??
+                    item.hora_aluno_realizada ??
+                    item.realizado_hora_aluno ??
+                    item.hora_aluno_total ??
+                    0
+                );
+
+                atual.receita_real += Number(
+                    item.receita_real ??
+                    item.receita_realizada ??
+                    item.realizado_receita ??
+                    item.receita_total ??
+                    0
+                );
+
+                atual.receita_meta += Number(
+                    item.receita_meta ??
+                    item.meta_receita ??
+                    item.receita_meta_total ??
+                    item.meta_total_receita ??
+                    0
+                );
+
+                agrupado.set(cod, atual);
+            });
+
+            const listaRegioes = Array.from(agrupado.values())
+                .map(r => ({
+                    ...r,
+                    pct_matriculas: r.meta_matriculas > 0
+                        ? (r.matriculas_real / r.meta_matriculas) * 100
+                        : 0,
+                    pct_ha: r.meta_ha > 0
+                        ? (r.ha_real / r.meta_ha) * 100
+                        : 0,
+
+                    pct_receita: r.receita_meta > 0
+                        ? (r.receita_real / r.receita_meta) * 100
+                        : 0
+                }))
+
+            listaRegioes.sort((a, b) => {
+                if (rankingIndicadorAtual === "ha") {
+                    return Number(b.pct_ha || 0) - Number(a.pct_ha || 0);
+                }
+
+                if (rankingIndicadorAtual === "receita") {
+                    return Number(b.pct_receita || 0) - Number(a.pct_receita || 0);
+                }
+
+                return Number(b.pct_matriculas || 0) - Number(a.pct_matriculas || 0);
+            });
+
+            listaRegioes.forEach((item, index) => {
+                item.posicao_geral = index + 1;
+            });
+
+            const listaExibida = filtroRegiao
+                ? listaRegioes.filter(item =>
+                    String(item.cod_regiao) === String(filtroRegiao)
+                )
+                : listaRegioes;
+
+            const totais = listaExibida.reduce((acc, r) => {
+
+                acc.matriculas_real += Number(r.matriculas_real || 0);
+                acc.meta_matriculas += Number(r.meta_matriculas || 0);
+
+                acc.ha_real += Number(r.ha_real || 0);
+                acc.meta_ha += Number(r.meta_ha || 0);
+
+                acc.receita_real += Number(r.receita_real || 0);
+                acc.receita_meta += Number(r.receita_meta || 0);
+
+                return acc;
+
+            }, {
+
+                matriculas_real: 0,
+                meta_matriculas: 0,
+
+                ha_real: 0,
+                meta_ha: 0,
+
+                receita_real: 0,
+                receita_meta: 0
+            });
+
+
+            const pctMatTotal =
+                totais.meta_matriculas > 0
+                    ? (totais.matriculas_real / totais.meta_matriculas) * 100
+                    : 0;
+
+            const pctHaTotal =
+                totais.meta_ha > 0
+                    ? (totais.ha_real / totais.meta_ha) * 100
+                    : 0;
+
+            const pctReceitaTotal =
+                totais.receita_meta > 0
+                    ? (totais.receita_real / totais.receita_meta) * 100
+                    : 0;
+
+
+            document.getElementById(
+                "cardRankingMatriculas"
+            ).innerText =
+                totais.matriculas_real.toLocaleString(
+                    "pt-BR"
+                );
+
+            document.getElementById(
+                "cardRankingPctMatriculas"
+            ).innerText =
+                `${pctMatTotal.toFixed(1).replace(".", ",")}% da meta`;
+
+
+            document.getElementById(
+                "cardRankingHA"
+            ).innerText =
+                totais.ha_real.toLocaleString(
+                    "pt-BR"
+                );
+
+            document.getElementById(
+                "cardRankingPctHA"
+            ).innerText =
+                `${pctHaTotal.toFixed(1).replace(".", ",")}% da meta`;
+
+
+            document.getElementById(
+                "cardRankingReceita"
+            ).innerText =
+                moeda(
+                    totais.receita_real
+                );
+
+            document.getElementById(
+                "cardRankingPctReceita"
+            ).innerText =
+                `${pctReceitaTotal.toFixed(1).replace(".", ",")}% da meta`;
+
+            renderizarMapa(listaExibida);
+
+            listaExibida.forEach((item) => {
+                const pctMatriculas = Number(item.pct_matriculas || 0);
+                const pctHa = Number(item.pct_ha || 0);
+
+                let percentualStatus = Number(item.pct_matriculas || 0);
+                let metaStatus = Number(item.meta_matriculas || 0);
+                let realizadoStatus = Number(item.matriculas_real || 0);
+
+                if (rankingIndicadorAtual === "ha") {
+                    percentualStatus = Number(item.pct_ha || 0);
+                    metaStatus = Number(item.meta_ha || 0);
+                    realizadoStatus = Number(item.ha_real || 0);
+                }
+
+                if (rankingIndicadorAtual === "receita") {
+                    percentualStatus = Number(item.pct_receita || 0);
+                    metaStatus = Number(item.receita_meta || 0);
+                    realizadoStatus = Number(item.receita_real || 0);
+                }
+
+                const classe = classeStatusPorPct(percentualStatus, metaStatus, realizadoStatus);
+                const status = textoStatusPorPct(percentualStatus, metaStatus, realizadoStatus);
+
+                tbody.innerHTML += `
+                <tr>
+                    <td><span class="rank ${classe}">${item.posicao_geral}</span></td>
+                    <td><strong>${item.regiao || "-"}</strong></td>
+                    <td class="${rankingIndicadorAtual === "matriculas" ? classe + "-text" : ""}">
+                        ${pctMatriculas.toFixed(1).replace(".", ",")}%
+                    </td>
+
+                    <td class="${rankingIndicadorAtual === "ha" ? classe + "-text" : ""}">
+                        ${pctHa.toFixed(1).replace(".", ",")}%
+                    </td>
+
+                    <td class="${rankingIndicadorAtual === "receita" ? classe + "-text" : ""}">
+                        ${Number(item.pct_receita || 0).toFixed(1).replace(".", ",")}%
+                    </td>
+                    <td>
+                        <span class="status-regiao ${classe}">
+                            ${status}
+                        </span>
+                    </td>
+                </tr>
+            `;
+            });
+
+            if (filtroRegiao) {
+                if (listaExibida.length) {
+                    preencherDetalhamentoRegiao(listaExibida[0], false);
+                    carregarTabelaDetalhamento();
+                }
+            } else {
+                carregarTabelaDetalhamento();
+            }
+        }
+
+        function renderizarMapa(listaRegioes) {
+
+            const pins =
+                document.getElementById("pinsMapa");
+
+            if (!pins) return;
+
+            pins.innerHTML = "";
+
+            const posicoes = {
+
+                "NOROESTE": { top: "22%", left: "45%" }, // 4
+
+                "NORTE": { top: "22%", left: "69%" }, // 5
+
+                "ENCOSTA DA SERRA": { top: "37%", left: "88%" }, // 2
+
+                "SERRA": { top: "31%", left: "79%" }, // 6
+
+                "CENTRAL": { top: "42%", left: "35%" }, // 1
+
+                "VALE DO TAQUARI": { top: "36%", left: "71%" }, // 9
+
+                "VALE DOS SINOS": { top: "41%", left: "81%" }, // 10
+
+                "METROPOLITANA": { top: "50%", left: "74%" }, // 3
+
+                "VALE DO RIO PARDO": { top: "41%", left: "66%" }, // 8
+
+                "SUL": { top: "63%", left: "53%" }  // 7
+            };
+
+            listaRegioes.forEach((r, index) => {
+
+                const nomeRegiao =
+                    String(r.regiao || "")
+                        .trim()
+                        .toUpperCase();
+
+                const pos =
+                    posicoes[nomeRegiao];
+
+                const percentualMapa =
+                    rankingIndicadorAtual === "ha"
+                        ? Number(r.pct_ha || 0)
+                        : rankingIndicadorAtual === "receita"
+                            ? Number(r.pct_receita || 0)
+                            : Number(r.pct_matriculas || 0);
+
+                let metaMapa = Number(r.meta_matriculas || 0);
+                let realizadoMapa = Number(r.matriculas_real || 0);
+
+                if (rankingIndicadorAtual === "ha") {
+                    metaMapa = Number(r.meta_ha || 0);
+                    realizadoMapa = Number(r.ha_real || 0);
+                }
+
+                if (rankingIndicadorAtual === "receita") {
+                    metaMapa = Number(r.receita_meta || 0);
+                    realizadoMapa = Number(r.receita_real || 0);
+                }
+
+                const classe = classeStatusPorPct(percentualMapa, metaMapa, realizadoMapa);
+
+                if (!pos) return;
+
+                pins.innerHTML += `<span class="pin ${classe}" style="top:${pos.top};left:${pos.left};">${r.posicao_geral || index + 1}</span>`;
+
+            });
+
+        }
+
+        async function carregarFiltroRegioes() {
+            const select = document.getElementById("filtroRegiao");
+            if (!select) return;
+
+            select.innerHTML = `<option value="">Todas as regiões</option>`;
+
+            const ano = obterAnoRegiao();
+
+            const resp = await fetch(
+                `${API}/regioes/ranking?ano=${ano}&meses=1,2,3,4,5,6,7,8,9,10,11,12`
+            );
+
+            if (!resp.ok) return;
+
+            const dados = await resp.json();
+
+            const regioes = new Map();
+
+            dados.forEach(item => {
+                if (item.cod_regiao && item.regiao) {
+                    regioes.set(item.cod_regiao, item.regiao);
+                }
+            });
+
+            Array.from(regioes.entries())
+                .sort((a, b) => a[1].localeCompare(b[1], "pt-BR"))
+                .forEach(([codigo, nome]) => {
+                    select.innerHTML += `
+                    <option value="${codigo}">
+                        ${nome}
+                    </option>
+                `;
+                });
+
+            select.addEventListener("change", async () => {
+                await carregarRankingRegioes();
+                await carregarTabelaDetalhamento();
+            });
+        }
+
+        function preencherDetalhamentoGeral(listaRegioes) {
+
+            const totais = listaRegioes.reduce((acc, r) => {
+                acc.matriculas_real += Number(r.matriculas_real || 0);
+                acc.meta_matriculas += Number(r.meta_matriculas || 0);
+
+                acc.ha_real += Number(r.ha_real || 0);
+                acc.meta_ha += Number(r.meta_ha || 0);
+
+                acc.receita_real += Number(r.receita_real || 0);
+                acc.receita_meta += Number(r.receita_meta || 0);
+
+                acc.turmas_ativas += Number(r.turmas_ativas || 0);
+
+                return acc;
+            }, {
+                matriculas_real: 0,
+                meta_matriculas: 0,
+                ha_real: 0,
+                meta_ha: 0,
+                receita_real: 0,
+                receita_meta: 0,
+                turmas_ativas: 0
+            });
+
+            const pctMat = totais.meta_matriculas > 0
+                ? (totais.matriculas_real / totais.meta_matriculas) * 100
+                : 0;
+
+            const pctHa = totais.meta_ha > 0
+                ? (totais.ha_real / totais.meta_ha) * 100
+                : 0;
+
+            const pctRec = totais.receita_meta > 0
+                ? (totais.receita_real / totais.receita_meta) * 100
+                : 0;
+
+            document.getElementById("detalheRank").innerText = "G";
+            document.getElementById("detalheRegiaoNome").innerText = "Todas as regiões";
+
+            document.getElementById("detalheMatriculas").innerText =
+                `${totais.matriculas_real.toLocaleString("pt-BR")} / ${totais.meta_matriculas.toLocaleString("pt-BR")}`;
+
+            document.getElementById("detalheMatriculasPct").innerText =
+                `${pctMat.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheMatriculasBar").style.width =
+                `${Math.min(pctMat, 100)}%`;
+
+            document.getElementById("detalheHA").innerText =
+                `${totais.ha_real.toLocaleString("pt-BR")} / ${totais.meta_ha.toLocaleString("pt-BR")}`;
+
+            document.getElementById("detalheHAPct").innerText =
+                `${pctHa.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheHABar").style.width =
+                `${Math.min(pctHa, 100)}%`;
+
+            document.getElementById("detalheReceita").innerText =
+                `${moeda(totais.receita_real)} / ${moeda(totais.receita_meta)}`;
+
+            document.getElementById("detalheReceitaPct").innerText =
+                `${pctRec.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheReceitaBar").style.width =
+                `${Math.min(pctRec, 100)}%`;
+
+            document.getElementById("detalheQtdUnidades").innerText =
+                listaRegioes.length.toLocaleString("pt-BR");
+
+            document.getElementById("detalheTurmasAtivas").innerText =
+                totais.turmas_ativas.toLocaleString("pt-BR");
+
+            document.getElementById("tituloTabelaDetalhe").innerText =
+                "Desempenho por Unidade";
+
+            document.getElementById("tbodyDetalhamento").innerHTML = `
+    <tr>
+        <td colspan="5">Selecione uma região para visualizar o detalhamento por unidade.</td>
+    </tr>
+`;
+        }
+
+        async function carregarResumoGeralDetalhamento() {
+            let meses = document.getElementById("periodoRegiao")?.tomselect?.getValue() || [];
+
+            meses = Array.isArray(meses)
+                ? meses.join(",")
+                : meses;
+
+            if (!meses) return;
+
+            const resp = await fetch(
+                `${API}/regioes/detalhamento?ano=${obterAnoRegiao()}&meses=${meses}`
+            );
+
+            if (minhaReq !== reqDetalhamentoId) return;
+
+            if (!resp.ok) return;
+
+            const dados = await resp.json();
+
+            if (minhaReq !== reqDetalhamentoId) return;
+
+            document.getElementById("detalheQtdUnidades").innerText =
+                dados.length.toLocaleString("pt-BR");
+
+            document.getElementById("detalheTurmasAtivas").innerText =
+                dados.reduce((s, x) => s + Number(x.turmas_ativas || 0), 0)
+                    .toLocaleString("pt-BR");
+        }
+
+        function preencherDetalhamentoRegiao(item, atualizarTurmas = true) {
+            if (!item) return;
+
+            const pctMat = Number(item.pct_matriculas || 0);
+            const pctHa = Number(item.pct_ha || 0);
+            const pctRec = Number(item.pct_receita || 0);
+
+            document.getElementById("detalheRank").innerText = item.posicao_geral || "—";
+            document.getElementById("detalheRegiaoNome").innerText = item.regiao || "—";
+
+            document.getElementById("detalheMatriculas").innerText =
+                `${Number(item.matriculas_real || 0).toLocaleString("pt-BR")} / ${Number(item.meta_matriculas || 0).toLocaleString("pt-BR")}`;
+
+            document.getElementById("detalheMatriculasPct").innerText =
+                `${pctMat.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheMatriculasBar").style.width =
+                `${Math.min(pctMat, 100)}%`;
+
+            document.getElementById("detalheHA").innerText =
+                `${Number(item.ha_real || 0).toLocaleString("pt-BR")} / ${Number(item.meta_ha || 0).toLocaleString("pt-BR")}`;
+
+            document.getElementById("detalheHAPct").innerText =
+                `${pctHa.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheHABar").style.width =
+                `${Math.min(pctHa, 100)}%`;
+
+            document.getElementById("detalheReceita").innerText =
+                `${moeda(item.receita_real || 0)} / ${moeda(item.receita_meta || 0)}`;
+
+            document.getElementById("detalheReceitaPct").innerText =
+                `${pctRec.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheReceitaBar").style.width =
+                `${Math.min(pctRec, 100)}%`;
+
+            document.getElementById("tituloTabelaDetalhe").innerText =
+                `Desempenho por Unidade da Região: ${item.regiao || "-"}`;
+
+            if (atualizarTurmas) {
+                document.getElementById("detalheTurmasAtivas").innerText =
+                    Number(item.turmas_ativas || 0).toLocaleString("pt-BR");
+            }
+        }
+
+        async function carregarTabelaDetalhamento() {
+            const minhaReq = ++reqDetalhamentoId;
+            const tbody =
+                document.getElementById("tbodyDetalhamento");
+
+            let meses =
+                document.getElementById("periodoRegiao")
+                    ?.tomselect
+                    ?.getValue() || [];
+
+            meses =
+                Array.isArray(meses)
+                    ? meses.join(",")
+                    : meses;
+
+            if (!meses) {
+                preencherDetalhamentoGeral([]);
+                tbody.innerHTML = `
+        <tr>
+            <td colspan="5">Selecione um ou mais meses.</td>
+        </tr>
+    `;
+                return;
+            }
+
+            const regiao =
+                document.getElementById("filtroRegiao")
+                    ?.value || "";
+
+            // ===== LIMPA TUDO =====
+            if (!meses) {
+
+                tbody.innerHTML =
+                    `
+    <tr>
+        <td colspan="5">
+            Selecione um ou mais meses.
+        </td>
+    </tr>
+    `;
+
+                preencherDetalhamentoGeral([]);
+
+                return;
+            }
+
+            let url =
+                `${API}/regioes/detalhamento?ano=${obterAnoRegiao()}&meses=${meses}`;
+
+            if (regiao) {
+                url += `&regiao=${regiao}`;
+            }
+
+            const resp =
+                await fetch(url);
+
+            if (minhaReq !== reqDetalhamentoId) return;
+
+
+            if (!resp.ok) {
+
+                tbody.innerHTML =
+                    `
+    <tr>
+        <td colspan="5">
+            Erro ao carregar.
+        </td>
+    </tr>
+    `;
+
+                preencherDetalhamentoGeral([]);
+
+                return;
+            }
+
+            const dados =
+                await resp.json();
+
+            console.table(dados.map(x => ({
+                unidade: x.unidade,
+                turmas_ativas: x.turmas_ativas,
+                turmas_acumulado: x.turmas_acumulado
+            })));
+
+            if (minhaReq !== reqDetalhamentoId) return;
+
+            // ===== SEM DADOS =====
+            if (!dados.length) {
+
+                preencherDetalhamentoGeral([]);
+
+                tbody.innerHTML =
+                    `
+    <tr>
+        <td colspan="5">
+            Nenhum dado encontrado.
+        </td>
+    </tr>
+    `;
+
+                return;
+            }
+
+            // ===== RESUMO LATERAL =====
+            const totalMat =
+                dados.reduce(
+                    (s, x) => s + Number(x.matriculas_real || 0), 0
+                );
+
+            const totalMetaMat =
+                dados.reduce(
+                    (s, x) => s + Number(x.matriculas_meta || 0), 0
+                );
+
+            const totalHA =
+                dados.reduce(
+                    (s, x) => s + Number(x.ha_real || 0), 0
+                );
+
+            const totalMetaHA =
+                dados.reduce(
+                    (s, x) => s + Number(x.ha_meta || 0), 0
+                );
+
+            const totalRec =
+                dados.reduce(
+                    (s, x) => s + Number(x.receita_real || 0), 0
+                );
+
+            const totalMetaRec =
+                dados.reduce(
+                    (s, x) => s + Number(x.receita_meta || 0), 0
+                );
+
+            const pctMatTotal = totalMetaMat > 0 ? (totalMat / totalMetaMat) * 100 : 0;
+            const pctHaTotal = totalMetaHA > 0 ? (totalHA / totalMetaHA) * 100 : 0;
+            const pctRecTotal = totalMetaRec > 0 ? (totalRec / totalMetaRec) * 100 : 0;
+
+            document.getElementById("detalheMatriculasPct").innerText =
+                `${pctMatTotal.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheMatriculasBar").style.width =
+                `${Math.min(pctMatTotal, 100)}%`;
+
+            document.getElementById("detalheHAPct").innerText =
+                `${pctHaTotal.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheHABar").style.width =
+                `${Math.min(pctHaTotal, 100)}%`;
+
+            document.getElementById("detalheReceitaPct").innerText =
+                `${pctRecTotal.toFixed(1).replace(".", ",")}% da meta`;
+
+            document.getElementById("detalheReceitaBar").style.width =
+                `${Math.min(pctRecTotal, 100)}%`;
+
+            const totalTurmas =
+                dados.reduce((s, x) => {
+                    return s + Number(x.turmas_ativas || 0);
+                }, 0);
+
+            document.getElementById(
+                "detalheQtdUnidades"
+            ).innerText =
+                dados.length;
+
+            document.getElementById(
+                "detalheTurmasAtivas"
+            ).innerText =
+                totalTurmas.toLocaleString("pt-BR");
+
+            document.getElementById(
+                "detalheMatriculas"
+            ).innerText =
+                `${totalMat.toLocaleString("pt-BR")} / ${totalMetaMat.toLocaleString("pt-BR")}`;
+
+            document.getElementById(
+                "detalheHA"
+            ).innerText =
+                `${totalHA.toLocaleString("pt-BR")} / ${totalMetaHA.toLocaleString("pt-BR")}`;
+
+            document.getElementById(
+                "detalheReceita"
+            ).innerText =
+                `${moeda(totalRec)} / ${moeda(totalMetaRec)}`;
+
+            // ===== TABELA =====
+
+            const dadosFiltrados = dados.filter(x => {
+                if (detalheIndicadorAtual === "ha") {
+                    return Number(x.ha_real || 0) > 0 || Number(x.ha_meta || 0) > 0;
+                }
+
+                if (detalheIndicadorAtual === "receita") {
+                    return Number(x.receita_real || 0) > 0 || Number(x.receita_meta || 0) > 0;
+                }
+
+                return Number(x.matriculas_real || 0) > 0 || Number(x.matriculas_meta || 0) > 0;
+            });
+
+            if (!dadosFiltrados.length) {
+                tbody.innerHTML = `
+        <tr>
+            <td colspan="5">Nenhuma unidade encontrada para este indicador.</td>
+        </tr>
+    `;
+                return;
+            }
+
+            tbody.innerHTML =
+                dadosFiltrados.map(x => {
+
+                    let realizado;
+                    let meta;
+                    let pct;
+
+                    if (
+                        detalheIndicadorAtual === "ha"
+                    ) {
+
+                        realizado = x.ha_real;
+                        meta = x.ha_meta;
+                        pct = x.pct_ha;
+
+                    }
+
+                    else if (
+                        detalheIndicadorAtual === "receita"
+                    ) {
+
+                        realizado = x.receita_real;
+                        meta = x.receita_meta;
+                        pct = x.pct_receita;
+
+                    }
+
+                    else {
+
+                        realizado = x.matriculas_real;
+                        meta = x.matriculas_meta;
+                        pct = x.pct_matriculas;
+
+                    }
+
+                    const classe =
+                        classeStatusPorPct(
+                            pct,
+                            meta,
+                            realizado
+                        );
+
+                    return `
+        <tr>
+
+        <td>
+            <strong>
+            ${x.unidade}
+            </strong>
+        </td>
+
+        <td>
+            ${Number(meta)
+                .toLocaleString("pt-BR")}
+        </td>
+
+        <td>
+            ${Number(realizado)
+                .toLocaleString("pt-BR")}
+        </td>
+
+        <td>
+            ${Number(pct)
+                            .toFixed(1)}%
+        </td>
+
+        <td>
+            <span class="
+            status-regiao
+            ${classe}">
+            ${textoStatusPorPct(pct, meta, realizado)}
+            </span>
+        </td>
+
+        </tr>
+        `;
+
+                }).join("");
+        }
+
+        function sincronizarIndicadorRanking(indicador) {
+            rankingIndicadorAtual = indicador;
+
+            document.querySelectorAll(".ranking-tab:not(.detalhe-tab)")
+                .forEach(btn => {
+                    btn.classList.toggle("active", btn.dataset.ranking === indicador);
+                });
+        }
+
+        function sincronizarIndicadorDetalhamento(indicador) {
+            detalheIndicadorAtual = indicador;
+
+            document.querySelectorAll(".detalhe-tab")
+                .forEach(btn => {
+                    btn.classList.toggle("active", btn.dataset.detalhe === indicador);
+                });
+        }
+
+        function exportarDados() {
+            const tabela =
+                document.querySelector("#aba-detalhamento.active table")
+                ||
+                document.querySelector("#aba-ranking.active table");
+
+            if (!tabela) {
+                alert("Sem dados.");
+                return;
+            }
+
+            const tabelaClone = tabela.cloneNode(true);
+
+            tabelaClone.querySelectorAll("td, th").forEach(celula => {
+                const texto = celula.innerText.trim();
+
+                if (texto.includes("%")) {
+                    celula.setAttribute("data-t", "s");
+                    celula.textContent = texto;
+                }
+            });
+
+            const wb = XLSX.utils.table_to_book(
+                tabelaClone,
+                { sheet: "Relatório", raw: true }
+            );
+
+            XLSX.writeFile(
+                wb,
+                `relatorio_${Date.now()}.xlsx`
+            );
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const tsPeriodo = new TomSelect("#periodoRegiao", {
+                plugins: ["remove_button"],
+                placeholder: "Selecione um ou mais meses",
+                maxItems: null,
+                hideSelected: true,
+                closeAfterSelect: false,
+                persist: false,
+                onChange() {
+                    carregarRankingRegioes();
+                },
+                onItemAdd() {
+                    this.control_input.placeholder = "";
+                },
+                onItemRemove() {
+                    if (!this.items.length) {
+                        this.control_input.placeholder = "Selecione um ou mais meses";
+                    }
+                }
+            });
+
+            tsPeriodo.clear(true);
+
+            await carregarFiltroRegioes();
+
+            document.getElementById("filtroAnoRegiao")?.addEventListener("change", async () => {
+                await carregarFiltroRegioes();
+                carregarRankingRegioes();
+
+                if (document.getElementById("aba-detalhamento")?.classList.contains("active")) {
+                    carregarTabelaDetalhamento();
+                }
+            });
+
+            carregarRankingRegioes();
+        });
+
+        document.querySelectorAll(".ranking-tab:not(.detalhe-tab)").forEach(btn => {
+            btn.addEventListener("click", () => {
+                sincronizarIndicadorRanking(btn.dataset.ranking);
+                sincronizarIndicadorDetalhamento(btn.dataset.ranking);
+                carregarRankingRegioes();
+            });
+        });
+
+        document.querySelectorAll(".tab-ind").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".tab-ind")
+                    .forEach(b => b.classList.remove("active"));
+
+                document.querySelectorAll(".aba-regioes")
+                    .forEach(sec => sec.classList.remove("active"));
+
+                btn.classList.add("active");
+
+                const aba = btn.dataset.aba;
+                document.getElementById(`aba-${aba}`)?.classList.add("active");
+
+                if (aba === "ranking") {
+                    sincronizarIndicadorRanking(detalheIndicadorAtual);
+                    carregarRankingRegioes();
+                }
+
+                if (aba === "detalhamento") {
+                    sincronizarIndicadorDetalhamento(rankingIndicadorAtual);
+                    carregarTabelaDetalhamento();
+                }
+            });
+        });
+
+        let detalheIndicadorAtual = "matriculas";
+
+        document.querySelectorAll(".detalhe-tab").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".detalhe-tab")
+                    .forEach(b => b.classList.remove("active"));
+
+                btn.classList.add("active");
+
+                detalheIndicadorAtual = btn.dataset.detalhe;
+
+                sincronizarIndicadorRanking(detalheIndicadorAtual);
+
+                carregarTabelaDetalhamento();
+            });
+        });
+    </script>
+
+</body>
+
+</html>

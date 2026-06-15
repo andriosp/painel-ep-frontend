@@ -4,9 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Painel • Análise Preditiva</title>
+  <title>Painel • Visão Executiva</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js">
+  </script>
 
   <style>
     :root {
@@ -163,7 +167,7 @@
     }
 
     select[multiple] {
-      height: 140px;
+      height: 40px;
     }
 
     select:focus,
@@ -250,6 +254,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
+      margin-bottom: 14px;
     }
 
     @media (max-width: 1200px) {
@@ -289,6 +294,31 @@
       gap: 10px;
       align-items: flex-start;
       margin-bottom: 10px;
+    }
+
+    .big {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      margin: 12px 0 6px;
+    }
+
+    .sub {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 16px;
     }
 
     .prog {
@@ -491,7 +521,222 @@
       align-items: center;
       gap: 10px;
     }
+
+    .insights-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .insight-item {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .highlight {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 800;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .status-ok {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-atencao {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-critico {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .mini-chart {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      height: 95px;
+    }
+
+    .chart-header {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .meta-info {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* ===== LAYOUT ===== */
+    .page-layout {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar-executiva {
+      width: 220px;
+      min-height: calc(100vh - 90px);
+      background: #003B8F;
+      border-radius: 20px;
+      padding: 20px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 18px;
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-logo img {
+      width: 100px;
+      max-width: 100%;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: .2s;
+      font-size: 15px;
+    }
+
+    .sidebar-nav a:hover {
+      background:
+        rgba(255, 255, 255, .12);
+    }
+
+    .sidebar-nav a.active {
+      background: #0F5FFF;
+    }
+
+    /* ===== CONTEÚDO ===== */
+    .main-executiva {
+      flex: 1;
+    }
+
+    /* submenu */
+    .sidebar-nav a.submenu {
+      margin-left: 24px;
+      padding: 10px 14px;
+      font-size: 14px;
+      opacity: .85;
+    }
+
+    /* menu expansível */
+    .menu-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .arrow {
+      font-size: 12px;
+      transition: .2s;
+    }
+
+    .submenu-group {
+      display: none;
+      flex-direction: column;
+    }
+
+    .submenu-group.open {
+      display: flex;
+    }
+
+    .submenu {
+      margin-left: 20px;
+      padding: 10px 14px;
+      font-size: 14px;
+      opacity: .9;
+    }
+
+    .ts-wrapper {
+      width: 100%;
+    }
+
+    .ts-control {
+      height: 40px !important;
+      min-height: 40px !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius-sm) !important;
+      padding: 6px 10px !important;
+      background: #fff !important;
+      display: flex !important;
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      box-shadow: none !important;
+    }
+
+    .ts-control>.item {
+      margin: 0 6px 0 0 !important;
+      padding: 2px 8px !important;
+      border-radius: 999px !important;
+      background: rgba(37, 99, 235, .10) !important;
+      border: 1px solid rgba(37, 99, 235, .25) !important;
+      font-size: 12px !important;
+      line-height: 18px !important;
+      white-space: nowrap !important;
+      flex: 0 0 auto !important;
+    }
+
+    .ts-control input {
+      min-width: 1px !important;
+      height: 22px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .ts-wrapper.has-items .ts-control input::placeholder {
+      color: transparent !important;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -537,8 +782,8 @@
       <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
       <a href="unidades.html" class="navlink">Unidades</a>
       <a href="sge_turmas.html" class="navlink">Turmas</a>
-      <a href="analise_preditiva.html" class="navlink active">Análise Preditiva</a>
-      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
+      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
+      <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
 
       <div class="topnav-right">
         <a href="alterar_senha.html" class="navlink">
@@ -548,123 +793,198 @@
           <span class="dot"></span>
           Usuário: —
         </div>
-
         <button onclick="logout()">Sair</button>
       </div>
     </nav>
-
-    <div class="header">
-      <div class="title">
-        <h1>Análise Preditiva</h1>
-        <p>Análise de tendência e projeção com base em meta e realizado</p>
-      </div>
-      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões</div>
-    </div>
-
-    <div class="panel">
-      <div class="filters">
-
-        <div class="field">
-          <label for="subregioes">Sub-regiões (Ctrl + clique para múltiplas)</label>
-          <select id="subregioes" multiple></select>
-
+    <div class="page-layout">
+      <aside class="sidebar-executiva">
+        <div class="sidebar-logo">
+          <img src="/assets/logo.png" alt="SENAI">
+        </div>
+        <nav class="sidebar-nav">
+          <a href="visao_executiva.html" class="active">
+            🏠
+            <span>Visão Executiva</span>
+          </a>
+          <a href="indicadores.html">
+            📊
+            <span>Indicadores</span>
+          </a>
+          <a href="regioes.html">
+            🌎
+            <span>Regiões</span>
+          </a>
+          <a href="subregioes.html">
+            📍
+            <span>Sub-regiões</span>
+          </a>
+          <a href="turmas.html">
+            👥
+            <span>Turmas</span>
+          </a>
+          <a href="acoes.html">
+            🎯
+            <span>Ações</span>
+          </a>
+          <a href="relatoriosexecutivos.html">
+            📄
+            <span>Relatórios</span>
+          </a>
+        </nav>
+      </aside>
+      <main class="main-executiva">
+        <div class="header">
+          <div class="title">
+            <h1>Visão Executiva</h1>
+            <p>Resumo executivo por programa e período selecionado</p>
+          </div>
+          <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões</div>
         </div>
 
-        <div class="field">
-          <label for="programas">Programas (depende do filtro de sub-regiões)</label>
-          <select id="programas" multiple></select>
+        <div class="panel">
+
+          <div class="filters">
+
+            <div class="field">
+              <label>Programa</label>
+
+              <select id="programa">
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Período</label>
+              <select id="periodo" multiple>
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </div>
+            <div class="field sm">
+              <label>Ano</label>
+              <input id="ano" type="number" value="2026">
+            </div>
+            <div class="actions">
+              <button class="btn-primary" onclick="gerarVisaoExecutiva()">
+                Gerar Visão Executiva
+              </button>
+            </div>
+          </div>
         </div>
-
-        <div class="field">
-          <label for="meses">Meses (Ctrl + clique para múltiplos)</label>
-          <select id="meses" multiple>
-            <option value="1">Janeiro</option>
-            <option value="2">Fevereiro</option>
-            <option value="3">Março</option>
-            <option value="4">Abril</option>
-            <option value="5">Maio</option>
-            <option value="6">Junho</option>
-            <option value="7">Julho</option>
-            <option value="8">Agosto</option>
-            <option value="9">Setembro</option>
-            <option value="10">Outubro</option>
-            <option value="11">Novembro</option>
-            <option value="12">Dezembro</option>
-          </select>
+        <div class="panel">
+          <h2 style="
+          margin:0;
+          font-size:24px;
+          font-weight:900;
+      ">
+            Resumo Executivo
+          </h2>
+          <p id="resumoExecutivo" style="
+           margin-top:14px;
+           line-height:1.7;
+           color:var(--text);
+           font-size:15px;
+         ">
+            Selecione um programa e período para gerar automaticamente
+            um resumo executivo consolidado com indicadores,
+            tendências, riscos e recomendações.
+          </p>
         </div>
+        <div class="cards cards-indicadores">
+          <div class="card">
+            <h3>Matrículas</h3>
+            <div class="big" id="matriculasTotal">0</div>
+            <div class="sub" id="matriculasStatus">
+              realizado / meta
+            </div>
 
-        <div class="field sm">
-          <label for="ano">Ano</label>
-          <input id="ano" type="number" min="2000" max="2100" />
+            <div class="meta-info" id="matriculasMeta">
+              Meta: —
+            </div>
+          </div>
+          <div class="card">
+            <h3>Hora-Aluno</h3>
+
+            <div class="big" id="horaAlunoTotal">0</div>
+
+            <div class="sub" id="horaAlunoStatus">
+              acumulada
+            </div>
+
+            <div class="meta-info" id="horaAlunoMeta">
+              Meta: —
+            </div>
+          </div>
+          <div class="card">
+            <h3>Receita</h3>
+
+            <div class="big" id="receitaTotal">
+              R$ 0
+            </div>
+
+            <div class="sub" id="receitaStatus">
+              receita realizada
+            </div>
+
+            <div class="meta-info" id="receitaMeta">
+              Meta: —
+            </div>
+          </div>
+          <div class="card">
+            <h3>Turmas</h3>
+
+            <div class="big" id="turmasTotal">
+              0
+            </div>
+
+            <div class="sub" id="turmasStatus">
+              turmas vinculadas
+            </div>
+          </div>
         </div>
+        <div class="panel">
+          <h2 style="margin:0 0 6px; font-size:20px;">
+            Insights Executivos
+          </h2>
 
-        <div class="actions">
-          <button class="btn-primary" onclick="limparFiltros()">Limpar</button>
+          <p class="muted" style="margin:0 0 14px;">
+            Leitura automática dos principais pontos do programa no período selecionado.
+          </p>
+
+          <div id="insightsExecutivos" class="insights-list">
+            <div class="insight-item">
+              Selecione um programa e um período para gerar a análise executiva.
+            </div>
+          </div>
         </div>
-      </div>
+        <div class="panel">
+          <h2 style="margin:0 0 6px; font-size:20px;">
+            Recomendações
+          </h2>
+          <p class="muted" style="margin:0 0 14px;">
+            Sugestões de ação com base nos resultados do período.
+          </p>
+          <div class="insights-list">
+            <div class="insight-item">
+              Selecione um programa e período para gerar recomendações automáticas.
+            </div>
+          </div>
+        </div>
     </div>
-
-    <div class="cards-fechamento">
-
-      <div class="card-fechamento matriculas">
-        <div class="titulo">Fechamento previsto • Matrículas</div>
-        <div class="valor" id="fechamentoMatriculas">0</div>
-
-        <div class="status-fechamento" id="statusMatriculas">🔴 Crítico</div>
-
-        <div class="sub" id="fechamentoMatriculasSub">0% da meta anual</div>
-      </div>
-
-      <div class="card-fechamento hora-aluno">
-        <div class="titulo">Fechamento previsto • Hora-Aluno</div>
-        <div class="valor" id="fechamentoHoraAluno">0</div>
-
-        <div class="status-fechamento" id="statusHoraAluno">🔴 Crítico</div>
-
-        <div class="sub" id="fechamentoHoraAlunoSub">0% da meta anual</div>
-      </div>
-
-      <div class="card-fechamento receita">
-        <div class="titulo">Fechamento previsto • Receita</div>
-        <div class="valor" id="fechamentoReceita">R$ 0,00</div>
-
-        <div class="status-fechamento" id="statusReceita">🔴 Crítico</div>
-
-        <div class="sub" id="fechamentoReceitaSub">0% da meta anual</div>
-      </div>
-
-    </div>
-
-    <div class="panel">
-      <h2 style="margin:0 0 6px; font-size:20px;">Matrículas</h2>
-      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-      <div style="height:360px;">
-        <canvas id="graficoMatriculas"></canvas>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2 style="margin:0 0 6px; font-size:20px;">Hora-Aluno</h2>
-      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-      <div style="height:360px;">
-        <canvas id="graficoHoraAluno"></canvas>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2 style="margin:0 0 6px; font-size:20px;">Receita</h2>
-      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-      <div style="height:360px;">
-        <canvas id="graficoReceita"></canvas>
-      </div>
-    </div>
-
-    <div id="cards" class="cards"></div>
-
+    </main>
   </div>
-
+  <div id="cards" class="cards"></div>
+  </div>
   <script>
-
     function getDataAtual() {
       const agora = new Date();
       return {
@@ -708,139 +1028,38 @@
       }
     }
 
-    function acumuladoSerie(lista) {
-      let soma = 0;
-
-      return (lista || []).map(v => {
-        if (v === null || v === undefined) {
-          return null;
-        }
-
-        soma += Number(v || 0);
-        return soma;
-      });
-    }
-
-    function mesAtingimentoMeta(labels, previsaoAcum, metaAnual) {
-      metaAnual = Number(metaAnual || 0);
-      if (metaAnual <= 0) return null;
-
-      for (let i = 0; i < previsaoAcum.length; i++) {
-        const v = Number(previsaoAcum[i] || 0);
-        if (v >= metaAnual) {
-          return {
-            index: i,
-            mes: labels[i],
-            valor: v
-          };
-        }
-      }
-
-      return null;
-    }
-
-    function criarGrafico(idCanvas, titulo, labels, meta, realizado, previsao, ehMoeda = false, metaAnual = 0) {
+    function criarGrafico(idCanvas, titulo, labels, meta, realizado, previsao, ehMoeda = false) {
       const ctx = document.getElementById(idCanvas).getContext("2d");
 
-      const metaAcum = acumuladoSerie(meta);
-      const realizadoAcum = acumuladoSerie(realizado);
-      function acumuladoPrevisaoComRealizado(realizado, previsao) {
-        let soma = 0;
-        let ultimoRealizadoIndex = -1;
-
-        // acumula realizado até o último mês com dado
-        (realizado || []).forEach((r, i) => {
-          if (r !== null && r !== undefined) {
-            soma += Number(r || 0);
-            ultimoRealizadoIndex = i;
-          }
-        });
-
-        let acumulado = 0;
-
-        return (previsao || []).map((p, i) => {
-          const r = realizado?.[i];
-
-          if (r !== null && r !== undefined) {
-            acumulado += Number(r || 0);
-            return acumulado; // mantém a linha visível no período realizado
-          }
-
-          if (i > ultimoRealizadoIndex && p !== null && p !== undefined) {
-            acumulado += Number(p || 0);
-            return acumulado;
-          }
-
-          return null;
-        });
-      }
-
-      const previsaoAcum = acumuladoPrevisaoComRealizado(realizado, previsao);
-      const pontoMeta = mesAtingimentoMeta(labels, previsaoAcum, metaAnual);
-      const valoresEscala = [
-        ...metaAcum,
-        ...realizadoAcum,
-        ...previsaoAcum
-      ].filter(v => v !== null && v !== undefined && Number(v) > 0);
-
-      const maxEscala = Math.max(...valoresEscala, 0);
-
       return new Chart(ctx, {
-        type: "bar",
+        type: "line",
         data: {
           labels,
           datasets: [
             {
-              label: "Meta acumulada",
-              type: "bar",
-              data: metaAcum,
-              backgroundColor: "#cbd5f5",
-              borderRadius: 8
+              label: "Meta",
+              data: meta,
+              borderColor: "#2563eb",
+              backgroundColor: "transparent",
+              borderWidth: 3,
+              tension: 0.25
             },
             {
-              label: "Realizado acumulado",
-              type: "bar",
-              data: realizadoAcum,
-              backgroundColor: "#2563eb",
-              borderRadius: 8
+              label: "Realizado",
+              data: realizado,
+              borderColor: "#16a34a",
+              backgroundColor: "transparent",
+              borderWidth: 3,
+              tension: 0.25
             },
             {
-              label: "Previsão acumulada",
-              type: "line",
-              data: previsaoAcum,
+              label: "Previsão",
+              data: previsao,
               borderColor: "#f59e0b",
               backgroundColor: "transparent",
               borderWidth: 3,
               tension: 0.25,
-              borderDash: [6, 6],
-              pointRadius: 4,
-              pointHoverRadius: 5
-            },
-            {
-              label: "Meta anual",
-              type: "line",
-              clip: false,
-              data: labels.map(() => Number(metaAnual || 0)),
-              borderColor: "#16a34a",
-              backgroundColor: "transparent",
-              borderWidth: 1.5,
-              borderDash: [3, 5],
-              pointRadius: 0,
-              tension: 0
-            },
-            {
-              label: pontoMeta ? `Meta anual atingida em ${pontoMeta.mes}` : "",
-              type: "scatter",
-              data: pontoMeta ? [{
-                x: pontoMeta.mes,
-                y: pontoMeta.valor
-              }] : [],
-              backgroundColor: "#16a34a",
-              borderColor: "#ffffff",
-              borderWidth: 3,
-              pointRadius: 8,
-              pointHoverRadius: 10,
-              showLine: false
+              borderDash: [6, 6]
             }
           ]
         },
@@ -870,15 +1089,7 @@
           scales: {
             y: {
               beginAtZero: true,
-              suggestedMax: maxEscala * 1.15,
-
               ticks: {
-                stepSize: ehMoeda
-                  ? 5000000
-                  : (titulo === "Hora-Aluno"
-                    ? 1000000
-                    : 50000),
-
                 callback: function (value) {
                   if (ehMoeda) return moeda(value);
                   return format(value);
@@ -1112,41 +1323,10 @@
       }
     }
 
-    // Atualiza programas quando muda sub-região
-    document.getElementById("subregioes").addEventListener("change", async () => {
-      await aplicarFiltros();
-    });
-
-    document.getElementById("programas").addEventListener("change", async () => {
-      await carregarSubregioes();
-      await aplicarFiltros();
-    });
-
-    // Atualiza quando mudar mês/ano
-    document.getElementById("meses").addEventListener("change", async () => {
-      await carregarSubregioes();
-      await aplicarFiltros();
-    });
-
     document.getElementById("ano").addEventListener("change", async () => {
       await carregarSubregioes();
       await aplicarFiltros();
     });
-
-    (async function init() {
-      await carregarUsuario();
-      try {
-        setStatus("Carregando…");
-        aplicarAnoMesPadrao();
-        await carregarSubregioes();
-        atualizarBadgeFiltro();
-        await aplicarFiltros();
-        setStatus("");
-      } catch (e) {
-        console.error(e);
-        setStatus("Erro ao iniciar. Verifique endpoints no backend.");
-      }
-    })();
 
     async function carregarDadosPreditivos() {
       const atual = getDataAtual();
@@ -1187,9 +1367,7 @@
       return {
         matriculas: Number(data?.matriculas?.meta_total || 0),
         hora_aluno: Number(data?.hora_aluno?.meta_total || 0),
-        receita: Number(data?.receita?.meta_total || 0),
-
-        receita_realizada: Number(data?.receita?.realizado_total || data?.receita?.total || 0)
+        receita: Number(data?.receita?.meta_total || 0)
       };
     }
 
@@ -1211,8 +1389,7 @@
         data.matriculas.meta,
         data.matriculas.realizado,
         data.matriculas.previsao,
-        false,
-        totaisOficiais.matriculas
+        false
       );
 
       chartHoraAluno = criarGrafico(
@@ -1222,8 +1399,7 @@
         data.hora_aluno.meta,
         data.hora_aluno.realizado,
         data.hora_aluno.previsao,
-        false,
-        totaisOficiais.hora_aluno
+        false
       );
 
       chartReceita = criarGrafico(
@@ -1233,8 +1409,7 @@
         data.receita.meta,
         data.receita.realizado,
         data.receita.previsao,
-        true,
-        totaisOficiais.receita
+        true
       );
     }
 
@@ -1294,11 +1469,9 @@
       fha.totalMeta = Number(totaisOficiais.hora_aluno || 0);
       fr.totalMeta = Number(totaisOficiais.receita || 0);
 
-      fr.totalPrevisto = Number(totaisOficiais.receita_realizada || fr.totalPrevisto || 0);
-      fr.percentual = fr.totalMeta > 0 ? (fr.totalPrevisto / fr.totalMeta) * 100 : 0;
-
       fm.percentual = fm.totalMeta > 0 ? (fm.totalPrevisto / fm.totalMeta) * 100 : 0;
       fha.percentual = fha.totalMeta > 0 ? (fha.totalPrevisto / fha.totalMeta) * 100 : 0;
+      fr.percentual = fr.totalMeta > 0 ? (fr.totalPrevisto / fr.totalMeta) * 100 : 0;
 
       document.getElementById("fechamentoMatriculas").textContent = format(Math.round(fm.totalPrevisto));
       document.getElementById("fechamentoMatriculasSub").innerHTML =
@@ -1306,10 +1479,7 @@
 
       document.getElementById("fechamentoHoraAluno").textContent = format(Math.round(fha.totalPrevisto));
       document.getElementById("fechamentoHoraAlunoSub").innerHTML =
-        `Meta anual: <strong>${Number(fha.totalMeta || 0).toLocaleString("pt-BR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        })}</strong> • ${fha.percentual.toFixed(1).replace(".", ",")}% de atingimento`;
+        `Meta anual: <strong>${format(Math.round(fha.totalMeta))}</strong> • ${fha.percentual.toFixed(1).replace(".", ",")}% de atingimento`;
 
       document.getElementById("fechamentoReceita").textContent = moeda(fr.totalPrevisto);
       document.getElementById("fechamentoReceitaSub").innerHTML =
@@ -1383,7 +1553,537 @@
 
       window.location.href = "/login.html";
     }
+    async function gerarVisaoExecutiva() {
+      const programa =
+        document.getElementById(
+          "programa"
+        ).value;
+      const periodo =
+        Array.from(
+          document.getElementById(
+            "periodo"
+          ).selectedOptions
+        )
+          .map(
+            o => o.value
+          )
+          .join(",");
+      const ano =
+        document.getElementById(
+          "ano"
+        ).value;
+      const resp =
+        await fetch(
+          `${API}/programas/summary?` +
+          `programas=${programa}` +
+          `&meses=${periodo}` +
+          `&ano=${ano}`
+        );
+      const dados =
+        await resp.json();
+      console.log(dados);
+      const matriculas =
+        Number(
+          dados.matriculas?.realizado_total || 0
+        );
+      const receita =
+        Number(
+          dados.receita?.realizado_total || 0
+        );
+      const horaAluno = Number(dados.hora_aluno?.realizado_total || 0);
+      const pctMatriculas = Number(dados.matriculas?.pct_meta || 0);
+      const pctHoraAluno = Number(dados.hora_aluno?.pct_meta || 0);
+      const pctReceita = Number(dados.receita?.pct_meta || 0);
+      const temMetaMatriculas = Number(dados.matriculas?.meta_total || 0) > 0;
+      const temMetaHoraAluno = Number(dados.hora_aluno?.meta_total || 0) > 0;
+      const temMetaReceita = Number(dados.receita?.meta_total || 0) > 0;
+      const pctsValidos = [pctMatriculas, pctHoraAluno, pctReceita].filter(v => v > 0);
 
+      const pctGeral = pctsValidos.length
+        ? pctsValidos.reduce((a, b) => a + b, 0) / pctsValidos.length
+        : 0;
+
+      const pctsComMeta = [];
+
+      if (temMetaMatriculas) pctsComMeta.push(pctMatriculas);
+      if (temMetaHoraAluno) pctsComMeta.push(pctHoraAluno);
+      if (temMetaReceita) pctsComMeta.push(pctReceita);
+
+      const indicadoresCriticos =
+        pctsComMeta.filter(v => v < 70).length;
+
+      const indicadoresAtencao =
+        pctsComMeta.filter(v => v >= 70 && v < 100).length;
+
+      const indicadoresAcima =
+        pctsComMeta.filter(v => v >= 100).length;
+
+      let risco = "Não avaliado";
+
+      if (indicadoresCriticos >= 2) {
+        risco = "Alto";
+      }
+      else if (indicadoresCriticos >= 1 || indicadoresAtencao >= 1) {
+        risco = "Moderado";
+      }
+      else if (indicadoresAcima > 0) {
+        risco = "Baixo";
+      }
+      document.getElementById(
+        "matriculasTotal"
+      ).innerText =
+        Number(
+          dados.matriculas?.realizado_total || 0
+        )
+          .toLocaleString(
+            "pt-BR"
+          );
+      document.getElementById("matriculasMeta").innerHTML =
+        `Meta: <strong>${Number(
+          dados.matriculas?.meta_total || 0
+        ).toLocaleString("pt-BR")}</strong>
+            |
+            <strong> Atingimento: ${Number(
+          dados.matriculas?.pct_meta || 0
+        ).toFixed(1).replace(".", ",")}%</strong>`;
+      document.getElementById("horaAlunoMeta").innerHTML =
+        `Meta: <strong>${Number(dados.hora_aluno?.meta_total || 0)
+          .toLocaleString("pt-BR")}</strong>
+            |
+            <strong>Atingimento: ${Number(
+            dados.hora_aluno?.pct_meta || 0)
+          .toFixed(1)
+          .replace(".", ",")
+        }%
+</strong>`;
+      document.getElementById(
+        "horaAlunoTotal"
+      ).innerText =
+        Number(
+          dados.hora_aluno?.realizado_total || 0
+        )
+          .toLocaleString(
+            "pt-BR"
+          );
+      document.getElementById(
+        "receitaTotal"
+      ).innerText =
+        Number(
+          dados.receita?.realizado_total || 0
+        )
+          .toLocaleString(
+            "pt-BR",
+            {
+              style: "currency",
+              currency: "BRL"
+            }
+          );
+      document.getElementById("receitaMeta").innerHTML =
+        `Meta:
+<strong>${Number(dados.receita?.meta_total || 0)
+          .toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+          })
+        }</strong>
+|
+<strong>Atingimento:
+${Number(dados.receita?.pct_meta || 0)
+          .toFixed(1)
+          .replace(".", ",")
+        }%
+</strong>`;
+      document.getElementById("turmasTotal").innerText =
+        Number(dados.turmas?.total || 0).toLocaleString("pt-BR");
+      const turmas =
+        dados.turmas?.total ||
+        dados.turmas_ativas ||
+        dados.total_turmas ||
+        null;
+      document.getElementById(
+        "turmasTotal"
+      ).innerText =
+        turmas !== null
+          ? Number(
+            turmas
+          ).toLocaleString(
+            "pt-BR"
+          )
+          : "—";
+      document.querySelector(
+        "#turmasTotal"
+      )
+        .nextElementSibling
+        .innerHTML =
+        turmas !== null
+          ? "turmas vinculadas"
+          : "dado indisponível";
+
+      const temRealizadoMatriculas = matriculas > 0;
+      const temRealizadoHoraAluno = horaAluno > 0;
+
+      const blocoMatriculas = temRealizadoMatriculas
+        ? `<strong class="highlight">${matriculas.toLocaleString("pt-BR")} matrículas</strong>`
+        : "";
+
+      const blocoHoraAluno = temRealizadoHoraAluno
+        ? `com volume acumulado de <strong class="highlight">${horaAluno.toLocaleString("pt-BR")} hora-aluno</strong>`
+        : "";
+
+      const blocoReceita = temMetaReceita
+        ? `receita realizada de
+     <strong class="highlight">
+       ${Number(dados.receita?.realizado_total || 0)
+          .toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL"
+          })}
+     </strong>`
+        : "";
+      const blocosResumo = [
+        blocoMatriculas,
+        blocoHoraAluno,
+        blocoReceita
+      ].filter(Boolean);
+
+      document.getElementById("resumoExecutivo").innerHTML = `
+        O programa <strong>${document.getElementById("programa").selectedOptions[0]?.text}</strong>
+        apresentou, no período selecionado,
+        ${blocosResumo.length ? blocosResumo.join(", ") : "sem indicadores realizados disponíveis"}.
+        A leitura executiva recomenda acompanhamento integrado dos indicadores disponíveis no período.
+      `;
+
+      const turmasScore = Number(dados.turmas?.total || 0);
+
+      const ocupacaoMedia =
+        turmasScore > 0
+          ? matriculas / turmasScore
+          : 0;
+
+      let situacaoOcupacao = "";
+
+      if (ocupacaoMedia >= 20) {
+        situacaoOcupacao = "alta ocupação";
+      }
+      else if (ocupacaoMedia >= 10) {
+        situacaoOcupacao = "ocupação moderada";
+      }
+      else {
+        situacaoOcupacao = "baixa ocupação";
+      }
+      const cards = document.querySelectorAll(
+        ".cards-indicadores .card"
+      );
+
+      function statusIndicador(pct, meta, textos) {
+
+        if (Number(meta || 0) <= 0) {
+          return `⚪ sem meta definida`;
+        }
+
+        if (pct >= 100) {
+          return `🟢 ${textos.ok}`;
+        }
+
+        if (pct >= 70) {
+          return `🟡 ${textos.atencao}`;
+        }
+
+        return `🔴 ${textos.critico}`;
+      }
+
+      cards[0].querySelector(".sub").innerHTML =
+        statusIndicador(pctMatriculas, dados.matriculas?.meta_total, {
+          ok: "desempenho saudável",
+          atencao: "atenção",
+          critico: "abaixo do esperado"
+        });
+
+      cards[1].querySelector(".sub").innerHTML =
+        statusIndicador(pctHoraAluno, dados.hora_aluno?.meta_total, {
+          ok: "dentro da meta",
+          atencao: "monitorar",
+          critico: "risco operacional"
+        });
+
+      cards[2].querySelector(".sub").innerHTML =
+        statusIndicador(pctReceita, dados.receita?.meta_total, {
+          ok: "receita adequada",
+          atencao: "acompanhar",
+          critico: "revisar receita"
+        });
+      const insights = [];
+
+      if (indicadoresCriticos >= 2) {
+        insights.push(`
+    <div class="insight-item">
+      🔴 <strong>Desempenho crítico:</strong>
+      há dois ou mais indicadores com meta abaixo de 70%, exigindo plano de ação corretivo.
+    </div>
+  `);
+      }
+      else if (indicadoresCriticos === 1) {
+        insights.push(`
+    <div class="insight-item">
+      🔴 <strong>Ponto crítico identificado:</strong>
+      existe indicador abaixo de 70%, exigindo acompanhamento prioritário.
+    </div>
+  `);
+      }
+      else if (indicadoresAtencao > 0) {
+        insights.push(`
+    <div class="insight-item">
+      🟡 <strong>Atenção operacional:</strong>
+      há indicador entre 70% e 99% da meta, indicando necessidade de ações pontuais.
+    </div>
+  `);
+      }
+      else if (indicadoresAcima >= 2) {
+        insights.push(`
+    <div class="insight-item">
+      🟢 <strong>Alta performance:</strong>
+      os indicadores com meta demonstram desempenho acima do previsto para o período.
+    </div>
+  `);
+      }
+
+      if (temMetaReceita && pctReceita >= 100 && (pctMatriculas < 100 || pctHoraAluno < 100)) {
+        insights.push(`
+    <div class="insight-item">
+      🟡 <strong>Assimetria entre indicadores:</strong>
+      a receita superou a meta, mas há indicador acadêmico abaixo do esperado.
+      Recomenda-se avaliar eficiência operacional e composição das ofertas.
+    </div>
+  `);
+      }
+
+      if (!temMetaReceita) {
+        insights.push(`
+    <div class="insight-item">
+      ⚪ <strong>Receita sem meta:</strong>
+      a análise financeira do período fica limitada pela ausência de meta definida.
+    </div>
+  `);
+      }
+
+      if (matriculas > 0 && turmasScore > 0) {
+        if (ocupacaoMedia >= 30) {
+          insights.push(`
+      <div class="insight-item">
+        🟢 <strong>Alta ocupação:</strong>
+        a média de ${ocupacaoMedia.toFixed(1).replace(".", ",")} matrículas por turma indica bom aproveitamento da capacidade instalada.
+      </div>
+    `);
+        }
+        else if (ocupacaoMedia >= 15) {
+          insights.push(`
+      <div class="insight-item">
+        🟡 <strong>Ocupação intermediária:</strong>
+        a média de ${ocupacaoMedia.toFixed(1).replace(".", ",")} matrículas por turma sugere acompanhamento da eficiência das turmas.
+      </div>
+    `);
+        }
+        else {
+          insights.push(`
+      <div class="insight-item">
+        🔴 <strong>Baixa ocupação:</strong>
+        a média de ${ocupacaoMedia.toFixed(1).replace(".", ",")} matrículas por turma pode indicar pulverização da oferta ou baixa demanda.
+      </div>
+    `);
+        }
+      }
+
+      if (insights.length === 0) {
+        insights.push(`
+    <div class="insight-item">
+      📌 <strong>Leitura executiva:</strong>
+      os indicadores não apresentam desvios relevantes no período selecionado.
+    </div>
+  `);
+      }
+
+      document.getElementById("insightsExecutivos").innerHTML =
+        insights.join("");
+      let recomendacoes = [];
+
+      const indicadoresSemMeta = [];
+      const indicadoresAbaixo = [];
+      const indicadoresAtencaoLista = [];
+      const indicadoresAcimaLista = [];
+
+      if (!temMetaMatriculas) {
+        indicadoresSemMeta.push("Matrículas");
+      } else if (pctMatriculas < 70) {
+        indicadoresAbaixo.push("Matrículas");
+      } else if (pctMatriculas < 100) {
+        indicadoresAtencaoLista.push("Matrículas");
+      } else {
+        indicadoresAcimaLista.push("Matrículas");
+      }
+
+      if (!temMetaHoraAluno) {
+        indicadoresSemMeta.push("Hora-Aluno");
+      } else if (pctHoraAluno < 70) {
+        indicadoresAbaixo.push("Hora-Aluno");
+      } else if (pctHoraAluno < 100) {
+        indicadoresAtencaoLista.push("Hora-Aluno");
+      } else {
+        indicadoresAcimaLista.push("Hora-Aluno");
+      }
+
+      if (!temMetaReceita) {
+        indicadoresSemMeta.push("Receita");
+      } else if (pctReceita < 70) {
+        indicadoresAbaixo.push("Receita");
+      } else if (pctReceita < 100) {
+        indicadoresAtencaoLista.push("Receita");
+      } else {
+        indicadoresAcimaLista.push("Receita");
+      }
+
+      if (indicadoresSemMeta.length > 0) {
+        recomendacoes.push(
+          `⚪ Existem indicadores sem meta definida no período: ${indicadoresSemMeta.join(", ")}.`
+        );
+      }
+
+      if (indicadoresAbaixo.length > 0) {
+        recomendacoes.push(
+          `🔴 Indicadores abaixo do esperado: ${indicadoresAbaixo.join(", ")}. Recomenda-se plano de ação corretivo para esse(s) indicadore(s).`
+        );
+      }
+
+      if (indicadoresAtencao.length > 0) {
+        recomendacoes.push(
+          `🟡 Indicadores em atenção: ${indicadoresAtencao.join(", ")}. Recomenda-se acompanhamento e ações pontuais para aproximação da meta.`
+        );
+      }
+
+      if (
+        indicadoresAcimaLista.length > 0 &&
+        indicadoresAtencaoLista.length === 0 &&
+        indicadoresAbaixo.length === 0
+      ) {
+        recomendacoes.push(
+          `🚀 Indicadores acima da meta: ${indicadoresAcimaLista.join(", ")}. Recomenda-se a consolidação das práticas de alta performance e replicação das estratégias adotadas neste programa.`
+        );
+      }
+
+      if (
+        indicadoresAcima.length > 0 &&
+        (indicadoresAtencao.length > 0 || indicadoresAbaixo.length > 0)
+      ) {
+        recomendacoes.push(
+          `🚀 Indicadores acima da meta: ${indicadoresAcima.join(", ")}. O programa demonstra sinais de alta performance. Recomenda-se a continuidade das estratégias adotadas para sustentar os resultados alcançados.`
+        );
+      }
+      document.querySelector(
+        ".panel:last-child .insights-list"
+      )
+        .innerHTML =
+        recomendacoes
+          .map(
+            r => `<div class="insight-item">${r}</div>`
+          )
+          .join("");
+    }
+    async function carregarProgramasExecutivos() {
+      try {
+        const resp =
+          await fetch(
+            `${API}/programas/list?ano=${document.getElementById("ano").value || 2026}`
+          );
+        const dados =
+          await resp.json();
+        const sel =
+          document.getElementById(
+            "programa"
+          );
+        sel.innerHTML =
+          `<option value="">
+                Selecione...
+              </option>`;
+        dados.forEach(p => {
+          sel.innerHTML += `
+            <option
+                value="${p.codigo}">
+                ${p.nome}
+            </option>
+        `;
+        });
+      }
+      catch (e) {
+        console.error(
+          "Erro programas",
+          e
+        );
+      }
+    }
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+        carregarProgramasExecutivos();
+        new TomSelect("#periodo", {
+          plugins: ["remove_button"],
+          placeholder: "Selecione um ou mais meses",
+          maxItems: null,
+          hideSelected: true,
+          closeAfterSelect: false
+        });
+      }
+    );
+    function desenharGrafico(periodos, valores) {
+      const ctx =
+        document.getElementById(
+          "graficoTendencia"
+        );
+      if (window.graficoExec) {
+        window.graficoExec.destroy();
+      }
+      window.graficoExec =
+        new Chart(
+          ctx,
+          {
+            type: "line",
+            data: {
+              labels:
+                periodos,
+              datasets: [{
+                data:
+                  valores,
+                borderColor:
+                  "#2563eb",
+                borderWidth:
+                  2,
+                tension:
+                  .35,
+                pointRadius:
+                  3,
+                fill: false
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false
+                }
+              },
+              scales: {
+                y: {
+                  display: false
+                },
+                x: {
+                  grid: {
+                    display: false
+                  }
+                }
+              }
+            }
+          }
+        );
+    }
   </script>
 </body>
 

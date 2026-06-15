@@ -509,7 +509,7 @@
       <a href="unidades.html" class="navlink">Unidades</a>
       <a href="sge_turmas.html" class="navlink">Turmas</a>
       <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-      <a href="relatorio_programa.html" class="navlink">Relatório Executivo</a>
+      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
 
       <div class="topnav-right">
         <a href="alterar_senha.html" class="navlink">
@@ -851,7 +851,7 @@
 
       montarTabela(
         "tabela-subregioes",
-        ["Sub-região", "Matrículas", "Hora-Aluno", "Receita", "Despesa",
+        ["Sub-região", "Matrículas", "Hora-Aluno", "Receita",
           "GR Matrículas", "GR Hora-Aluno", "% GR (Mat)",
           "GNR Matrículas", "GNR Hora-Aluno", "% GNR (Mat)",
           "PG Matrículas", "PG Hora-Aluno", "% PG (Mat)"],
@@ -860,7 +860,6 @@
           "Matrículas": format(r.matriculas_total),
           "Hora-Aluno": format(r.hora_aluno_total),
           "Receita": moeda(r.receita_total),
-          "Despesa": moeda(r.despesa_total),
 
           "GR Matrículas": format(r.gr_matriculas),
           "GR Hora-Aluno": format(r.gr_hora_aluno),

@@ -1,0 +1,3208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painel • Indicadores Estratégicos</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js">
+    </script>
+
+    <style>
+        :root {
+            --bg: #f6f7fb;
+            --panel: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e5e7eb;
+            --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+            --radius: 14px;
+            --radius-sm: 12px;
+
+            --brand: #2563eb;
+            --ok: #16a34a;
+            --warn: #f59e0b;
+            --bad: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 18px 18px 36px;
+        }
+
+        /* Top nav */
+        .topnav {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0 14px;
+            align-items: center;
+        }
+
+        .navlink {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 750;
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+        }
+
+        .navlink:hover {
+            background: #fff;
+            border-color: var(--border);
+        }
+
+        .navlink.active {
+            background: rgba(37, 99, 235, .10);
+            color: var(--text);
+            border-color: rgba(37, 99, 235, .25);
+        }
+
+        .header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: .2px;
+        }
+
+        .title p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--muted);
+            font-size: 12px;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+            white-space: nowrap;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand);
+            box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .field {
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .field:first-child {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field.sm {
+            flex: 0 0 160px;
+            min-width: 160px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            background: #fff;
+            outline: none;
+            height: 40px;
+        }
+
+        select[multiple] {
+            height: 40px;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            align-self: flex-end;
+        }
+
+        button {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 650;
+            font-size: 13px;
+            transition: transform .05s ease, background .15s ease, border-color .15s ease;
+        }
+
+        button:hover {
+            background: #f8fafc;
+            border-color: #dbe3ef;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background: var(--brand);
+            color: #fff;
+            border-color: rgba(37, 99, 235, .65);
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .status-bar {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--muted);
+            min-height: 16px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 2px 0 10px;
+        }
+
+        .tab {
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 10px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--muted);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .tab.active {
+            background: rgba(37, 99, 235, .10);
+            border-color: rgba(37, 99, 235, .25);
+            color: var(--text);
+        }
+
+        /* Cards grid */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        #secao-metas .cards {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 1200px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .field {
+                min-width: 100%;
+            }
+
+            .field.sm {
+                flex: 1;
+                min-width: 100%;
+            }
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card .h {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .big {
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1;
+            margin: 12px 0 6px;
+        }
+
+        .sub {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .prog {
+            font-weight: 900;
+            letter-spacing: .2px;
+            line-height: 1.15;
+        }
+
+        .emoji {
+            font-size: 22px;
+            line-height: 1;
+            margin-top: -2px;
+        }
+
+        .kv {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 12px;
+            margin-top: 6px;
+        }
+
+        .k {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .25px;
+            text-transform: uppercase;
+        }
+
+        .v {
+            font-weight: 900;
+            text-align: right;
+        }
+
+        .bar {
+            margin-top: 12px;
+            height: 10px;
+            border-radius: 999px;
+            background: #eef2f7;
+            overflow: hidden;
+            border: 1px solid #e9eef6;
+        }
+
+        .fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            background: rgba(37, 99, 235, .85);
+            transition: width .25s ease;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: #fff;
+            width: fit-content;
+        }
+
+        .pill strong {
+            color: var(--text);
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        /* Cards clicáveis */
+        .card {
+            cursor: pointer;
+            transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+            border-color: rgba(37, 99, 235, .35);
+        }
+
+        /* Dá um feedback visual no header do card */
+        .card:hover .prog {
+            color: #2563eb;
+        }
+
+        /* Emoji reage levemente ao hover */
+        .card:hover .emoji {
+            transform: scale(1.05);
+        }
+
+        .cards-fechamento {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        @media (max-width: 1180px) {
+            .cards-fechamento {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-fechamento {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 16px 18px;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-fechamento .titulo {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            margin-bottom: 10px;
+        }
+
+        .card-fechamento .valor {
+            font-size: 32px;
+            font-weight: 900;
+            line-height: 1.05;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .card-fechamento .sub {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .card-fechamento .sub strong {
+            color: var(--text);
+        }
+
+        .card-fechamento.matriculas {
+            border-top: 4px solid #2563eb;
+        }
+
+        .card-fechamento.hora-aluno {
+            border-top: 4px solid #16a34a;
+        }
+
+        .card-fechamento.receita {
+            border-top: 4px solid #f59e0b;
+        }
+
+        .card-fechamento.status-critico {
+            border-top: 4px solid #dc2626;
+        }
+
+        .card-fechamento.status-atencao {
+            border-top: 4px solid #f59e0b;
+        }
+
+        .card-fechamento.status-ok {
+            border-top: 4px solid #16a34a;
+        }
+
+        .card-fechamento .status-fechamento {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-fechamento .status-fechamento.status-ok {
+            color: #16a34a;
+        }
+
+        .card-fechamento .status-fechamento.status-atencao {
+            color: #f59e0b;
+        }
+
+        .card-fechamento .status-fechamento.status-critico {
+            color: #dc2626;
+        }
+
+        .topnav {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .topnav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insights-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .insight-item {
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .ts-wrapper {
+            width: 100%;
+        }
+
+        .ts-control {
+            height: 40px !important;
+            min-height: 40px !important;
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius-sm) !important;
+            padding: 6px 10px !important;
+            background: #fff !important;
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            box-shadow: none !important;
+        }
+
+        .ts-control>.item {
+            margin: 0 6px 0 0 !important;
+            padding: 2px 8px !important;
+            border-radius: 999px !important;
+            background: rgba(37, 99, 235, .10) !important;
+            border: 1px solid rgba(37, 99, 235, .25) !important;
+            font-size: 12px !important;
+            line-height: 18px !important;
+            white-space: nowrap !important;
+            flex: 0 0 auto !important;
+        }
+
+        .ts-control input {
+            min-width: 1px !important;
+            height: 22px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .ts-wrapper.has-items .ts-control input::placeholder {
+            color: transparent !important;
+        }
+
+        .ts-dropdown {
+            z-index: 9999 !important;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: 800;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .status-ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-atencao {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-critico {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .mini-chart {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            height: 95px;
+        }
+
+        .chart-header {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .card-meta-detalhe {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .meta-info {
+            margin-top: 10px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        #secao-metas .meta-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meta-info strong {
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        /* ===== LAYOUT ===== */
+        .page-layout {
+            display: flex;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar-executiva {
+            width: 220px;
+            min-height: calc(100vh - 90px);
+            background: #003B8F;
+            border-radius: 20px;
+            padding: 20px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 18px;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-logo img {
+            width: 100px;
+            max-width: 100%;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: .2s;
+            font-size: 15px;
+        }
+
+        .sidebar-nav a:hover {
+            background:
+                rgba(255, 255, 255, .12);
+        }
+
+        .sidebar-nav a.active {
+            background: #0F5FFF;
+        }
+
+        /* ===== CONTEÚDO ===== */
+        .main-executiva {
+            flex: 1;
+        }
+
+        /* submenu */
+        .sidebar-nav a.submenu {
+            margin-left: 24px;
+            padding: 10px 14px;
+            font-size: 14px;
+            opacity: .85;
+        }
+
+        /* menu expansível */
+        .menu-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .arrow {
+            font-size: 12px;
+            transition: .2s;
+        }
+
+        .submenu-group {
+            display: none;
+            flex-direction: column;
+        }
+
+        .submenu-group.open {
+            display: flex;
+        }
+
+        .submenu {
+            margin-left: 20px;
+            padding: 10px 14px;
+            font-size: 14px;
+            opacity: .9;
+        }
+
+        .graficos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .grafico-card {
+            height: 320px;
+            padding: 24px;
+        }
+
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin-bottom: 24px;
+            padding-left: 6px;
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding-bottom: 12px;
+        }
+
+        .tab-ind.active {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        .graficos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .grafico-card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            min-height: 360px;
+            border: 1px solid var(--border);
+        }
+
+        .card-value-row {
+            display: block;
+        }
+
+        .card .h-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .card .h-card h3 {
+            margin: 0;
+        }
+
+        .card-variation {
+            font-size: 18px;
+            font-weight: 900;
+            white-space: nowrap;
+            line-height: 1;
+            margin-left: auto;
+        }
+
+        #receitaTotal {
+            font-size: 30px;
+        }
+
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 290px;
+            margin-top: 10px;
+        }
+
+        .chart-box canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .grafico-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 15px;
+            font-weight: 700;
+            pointer-events: none;
+            padding: 20px;
+        }
+
+        .grafico-placeholder.hidden {
+            display: none;
+        }
+
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin-bottom: 24px;
+            padding-left: 6px;
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding-bottom: 12px;
+        }
+
+        .tab-ind.active {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        .metas-card {
+            padding: 24px;
+        }
+
+        .metas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .btn-exportar {
+            font-size: 13px;
+            padding: 9px 14px;
+        }
+
+        .tabela-metas-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .tabela-metas {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .tabela-metas th,
+        .tabela-metas td {
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .tabela-metas th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .tabela-metas td:first-child,
+        .tabela-metas th:first-child {
+            text-align: left;
+            font-weight: 800;
+        }
+
+        .status-meta {
+            display: inline-flex;
+            justify-content: center;
+            min-width: 115px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .status-meta.ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-meta.baixo {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-meta.sem-meta {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .nota-metas {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        #secao-historico .card {
+            min-height: 230px;
+        }
+
+        #secao-historico .card h3 {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        #secao-historico .big {
+            font-size: 30px;
+            margin: 8px 0 2px;
+        }
+
+        #secao-historico .card-variation {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        #secao-historico .chart-box {
+            margin-top: 8px;
+        }
+
+        /* ===== HISTÓRICO MENSAL ===== */
+
+        .card-historico {
+            padding: 20px;
+            min-height: 240px;
+        }
+
+        .hist-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hist-titulo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hist-titulo h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .hist-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+        }
+
+        .hist-icon.azul {
+            background: #2563eb;
+        }
+
+        .hist-icon.roxo {
+            background: #a855f7;
+        }
+
+        .hist-icon.verde {
+            background: #16a34a;
+        }
+
+        .hist-icon.laranja {
+            background: #f59e0b;
+        }
+
+        .hist-valor {
+            font-size: 52px;
+            font-weight: 900;
+            line-height: 1;
+            margin-top: 14px;
+        }
+
+        .hist-variacao {
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .mini-hist {
+            height: 110px;
+            margin-top: 12px;
+        }
+
+        #secao-historico .historico-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        #secao-historico .card-historico {
+            min-height: 240px;
+            padding: 22px;
+        }
+
+        #secao-historico .hist-valor {
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1;
+            margin: 12px 0 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #secao-historico .mini-hist {
+            height: 150px;
+            margin-top: 18px;
+        }
+
+        #secao-historico .chart-box.mini-hist {
+            height: 150px;
+        }
+
+        #histReceitaTotal {
+            font-size: 34px;
+        }
+
+        .cards-comparativos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .card-comparativo {
+            min-height: 160px;
+            padding: 24px 28px;
+        }
+
+        .comp-top {
+            margin-bottom: 18px;
+        }
+
+        .comp-valores {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: end;
+            gap: 28px;
+            margin-top: 22px;
+        }
+
+        .comp-valores>div:last-child {
+            text-align: right;
+        }
+
+        .comp-variacao {
+            position: static;
+            font-size: 20px;
+            font-weight: 900;
+            white-space: nowrap;
+            align-self: center;
+            padding-bottom: 24px;
+        }
+
+        .comp-numero,
+        .comp-numero.menor,
+        .comp-numero.receita,
+        .comp-numero.receita.menor {
+            font-size: 34px;
+            font-weight: 900;
+            line-height: 1;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .comp-label {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .comp-variacao.ok {
+            color: #16a34a;
+        }
+
+        .comp-variacao.bad {
+            color: #ef4444;
+        }
+
+        .comp-variacao.neutro {
+            color: #64748b;
+        }
+
+        @media (max-width: 720px) {
+            .cards-comparativos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .cards-comparativos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <script>
+        const API =
+            window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                ? "http://localhost:8000"
+                : "/api";
+    </script>
+    <script>
+        (async function validarSessao() {
+            try {
+                const resp = await fetch(`${API}/auth/me`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+
+                const data = await resp.json();
+
+                // 🔥 AQUI é o que faltava
+                if (data.deve_trocar_senha) {
+                    window.location.href = "/alterar_senha.html";
+                    return;
+                }
+
+            } catch (e) {
+                window.location.href = "/login.html";
+            }
+        })();
+    </script>
+
+    <div class="container">
+
+        <nav class="topnav">
+            <a href="index.html" class="navlink">Dashboard</a>
+            <a href="po.html" class="navlink">PO</a>
+            <a href="programas.html?v=2" class="navlink">Programas</a>
+            <a href="performance.html" class="navlink">Performance</a>
+            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
+            <a href="unidades.html" class="navlink">Unidades</a>
+            <a href="sge_turmas.html" class="navlink">Turmas</a>
+            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
+            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
+
+            <div class="topnav-right">
+                <a href="alterar_senha.html" class="navlink">
+                    Alterar senha
+                </a>
+                <div id="usuario-logado" class="badge">
+                    <span class="dot"></span>
+                    Usuário: —
+                </div>
+                <button onclick="logout()">Sair</button>
+            </div>
+        </nav>
+        <div class="page-layout">
+            <aside class="sidebar-executiva">
+                <div class="sidebar-logo">
+                    <img src="/assets/logo.png" alt="SENAI">
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="visao_executiva.html">
+                        🏠
+                        <span>Visão Executiva</span>
+                    </a>
+                    <a href="indicadores.html" class="active">
+                        📊
+                        <span>Indicadores</span>
+                    </a>
+                    <a href="regioes.html">
+                        🌎
+                        <span>Regiões</span>
+                    </a>
+                    <a href="subregioes.html">
+                        📍
+                        <span>Sub-regiões</span>
+                    </a>
+                    <a href="turmas.html">
+                        👥
+                        <span>Turmas</span>
+                    </a>
+                    <a href="acoes.html">
+                        🎯
+                        <span>Ações</span>
+                    </a>
+                    <a href="relatoriosexecutivos.html">
+                        📄
+                        <span>Relatórios</span>
+                    </a>
+                </nav>
+            </aside>
+            <main class="main-executiva">
+                <div class="header">
+                    <div class="title">
+                        <h1>Indicadores Estratégicos</h1>
+                        <p class="subtitle">
+                            Acompanhe o desempenho dos principais indicadores do programa
+                        </p>
+                    </div>
+                    <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões</div>
+                </div>
+
+                <div class="tabs-indicadores">
+                    <button class="tab-ind active">Visão Geral</button>
+                    <button class="tab-ind">Histórico Mensal</button>
+                    <button class="tab-ind">Metas</button>
+                    <button class="tab-ind">Comparativos</button>
+                </div>
+
+                <div class="panel">
+                    <div class="filters">
+                        <div class="field">
+                            <label>Programa</label>
+                            <select id="programa">
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Período</label>
+                            <select id="periodo" multiple>
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+                        <div class="field sm">
+                            <label>Ano</label>
+                            <input id="ano" type="number" value="2026">
+                        </div>
+                        <div class="actions">
+                            <button class="btn-primary" onclick="gerarIndicadores()">
+                                Gerar Indicadores
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="secao-visao" class="cards cards-indicadores">
+
+                    <div class="card">
+                        <div class="h-card">
+                            <h3>Matrículas</h3>
+                            <div class="card-variation" id="matriculasVariacao">0%</div>
+                        </div>
+                        
+                        <div class="big" id="matriculasTotal">0</div>
+
+                        <div class="sub" id="matriculasStatus">
+                            Execução
+                        </div>
+
+                        <div class="meta-info" id="matriculasMeta">
+                            Meta: —
+                        </div>
+
+                        <div style="margin-top:18px;">
+
+                            <div style="
+                                display:flex;
+                                justify-content:space-between;
+                                font-size:13px;
+                                margin-bottom:6px;
+                            ">
+                                <span>Ocupação média</span>
+                                <strong>-</strong>
+                            </div>
+
+                            <div style="
+                                height:10px;
+                                background:#eee;
+                                border-radius:999px;
+                                overflow:hidden;
+                            ">
+                                <div id="taxaOcupacaoBarra" style="
+                                        width:0%;
+                                        height:100%;
+                                        background:#f59e0b;
+                                     ">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="h-card">
+                            <h3>Hora-Aluno</h3>
+                            <div class="card-variation" id="horaAlunoVariacao">0%</div>
+                        </div>
+                        
+                        <div class="big" id="horaAlunoTotal">0</div>
+                        <div class="sub" id="horaAlunoStatus">
+                            Produção
+                        </div>
+                        <div class="meta-info" id="horaAlunoMeta">
+                            Meta: —
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="h-card">
+                            <h3>Receita</h3>
+                            <div class="card-variation" id="receitaVariacao">0%</div>
+                        </div>
+                        
+                        <div class="big" id="receitaTotal">R$ 0</div>
+                        <div class="sub" id="receitaStatus">
+                            Financeiro
+                        </div>
+                        <div class="meta-info" id="receitaMeta">
+                            Meta: —
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Turmas</h3>
+                        <div class="big" id="turmasTotal">
+                            0
+                        </div>
+                        <div class="sub" id="turmasStatus">
+                            Oferta Ativa
+                        </div>
+                    </div>
+                </div>
+
+                <div id="secao-graficos-geral" class="graficos-grid">
+                    <div class="card grafico-card">
+                        <h3>Desempenho Acumulado x Meta</h3>
+                        <div class="chart-box">
+                            <div class="grafico-placeholder">
+                                Selecione filtros e clique em Gerar Indicadores
+                            </div>
+                            <canvas id="graficoMeta"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card grafico-card">
+                        <h3>Evolução Mensal • Matrículas</h3>
+                        <div class="chart-box">
+                            <div class="grafico-placeholder">
+                                Selecione filtros e clique em Gerar Indicadores
+                            </div>
+                            <canvas id="graficoEvolucaoMatriculas"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card grafico-card">
+                        <h3>Evolução Mensal • Hora-Aluno</h3>
+                        <div class="chart-box">
+                            <div class="grafico-placeholder">
+                                Selecione filtros e clique em Gerar Indicadores
+                            </div>
+                            <canvas id="graficoEvolucaoHoraAluno"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card grafico-card">
+                        <h3>Evolução Mensal • Receita</h3>
+                        <div class="chart-box">
+                            <div class="grafico-placeholder">
+                                Selecione filtros e clique em Gerar Indicadores
+                            </div>
+                            <canvas id="graficoEvolucaoReceita"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="secao-historico" style="display:none;">
+                    <div class="cards cards-indicadores historico-cards">
+                        <div class="card card-historico">
+                            <div class="hist-top">
+                                <div class="hist-titulo">
+                                    <span class="hist-icon azul"></span>
+                                    <h3>Matrículas</h3>
+                                </div>
+                                <div class="hist-variacao" id="histMatriculasVariacao">
+                                    0%
+                                </div>
+                            </div>
+                            <div class="hist-valor" id="histMatriculasTotal">
+                                0
+                            </div>
+                            <div class="chart-box mini-hist">
+                                <canvas id="graficoHistMatriculas"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card card-historico">
+                            <div class="hist-top">
+                                <div class="hist-titulo">
+                                    <span class="hist-icon roxo"></span>
+                                    <h3>Hora-Aluno</h3>
+                                </div>
+                                <div class="hist-variacao" id="histHoraAlunoVariacao">
+                                    0%
+                                </div>
+                            </div>
+                            <div class="hist-valor" id="histHoraAlunoTotal">
+                                0
+                            </div>
+                            <div class="chart-box mini-hist">
+                                <canvas id="graficoHistHoraAluno"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card card-historico">
+                            <div class="hist-top">
+                                <div class="hist-titulo">
+                                    <span class="hist-icon verde"></span>
+                                    <h3>Receita</h3>
+                                </div>
+                                <div class="hist-variacao" id="histReceitaVariacao">
+                                    0%
+                                </div>
+                            </div>
+                            <div class="hist-valor" id="histReceitaTotal">
+                                R$ 0
+                            </div>
+                            <div class="chart-box mini-hist">
+                                <canvas id="graficoHistReceita"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="nota-metas">
+                        ℹ️ O histórico mensal apresenta a evolução dos indicadores no período selecionado.
+                    </div>
+                </div>
+
+                <div id="secao-metas" style="display:none;">
+                    <div class="card metas-card">
+                        <div class="metas-header">
+                            <h3>Metas do Período</h3>
+                            <button class="btn-exportar" onclick="exportarMetas()">
+                                ⬇ Exportar
+                            </button>
+                        </div>
+
+                        <div class="tabela-metas-wrap">
+                            <table class="tabela-metas">
+                                <thead>
+                                    <tr>
+                                        <th>Indicador</th>
+                                        <th id="thRealizadoMes">Realizado no mês</th>
+                                        <th id="thMetaMes">Meta do mês</th>
+                                        <th>% Atingimento</th>
+                                        <th>Acumulado no ano</th>
+                                        <th>Meta acumulada</th>
+                                        <th>% Atingimento</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <td>🔵 Matrículas</td>
+                                        <td id="metaMatRealizadoMes">—</td>
+                                        <td id="metaMatMetaMes">—</td>
+                                        <td id="metaMatPctMes">—</td>
+                                        <td id="metaMatAcumulado">—</td>
+                                        <td id="metaMatMetaAcumulada">—</td>
+                                        <td id="metaMatPctAcumulado">—</td>
+                                        <td><span id="metaMatStatus" class="status-meta">—</span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>🟣 Hora-Aluno</td>
+                                        <td id="metaHaRealizadoMes">—</td>
+                                        <td id="metaHaMetaMes">—</td>
+                                        <td id="metaHaPctMes">—</td>
+                                        <td id="metaHaAcumulado">—</td>
+                                        <td id="metaHaMetaAcumulada">—</td>
+                                        <td id="metaHaPctAcumulado">—</td>
+                                        <td><span id="metaHaStatus" class="status-meta">—</span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>🟢 Receita</td>
+                                        <td id="metaRecRealizadoMes">—</td>
+                                        <td id="metaRecMetaMes">—</td>
+                                        <td id="metaRecPctMes">—</td>
+                                        <td id="metaRecAcumulado">—</td>
+                                        <td id="metaRecMetaAcumulada">—</td>
+                                        <td id="metaRecPctAcumulado">—</td>
+                                        <td><span id="metaRecStatus" class="status-meta">—</span></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="nota-metas">
+                            ℹ️ As metas são definidas conforme o planejamento anual do programa.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="secao-comparativos" style="display:none;">
+                    <div class="cards cards-comparativos">
+
+                        <div class="card card-comparativo">
+                            <div class="comp-top">
+                                <div class="hist-titulo">
+                                    <span class="hist-icon azul"></span>
+                                    <h3>Matrículas Realizadas</h3>
+                                </div>
+                            </div>
+
+
+
+                            <div class="comp-valores">
+                                <div>
+                                    <div class="comp-numero" id="compMatAtual">0</div>
+                                    <div class="comp-label" id="compMatAtualLabel">Período atual</div>
+                                </div>
+
+                                <div class="comp-variacao" id="compMatVariacao">—</div>
+
+                                <div>
+                                    <div class="comp-numero menor" id="compMatAnterior">0</div>
+                                    <div class="comp-label" id="compMatAnteriorLabel">Período anterior</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-comparativo">
+                            <div class="comp-top">
+                                <div class="hist-titulo">
+                                    <span class="hist-icon roxo"></span>
+                                    <h3>Hora-Aluno Realizada</h3>
+                                </div>
+                            </div>
+
+                            <div class="comp-valores">
+                                <div>
+                                    <div class="comp-numero" id="compHaAtual">0</div>
+                                    <div class="comp-label" id="compHaAtualLabel">Período atual</div>
+                                </div>
+
+                                <div class="comp-variacao" id="compHaVariacao">—</div>
+
+                                <div>
+                                    <div class="comp-numero menor" id="compHaAnterior">0</div>
+                                    <div class="comp-label" id="compHaAnteriorLabel">Período anterior</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-comparativo">
+                            <div class="comp-top">
+                                <div class="hist-titulo">
+                                    <span class="hist-icon verde"></span>
+                                    <h3>Receita Realizada</h3>
+                                </div>
+                            </div>
+
+                            <div class="comp-valores">
+                                <div>
+                                    <div class="comp-numero receita" id="compRecAtual">R$ 0</div>
+                                    <div class="comp-label" id="compRecAtualLabel">Período atual</div>
+                                </div>
+
+                                <div class="comp-variacao" id="compRecVariacao">—</div>
+
+                                <div>
+                                    <div class="comp-numero receita menor" id="compRecAnterior">R$ 0</div>
+                                    <div class="comp-label" id="compRecAnteriorLabel">Período anterior</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-comparativo">
+                            <div class="comp-top">
+                                <div class="hist-titulo">
+                                    <span class="hist-icon laranja"></span>
+                                    <h3>Turmas Ativas</h3>
+                                </div>
+                            </div>
+
+                            <div class="comp-valores">
+                                <div>
+                                    <div class="comp-numero" id="compTurmasAtual">0</div>
+                                    <div class="comp-label" id="compTurmasAtualLabel">Período atual</div>
+                                </div>
+
+                                <div class="comp-variacao" id="compTurmasVariacao">—</div>
+
+                                <div>
+                                    <div class="comp-numero menor" id="compTurmasAnterior">0</div>
+                                    <div class="comp-label" id="compTurmasAnteriorLabel">Período anterior</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="nota-metas" id="notaComparativos">
+                        ℹ️ Comparação entre o período selecionado e o mesmo período do ano anterior.
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        function getDataAtual() {
+            const agora = new Date();
+            return {
+                ano: agora.getFullYear(),
+                mes: agora.getMonth() + 1
+            };
+        }
+
+        function aplicarAnoMesPadrao() {
+            const atual = getDataAtual();
+            document.getElementById("ano").value = atual.ano;
+
+            const sel = document.getElementById("periodo");
+            if (!sel) return;
+
+            Array.from(sel.options).forEach(o => {
+                o.selected = Number(o.value) === atual.mes;
+            });
+        }
+
+        function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
+        function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+
+        let chartMatriculas = null;
+        let chartHoraAluno = null;
+        let chartReceita = null;
+        let ultimoRequestId = 0;
+
+        function destruirGraficos() {
+            if (chartMatriculas) {
+                chartMatriculas.destroy();
+                chartMatriculas = null;
+            }
+            if (chartHoraAluno) {
+                chartHoraAluno.destroy();
+                chartHoraAluno = null;
+            }
+            if (chartReceita) {
+                chartReceita.destroy();
+                chartReceita = null;
+            }
+        }
+
+        function criarGrafico(idCanvas, titulo, labels, meta, realizado, previsao, ehMoeda = false) {
+            const ctx = document.getElementById(idCanvas).getContext("2d");
+
+            return new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: "Meta",
+                            data: meta,
+                            borderColor: "#2563eb",
+                            backgroundColor: "transparent",
+                            borderWidth: 3,
+                            tension: 0.25
+                        },
+                        {
+                            label: "Realizado",
+                            data: realizado,
+                            borderColor: "#16a34a",
+                            backgroundColor: "transparent",
+                            borderWidth: 3,
+                            tension: 0.25
+                        },
+                        {
+                            label: "Previsão",
+                            data: previsao,
+                            borderColor: "#f59e0b",
+                            backgroundColor: "transparent",
+                            borderWidth: 3,
+                            tension: 0.25,
+                            borderDash: [6, 6]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: "index",
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: "top"
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const valor = context.raw ?? 0;
+                                    if (ehMoeda) {
+                                        return `${context.dataset.label}: ${moeda(valor)}`;
+                                    }
+                                    return `${context.dataset.label}: ${format(valor)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    if (ehMoeda) return moeda(value);
+                                    return format(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function setStatus(msg) {
+            const el = document.getElementById("status");
+            if (el) el.textContent = msg || "";
+        }
+
+        function selecionados(id) {
+            const sel = document.getElementById(id);
+            return Array.from(sel.selectedOptions).map(o => o.value).join(",");
+        }
+
+        function mesesSelecionados() {
+            const sel = document.getElementById("meses");
+            if (!sel) return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+            const valores = Array.from(sel.selectedOptions)
+                .map(o => Number(o.value))
+                .filter(Boolean)
+                .sort((a, b) => a - b);
+
+            return valores.length ? valores : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        }
+
+        function selecionarTudo(id) {
+            const sel = document.getElementById(id);
+            Array.from(sel.options).forEach(o => o.selected = true);
+            atualizarBadgeFiltro();
+        }
+
+        async function limparFiltros() {
+            ["subregioes", "programas", "meses"].forEach(id => {
+                const sel = document.getElementById(id);
+                if (sel) Array.from(sel.options).forEach(o => o.selected = false);
+            });
+
+            aplicarAnoMesPadrao();
+            atualizarBadgeFiltro();
+            await aplicarFiltros();
+        }
+
+        function atualizarBadgeFiltro() {
+            const badge = document.getElementById("badge-filtro");
+            if (!badge) return;
+
+            const selSub = document.getElementById("subregioes");
+            const selProg = document.getElementById("programas");
+            const selMes = document.getElementById("meses");
+            const ano = document.getElementById("ano")?.value || new Date().getFullYear();
+
+            const subs = Array.from(selSub?.selectedOptions || [])
+                .map(o => o.textContent.trim());
+
+            const progs = Array.from(selProg?.selectedOptions || [])
+                .map(o => o.textContent.trim());
+
+            const mesesValores = Array.from(selMes?.selectedOptions || [])
+                .map(o => Number(o.value))
+                .filter(Boolean)
+                .sort((a, b) => a - b);
+
+            const nomesMeses = [
+                "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+            ];
+
+            const resumo = (lista, limite = 2) => {
+                return lista.length <= limite
+                    ? lista.join(", ")
+                    : `${lista.slice(0, limite).join(", ")} +${lista.length - limite}`;
+            };
+
+            const subTxt = subs.length
+                ? `Sub-regiões: ${resumo(subs)}`
+                : "Sub-regiões: todas";
+
+            const progTxt = progs.length
+                ? `Programas: ${resumo(progs)}`
+                : "Programas: todos";
+
+            let mesTxt = "";
+
+            if (mesesValores.length) {
+
+                const ehContinuo = mesesValores.every((m, i, arr) =>
+                    i === 0 || m === arr[i - 1] + 1
+                );
+
+                if (mesesValores.length === 1) {
+                    mesTxt = `Meses: ${nomesMeses[mesesValores[0]]}`;
+                }
+                else if (ehContinuo) {
+                    const primeiro = nomesMeses[mesesValores[0]];
+                    const ultimo = nomesMeses[mesesValores[mesesValores.length - 1]];
+                    mesTxt = `Meses: ${primeiro} - ${ultimo}`;
+                }
+                else {
+                    const lista = mesesValores.map(m => nomesMeses[m]);
+
+                    const resumo = lista.length <= 3
+                        ? lista.join(", ")
+                        : `${lista.slice(0, 3).join(", ")} +${lista.length - 3}`;
+
+                    mesTxt = `Meses: ${resumo}`;
+                }
+
+            } else {
+                mesTxt = "Meses: todos";
+            }
+
+            badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${progTxt} • ${mesTxt} • Ano: ${ano}`;
+        }
+
+        async function carregarSubregioes() {
+            setStatus("Carregando sub-regiões…");
+
+            const atual = getDataAtual();
+            const ano = document.getElementById("ano").value || String(atual.ano);
+            const meses = mesesSelecionados();
+            const programasSelecionados = Array.from(document.getElementById("programas").selectedOptions).map(o => o.value);
+
+            let data = [];
+
+            if (programasSelecionados.length === 1 && meses.length > 0) {
+                const qs = new URLSearchParams({
+                    ano: String(ano),
+                    programa_id: String(programasSelecionados[0]),
+                    meses: meses.join(",")
+                });
+
+                const res = await fetch(API + `/planejamento/filtros/subregioes-por-programa?` + qs.toString());
+                data = await res.json();
+            } else {
+                const res = await fetch(API + `/planejamento/filtros/subregioes?ano=${ano}`);
+                data = await res.json();
+            }
+
+            const sel = document.getElementById("subregioes");
+            const prev = new Set(Array.from(sel.selectedOptions).map(o => String(o.value)));
+
+            sel.innerHTML = "";
+
+            data.forEach(r => {
+                const opt = document.createElement("option");
+                opt.value = r.codigo;
+                opt.textContent = r.nome;
+                if (prev.has(String(r.codigo))) opt.selected = true;
+                sel.appendChild(opt);
+            });
+
+            setStatus("");
+            atualizarBadgeFiltro();
+        }
+
+        async function carregarProgramas() {
+            const atual = getDataAtual();
+            const ano = document.getElementById("ano").value || String(atual.ano);
+            const meses = mesesSelecionados();
+            const subs = selecionados("subregioes");
+
+            const qs = new URLSearchParams({
+                indicador: "matriculas",
+                ano: String(ano),
+                meses: meses.join(","),
+            });
+
+            if (subs) qs.set("subregioes", subs);
+
+            const res = await fetch(API + "/performance/cards?" + qs.toString());
+            const data = await res.json();
+
+            const validos = (data || []).filter(item =>
+                Number(item.meta || 0) > 0 ||
+                Number(item.projetado || 0) > 0 ||
+                Number(item.realizado || 0) > 0
+            );
+
+            const mapa = new Map();
+            validos.forEach(item => {
+                mapa.set(String(item.programa_id), {
+                    codigo: item.programa_id,
+                    nome: item.programa
+                });
+            });
+
+            const sel = document.getElementById("programas");
+            const prev = new Set(Array.from(sel.selectedOptions).map(o => String(o.value)));
+
+            sel.innerHTML = "";
+
+            Array.from(mapa.values())
+                .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
+                .forEach(r => {
+                    const opt = document.createElement("option");
+                    opt.value = r.codigo;
+                    opt.textContent = r.nome;
+                    if (prev.has(String(r.codigo))) opt.selected = true;
+                    sel.appendChild(opt);
+                });
+        }
+
+        async function aplicarFiltros() {
+            const requestId = ++ultimoRequestId;
+
+            try {
+                setStatus("Aplicando filtros…");
+                atualizarBadgeFiltro();
+
+                await carregarProgramas();
+
+                if (requestId !== ultimoRequestId) return;
+
+                await renderizarGraficos(requestId);
+
+                if (requestId !== ultimoRequestId) return;
+
+                setStatus("");
+            } catch (e) {
+                if (requestId !== ultimoRequestId) return;
+                console.error(e);
+                setStatus("Erro ao carregar performance. Veja o Console (F12).");
+            }
+        }
+
+        document.getElementById("ano").addEventListener("change", async () => {
+            await carregarSubregioes();
+            await aplicarFiltros();
+        });
+
+        async function carregarDadosPreditivos() {
+            const atual = getDataAtual();
+            const ano = document.getElementById("ano").value || String(atual.ano);
+            const meses = mesesSelecionados();
+            const subs = selecionados("subregioes");
+            const progs = selecionados("programas");
+
+            const qs = new URLSearchParams({
+                ano: String(ano),
+                meses: meses.join(",")
+            });
+
+            if (subs) qs.set("subregioes", subs);
+            if (progs) qs.set("programas", progs);
+
+            const res = await fetch(API + "/performance/preditiva?" + qs.toString());
+            return await res.json();
+        }
+
+        async function carregarTotaisOficiais() {
+            const atual = getDataAtual();
+            const ano = document.getElementById("ano").value || String(atual.ano);
+            const subs = selecionados("subregioes");
+            const progs = selecionados("programas");
+
+            const qs = new URLSearchParams({
+                ano: String(ano),
+                meses: "1,2,3,4,5,6,7,8,9,10,11,12"
+            });
+
+            if (subs) qs.set("subregioes", subs);
+            if (progs) qs.set("programas", progs);
+
+            const res = await fetch(API + "/programas/summary?" + qs.toString());
+            const data = await res.json();
+
+            return {
+                matriculas: Number(data?.matriculas?.meta_total || 0),
+                hora_aluno: Number(data?.hora_aluno?.meta_total || 0),
+                receita: Number(data?.receita?.meta_total || 0)
+            };
+        }
+
+        async function renderizarGraficos(requestId = null) {
+            destruirGraficos();
+
+            const data = await carregarDadosPreditivos();
+            if (requestId !== null && requestId !== ultimoRequestId) return;
+            const totaisOficiais = await carregarTotaisOficiais();
+            if (requestId !== null && requestId !== ultimoRequestId) return;
+            atualizarCardsFechamento(data, totaisOficiais);
+
+            const labels = data.meses;
+
+            chartMatriculas = criarGrafico(
+                "graficoMatriculas",
+                "Matrículas",
+                labels,
+                data.matriculas.meta,
+                data.matriculas.realizado,
+                data.matriculas.previsao,
+                false
+            );
+
+            chartHoraAluno = criarGrafico(
+                "graficoHoraAluno",
+                "Hora-Aluno",
+                labels,
+                data.hora_aluno.meta,
+                data.hora_aluno.realizado,
+                data.hora_aluno.previsao,
+                false
+            );
+
+            chartReceita = criarGrafico(
+                "graficoReceita",
+                "Receita",
+                labels,
+                data.receita.meta,
+                data.receita.realizado,
+                data.receita.previsao,
+                true
+            );
+        }
+
+        function calcularFechamento(meta, realizado, previsao) {
+            let totalMeta = 0;
+            let totalPrevisto = 0;
+
+            for (let i = 0; i < 12; i++) {
+                const m = meta[i] ?? 0;
+                const r = realizado[i];
+                const p = previsao[i];
+
+                totalMeta += m;
+
+                if (r !== null && r !== undefined) {
+                    totalPrevisto += r;
+                } else if (p !== null && p !== undefined) {
+                    totalPrevisto += p;
+                }
+            }
+
+            const percentual = totalMeta > 0 ? (totalPrevisto / totalMeta) * 100 : 0;
+
+            return {
+                totalMeta,
+                totalPrevisto,
+                percentual
+            };
+        }
+
+        function obterClasseStatus(percentual) {
+            if (percentual >= 100) return "status-ok";
+            if (percentual >= 70) return "status-atencao";
+            return "status-critico";
+        }
+
+        function atualizarCardsFechamento(data, totaisOficiais) {
+            const fm = calcularFechamento(
+                data.matriculas.meta,
+                data.matriculas.realizado,
+                data.matriculas.previsao
+            );
+
+            const fha = calcularFechamento(
+                data.hora_aluno.meta,
+                data.hora_aluno.realizado,
+                data.hora_aluno.previsao
+            );
+
+            const fr = calcularFechamento(
+                data.receita.meta,
+                data.receita.realizado,
+                data.receita.previsao
+            );
+
+            fm.totalMeta = Number(totaisOficiais.matriculas || 0);
+            fha.totalMeta = Number(totaisOficiais.hora_aluno || 0);
+            fr.totalMeta = Number(totaisOficiais.receita || 0);
+
+            fm.percentual = fm.totalMeta > 0 ? (fm.totalPrevisto / fm.totalMeta) * 100 : 0;
+            fha.percentual = fha.totalMeta > 0 ? (fha.totalPrevisto / fha.totalMeta) * 100 : 0;
+            fr.percentual = fr.totalMeta > 0 ? (fr.totalPrevisto / fr.totalMeta) * 100 : 0;
+
+            document.getElementById("fechamentoMatriculas").textContent = format(Math.round(fm.totalPrevisto));
+            document.getElementById("fechamentoMatriculasSub").innerHTML =
+                `Meta anual: <strong>${format(Math.round(fm.totalMeta))}</strong> • ${fm.percentual.toFixed(1).replace(".", ",")}% de atingimento`;
+
+            document.getElementById("fechamentoHoraAluno").textContent = format(Math.round(fha.totalPrevisto));
+            document.getElementById("fechamentoHoraAlunoSub").innerHTML =
+                `Meta anual: <strong>${format(Math.round(fha.totalMeta))}</strong> • ${fha.percentual.toFixed(1).replace(".", ",")}% de atingimento`;
+
+            document.getElementById("fechamentoReceita").textContent = moeda(fr.totalPrevisto);
+            document.getElementById("fechamentoReceitaSub").innerHTML =
+                `Meta anual: <strong>${moeda(fr.totalMeta)}</strong> • ${fr.percentual.toFixed(1).replace(".", ",")}% de atingimento`;
+
+            const cardM = document.querySelector(".card-fechamento.matriculas");
+            const cardH = document.querySelector(".card-fechamento.hora-aluno");
+            const cardR = document.querySelector(".card-fechamento.receita");
+
+            cardM.classList.remove("status-ok", "status-atencao", "status-critico");
+            cardH.classList.remove("status-ok", "status-atencao", "status-critico");
+            cardR.classList.remove("status-ok", "status-atencao", "status-critico");
+
+            cardM.classList.add(obterClasseStatus(fm.percentual));
+            cardH.classList.add(obterClasseStatus(fha.percentual));
+            cardR.classList.add(obterClasseStatus(fr.percentual));
+
+            const statusM = obterStatusTexto(fm.percentual);
+            const statusH = obterStatusTexto(fha.percentual);
+            const statusR = obterStatusTexto(fr.percentual);
+
+            const elM = document.getElementById("statusMatriculas");
+            const elH = document.getElementById("statusHoraAluno");
+            const elR = document.getElementById("statusReceita");
+
+            elM.textContent = statusM.texto;
+            elH.textContent = statusH.texto;
+            elR.textContent = statusR.texto;
+
+            elM.className = `status-fechamento ${statusM.classe}`;
+            elH.className = `status-fechamento ${statusH.classe}`;
+            elR.className = `status-fechamento ${statusR.classe}`;
+        }
+
+        function obterStatusTexto(percentual) {
+            if (percentual >= 100) {
+                return { texto: "🟢 Atingido", classe: "status-ok" };
+            }
+            if (percentual >= 70) {
+                return { texto: "🟡 Em risco", classe: "status-atencao" };
+            }
+            return { texto: "🔴 Crítico", classe: "status-critico" };
+        }
+
+        async function carregarUsuario() {
+            try {
+                const resp = await fetch(`${API}/auth/me`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) return;
+
+                const data = await resp.json();
+
+                const el = document.getElementById("usuario-logado");
+                if (el) {
+                    el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch(`${API}/auth/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } catch (e) { }
+
+            window.location.href = "/login.html";
+        }
+
+        async function gerarIndicadores() {
+
+            const programa =
+                document.getElementById("programa").value;
+
+            const periodo =
+                Array.from(
+                    document.getElementById("periodo").selectedOptions
+                )
+                    .map(o => o.value)
+                    .join(",");
+
+            const qtdMesesSelecionados =
+                periodo
+                    ? periodo.split(",").filter(Boolean).length
+                    : 0;
+
+            document.getElementById("thRealizadoMes").innerText =
+                qtdMesesSelecionados > 1
+                    ? "Realizado no período"
+                    : "Realizado no mês";
+
+            document.getElementById("thMetaMes").innerText =
+                qtdMesesSelecionados > 1
+                    ? "Meta do período"
+                    : "Meta do mês";
+
+            const ano =
+                document.getElementById("ano").value;
+
+            const resp =
+                await fetch(
+                    `${API}/programas/summary?` +
+                    `programas=${programa}` +
+                    `&meses=${periodo}` +
+                    `&ano=${ano}`
+                );
+
+            const dados =
+                await resp.json();
+
+
+
+            const respAcumulado = await fetch(
+                `${API}/programas/summary?` +
+                `programas=${programa}` +
+                `&meses=1,2,3,4,5,6,7,8,9,10,11,12` +
+                `&ano=${ano}`
+            );
+
+            const dadosAcumulado = await respAcumulado.json();
+
+            const qsPred = new URLSearchParams({
+                ano: ano,
+                meses: periodo
+            });
+
+            if (programa) {
+                qsPred.set("programas", programa);
+            }
+
+            const respPred = await fetch(
+                `${API}/performance/preditiva?${qsPred.toString()}`
+            );
+
+            const pred = await respPred.json();
+
+            const mesesSelecionadosComparativo =
+                periodo
+                    .split(",")
+                    .map(Number)
+                    .filter(Boolean)
+                    .sort((a, b) => a - b);
+
+            const qtdMesesComparativo =
+                mesesSelecionadosComparativo.length;
+
+            const primeiroMesComparativo =
+                mesesSelecionadosComparativo[0];
+
+            let mesesPeriodoAnterior = [];
+            let anoPeriodoAnterior = Number(ano);
+
+            for (let i = qtdMesesComparativo; i >= 1; i--) {
+                let mes = primeiroMesComparativo - i;
+
+                if (mes <= 0) {
+                    mes += 12;
+                    anoPeriodoAnterior -= 1;
+                }
+
+                mesesPeriodoAnterior.push(mes);
+            }
+
+            const periodoAnterior =
+                mesesPeriodoAnterior.join(",");
+
+            const respComparativo = await fetch(
+                `${API}/programas/summary?` +
+                `programas=${programa}` +
+                `&meses=${periodoAnterior}` +
+                `&ano=${anoPeriodoAnterior}`
+            );
+
+            const dadosAnterior = await respComparativo.json();
+
+            function calcularVariacaoComparativa(atual, anterior) {
+                atual = Number(atual || 0);
+                anterior = Number(anterior || 0);
+
+                if (anterior === 0 && atual === 0) {
+                    return { texto: "—", classe: "neutro" };
+                }
+
+                if (anterior === 0 && atual > 0) {
+                    return { texto: "↑ 100%", classe: "ok" };
+                }
+
+                const variacao = ((atual - anterior) / anterior) * 100;
+
+                if (variacao > 0) {
+                    return {
+                        texto: `↑ ${variacao.toFixed(1).replace(".", ",")}%`,
+                        classe: "ok"
+                    };
+                }
+
+                if (variacao < 0) {
+                    return {
+                        texto: `↓ ${Math.abs(variacao).toFixed(1).replace(".", ",")}%`,
+                        classe: "bad"
+                    };
+                }
+
+                return { texto: "0%", classe: "neutro" };
+            }
+
+            function aplicarComparativo(prefixo, atual, anterior, ehMoeda = false) {
+                const variacao = calcularVariacaoComparativa(atual, anterior);
+
+                document.getElementById(`${prefixo}Atual`).innerText =
+                    ehMoeda ? moeda(atual) : format(atual);
+
+                document.getElementById(`${prefixo}Anterior`).innerText =
+                    ehMoeda ? moeda(anterior) : format(anterior);
+
+                const elVar = document.getElementById(`${prefixo}Variacao`);
+                elVar.innerText = variacao.texto;
+                elVar.className = `comp-variacao ${variacao.classe}`;
+            }
+
+            /* ===========================
+               CARDS
+            =========================== */
+
+            document.getElementById(
+                "matriculasTotal"
+            ).innerText =
+                Number(
+                    dados.matriculas?.realizado_total || 0
+                ).toLocaleString("pt-BR");
+
+
+            document.getElementById(
+                "horaAlunoTotal"
+            ).innerText =
+                Number(
+                    dados.hora_aluno?.realizado_total || 0
+                ).toLocaleString("pt-BR");
+
+
+            document.getElementById(
+                "receitaTotal"
+            ).innerText =
+                Number(
+                    dados.receita?.realizado_total || 0
+                ).toLocaleString(
+                    "pt-BR",
+                    {
+                        style: "currency",
+                        currency: "BRL"
+                    }
+                );
+
+            const totalTurmas =
+                dados.turmas?.total ??
+                dados.turmas?.realizado_total ??
+                dados.turmas_ativas ??
+                dados.total_turmas ??
+                0;
+
+            aplicarComparativo(
+                "compMat",
+                dados.matriculas?.realizado_total,
+                dadosAnterior.matriculas?.realizado_total
+            );
+
+            aplicarComparativo(
+                "compHa",
+                dados.hora_aluno?.realizado_total,
+                dadosAnterior.hora_aluno?.realizado_total
+            );
+
+            aplicarComparativo(
+                "compRec",
+                dados.receita?.realizado_total,
+                dadosAnterior.receita?.realizado_total,
+                true
+            );
+
+            aplicarComparativo(
+                "compTurmas",
+                totalTurmas,
+                dadosAnterior.turmas?.total ??
+                dadosAnterior.turmas?.realizado_total ??
+                dadosAnterior.turmas_ativas ??
+                dadosAnterior.total_turmas ??
+                0
+            );
+
+            document.getElementById("compMatAtualLabel").innerText = ano;
+            document.getElementById("compHaAtualLabel").innerText = ano;
+            document.getElementById("compRecAtualLabel").innerText = ano;
+            document.getElementById("compTurmasAtualLabel").innerText = ano;
+
+            const labelPeriodoAtual =
+                `Período atual`;
+
+            const labelPeriodoAnterior =
+                `Período anterior`;
+
+            document.getElementById("compMatAtualLabel").innerText = labelPeriodoAtual;
+            document.getElementById("compHaAtualLabel").innerText = labelPeriodoAtual;
+            document.getElementById("compRecAtualLabel").innerText = labelPeriodoAtual;
+            document.getElementById("compTurmasAtualLabel").innerText = labelPeriodoAtual;
+
+            document.getElementById("compMatAnteriorLabel").innerText = labelPeriodoAnterior;
+            document.getElementById("compHaAnteriorLabel").innerText = labelPeriodoAnterior;
+            document.getElementById("compRecAnteriorLabel").innerText = labelPeriodoAnterior;
+            document.getElementById("compTurmasAnteriorLabel").innerText = labelPeriodoAnterior;
+
+            document.getElementById("notaComparativos").innerText =
+                "ℹ️ Comparação entre o período selecionado e o período imediatamente anterior.";
+
+            /* ===========================
+               HISTÓRICO MENSAL - CARDS
+            =========================== */
+
+            document.getElementById("histMatriculasTotal").innerText =
+                format(dados.matriculas?.realizado_total || 0);
+
+            document.getElementById("histHoraAlunoTotal").innerText =
+                format(dados.hora_aluno?.realizado_total || 0);
+
+            document.getElementById("histReceitaTotal").innerText =
+                moeda(dados.receita?.realizado_total || 0);
+
+            document.getElementById("histMatriculasVariacao").innerText =
+                `${Number(dados.matriculas?.pct_meta || 0).toFixed(1).replace(".", ",")}%`;
+
+            document.getElementById("histHoraAlunoVariacao").innerText =
+                `${Number(dados.hora_aluno?.pct_meta || 0).toFixed(1).replace(".", ",")}%`;
+
+            document.getElementById("histReceitaVariacao").innerText =
+                `${Number(dados.receita?.pct_meta || 0).toFixed(1).replace(".", ",")}%`;
+
+            document.getElementById("turmasTotal").innerText =
+                Number(totalTurmas).toLocaleString("pt-BR");
+
+            const matriculasRealizadas =
+                Number(dados.matriculas?.realizado_total || 0);
+
+            const totalTurmasTaxa =
+                Number(totalTurmas || 0);
+
+            const taxaOcupacao =
+                totalTurmasTaxa > 0
+                    ? matriculasRealizadas / totalTurmasTaxa
+                    : 0;
+
+            const taxaBarra = document.getElementById("taxaOcupacaoBarra");
+
+            const taxaTexto = taxaBarra
+                .parentElement
+                .previousElementSibling
+                .querySelector("strong");
+
+            taxaTexto.innerText =
+                taxaOcupacao > 0
+                    ? `${taxaOcupacao.toFixed(1).replace(".", ",")} alunos`
+                    : "-";
+
+            taxaBarra.style.width =
+                taxaOcupacao > 0
+                    ? `${Math.min((taxaOcupacao / 30) * 100, 100)}%`
+                    : "0%";
+
+            document.getElementById("matriculasMeta").innerHTML =
+                `
+Meta:
+<strong>
+${Number(
+                    dados.matriculas?.meta_total || 0
+                ).toLocaleString("pt-BR")}
+</strong>
+
+|
+
+<strong>
+${Number(
+                    dados.matriculas?.pct_meta || 0
+                ).toFixed(1).replace(".", ",")}%
+</strong>
+`;
+
+
+
+            document.getElementById("horaAlunoMeta").innerHTML =
+                `
+Meta:
+<strong>
+${Number(
+                    dados.hora_aluno?.meta_total || 0
+                ).toLocaleString("pt-BR")}
+</strong>
+
+|
+
+<strong>
+${Number(
+                    dados.hora_aluno?.pct_meta || 0
+                ).toFixed(1).replace(".", ",")}%
+</strong>
+`;
+
+
+
+
+            function atualizarCardMeta(prefixo, realizado, meta, ehMoeda = false) {
+                realizado = Number(realizado || 0);
+                meta = Number(meta || 0);
+
+                const saldo = meta - realizado;
+                const pct = meta > 0 ? (realizado / meta) * 100 : 0;
+
+                document.getElementById(`${prefixo}Realizado`).innerHTML =
+                    `<span>Realizado</span><strong>${ehMoeda ? moeda(realizado) : format(realizado)}</strong>`;
+
+                document.getElementById(`${prefixo}Saldo`).innerHTML =
+                    saldo > 0
+                        ? `<span>Falta</span><strong>${ehMoeda ? moeda(saldo) : format(saldo)}</strong>`
+                        : `<span>Excedente</span><strong>${ehMoeda ? moeda(Math.abs(saldo)) : format(Math.abs(saldo))}</strong>`;
+
+                document.getElementById(`${prefixo}Pct`).innerHTML =
+                    `<span>Atingimento</span><strong>${pct.toFixed(1).replace(".", ",")}%</strong>`;
+            }
+
+            /* ===========================
+                TABELA METAS
+            =========================== */
+
+            function preencherLinhaMeta(prefixo, realizado, meta, acumulado, metaAcumulada, ehMoeda = false) {
+                realizado = Number(realizado || 0);
+                meta = Number(meta || 0);
+                acumulado = Number(acumulado || 0);
+                metaAcumulada = Number(metaAcumulada || 0);
+
+                const pctMes = meta > 0 ? (realizado / meta) * 100 : null;
+                const pctAcum = metaAcumulada > 0 ? (acumulado / metaAcumulada) * 100 : null;
+
+                const status = metaAcumulada <= 0
+                    ? "Sem meta"
+                    : pctAcum >= 100
+                        ? "Atingido"
+                        : "Abaixo da meta";
+
+                const classe = metaAcumulada <= 0
+                    ? "sem-meta"
+                    : pctAcum >= 100
+                        ? "ok"
+                        : "baixo";
+
+                document.getElementById(`${prefixo}RealizadoMes`).innerText =
+                    ehMoeda ? moeda(realizado) : format(realizado);
+
+                document.getElementById(`${prefixo}MetaMes`).innerText =
+                    meta > 0 ? (ehMoeda ? moeda(meta) : format(meta)) : "—";
+
+                document.getElementById(`${prefixo}PctMes`).innerText =
+                    pctMes !== null ? `${pctMes.toFixed(1).replace(".", ",")}%` : "—";
+
+                document.getElementById(`${prefixo}Acumulado`).innerText =
+                    ehMoeda ? moeda(acumulado) : format(acumulado);
+
+                document.getElementById(`${prefixo}MetaAcumulada`).innerText =
+                    metaAcumulada > 0 ? (ehMoeda ? moeda(metaAcumulada) : format(metaAcumulada)) : "—";
+
+                document.getElementById(`${prefixo}PctAcumulado`).innerText =
+                    pctAcum !== null ? `${pctAcum.toFixed(1).replace(".", ",")}%` : "—";
+
+                const elStatus = document.getElementById(`${prefixo}Status`);
+                elStatus.innerText = status;
+                elStatus.className = `status-meta ${classe}`;
+            }
+
+            preencherLinhaMeta(
+                "metaMat",
+                dados.matriculas?.realizado_total,
+                dados.matriculas?.meta_total,
+                dadosAcumulado.matriculas?.realizado_total,
+                dadosAcumulado.matriculas?.meta_total
+            );
+
+            preencherLinhaMeta(
+                "metaHa",
+                dados.hora_aluno?.realizado_total,
+                dados.hora_aluno?.meta_total,
+                dadosAcumulado.hora_aluno?.realizado_total,
+                dadosAcumulado.hora_aluno?.meta_total
+            );
+
+            preencherLinhaMeta(
+                "metaRec",
+                dados.receita?.realizado_total,
+                dados.receita?.meta_total,
+                dadosAcumulado.receita?.realizado_total,
+                dadosAcumulado.receita?.meta_total,
+                true
+            );
+
+            document.getElementById("receitaMeta").innerHTML =
+                `
+Meta:
+<strong>
+${Number(
+                    dados.receita?.meta_total || 0
+                ).toLocaleString(
+                    "pt-BR",
+                    {
+                        style: "currency",
+                        currency: "BRL"
+                    })
+                }
+</strong>
+
+|
+
+<strong>
+${Number(
+                    dados.receita?.pct_meta || 0
+                ).toFixed(1).replace(".", ",")}%
+</strong>
+`;
+
+
+
+            /* ===========================
+               VARIAÇÕES %
+            =========================== */
+
+            let pctM =
+                Number(
+                    dados.matriculas?.pct_meta || 0
+                );
+
+            let pctHA =
+                Number(
+                    dados.hora_aluno?.pct_meta || 0
+                );
+
+            let pctR =
+                Number(
+                    dados.receita?.pct_meta || 0
+                );
+
+            function atualizarVariacao(elId, pct, meta) {
+                const el = document.getElementById(elId);
+
+                if (Number(meta || 0) === 0) {
+                    el.innerHTML = `0%`;
+                    el.style.color = "#f59e0b";
+                    return;
+                }
+
+                if (pct > 100) {
+                    el.innerHTML = `↑ ${(pct - 100).toFixed(1).replace(".", ",")}%`;
+                    el.style.color = "#16a34a";
+                } else if (pct < 100) {
+                    el.innerHTML = `↓ ${(100 - pct).toFixed(1).replace(".", ",")}%`;
+                    el.style.color = "#ef4444";
+                } else {
+                    el.innerHTML = `0%`;
+                    el.style.color = "#f59e0b";
+                }
+            }
+
+            atualizarVariacao("matriculasVariacao", pctM, dados.matriculas?.meta_total);
+            atualizarVariacao("horaAlunoVariacao", pctHA, dados.hora_aluno?.meta_total);
+            atualizarVariacao("receitaVariacao", pctR, dados.receita?.meta_total);
+
+            /* ===========================
+               GRÁFICOS
+            =========================== */
+            document
+                .querySelectorAll(".grafico-placeholder")
+                .forEach(el => el.classList.add("hidden"));
+
+            graficoMeta.options.plugins.legend.display = true;
+            graficoEvolucaoMatriculas.options.plugins.legend.display = true;
+            graficoEvolucaoHoraAluno.options.plugins.legend.display = true;
+            graficoEvolucaoReceita.options.plugins.legend.display = true;
+
+            graficoMeta.data.datasets = [
+                {
+                    label: "Realizado",
+                    data: [
+                        dados.matriculas?.realizado_total || 0,
+                        dados.hora_aluno?.realizado_total || 0,
+                        dados.receita?.realizado_total || 0
+                    ]
+                },
+                {
+                    label: "Meta",
+                    data: [
+                        dados.matriculas?.meta_total || 0,
+                        dados.hora_aluno?.meta_total || 0,
+                        dados.receita?.meta_total || 0
+                    ]
+                }
+            ];
+
+            graficoMeta.data.labels = [
+                "Matrículas",
+                "Hora-Aluno",
+                "Receita"
+            ];
+
+            graficoMeta.update();
+
+            // MATRÍCULAS
+            graficoEvolucaoMatriculas.data.labels =
+                pred.meses;
+
+            graficoEvolucaoMatriculas.data.datasets = [
+                {
+                    label: "Realizado",
+                    data: pred.matriculas.realizado,
+                    borderWidth: 3
+                },
+                {
+                    label: "Meta",
+                    data: pred.matriculas.meta,
+                    borderWidth: 3,
+                    borderDash: [6, 6]
+                }
+            ];
+
+            graficoEvolucaoMatriculas.update();
+
+            // HORA-ALUNO
+            graficoEvolucaoHoraAluno.data.labels =
+                pred.meses;
+
+            graficoEvolucaoHoraAluno.data.datasets = [
+                {
+                    label: "Realizado",
+                    data: pred.hora_aluno.realizado,
+                    borderWidth: 3
+                },
+                {
+                    label: "Meta",
+                    data: pred.hora_aluno.meta,
+                    borderWidth: 3,
+                    borderDash: [6, 6]
+                }
+            ];
+
+            graficoEvolucaoHoraAluno.update();
+
+            // RECEITA
+            graficoEvolucaoReceita.data.labels =
+                pred.meses;
+
+            graficoEvolucaoReceita.data.datasets = [
+                {
+                    label: "Realizado",
+                    data: pred.receita.realizado,
+                    borderWidth: 3
+                },
+                {
+                    label: "Meta",
+                    data: pred.receita.meta,
+                    borderWidth: 3,
+                    borderDash: [6, 6]
+                }
+            ];
+
+            graficoEvolucaoReceita.update();
+
+            graficoHistMatriculas.data.labels = pred.meses;
+            graficoHistMatriculas.data.datasets = [{
+                label: "Matrículas",
+                data: pred.matriculas.realizado,
+                borderWidth: 3
+            }];
+            graficoHistMatriculas.update();
+
+            graficoHistHoraAluno.data.labels = pred.meses;
+            graficoHistHoraAluno.data.datasets = [{
+                label: "Hora-Aluno",
+                data: pred.hora_aluno.realizado,
+                borderWidth: 3
+            }];
+            graficoHistHoraAluno.update();
+
+            graficoHistReceita.data.labels = pred.meses;
+            graficoHistReceita.data.datasets = [{
+                label: "Receita",
+                data: pred.receita.realizado,
+                borderWidth: 3
+            }];
+            graficoHistReceita.update();
+
+        }
+
+        async function carregarProgramasExecutivos() {
+            try {
+                const resp =
+                    await fetch(
+                        `${API}/programas/list?ano=${document.getElementById("ano").value || 2026}`
+                    );
+                const dados =
+                    await resp.json();
+                const sel =
+                    document.getElementById(
+                        "programa"
+                    );
+                sel.innerHTML =
+                    `<option value="">
+                Selecione...
+              </option>`;
+                dados.forEach(p => {
+                    sel.innerHTML += `
+            <option
+                value="${p.codigo}">
+                ${p.nome}
+            </option>
+        `;
+                });
+            }
+            catch (e) {
+                console.error(
+                    "Erro programas",
+                    e
+                );
+            }
+        }
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                carregarProgramasExecutivos();
+                new TomSelect("#periodo", {
+                    plugins: ["remove_button"],
+                    placeholder: "Selecione um ou mais meses",
+                    maxItems: null,
+                    hideSelected: true,
+                    closeAfterSelect: false
+                });
+            }
+        );
+        function desenharGrafico(periodos, valores) {
+            const ctx =
+                document.getElementById(
+                    "graficoTendencia"
+                );
+            if (window.graficoExec) {
+                window.graficoExec.destroy();
+            }
+            window.graficoExec =
+                new Chart(
+                    ctx,
+                    {
+                        type: "line",
+                        data: {
+                            labels:
+                                periodos,
+                            datasets: [{
+                                data:
+                                    valores,
+                                borderColor:
+                                    "#2563eb",
+                                borderWidth:
+                                    2,
+                                tension:
+                                    .35,
+                                pointRadius:
+                                    3,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    display: false
+                                },
+                                x: {
+                                    grid: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
+        }
+    </script>
+    <script>
+        function criarGraficoEvolucao(idCanvas, label) {
+            return new Chart(
+                document.getElementById(idCanvas),
+                {
+                    type: "line",
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: label,
+                                data: [],
+                                borderWidth: 3,
+                                tension: 0.35
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+
+                        scales: {
+                            y: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+        }
+        const graficoMeta =
+            new Chart(
+                document.getElementById("graficoMeta"),
+                {
+                    type: "bar",
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+
+                        scales: {
+                            y: {
+                                type: "logarithmic",
+                                min: 10,
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    maxTicksLimit: 6,
+                                    callback: function (value) {
+                                        return Number(value).toLocaleString("pt-BR");
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+
+                        borderRadius: 12
+                    },
+                    data: {
+                        labels: [],
+                        datasets: [
+                            {
+                                label: "Realizado",
+                                data: []
+                            },
+                            {
+                                label: "Meta",
+                                data: []
+                            }
+                        ]
+                    }
+                }
+            );
+        const graficoEvolucaoMatriculas =
+            criarGraficoEvolucao(
+                "graficoEvolucaoMatriculas",
+                "Matrículas"
+            );
+
+        const graficoEvolucaoHoraAluno =
+            criarGraficoEvolucao(
+                "graficoEvolucaoHoraAluno",
+                "Hora-Aluno"
+            );
+
+        const graficoEvolucaoReceita =
+            criarGraficoEvolucao(
+                "graficoEvolucaoReceita",
+                "Receita"
+            );
+
+        const graficoHistMatriculas = criarGraficoEvolucao("graficoHistMatriculas", "Matrículas");
+        const graficoHistHoraAluno = criarGraficoEvolucao("graficoHistHoraAluno", "Hora-Aluno");
+        const graficoHistReceita = criarGraficoEvolucao("graficoHistReceita", "Receita");
+
+    </script>
+    <script>
+        document.querySelectorAll(".tab-ind").forEach(tab => {
+            tab.addEventListener("click", () => {
+                document.querySelectorAll(".tab-ind")
+                    .forEach(t => t.classList.remove("active"));
+
+                tab.classList.add("active");
+
+                document.getElementById("secao-visao").style.display = "none";
+                document.getElementById("secao-historico").style.display = "none";
+                document.getElementById("secao-graficos-geral").style.display = "none";
+                document.getElementById("secao-metas").style.display = "none";
+                document.getElementById("secao-comparativos").style.display = "none";
+
+                const texto = tab.innerText.trim();
+
+                if (texto === "Visão Geral") {
+                    document.getElementById("secao-visao").style.display = "grid";
+                    document.getElementById("secao-graficos-geral").style.display = "grid";
+                }
+
+                if (texto === "Histórico Mensal") {
+                    document.getElementById("secao-historico").style.display = "block";
+                }
+
+                if (texto === "Metas") {
+                    document.getElementById("secao-metas").style.display = "block";
+                }
+
+                if (texto === "Comparativos") {
+                    document.getElementById("secao-comparativos").style.display = "block";
+                }
+            });
+        });
+
+        function exportarMetas() {
+
+            const tabela =
+                document.querySelector(".tabela-metas");
+
+            let csv = [];
+
+            const linhas =
+                tabela.querySelectorAll("tr");
+
+            linhas.forEach(linha => {
+
+                let cols =
+                    linha.querySelectorAll("th, td");
+
+                let dados =
+                    Array.from(cols)
+                        .map(c =>
+                            `"${c.innerText.replace(/\n/g, " ")}"`
+                        );
+
+                csv.push(dados.join(";"));
+            });
+
+            const conteudo =
+                "\uFEFF" + csv.join("\n");
+
+            const blob =
+                new Blob(
+                    [conteudo],
+                    {
+                        type:
+                            "text/csv;charset=utf-8;"
+                    }
+                );
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const a =
+                document.createElement("a");
+
+            const programa =
+                document.getElementById("programa")
+                    .selectedOptions[0]?.text || "Programa";
+
+            const ano =
+                document.getElementById("ano").value;
+
+            a.href = url;
+
+            a.download =
+                `metas_${programa}_${ano}.csv`;
+
+            document.body.appendChild(a);
+
+            a.click();
+
+            document.body.removeChild(a);
+        }
+    </script>
+
+</body>
+
+</html>

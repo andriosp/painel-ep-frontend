@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painel • Ações</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #f6f7fb;
+            --panel: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e5e7eb;
+            --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+            --radius: 14px;
+            --radius-sm: 12px;
+
+            --brand: #2563eb;
+            --ok: #16a34a;
+            --warn: #f59e0b;
+            --bad: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 18px 18px 36px;
+        }
+
+        .navlink {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 750;
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+        }
+
+        .navlink:hover {
+            background: #fff;
+            border-color: var(--border);
+        }
+
+        .navlink.active {
+            background: rgba(37, 99, 235, .10);
+            color: var(--text);
+            border-color: rgba(37, 99, 235, .25);
+        }
+
+        .header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: .2px;
+        }
+
+        .title p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--muted);
+            font-size: 12px;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+            white-space: nowrap;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand);
+            box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            background: #fff;
+            outline: none;
+            height: 40px;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+        }
+
+        button {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 650;
+            font-size: 13px;
+            transition: transform .05s ease, background .15s ease, border-color .15s ease;
+        }
+
+        button:hover {
+            background: #f8fafc;
+            border-color: #dbe3ef;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .topnav {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .topnav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ===== LAYOUT ===== */
+        .page-layout {
+            display: flex;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar-executiva {
+            width: 220px;
+            min-height: calc(100vh - 90px);
+            background: #003B8F;
+            border-radius: 20px;
+            padding: 20px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 18px;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-logo img {
+            width: 100px;
+            max-width: 100%;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: .2s;
+            font-size: 15px;
+        }
+
+        .sidebar-nav a:hover {
+            background:
+                rgba(255, 255, 255, .12);
+        }
+
+        .sidebar-nav a.active {
+            background: #0F5FFF;
+        }
+
+        /* ===== CONTEÚDO ===== */
+        .main-executiva {
+            flex: 1;
+        }
+
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            margin-top: 16px;
+        }
+
+        .chart-box canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin-bottom: 24px;
+            padding-left: 6px;
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding-bottom: 12px;
+        }
+
+        .tab-ind.active {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        .filtros-subregioes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: flex-end;
+        }
+
+        .filtro-item {
+            flex: 0 0 180px;
+            min-width: 180px;
+        }
+
+        .filtro-item label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .filtro-item select,
+        .filtro-item input {
+            height: 44px;
+            border-radius: 12px;
+        }
+
+        .filtro-item.busca {
+            flex: 1 1 280px;
+            min-width: 280px;
+            grid-column: auto;
+        }
+
+        .filtro-item.periodo-field {
+            flex: 0 0 auto;
+        }
+
+        .kpi-sub-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .kpi-sub-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            gap: 14px;
+            min-height: 150px;
+            box-shadow: var(--shadow);
+        }
+
+        .kpi-sub-card h3 {
+            margin: 0 0 8px;
+            font-size: 13px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .kpi-sub-card strong {
+            display: block;
+            font-size: 26px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .kpi-sub-card p {
+            margin: 8px 0 6px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #071b52;
+        }
+
+        .kpi-sub-card span {
+            font-size: 13px;
+            color: #334155;
+        }
+
+        .kpi-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .kpi-sub-card.azul .kpi-icon {
+            background: #0f5fff;
+        }
+
+        .kpi-sub-card.roxo .kpi-icon {
+            background: #6d5dfc;
+        }
+
+        .kpi-sub-card.verde .kpi-icon {
+            background: #16a34a;
+        }
+
+        .kpi-sub-card.laranja .kpi-icon {
+            background: #f97316;
+        }
+
+        .kpi-sub-card .ok {
+            color: #16a34a;
+        }
+
+        .kpi-sub-card .bad {
+            color: #dc2626;
+        }
+
+        @media (max-width: 1400px) {
+            .kpi-sub-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .kpi-sub-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sub-main-grid {
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .sub-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 16px;
+        }
+
+        .sub-card-title {
+            margin-bottom: 14px;
+        }
+
+        .sub-card-title h2 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .sub-card-title.linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tabela-sub-wrap {
+            overflow-x: auto;
+        }
+
+        .tabela-sub {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .tabela-sub th,
+        .tabela-sub td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .tabela-sub th {
+            background: #f8fafc;
+            font-size: 11px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .tabela-sub td:first-child,
+        .tabela-sub th:first-child,
+        .tabela-sub td:nth-child(2),
+        .tabela-sub th:nth-child(2) {
+            text-align: left;
+            font-weight: 800;
+        }
+
+        .tabela-sub .ok {
+            color: #16a34a;
+            font-weight: 900;
+        }
+
+        .tabela-sub .bad {
+            color: #dc2626;
+            font-weight: 900;
+        }
+
+        .status {
+            display: inline-flex;
+            justify-content: center;
+            min-width: 105px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .status.ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status.atencao {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .status.critico {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status.no-caminho {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status.sem-meta {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .status.sem-movimento {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .aba-subregioes {
+            display: none;
+        }
+
+        .aba-subregioes.active {
+            display: block;
+        }
+
+        .ranking-subtitulo {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .detalhe-kpis-sub div {
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid #2563eb;
+        }
+
+        .detalhe-kpis-sub div:nth-child(2) {
+            border-top-color: #6d5dfc;
+        }
+
+        .detalhe-kpis-sub div:nth-child(3) {
+            border-top-color: #16a34a;
+        }
+
+        .detalhe-kpis-sub div:nth-child(4) {
+            border-top-color: #f97316;
+        }
+
+        .detalhe-kpis-sub span {
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        .detalhe-kpis-sub strong {
+            display: block;
+            margin-top: 4px;
+        }
+
+        .tabela-sub td.coluna-indicador-ativa {
+            background: rgba(37, 99, 235, .06);
+        }
+
+        .detalhe-kpis-sub div.kpi-ativo {
+            background: #eff6ff;
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, .12);
+        }
+
+        .status.sem-dados {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .filtro-item .ts-wrapper {
+            width: 100%;
+        }
+
+        .filtro-item .ts-wrapper.focus .ts-control {
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+        }
+
+        .filtro-item .ts-control.has-items input {
+            width: 2px !important;
+            min-width: 2px !important;
+        }
+
+        .filtro-item .ts-control.has-items input::placeholder {
+            color: transparent !important;
+        }
+
+        .filtro-item .ts-dropdown {
+            border-radius: 12px;
+            border-color: var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .filtro-item .ts-dropdown .option {
+            padding: 9px 12px;
+            font-size: 13px;
+        }
+
+        .form-acoes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        @media (max-width: 1100px) {
+            .form-acoes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .form-acoes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .campo-textarea {
+            width: 100%;
+            min-height: 110px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            resize: vertical;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .campo-textarea.menor {
+            min-height: 80px;
+        }
+
+        .campo-textarea:focus {
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+        }
+
+        .bloco-formulario {
+            margin-top: 18px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #f8fafc;
+        }
+
+        .bloco-formulario h3 {
+            margin: 0 0 12px;
+            font-size: 14px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .acoes-formulario {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-salvar-acao {
+            background: #2563eb;
+            color: white;
+            border: none;
+            min-width: 180px;
+            height: 48px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
+            transition: .2s;
+        }
+
+        .btn-salvar-acao:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-salvar-acao:active {
+            transform: translateY(0);
+        }
+
+        .badge-tipo-acao {
+            display: inline-flex;
+            justify-content: center;
+            min-width: 105px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .tipo-corretiva {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .tipo-preventiva {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .tipo-expansao {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .tipo-mobilizacao {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .tipo-acompanhamento {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+
+        .tipo-padrao {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .acoes-formulario {
+            gap: 10px;
+        }
+
+        .btn-cancelar-edicao {
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid var(--border);
+            min-width: 150px;
+            height: 48px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .btn-cancelar-edicao:hover {
+            background: #e2e8f0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .acoes-tabela {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-editar-acao,
+        .btn-excluir-acao {
+            min-width: 90px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 800;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+
+        .btn-editar-acao {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+        }
+
+        .btn-editar-acao:hover {
+            background: #dbeafe;
+        }
+
+        .btn-excluir-acao {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .btn-excluir-acao:hover {
+            background: #fee2e2;
+        }
+
+        .acoes-lista-botoes {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .acoes-lista-botoes button {
+            height: 42px;
+            min-width: 92px;
+            padding: 0 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            line-height: 1;
+        }
+
+        .filtro-item.periodo-field {
+            flex: 0 0 var(--periodo-width, 180px);
+            min-width: 180px;
+            max-width: 1010px;
+        }
+
+        .periodo-field .ts-wrapper {
+            width: 100% !important;
+        }
+
+        .periodo-field .ts-control {
+            width: 100% !important;
+            height: 44px !important;
+            min-height: 44px !important;
+            flex-wrap: nowrap !important;
+            overflow: hidden !important;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0 10px !important;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            box-shadow: none;
+        }
+
+        .periodo-field .ts-wrapper.multi .ts-control>div {
+            flex-shrink: 0;
+            background: rgba(37, 99, 235, .10);
+            border: 1px solid rgba(37, 99, 235, .25);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 2px 8px;
+            margin: 2px;
+            font-size: 12px;
+        }
+
+        .periodo-field .ts-dropdown {
+            min-width: 220px;
+        }
+
+        .periodo-field .ts-wrapper.has-items .ts-control input::placeholder {
+            color: transparent !important;
+        }
+
+        .periodo-field .ts-wrapper.has-items .ts-control input {
+            width: 1px !important;
+            min-width: 1px !important;
+            max-width: 1px !important;
+            padding: 0 !important;
+            opacity: 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const API =
+            window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                ? "http://localhost:8000"
+                : "/api";
+    </script>
+    <script>
+        (async function validarSessao() {
+            try {
+                const resp = await fetch(`${API}/auth/me`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+
+                const data = await resp.json();
+
+                // 🔥 AQUI é o que faltava
+                if (data.deve_trocar_senha) {
+                    window.location.href = "/alterar_senha.html";
+                    return;
+                }
+
+            } catch (e) {
+                window.location.href = "/login.html";
+            }
+        })();
+    </script>
+
+    <div class="container">
+
+        <nav class="topnav">
+            <a href="index.html" class="navlink">Dashboard</a>
+            <a href="po.html" class="navlink">PO</a>
+            <a href="programas.html?v=2" class="navlink">Programas</a>
+            <a href="performance.html" class="navlink">Performance</a>
+            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
+            <a href="unidades.html" class="navlink">Unidades</a>
+            <a href="sge_turmas.html" class="navlink">Turmas</a>
+            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
+            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
+
+            <div class="topnav-right">
+                <a href="alterar_senha.html" class="navlink">
+                    Alterar senha
+                </a>
+                <div id="usuario-logado" class="badge">
+                    <span class="dot"></span>
+                    Usuário: —
+                </div>
+                <button onclick="logout()">Sair</button>
+            </div>
+        </nav>
+        <div class="page-layout">
+            <aside class="sidebar-executiva">
+                <div class="sidebar-logo">
+                    <img src="/assets/logo.png" alt="SENAI">
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="visao_executiva.html">
+                        🏠
+                        <span>Visão Executiva</span>
+                    </a>
+                    <a href="indicadores.html">
+                        📊
+                        <span>Indicadores</span>
+                    </a>
+                    <a href="regioes.html">
+                        🌎
+                        <span>Regiões</span>
+                    </a>
+
+                    <a href="subregioes.html">
+                        📍
+                        <span>Sub-regiões</span>
+                    </a>
+                    <a href="turmas.html">
+                        👥
+                        <span>Turmas</span>
+                    </a>
+                    <a href="acoes.html" class="active">
+                        🎯
+                        <span>Ações</span>
+                    </a>
+                    <a href="relatoriosexecutivos.html">
+                        📄
+                        <span>Relatórios</span>
+                    </a>
+                </nav>
+            </aside>
+            <main class="main-executiva">
+
+                <div class="header">
+                    <div class="title">
+                        <h1>Plano de Ação Executivo</h1>
+                        <p>Cadastre, acompanhe e monitore ações vinculadas aos programas, regiões e sub-regiões.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="tabs-indicadores">
+                    <button class="tab-ind active" data-aba="lista">Ações Realizadas</button>
+                    <button class="tab-ind" data-aba="nova">Nova Ação</button>
+                </div>
+
+                <div class="panel filtros-subregioes">
+
+                    <div class="filtro-item">
+                        <label>Ano</label>
+                        <select id="filtroAno">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item periodo-field">
+                        <label>Período</label>
+                        <select id="filtroPeriodo" multiple>
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item">
+                        <label>Sub-região</label>
+                        <select id="filtroSubregiao">
+                            <option value="">Todas as sub-regiões</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item">
+                        <label>Região</label>
+                        <select id="filtroRegiao">
+                            <option value="">Todas as regiões</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item">
+                        <label>UO</label>
+                        <select id="filtroUo">
+                            <option value="">Todas as UOs</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item busca">
+                        <label>Buscar</label>
+                        <input type="text" id="buscaAcao" placeholder="Buscar ação, programa ou responsável..." />
+                    </div>
+
+                    <div class="filtro-item">
+                        <label>Status</label>
+                        <select id="filtroStatusAcao">
+                            <option value="">Todos</option>
+                            <option value="Planejada">Planejada</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Concluída">Concluída</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item">
+                        <label>Programa</label>
+                        <select id="filtroProgramaAcao">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <section class="kpi-sub-grid" style="grid-template-columns: repeat(4, 1fr);">
+
+                    <div class="kpi-sub-card azul">
+                        <div class="kpi-icon">🎯</div>
+                        <div>
+                            <h3>TOTAL DE AÇÕES</h3>
+                            <strong id="kpiTotalAcoes">0</strong>
+                            <p> ações cadastradas</p>
+                            <span>Ações conforme filtros aplicados</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-sub-card roxo">
+                        <div class="kpi-icon">📝</div>
+                        <div>
+                            <h3>PLANEJADAS</h3>
+                            <strong id="kpiPlanejadas">0</strong>
+                            <p> aguardando execução</p>
+                            <span>Conforme filtros aplicados</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-sub-card laranja">
+                        <div class="kpi-icon">⏳</div>
+                        <div>
+                            <h3>EM ANDAMENTO</h3>
+                            <strong id="kpiAndamento">0</strong>
+                            <p> em execução</p>
+                            <span>Conforme filtros aplicados</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-sub-card verde">
+                        <div class="kpi-icon">✅</div>
+                        <div>
+                            <h3>CONCLUÍDAS</h3>
+                            <strong id="kpiConcluidas">0</strong>
+                            <p> finalizadas</p>
+                            <span>Conforme filtros aplicados</span>
+                        </div>
+                    </div>
+
+                </section>
+
+                <div id="aba-lista" class="aba-subregioes active">
+                    <section class="sub-card">
+                        <div class="sub-card-title linha">
+                            <div>
+                                <h2>AÇÕES CADASTRADAS</h2>
+                                <p class="ranking-subtitulo">
+                                    Lista de ações registradas pelos interlocutores para acompanhamento executivo.
+                                </p>
+                            </div>
+                            <div class="acoes-lista-botoes">
+                                <button onclick="atualizarListaAcoes()">Atualizar</button>
+
+                                <button onclick="exportarAcoesCsv()">
+                                    ⬇ Exportar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="tabela-sub-wrap">
+                            <table class="tabela-sub">
+                                <thead>
+                                    <tr>
+                                        <th>Programa</th>
+                                        <th>Região</th>
+                                        <th>Sub-região</th>
+                                        <th>Tipo</th>
+                                        <th>Título</th>
+                                        <th>Responsável</th>
+                                        <th>Data prevista</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyAcoes"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="aba-nova" class="aba-subregioes">
+
+                    <section class="sub-card">
+                        <div class="sub-card-title">
+                            <h2>NOVA AÇÃO / PLANO DE AÇÃO</h2>
+                        </div>
+
+                        <div class="form-acoes-grid">
+
+                            <div class="filtro-item">
+                                <label>Ano</label>
+                                <input id="acaoAno" type="number" value="2026">
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>Mês</label>
+                                <select id="acaoMes">
+                                    <option value="">Selecione</option>
+                                    <option value="1">Janeiro</option>
+                                    <option value="2">Fevereiro</option>
+                                    <option value="3">Março</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Maio</option>
+                                    <option value="6">Junho</option>
+                                    <option value="7">Julho</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>Programa</label>
+                                <select id="acaoPrograma">
+                                    <option value="">Selecione o programa</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>Região</label>
+                                <select id="acaoRegiao">
+                                    <option value="">Selecione a região</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>Sub-região</label>
+                                <select id="acaoSubregiao">
+                                    <option value="">Selecione a sub-região</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>UO</label>
+                                <select id="acaoUo">
+                                    <option value="">Selecione a UO</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>Tipo da ação</label>
+                                <select id="acaoTipo">
+                                    <option>Corretiva</option>
+                                    <option>Preventiva</option>
+                                    <option>Expansão</option>
+                                    <option>Mobilização</option>
+                                    <option>Acompanhamento</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>Status</label>
+                                <select id="acaoStatus">
+                                    <option>Planejada</option>
+                                    <option>Em andamento</option>
+                                    <option>Concluída</option>
+                                    <option>Cancelada</option>
+                                </select>
+                            </div>
+
+                            <div class="filtro-item busca">
+                                <label>Título</label>
+                                <input id="acaoTitulo" placeholder="Título da ação">
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>Responsável</label>
+                                <input id="acaoResponsavel" placeholder="Responsável">
+                            </div>
+
+                            <div class="filtro-item">
+                                <label>Data prevista</label>
+                                <input id="acaoDataPrevista" type="date">
+                            </div>
+
+                        </div>
+
+                        <div class="bloco-formulario">
+                            <h3>Descrição da ação</h3>
+
+                            <textarea id="acaoDescricao" class="campo-textarea">
+                            </textarea>
+                        </div>
+
+                        <div class="bloco-formulario">
+                            <h3>Evidência / Observação</h3>
+
+                            <textarea id="acaoEvidencia" class="campo-textarea menor">
+                            </textarea>
+                        </div>
+
+                        <div class="acoes-formulario">
+                            <button id="btnCancelarEdicao" class="btn-cancelar-edicao hidden"
+                                onclick="cancelarEdicaoAcao()">
+                                Cancelar edição
+                            </button>
+
+                            <button class="btn-salvar-acao" onclick="salvarAcao()">
+                                🎯 Salvar ação
+                            </button>
+                        </div>
+                    </section>
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        async function carregarUsuario() {
+            try {
+                const resp = await fetch(`${API}/auth/me`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) return;
+
+                const data = await resp.json();
+
+                const el = document.getElementById("usuario-logado");
+                if (el) {
+                    el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch(`${API}/auth/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } catch (e) { }
+
+            window.location.href = "/login.html";
+        }
+
+        function inicializarAbasAcoes() {
+            const tabs = document.querySelectorAll(".tab-ind");
+
+            tabs.forEach(tab => {
+                tab.addEventListener("click", () => {
+                    tabs.forEach(t => t.classList.remove("active"));
+                    tab.classList.add("active");
+
+                    document
+                        .querySelectorAll(".aba-subregioes")
+                        .forEach(aba => aba.classList.remove("active"));
+
+                    document
+                        .getElementById(`aba-${tab.dataset.aba}`)
+                        .classList.add("active");
+                });
+            });
+        }
+
+        let acoes = [];
+        let acaoEditandoId = null;
+
+        function classeStatusAcao(status) {
+            if (status === "Concluída") return "ok";
+            if (status === "Em andamento") return "no-caminho";
+            if (status === "Planejada") return "atencao";
+            if (status === "Cancelada") return "critico";
+            return "sem-meta";
+        }
+
+        function classeTipoAcao(tipo) {
+            if (tipo === "Corretiva") return "tipo-corretiva";
+            if (tipo === "Preventiva") return "tipo-preventiva";
+            if (tipo === "Expansão") return "tipo-expansao";
+            if (tipo === "Mobilização") return "tipo-mobilizacao";
+            if (tipo === "Acompanhamento") return "tipo-acompanhamento";
+            return "tipo-padrao";
+        }
+
+        async function carregarAcoes() {
+
+            try {
+
+                const resp = await fetch(
+                    `${API}/executivo/acoes`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar ações");
+                }
+
+                acoes = await resp.json();
+
+                acoes.sort((a, b) => {
+
+                    const ordemStatus = {
+                        "Em andamento": 1,
+                        "Planejada": 2,
+                        "Concluída": 3,
+                        "Concluida": 3,
+                        "Cancelada": 4
+                    };
+
+                    const statusA = ordemStatus[a.status] || 99;
+                    const statusB = ordemStatus[b.status] || 99;
+
+                    if (statusA !== statusB) {
+                        return statusA - statusB;
+                    }
+
+                    return new Date(b.data_prevista || 0) - new Date(a.data_prevista || 0);
+
+                });
+
+                const tbody =
+                    document.getElementById("tbodyAcoes");
+
+                tbody.innerHTML = acoes.map(acao => `
+                    <tr
+                        data-status="${acao.status || ""}"
+                        data-programa="${acao.programa || ""}"
+                        data-subregiao="${acao.subregiao || ""}"
+                        data-regiao="${acao.regiao || ""}"
+                        data-uo="${acao.uo || ""}"
+                        data-ano="${acao.ano || ""}"
+                        data-mes="${acao.mes || ""}"
+                    >
+                        <td>${acao.programa || "-"}</td>
+                        <td>${acao.regiao || "-"}</td>
+                        <td>${acao.subregiao || "-"}</td>
+                        <td>
+                            <span class="badge-tipo-acao ${classeTipoAcao(acao.tipo)}">
+                                ${acao.tipo || "-"}
+                            </span>
+                        </td>
+                        <td>${acao.titulo || "-"}</td>
+                        <td>${acao.responsavel || "-"}</td>
+                        <td>
+                            ${formatarData(acao.data_prevista)}
+                        </td>
+                        <td>
+                            <span class="status ${obterClasseStatus(acao.status)}">
+                                ${acao.status}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="acoes-tabela">
+                                <button
+                                    class="btn-editar-acao"
+                                    onclick="editarAcao(${acao.id})">
+                                    Editar
+                                </button>
+
+                                <button
+                                    class="btn-excluir-acao"
+                                    onclick="excluirAcao(${acao.id})">
+                                    Excluir
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join("");
+
+                atualizarKPIsAcoes(acoes);
+                aplicarFiltrosAcoes();
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar ações:",
+                    erro
+                );
+
+            }
+        }
+
+        function obterClasseStatus(status) {
+
+            switch ((status || "").toLowerCase()) {
+
+                case "concluída":
+                case "concluida":
+                    return "ok";
+
+                case "em andamento":
+                    return "no-caminho";
+
+                case "planejada":
+                    return "atencao";
+
+                case "cancelada":
+                    return "critico";
+
+                default:
+                    return "sem-dados";
+            }
+        }
+
+        function atualizarKPIsAcoes(acoes) {
+
+            document.getElementById("kpiTotalAcoes").textContent =
+                acoes.length;
+
+            document.getElementById("kpiPlanejadas").textContent =
+                acoes.filter(a =>
+                    (a.status || "").toLowerCase() === "planejada"
+                ).length;
+
+            document.getElementById("kpiAndamento").textContent =
+                acoes.filter(a =>
+                    (a.status || "").toLowerCase() === "em andamento"
+                ).length;
+
+            document.getElementById("kpiConcluidas").textContent =
+                acoes.filter(a =>
+                    ["concluída", "concluida"]
+                        .includes((a.status || "").toLowerCase())
+                ).length;
+        }
+
+        async function salvarAcao() {
+            const novaAcao = {
+                ano: Number(document.getElementById("acaoAno").value),
+                mes: document.getElementById("acaoMes").value
+                    ? Number(document.getElementById("acaoMes").value)
+                    : null,
+                programa: document.getElementById("acaoPrograma").value,
+                regiao: document.getElementById("acaoRegiao").value,
+                subregiao: document.getElementById("acaoSubregiao").value,
+                uo: document.getElementById("acaoUo").value,
+                tipo: document.getElementById("acaoTipo").value,
+                titulo: document.getElementById("acaoTitulo").value,
+                descricao: document.getElementById("acaoDescricao").value.trim(),
+                responsavel: document.getElementById("acaoResponsavel").value,
+                data_prevista: document.getElementById("acaoDataPrevista").value || null,
+                status: document.getElementById("acaoStatus").value,
+                evidencia: document.getElementById("acaoEvidencia").value.trim()
+            };
+
+            if (!novaAcao.titulo.trim()) {
+                alert("Informe o título da ação.");
+                return;
+            }
+
+            try {
+                const url = acaoEditandoId
+                    ? `${API}/executivo/acoes/${acaoEditandoId}`
+                    : `${API}/executivo/acoes`;
+
+                const metodo = acaoEditandoId ? "PUT" : "POST";
+
+                const resp = await fetch(url, {
+                    method: metodo,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(novaAcao)
+                });
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao salvar ação.");
+                }
+
+                await carregarAcoes();
+                limparFormularioAcao();
+
+                const estavaEditando = !!acaoEditandoId;
+
+                acaoEditandoId = null;
+
+                document.querySelector(".btn-salvar-acao").textContent =
+                    "🎯 Salvar ação";
+
+                document.getElementById("btnCancelarEdicao")?.classList.add("hidden");
+
+                document.querySelector('.tab-ind[data-aba="lista"]').click();
+
+                alert(
+                    estavaEditando
+                        ? "Ação atualizada com sucesso!"
+                        : "Ação cadastrada com sucesso!"
+                );
+
+            } catch (erro) {
+                console.error("Erro ao salvar ação:", erro);
+                alert("Não foi possível salvar a ação.");
+            }
+        }
+
+        function editarAcao(id) {
+            const acao = acoes.find(a => Number(a.id) === Number(id));
+
+            if (!acao) {
+                alert("Ação não encontrada.");
+                return;
+            }
+
+            acaoEditandoId = acao.id;
+
+            document.getElementById("acaoAno").value = acao.ano || 2026;
+            document.getElementById("acaoMes").value = acao.mes || "";
+            document.getElementById("acaoPrograma").value = acao.programa || "";
+            document.getElementById("acaoRegiao").value = acao.regiao || "";
+            document.getElementById("acaoSubregiao").value = acao.subregiao || "";
+            document.getElementById("acaoUo").value = acao.uo || "";
+            document.getElementById("acaoTipo").value = acao.tipo || "Corretiva";
+            document.getElementById("acaoStatus").value = acao.status || "Planejada";
+            document.getElementById("acaoTitulo").value = acao.titulo || "";
+            document.getElementById("acaoResponsavel").value = acao.responsavel || "";
+            document.getElementById("acaoDataPrevista").value = acao.data_prevista || "";
+            document.getElementById("acaoDescricao").value = acao.descricao || "";
+            document.getElementById("acaoEvidencia").value = acao.evidencia || "";
+
+            document.querySelector('.tab-ind[data-aba="nova"]').click();
+
+            document.querySelector(".btn-salvar-acao").textContent = "💾 Atualizar ação";
+            document.getElementById("btnCancelarEdicao")?.classList.remove("hidden");
+        }
+
+        async function excluirAcao(id) {
+            const confirmar = confirm("Deseja realmente excluir esta ação?");
+
+            if (!confirmar) return;
+
+            try {
+                const resp = await fetch(`${API}/executivo/acoes/${id}`, {
+                    method: "DELETE",
+                    credentials: "include"
+                });
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao excluir ação.");
+                }
+
+                if (acaoEditandoId === id) {
+                    cancelarEdicaoAcao();
+                }
+
+                await carregarAcoes();
+
+                alert("Ação excluída com sucesso.");
+
+            } catch (erro) {
+                console.error("Erro ao excluir ação:", erro);
+                alert("Não foi possível excluir a ação.");
+            }
+        }
+
+        function cancelarEdicaoAcao() {
+            acaoEditandoId = null;
+
+            limparFormularioAcao();
+
+            document.querySelector(".btn-salvar-acao").textContent =
+                "🎯 Salvar ação";
+
+            document.getElementById("btnCancelarEdicao")?.classList.add("hidden");
+        }
+
+        function limparFormularioAcao() {
+            document.getElementById("acaoMes").value = "";
+            document.getElementById("acaoPrograma").value = "";
+            document.getElementById("acaoRegiao").value = "";
+            document.getElementById("acaoSubregiao").value = "";
+            document.getElementById("acaoUo").value = "";
+            document.getElementById("acaoTipo").value = "Corretiva";
+            document.getElementById("acaoStatus").value = "Planejada";
+            document.getElementById("acaoTitulo").value = "";
+            document.getElementById("acaoResponsavel").value = "";
+            document.getElementById("acaoDataPrevista").value = "";
+            document.getElementById("acaoDescricao").value = "";
+            document.getElementById("acaoEvidencia").value = "";
+        }
+
+        function inicializarBuscaAcoes() {
+            const campoBusca = document.getElementById("buscaAcao");
+
+            if (!campoBusca) return;
+
+            campoBusca.addEventListener("input", aplicarFiltrosAcoes);
+        }
+
+        function aplicarFiltrosAcoes() {
+            const busca = document.getElementById("buscaAcao")?.value
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim() || "";
+
+            const status = document.getElementById("filtroStatusAcao")?.value || "";
+            const programa = document.getElementById("filtroProgramaAcao")?.value || "";
+            const subregiao = document.getElementById("filtroSubregiao")?.value || "";
+            const regiao = normalizarTexto(document.getElementById("filtroRegiao")?.value || "");
+            const uo = normalizarTexto(document.getElementById("filtroUo")?.value || "");
+            const ano = document.getElementById("filtroAno")?.value || "";
+            const periodo = Array.from(document.getElementById("filtroPeriodo")?.selectedOptions || []
+            ).map(opt => opt.value);
+
+            document.querySelectorAll("#tbodyAcoes tr").forEach(linha => {
+                const texto = linha.textContent
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+
+                const linhaStatus = linha.dataset.status || "";
+                const linhaPrograma = linha.dataset.programa || "";
+                const linhaSubregiao = linha.dataset.subregiao || "";
+                const linhaRegiao = normalizarTexto(linha.dataset.regiao || "");
+                const linhaUo = normalizarTexto(linha.dataset.uo || "");
+                const linhaAno = linha.dataset.ano || "";
+                const linhaMes = linha.dataset.mes || "";
+
+                const okBusca =
+                    !busca || texto.includes(busca);
+
+                const okStatus =
+                    !status || linhaStatus === status;
+
+                const okPrograma =
+                    !programa || linhaPrograma === programa;
+
+                const okSubregiao =
+                    !subregiao || linhaSubregiao === subregiao;
+
+                const okRegiao =
+                    !regiao || linhaRegiao === regiao;
+
+                const okUo =
+                    !uo || linhaUo === uo;
+
+                const okAno =
+                    !ano || linhaAno === ano;
+
+                const okPeriodo =
+                    !periodo.length || periodo.includes(linhaMes);
+
+                linha.style.display =
+                    okBusca &&
+                        okStatus &&
+                        okPrograma &&
+                        okSubregiao &&
+                        okRegiao &&
+                        okUo &&
+                        okAno &&
+                        okPeriodo
+                        ? ""
+                        : "none";
+            });
+            atualizarKpisFiltrados();
+        }
+
+        function atualizarKpisFiltrados() {
+            const linhasVisiveis = Array.from(
+                document.querySelectorAll("#tbodyAcoes tr")
+            ).filter(linha => linha.style.display !== "none");
+
+            const total = linhasVisiveis.length;
+
+            const planejadas = linhasVisiveis.filter(linha =>
+                (linha.dataset.status || "").toLowerCase() === "planejada"
+            ).length;
+
+            const andamento = linhasVisiveis.filter(linha =>
+                (linha.dataset.status || "").toLowerCase() === "em andamento"
+            ).length;
+
+            const concluidas = linhasVisiveis.filter(linha =>
+                ["concluída", "concluida"].includes(
+                    (linha.dataset.status || "").toLowerCase()
+                )
+            ).length;
+
+            document.getElementById("kpiTotalAcoes").textContent = total;
+            document.getElementById("kpiPlanejadas").textContent = planejadas;
+            document.getElementById("kpiAndamento").textContent = andamento;
+            document.getElementById("kpiConcluidas").textContent = concluidas;
+        }
+
+        function normalizarTexto(valor) {
+            return String(valor || "")
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim();
+        }
+
+        function carregarFiltroProgramas() {
+
+            const select = document.getElementById("filtroProgramaAcao");
+
+            if (!select) return;
+
+            const programas = [
+                ...new Set(
+                    acoes
+                        .map(a => (a.programa || "").trim())
+                        .filter(p => p !== "")
+                )
+            ].sort();
+
+            select.innerHTML = `
+                <option value="">Todos</option>
+            `;
+
+            programas.forEach(programa => {
+
+                const option = document.createElement("option");
+
+                option.value = programa;
+                option.textContent = programa;
+
+                select.appendChild(option);
+
+            });
+
+        }
+
+        async function carregarRegioesAcoes() {
+            const select = document.getElementById("acaoRegiao");
+            const filtroRegiao = document.getElementById("filtroRegiao");
+
+            if (!select) return;
+
+            try {
+                const resp = await fetch(`${API}/executivo/regioes/lista`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar regiões");
+                }
+
+                const dados = await resp.json();
+
+                select.innerHTML = `<option value="">Selecione a região</option>`;
+                if (filtroRegiao) {
+                    filtroRegiao.innerHTML =
+                        `<option value="">Todas as regiões</option>`;
+                }
+
+                dados.forEach(item => {
+                    const nome = item.nome || item.regiao || item;
+
+                    const option = document.createElement("option");
+                    option.value = nome;
+                    option.textContent = nome;
+
+                    select.appendChild(option);
+
+                    if (filtroRegiao) {
+
+                        const optionFiltro =
+                            document.createElement("option");
+
+                        optionFiltro.value = nome;
+                        optionFiltro.textContent = nome;
+
+                        filtroRegiao.appendChild(optionFiltro);
+
+                    }
+                });
+
+            } catch (erro) {
+                console.error("Erro ao carregar regiões:", erro);
+            }
+        }
+
+        async function carregarProgramasAcoes() {
+
+            const select = document.getElementById("acaoPrograma");
+            const filtroPrograma = document.getElementById("filtroProgramaAcao");
+
+            if (!select) return;
+
+            try {
+
+                const resp = await fetch(
+                    `${API}/executivo/programas/lista`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar programas");
+                }
+
+                const dados = await resp.json();
+
+                select.innerHTML = `<option value="">Selecione o programa</option>`;
+
+                if (filtroPrograma) {
+                    filtroPrograma.innerHTML =
+                        `<option value="">Todos</option>`;
+                }
+
+                dados.forEach(item => {
+
+                    const nome =
+                        item.nome ||
+                        item.programa ||
+                        item.nome_programa ||
+                        item;
+
+                    const option = document.createElement("option");
+
+                    option.value = nome;
+                    option.textContent = nome;
+
+                    select.appendChild(option);
+
+                    if (filtroPrograma) {
+                        const optionFiltro = document.createElement("option");
+
+                        optionFiltro.value = nome;
+                        optionFiltro.textContent = nome;
+
+                        filtroPrograma.appendChild(optionFiltro);
+                    }
+
+                });
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar programas:",
+                    erro
+                );
+
+            }
+
+        }
+
+        async function carregarUosAcoes() {
+
+            const select = document.getElementById("acaoUo");
+            const filtroUo = document.getElementById("filtroUo");
+
+            if (!select) return;
+
+            try {
+
+                const resp = await fetch(
+                    `${API}/executivo/uos/lista`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar UOs");
+                }
+
+                const dados = await resp.json();
+
+                select.innerHTML = `<option value="">Selecione a UO</option>`;
+
+                if (filtroUo) {
+                    filtroUo.innerHTML =
+                        `<option value="">Todas as UOs</option>`;
+                }
+
+                dados.forEach(item => {
+
+                    const nome =
+                        item.nome ||
+                        item.uo ||
+                        item.unidade ||
+                        item;
+
+                    const option = document.createElement("option");
+
+                    option.value = nome;
+                    option.textContent = nome;
+
+                    select.appendChild(option);
+
+                    if (filtroUo) {
+
+                        const optionFiltro =
+                            document.createElement("option");
+
+                        optionFiltro.value = nome;
+                        optionFiltro.textContent = nome;
+
+                        filtroUo.appendChild(optionFiltro);
+
+                    }
+
+                });
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar UOs:",
+                    erro
+                );
+
+            }
+
+        }
+
+        async function carregarSubregioesAcoes() {
+            const select = document.getElementById("acaoSubregiao");
+            const filtroSubregiao = document.getElementById("filtroSubregiao");
+
+            if (!select) return;
+
+            try {
+                const resp = await fetch(`${API}/executivo/subregioes/lista`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar sub-regiões");
+                }
+
+                const dados = await resp.json();
+
+                select.innerHTML = `<option value="">Selecione a sub-região</option>`;
+
+                if (filtroSubregiao) {
+                    filtroSubregiao.innerHTML = `<option value="">Todas as sub-regiões</option>`;
+                }
+
+                dados.forEach(item => {
+                    const nome = item.nome || item.subregiao || item;
+
+                    const option = document.createElement("option");
+                    option.value = nome;
+                    option.textContent = nome;
+
+                    select.appendChild(option);
+
+                    if (filtroSubregiao) {
+                        const optionFiltro = document.createElement("option");
+                        optionFiltro.value = nome;
+                        optionFiltro.textContent = nome;
+                        filtroSubregiao.appendChild(optionFiltro);
+                    }
+                });
+
+            } catch (erro) {
+                console.error("Erro ao carregar sub-regiões:", erro);
+            }
+        }
+
+        function atualizarListaAcoes() {
+            const busca = document.getElementById("buscaAcao");
+
+            if (busca) {
+                busca.value = "";
+            }
+
+            carregarAcoes();
+        }
+
+        function formatarData(data) {
+            if (!data) return "-";
+
+            const partes = data.split("-");
+
+            if (partes.length !== 3) return data;
+
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        function exportarAcoesCsv() {
+            const linhasVisiveis = Array.from(
+                document.querySelectorAll("#tbodyAcoes tr")
+            ).filter(linha => linha.style.display !== "none");
+
+            if (!linhasVisiveis.length) {
+                alert("Não há ações para exportar.");
+                return;
+            }
+
+            const cabecalho = [
+                "Programa",
+                "Região",
+                "Sub-região",
+                "Tipo",
+                "Título",
+                "Responsável",
+                "Data prevista",
+                "Status"
+            ];
+
+            const linhas = linhasVisiveis.map(linha =>
+                Array.from(linha.querySelectorAll("td"))
+                    .slice(0, 8)
+                    .map(td => `"${td.innerText.replace(/"/g, '""').trim()}"`)
+                    .join(";")
+            );
+
+            const csv = [
+                cabecalho.join(";"),
+                ...linhas
+            ].join("\n");
+
+            const blob = new Blob(
+                ["\ufeff" + csv],
+                {
+                    type: "text/csv;charset=utf-8;"
+                }
+            );
+
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "acoes_executivas.csv";
+            link.click();
+
+            URL.revokeObjectURL(url);
+        }
+
+        let tomSelectPeriodo = null;
+
+        function inicializarFiltroPeriodo() {
+            const select = document.getElementById("filtroPeriodo");
+
+            if (!select) return;
+
+            tomSelectPeriodo = new TomSelect("#filtroPeriodo", {
+                plugins: ["remove_button"],
+                placeholder: "Selecione um ou mais meses",
+                maxItems: null,
+                hideSelected: true,
+                closeAfterSelect: false,
+                persist: false,
+                onChange() {
+                    ajustarLarguraPeriodo();
+                    aplicarFiltrosAcoes();
+                },
+                onItemAdd() {
+                    this.control_input.placeholder = "";
+                    ajustarLarguraPeriodo();
+                },
+                onItemRemove() {
+                    if (!this.items.length) {
+                        this.control_input.placeholder = "Selecione um ou mais meses";
+                    }
+
+                    ajustarLarguraPeriodo();
+                }
+            });
+
+            tomSelectPeriodo.clear(true);
+            ajustarLarguraPeriodo();
+        }
+
+        function ajustarLarguraPeriodo() {
+            const campo = document.querySelector(".periodo-field");
+            const total = tomSelectPeriodo?.items?.length || 0;
+
+            if (!campo) return;
+
+            const largura = Math.min(
+                180 + (total * 70),
+                1010
+            );
+
+            campo.style.setProperty("--periodo-width", `${largura}px`);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarUsuario();
+            inicializarAbasAcoes();
+            inicializarFiltroPeriodo();
+            carregarAcoes();
+            inicializarBuscaAcoes();
+            carregarRegioesAcoes();
+            carregarSubregioesAcoes();
+            carregarProgramasAcoes();
+            carregarUosAcoes();
+
+            document
+                .getElementById("filtroStatusAcao")
+                ?.addEventListener("change", aplicarFiltrosAcoes);
+
+            document
+                .getElementById("filtroProgramaAcao")
+                ?.addEventListener("change", aplicarFiltrosAcoes);
+
+            document
+                .getElementById("filtroRegiao")
+                ?.addEventListener("change", aplicarFiltrosAcoes);
+
+            document
+                .getElementById("filtroUo")
+                ?.addEventListener("change", aplicarFiltrosAcoes);
+
+            document
+                .getElementById("filtroSubregiao")
+                ?.addEventListener("change", aplicarFiltrosAcoes);
+
+            document
+                .getElementById("filtroAno")
+                ?.addEventListener("change", aplicarFiltrosAcoes);
+
+        });
+
+    </script>
+
+</body>
+
+</html>

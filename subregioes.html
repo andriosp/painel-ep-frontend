@@ -1,0 +1,2786 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Painel • Sub-regiões</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #f6f7fb;
+            --panel: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e5e7eb;
+            --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+            --radius: 14px;
+            --radius-sm: 12px;
+
+            --brand: #2563eb;
+            --ok: #16a34a;
+            --warn: #f59e0b;
+            --bad: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 18px 18px 36px;
+        }
+
+        .navlink {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 750;
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+        }
+
+        .navlink:hover {
+            background: #fff;
+            border-color: var(--border);
+        }
+
+        .navlink.active {
+            background: rgba(37, 99, 235, .10);
+            color: var(--text);
+            border-color: rgba(37, 99, 235, .25);
+        }
+
+        .header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: .2px;
+        }
+
+        .title p {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--muted);
+            font-size: 12px;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+            white-space: nowrap;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--brand);
+            box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            background: #fff;
+            outline: none;
+            height: 40px;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+        }
+
+        button {
+            appearance: none;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 650;
+            font-size: 13px;
+            transition: transform .05s ease, background .15s ease, border-color .15s ease;
+        }
+
+        button:hover {
+            background: #f8fafc;
+            border-color: #dbe3ef;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .topnav {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .topnav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ===== LAYOUT ===== */
+        .page-layout {
+            display: flex;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar-executiva {
+            width: 220px;
+            min-height: calc(100vh - 90px);
+            background: #003B8F;
+            border-radius: 20px;
+            padding: 20px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 18px;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-logo img {
+            width: 100px;
+            max-width: 100%;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: .2s;
+            font-size: 15px;
+        }
+
+        .sidebar-nav a:hover {
+            background:
+                rgba(255, 255, 255, .12);
+        }
+
+        .sidebar-nav a.active {
+            background: #0F5FFF;
+        }
+
+        /* ===== CONTEÚDO ===== */
+        .main-executiva {
+            flex: 1;
+        }
+
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            margin-top: 16px;
+        }
+
+        .chart-box canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin-bottom: 24px;
+            padding-left: 6px;
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding-bottom: 12px;
+        }
+
+        .tab-ind.active {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        .filtros-subregioes {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filtro-item {
+            min-width: 180px;
+        }
+
+        .filtro-item label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .filtro-item select,
+        .filtro-item input {
+            height: 44px;
+            border-radius: 12px;
+        }
+
+        .filtro-item.busca {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .btn-exportar-sub {
+            margin-left: auto;
+            min-width: 120px;
+        }
+
+        .kpi-sub-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .kpi-sub-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            gap: 14px;
+            min-height: 150px;
+            box-shadow: var(--shadow);
+        }
+
+        .kpi-sub-card h3 {
+            margin: 0 0 8px;
+            font-size: 13px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .kpi-sub-card strong {
+            display: block;
+            font-size: 26px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .kpi-sub-card p {
+            margin: 8px 0 6px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #071b52;
+        }
+
+        .kpi-sub-card span {
+            font-size: 13px;
+            color: #334155;
+        }
+
+        .kpi-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .kpi-sub-card.azul .kpi-icon {
+            background: #0f5fff;
+        }
+
+        .kpi-sub-card.roxo .kpi-icon {
+            background: #6d5dfc;
+        }
+
+        .kpi-sub-card.verde .kpi-icon {
+            background: #16a34a;
+        }
+
+        .kpi-sub-card.laranja .kpi-icon {
+            background: #f97316;
+        }
+
+        .kpi-sub-card .ok {
+            color: #16a34a;
+        }
+
+        .kpi-sub-card .bad {
+            color: #dc2626;
+        }
+
+        @media (max-width: 1400px) {
+            .kpi-sub-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .kpi-sub-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sub-main-grid {
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .sub-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 16px;
+        }
+
+        .sub-card-title {
+            margin-bottom: 14px;
+        }
+
+        .sub-card-title h2 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .sub-card-title.linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tabela-sub-wrap {
+            overflow-x: auto;
+        }
+
+        .tabela-sub {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .tabela-sub th,
+        .tabela-sub td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .tabela-sub th {
+            background: #f8fafc;
+            font-size: 11px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .tabela-sub td:first-child,
+        .tabela-sub th:first-child,
+        .tabela-sub td:nth-child(2),
+        .tabela-sub th:nth-child(2) {
+            text-align: left;
+            font-weight: 800;
+        }
+
+        .tabela-sub .ok {
+            color: #16a34a;
+            font-weight: 900;
+        }
+
+        .tabela-sub .bad {
+            color: #dc2626;
+            font-weight: 900;
+        }
+
+        .status {
+            display: inline-flex;
+            justify-content: center;
+            min-width: 105px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .status.ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status.atencao {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .status.critico {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status.no-caminho {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status.sem-meta {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .status.sem-movimento {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .resumo-modalidades-card {
+            margin-bottom: 16px;
+        }
+
+        .resumo-info {
+            font-size: 12px;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        .resumo-modalidades-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .modalidade-resumo {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #f8fafc;
+            padding: 16px;
+        }
+
+        .modalidade-resumo h3 {
+            margin: 0 0 12px;
+            min-height: 38px;
+            font-size: 14px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .modalidade-resumo strong {
+            display: block;
+            font-size: 28px;
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        .modalidade-resumo p {
+            margin: 4px 0 12px;
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .barra-resumo {
+            height: 10px;
+            border-radius: 999px;
+            background: #e2e8f0;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .barra-resumo span {
+            display: block;
+            height: 100%;
+            max-width: 100%;
+            border-radius: 999px;
+            background: #2563eb;
+        }
+
+        .modalidade-resumo small {
+            font-size: 12px;
+            font-weight: 900;
+            color: #334155;
+        }
+
+        @media (max-width: 1200px) {
+            .resumo-modalidades-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .resumo-modalidades-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .graficos-sub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .grafico-sub-card {
+            min-height: 420px;
+            padding: 20px;
+        }
+
+        .grafico-sub-card .chart-box {
+            height: 330px;
+        }
+
+        @media (max-width: 1100px) {
+            .graficos-sub-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .aba-subregioes {
+            display: none;
+        }
+
+        .aba-subregioes.active {
+            display: block;
+        }
+
+        .detalhamento-sub-grid {
+            display: grid;
+            grid-template-columns: 520px 1fr;
+            gap: 20px;
+            align-items: stretch;
+            margin-bottom: 16px;
+        }
+
+        .detalhe-sub-card {
+            min-height: 100%;
+            padding: 22px;
+        }
+
+        .detalhe-sub-nome {
+            margin-top: 10px;
+            margin-bottom: 18px;
+            font-size: 32px;
+            font-weight: 900;
+            color: #071b52;
+            line-height: 1.1;
+        }
+
+        .detalhe-sub-tabela-card {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 1100px) {
+            .detalhamento-sub-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        #tbodyRankingSubregioes tr {
+            cursor: pointer;
+            transition: background .15s ease;
+        }
+
+        #tbodyRankingSubregioes tr:hover {
+            background: #f8fafc;
+        }
+
+        .detalhe-kpis-sub {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 22px;
+            margin-bottom: 18px;
+        }
+
+        .detalhe-kpis-sub div {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 10px;
+            background: #f8fafc;
+            min-width: 0;
+        }
+
+        .detalhe-kpis-sub span {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .detalhe-kpis-sub strong {
+            font-size: 24px;
+            font-weight: 900;
+            color: #071b52;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        #detSubReceita {
+            font-size: 24px;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.8px;
+        }
+
+        #detSubStatus {
+            width: 100%;
+            justify-content: center;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 900;
+            margin-top: 8px;
+        }
+
+        #tbodyRankingSubregioes tr.linha-selecionada {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+        }
+
+        #tbodyRankingSubregioes tr.linha-selecionada td {
+            font-weight: 800;
+        }
+
+        #tbodyRankingSubregioes tr {
+            transition: all .15s ease;
+        }
+
+        #tbodyRankingSubregioes tr:hover {
+            background: #f8fafc;
+        }
+
+        #tbodyRankingSubregioes td:first-child,
+        .tabela-sub th:first-child {
+            text-align: center;
+            width: 70px;
+        }
+
+        #tbodyRankingSubregioes td:nth-child(2) {
+            font-weight: 900;
+            color: #071b52;
+        }
+
+        #tbodyRankingSubregioes td:nth-child(3) {
+            color: #334155;
+            font-weight: 700;
+        }
+
+        .ranking-subtitulo {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .rank-badge {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 12px;
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+        }
+
+        .rank-badge.top1 {
+            background: #facc15;
+            color: #713f12;
+            border-color: #eab308;
+        }
+
+        .rank-badge.top2 {
+            background: #cbd5e1;
+            color: #334155;
+            border-color: #94a3b8;
+        }
+
+        .rank-badge.top3 {
+            background: #fb923c;
+            color: #7c2d12;
+            border-color: #ea580c;
+        }
+
+        .graficos-detalhe-sub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 1100px) {
+            .graficos-detalhe-sub-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .grafico-vazio {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 800;
+            padding: 20px;
+            pointer-events: none;
+        }
+
+        .grafico-vazio.hidden {
+            display: none;
+        }
+
+        .detalhe-kpis-sub div {
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid #2563eb;
+        }
+
+        .detalhe-kpis-sub div:nth-child(2) {
+            border-top-color: #6d5dfc;
+        }
+
+        .detalhe-kpis-sub div:nth-child(3) {
+            border-top-color: #16a34a;
+        }
+
+        .detalhe-kpis-sub div:nth-child(4) {
+            border-top-color: #f97316;
+        }
+
+        .detalhe-kpis-sub span {
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        .detalhe-kpis-sub strong {
+            display: block;
+            margin-top: 4px;
+        }
+
+        .busca-vazia {
+            padding: 22px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .busca-vazia.hidden {
+            display: none;
+        }
+
+        .coluna-indicador-ativa {
+            background: #eff6ff !important;
+            color: #1d4ed8 !important;
+            font-weight: 900 !important;
+        }
+
+        .tabela-sub td.coluna-indicador-ativa {
+            background: rgba(37, 99, 235, .06);
+        }
+
+        .detalhe-kpis-sub div.kpi-ativo {
+            background: #eff6ff;
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 8px 18px rgba(37, 99, 235, .12);
+        }
+
+        .status.sem-dados {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .filtro-item .ts-wrapper {
+            width: 100%;
+        }
+
+        .filtro-item .ts-control {
+            min-height: 44px;
+            height: 44px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 7px 10px;
+            background: #fff;
+            box-shadow: none;
+            overflow: hidden;
+        }
+
+        .filtro-item .ts-wrapper.focus .ts-control {
+            border-color: rgba(37, 99, 235, .45);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+        }
+
+        .filtro-item .ts-control>input {
+            height: auto;
+            padding: 0;
+        }
+
+        .filtro-item .ts-control .item {
+            background: #eff6ff !important;
+            border: 1px solid #bfdbfe !important;
+            color: #0f172a !important;
+            border-radius: 999px !important;
+            padding: 4px 10px !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+        }
+
+        .filtro-item .ts-control.has-items input {
+            width: 2px !important;
+            min-width: 2px !important;
+        }
+
+        .filtro-item .ts-control.has-items input::placeholder {
+            color: transparent !important;
+        }
+
+        .filtro-item .ts-dropdown {
+            border-radius: 12px;
+            border-color: var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .filtro-item .ts-dropdown .option {
+            padding: 9px 12px;
+            font-size: 13px;
+        }
+
+        .kpi-pct-ok {
+            color: #16a34a !important;
+        }
+
+        .kpi-pct-caminho {
+            color: #2563eb !important;
+        }
+
+        .kpi-pct-atencao {
+            color: #f59e0b !important;
+        }
+
+        .kpi-pct-critico {
+            color: #dc2626 !important;
+        }
+
+        .kpi-pct-neutro {
+            color: #64748b !important;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        const API =
+            window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                ? "http://localhost:8000"
+                : "/api";
+    </script>
+    <script>
+        (async function validarSessao() {
+            try {
+                const resp = await fetch(`${API}/auth/me`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) {
+                    window.location.href = "/login.html";
+                    return;
+                }
+
+                const data = await resp.json();
+
+                // 🔥 AQUI é o que faltava
+                if (data.deve_trocar_senha) {
+                    window.location.href = "/alterar_senha.html";
+                    return;
+                }
+
+            } catch (e) {
+                window.location.href = "/login.html";
+            }
+        })();
+    </script>
+
+    <div class="container">
+
+        <nav class="topnav">
+            <a href="index.html" class="navlink">Dashboard</a>
+            <a href="po.html" class="navlink">PO</a>
+            <a href="programas.html?v=2" class="navlink">Programas</a>
+            <a href="performance.html" class="navlink">Performance</a>
+            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
+            <a href="unidades.html" class="navlink">Unidades</a>
+            <a href="sge_turmas.html" class="navlink">Turmas</a>
+            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
+            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
+
+            <div class="topnav-right">
+                <a href="alterar_senha.html" class="navlink">
+                    Alterar senha
+                </a>
+                <div id="usuario-logado" class="badge">
+                    <span class="dot"></span>
+                    Usuário: —
+                </div>
+                <button onclick="logout()">Sair</button>
+            </div>
+        </nav>
+        <div class="page-layout">
+            <aside class="sidebar-executiva">
+                <div class="sidebar-logo">
+                    <img src="/assets/logo.png" alt="SENAI">
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="visao_executiva.html">
+                        🏠
+                        <span>Visão Executiva</span>
+                    </a>
+                    <a href="indicadores.html">
+                        📊
+                        <span>Indicadores</span>
+                    </a>
+                    <a href="regioes.html">
+                        🌎
+                        <span>Regiões</span>
+                    </a>
+
+                    <a href="subregioes.html" class="active">
+                        📍
+                        <span>Sub-regiões</span>
+                    </a>
+                    <a href="turmas.html">
+                        👥
+                        <span>Turmas</span>
+                    </a>
+                    <a href="acoes.html">
+                        🎯
+                        <span>Ações</span>
+                    </a>
+                    <a href="relatoriosexecutivos.html">
+                        📄
+                        <span>Relatórios</span>
+                    </a>
+                </nav>
+            </aside>
+            <main class="main-executiva">
+
+                <div class="header">
+                    <div class="title">
+                        <h1>Desempenho das Modalidades nas Sub-Regiões</h1>
+                        <p>Acompanhe o desempenho das modalidades em cada sub-região e compare com as metas acumuladas.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="tabs-indicadores">
+                    <button class="tab-ind active" data-aba="ranking">Ranking</button>
+                    <button class="tab-ind" data-aba="detalhamento">Detalhamento</button>
+                </div>
+
+                <div class="panel filtros-subregioes">
+
+                    <div class="filtro-item">
+                        <label>Ano</label>
+                        <select id="filtroAno">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item">
+                        <label>Período</label>
+                        <select id="filtroPeriodo" multiple>
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item">
+                        <label>Sub-região</label>
+                        <select id="filtroSubregiao">
+                            <option value="">Todas as sub-regiões</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item">
+                        <label>Indicador</label>
+                        <select id="filtroIndicador">
+                            <option value="matriculas">Matrículas</option>
+                            <option value="hora_aluno">Hora-Aluno</option>
+                            <option value="receita">Receita</option>
+                            <option value="turmas">Turmas</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-item busca">
+                        <label>Buscar</label>
+                        <input type="text" id="buscaSubregiao" placeholder="Buscar sub-região..." />
+                    </div>
+
+                    <button class="btn-exportar-sub">
+                        Exportar
+                    </button>
+
+                </div>
+
+                <section class="kpi-sub-grid">
+
+                    <div class="kpi-sub-card azul">
+                        <div class="kpi-icon">👤</div>
+                        <div>
+                            <h3>MATRÍCULAS REALIZADAS</h3>
+                            <strong id="kpiMatriculas">0</strong>
+                            <p id="kpiMatriculasPct" class="ok">0%</p>
+                            <span id="kpiMatriculasMeta">Meta: 0</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-sub-card roxo">
+                        <div class="kpi-icon">◷</div>
+                        <div>
+                            <h3>HORA-ALUNO REALIZADA</h3>
+                            <strong id="kpiHoraAluno">0</strong>
+                            <p id="kpiHoraAlunoPct" class="bad">0%</p>
+                            <span id="kpiHoraAlunoMeta">Meta: 0</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-sub-card verde">
+                        <div class="kpi-icon">💲</div>
+                        <div>
+                            <h3>RECEITA REALIZADA</h3>
+                            <strong id="kpiReceita">R$ 0,00</strong>
+                            <p id="kpiReceitaPct">Sem meta definida</p>
+                            <span id="kpiReceitaMeta">Meta: —</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-sub-card laranja">
+                        <div class="kpi-icon">🎓</div>
+                        <div>
+                            <h3>TURMAS ATIVAS</h3>
+                            <strong id="kpiTurmas">0</strong>
+                            <p id="kpiTaxaOcupacao">0,0% taxa de ocupação</p>
+                            <span id="kpiTurmasAcumulado">Acumulado: 0</span>
+                        </div>
+                    </div>
+
+                    <div class="kpi-sub-card azul">
+                        <div class="kpi-icon">📍</div>
+                        <div>
+                            <h3>SUB-REGIÕES ATIVAS</h3>
+                            <strong id="kpiSubregioes">0</strong>
+                        </div>
+                    </div>
+
+                </section>
+
+                <div id="aba-ranking" class="aba-subregioes active">
+
+                    <section class="sub-main-grid">
+
+                        <div class="sub-card tabela-card">
+                            <div class="sub-card-title linha">
+
+                                <div>
+                                    <h2 id="tituloRanking">RANKING DAS SUB-REGIÕES POR MATRÍCULAS</h2>
+
+                                    <p id="subtituloRanking" class="ranking-subtitulo">
+                                        Classificação das sub-regiões com base nas matrículas acumuladas do período
+                                        selecionado.
+                                    </p>
+                                </div>
+
+                                <button id="btnVerTodas">
+                                    Ver todas
+                                </button>
+
+                            </div>
+
+                            <div class="tabela-sub-wrap">
+                                <table class="tabela-sub">
+                                    <thead>
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>Sub-região</th>
+                                            <th>Modalidade líder</th>
+                                            <th>Matrículas</th>
+                                            <th>Hora-Aluno</th>
+                                            <th>Receita</th>
+                                            <th>Turmas</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <!-- TODO: futuramente este tbody será preenchido via API em carregarRankingSubregioes() -->
+
+                                    <tbody id="tbodyRankingSubregioes">
+                                    </tbody>
+                                </table>
+
+                                <div id="msgBuscaVazia" class="busca-vazia hidden">
+                                    Nenhuma sub-região encontrada para a busca informada.
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </section>
+
+                    <section class="sub-card resumo-modalidades-card">
+
+                        <div class="sub-card-title linha">
+                            <h2>RESUMO DAS PRINCIPAIS MODALIDADES</h2>
+                            <span class="resumo-info">Top 4 modalidades conforme o indicador selecionado</span>
+                        </div>
+
+                        <div class="resumo-modalidades-grid" id="resumoModalidadesGrid">
+                        </div>
+
+                    </section>
+
+                    <section class="graficos-sub-grid">
+
+                        <div class="sub-card grafico-sub-card">
+                            <div class="sub-card-title">
+                                <h2 id="tituloGraficoTop">TOP 10 SUB-REGIÕES POR MATRÍCULAS</h2>
+                            </div>
+                            <div class="chart-box">
+                                <canvas id="graficoTopSubregioes"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="sub-card grafico-sub-card">
+                            <div class="sub-card-title">
+                                <h2 id="tituloGraficoModalidades">DESEMPENHO POR MODALIDADE</h2>
+                            </div>
+                            <div class="chart-box">
+                                <canvas id="graficoModalidadesSub"></canvas>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+
+                <div id="aba-detalhamento" class="aba-subregioes">
+
+                    <section class="detalhamento-sub-grid">
+
+                        <div class="sub-card detalhe-sub-card">
+                            <div class="sub-card-title">
+                                <h2>DETALHAMENTO DA SUB-REGIÃO</h2>
+                            </div>
+
+                            <div class="detalhe-sub-nome" id="detalheSubregiaoNome">
+                                Selecione uma sub-região
+                            </div>
+
+                            <div class="detalhe-kpis-sub">
+
+                                <div data-kpi="matriculas">
+                                    <span>Matrículas</span>
+                                    <strong id="detSubMatriculas">—</strong>
+                                </div>
+
+                                <div data-kpi="hora_aluno">
+                                    <span>Hora-Aluno</span>
+                                    <strong id="detSubHoraAluno">—</strong>
+                                </div>
+
+                                <div data-kpi="receita">
+                                    <span>Receita</span>
+                                    <strong id="detSubReceita">—</strong>
+                                </div>
+
+                                <div data-kpi="turmas">
+                                    <span>Turmas</span>
+                                    <strong id="detSubTurmas">—</strong>
+                                </div>
+
+                            </div>
+
+                            <div id="detSubStatus" class="status ok">
+                                Sem dados
+                            </div>
+                        </div>
+
+                        <div class="sub-card detalhe-sub-tabela-card">
+                            <div class="sub-card-title">
+                                <h2 id="tituloTabelaDetalhamento">MODALIDADES DA SUB-REGIÃO — MATRÍCULAS</h2>
+                            </div>
+
+                            <div class="tabela-sub-wrap">
+                                <table class="tabela-sub">
+                                    <thead>
+                                        <tr>
+                                            <th>Modalidade</th>
+                                            <th id="colunaIndicadorDetalhamento">Matrículas</th>
+                                            <th>Meta</th>
+                                            <th>%</th>
+                                            <th>Hora-Aluno</th>
+                                            <th>Receita</th>
+                                            <th>Turmas</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyDetalhamentoSub">
+                                        <tr>
+                                            <td colspan="8" style="text-align:center;color:#64748b;">
+                                                Clique em uma sub-região na aba Ranking para visualizar os dados
+                                                detalhados.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </section>
+
+                    <section class="graficos-detalhe-sub-grid">
+
+                        <div class="sub-card grafico-sub-card">
+                            <div class="sub-card-title">
+                                <h2 id="tituloGraficoDetalheBarras">MATRÍCULAS POR MODALIDADE</h2>
+                            </div>
+                            <div class="chart-box">
+                                <canvas id="graficoDetalheMatriculas"></canvas>
+                                <div id="placeholderGraficoMatriculas" class="grafico-vazio">
+                                    Clique em uma sub-região no Ranking para visualizar o gráfico.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sub-card grafico-sub-card">
+                            <div class="sub-card-title">
+                                <h2 id="tituloGraficoDetalheDonut">PARTICIPAÇÃO POR MODALIDADE — MATRÍCULAS</h2>
+                            </div>
+                            <div class="chart-box">
+                                <canvas id="graficoDetalheParticipacao"></canvas>
+                                <div id="placeholderGraficoParticipacao" class="grafico-vazio">
+                                    Clique em uma sub-região no Ranking para visualizar o gráfico.
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+    <script>
+        async function carregarUsuario() {
+            try {
+                const resp = await fetch(`${API}/auth/me`, {
+                    credentials: "include"
+                });
+
+                if (!resp.ok) return;
+
+                const data = await resp.json();
+
+                const el = document.getElementById("usuario-logado");
+                if (el) {
+                    el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function aplicarCorKpiMeta(elemento, percentual) {
+            elemento.classList.remove(
+                "kpi-pct-neutro",
+                "kpi-pct-ok",
+                "kpi-pct-caminho",
+                "kpi-pct-atencao",
+                "kpi-pct-critico"
+            );
+
+            if (percentual >= 100) {
+                elemento.classList.add("kpi-pct-ok");
+            } else if (percentual >= 75) {
+                elemento.classList.add("kpi-pct-caminho");
+            } else if (percentual >= 51) {
+                elemento.classList.add("kpi-pct-atencao");
+            } else {
+                elemento.classList.add("kpi-pct-critico");
+            }
+        }
+
+        async function carregarKPIs() {
+
+            try {
+
+                const filtros = obterFiltros();
+
+                const params = new URLSearchParams();
+
+                if (filtros.ano) {
+                    params.append("ano", filtros.ano);
+                }
+
+                if (filtros.meses.length) {
+                    params.append("meses", filtros.meses.join(","));
+                }
+
+                if (filtros.subregiao) {
+                    params.append("subregiao", filtros.subregiao);
+                }
+
+                const resp = await fetch(
+                    `${API}/executivo/subregioes/kpis?${params}`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar KPIs");
+                }
+
+                const dados = await resp.json();
+
+                document.getElementById("kpiMatriculas").textContent =
+                    Number(dados.matriculas || 0).toLocaleString("pt-BR");
+
+                if (Number(dados.matriculas_meta || 0) > 0) {
+                    const pctMatriculas =
+                        (Number(dados.matriculas || 0) / Number(dados.matriculas_meta)) * 100;
+
+                    const elMatriculas = document.getElementById("kpiMatriculasPct");
+
+                    elMatriculas.textContent =
+                        pctMatriculas.toFixed(1).replace(".", ",") + "% da meta";
+
+                    aplicarCorKpiMeta(elMatriculas, pctMatriculas);
+
+                    document.getElementById("kpiMatriculasMeta").textContent =
+                        "Meta: " + Number(dados.matriculas_meta).toLocaleString("pt-BR");
+                } else {
+                    document.getElementById("kpiMatriculasPct").textContent =
+                        "Sem meta definida";
+
+                    document.getElementById("kpiMatriculasMeta").textContent =
+                        "Meta: —";
+                }
+
+                document.getElementById("kpiHoraAluno").textContent =
+                    Number(dados.hora_aluno || 0).toLocaleString("pt-BR");
+
+                if (Number(dados.hora_aluno_meta || 0) > 0) {
+                    const pctHoraAluno =
+                        (Number(dados.hora_aluno || 0) / Number(dados.hora_aluno_meta)) * 100;
+
+                    const elHoraAluno = document.getElementById("kpiHoraAlunoPct");
+
+                    elHoraAluno.textContent =
+                        pctHoraAluno.toFixed(1).replace(".", ",") + "% da meta";
+
+                    aplicarCorKpiMeta(elHoraAluno, pctHoraAluno);
+
+                    document.getElementById("kpiHoraAlunoMeta").textContent =
+                        "Meta: " + Number(dados.hora_aluno_meta).toLocaleString("pt-BR");
+                } else {
+                    document.getElementById("kpiHoraAlunoPct").textContent =
+                        "Sem meta definida";
+
+                    document.getElementById("kpiHoraAlunoMeta").textContent =
+                        "Meta: —";
+                }
+
+                document.getElementById("kpiReceita").textContent =
+                    Number(dados.receita || 0).toLocaleString(
+                        "pt-BR",
+                        {
+                            style: "currency",
+                            currency: "BRL"
+                        }
+                    );
+                if (Number(dados.receita_meta || 0) > 0) {
+                    const pctReceita =
+                        (Number(dados.receita || 0) / Number(dados.receita_meta)) * 100;
+
+                    const elReceita = document.getElementById("kpiReceitaPct");
+
+                    elReceita.textContent =
+                        pctReceita.toFixed(1).replace(".", ",") + "% da meta";
+
+                    aplicarCorKpiMeta(elReceita, pctReceita);
+
+                    document.getElementById("kpiReceitaMeta").textContent =
+                        "Meta: " + Number(dados.receita_meta || 0).toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL"
+                        });
+                } else {
+                    document.getElementById("kpiReceitaPct").textContent =
+                        "Sem meta definida";
+
+                    document.getElementById("kpiReceitaMeta").textContent =
+                        "Meta: —";
+                }
+
+                document.getElementById("kpiTurmas").textContent =
+                    Number(dados.turmas || 0).toLocaleString("pt-BR");
+
+                document.getElementById("kpiTaxaOcupacao").textContent =
+                    Number(dados.ocupacao || 0).toFixed(1).replace(".", ",") +
+                    "% taxa de ocupação";
+
+                document.getElementById("kpiTurmasAcumulado").textContent =
+                    "Acumulado no período: " + Number(dados.turmas_acumulado || 0).toLocaleString("pt-BR");
+
+                document.getElementById("kpiSubregioes").textContent =
+                    Number(dados.subregioes || 0).toLocaleString("pt-BR");
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar KPIs:",
+                    erro
+                );
+
+            }
+
+        }
+
+        async function logout() {
+            try {
+                await fetch(`${API}/auth/logout`, {
+                    method: "POST",
+                    credentials: "include"
+                });
+            } catch (e) { }
+
+            window.location.href = "/login.html";
+        }
+
+        let tomSelectPeriodo = null;
+
+        function inicializarFiltroPeriodo() {
+
+            const select = document.getElementById("filtroPeriodo");
+
+            if (!select) return;
+
+            tomSelectPeriodo = new TomSelect(select, {
+                plugins: ["remove_button"],
+                create: false,
+                persist: false,
+                hidePlaceholder: true,
+                placeholder: "Selecione um ou mais meses"
+            });
+
+        }
+
+        function inicializarEventosFiltros() {
+
+            const filtroAno = document.getElementById("filtroAno");
+
+            if (filtroAno) {
+                filtroAno.addEventListener("change", atualizarPaginaSubregioes);
+            }
+
+            if (tomSelectPeriodo) {
+                tomSelectPeriodo.on("change", atualizarPaginaSubregioes);
+            }
+
+            const filtroSubregiao =
+                document.getElementById("filtroSubregiao");
+
+            if (filtroSubregiao) {
+                filtroSubregiao.addEventListener(
+                    "change",
+                    atualizarPaginaSubregioes
+                );
+            }
+
+        }
+
+        function atualizarPaginaSubregioes() {
+
+            const filtros = obterFiltros();
+
+            if (!filtros.meses.length) {
+                limparDadosSubregioes();
+                return;
+            }
+
+            carregarKPIs();
+            carregarRankingSubregioes();
+            carregarResumoModalidades();
+
+            if (subregiaoSelecionada) {
+                carregarDetalhamentoSubregiao(subregiaoSelecionada);
+            }
+
+        }
+
+        function limparDadosSubregioes() {
+
+            ["kpiMatriculasPct", "kpiHoraAlunoPct", "kpiReceitaPct", "kpiTaxaOcupacao"].forEach(id => {
+                const el = document.getElementById(id);
+                el.classList.remove(
+                    "kpi-pct-ok",
+                    "kpi-pct-caminho",
+                    "kpi-pct-atencao",
+                    "kpi-pct-critico"
+                );
+                el.classList.add("kpi-pct-neutro");
+            });
+
+            document.getElementById("kpiMatriculas").textContent = "0";
+            document.getElementById("kpiMatriculasPct").textContent = "Selecione o período";
+            document.getElementById("kpiMatriculasMeta").textContent = "Meta: —";
+
+            document.getElementById("kpiHoraAluno").textContent = "0";
+            document.getElementById("kpiHoraAlunoPct").textContent = "Selecione o período";
+            document.getElementById("kpiHoraAlunoMeta").textContent = "Meta: —";
+
+            document.getElementById("kpiReceita").textContent = "R$ 0,00";
+            document.getElementById("kpiReceitaPct").textContent = "Selecione o período";
+            document.getElementById("kpiReceitaMeta").textContent = "Meta: —";
+            document.getElementById("kpiTurmas").textContent = "0";
+            document.getElementById("kpiTaxaOcupacao").textContent = "Selecione o período";
+            document.getElementById("kpiTurmasAcumulado").textContent = "Acumulado: —";
+
+            document.getElementById("kpiSubregioes").textContent = "0";
+            document.getElementById("tbodyRankingSubregioes").innerHTML = `
+    <tr>
+        <td colspan="8" style="text-align:center;color:#64748b;">
+            Selecione um ou mais meses para visualizar o ranking.
+        </td>
+    </tr>
+`;
+
+            if (window.graficoTopSubregioes) {
+                window.graficoTopSubregioes.data.labels = [];
+                window.graficoTopSubregioes.data.datasets[0].data = [];
+                window.graficoTopSubregioes.update();
+            }
+
+            if (window.graficoModalidadesSub) {
+                window.graficoModalidadesSub.data.labels = [];
+                window.graficoModalidadesSub.data.datasets[0].data = [];
+                window.graficoModalidadesSub.update();
+            }
+
+            document.getElementById("resumoModalidadesGrid").innerHTML = "";
+
+            subregiaoSelecionada = null;
+
+            document.getElementById("detalheSubregiaoNome").textContent =
+                "Selecione uma sub-região";
+
+            document.getElementById("detSubMatriculas").textContent = "—";
+            document.getElementById("detSubHoraAluno").textContent = "—";
+            document.getElementById("detSubReceita").textContent = "—";
+            document.getElementById("detSubTurmas").textContent = "—";
+
+            const statusDetalhe = document.getElementById("detSubStatus");
+            statusDetalhe.className = "status sem-dados";
+            statusDetalhe.textContent = "Sem dados";
+
+            document.getElementById("tbodyDetalhamentoSub").innerHTML = `
+    <tr>
+        <td colspan="8" style="text-align:center;color:#64748b;">
+            Selecione um ou mais meses e clique em uma sub-região no Ranking.
+        </td>
+    </tr>
+`;
+
+            document
+                .querySelectorAll("#tbodyRankingSubregioes tr")
+                .forEach(linha => linha.classList.remove("linha-selecionada"));
+
+            if (graficoDetalheMatriculas) {
+                graficoDetalheMatriculas.destroy();
+                graficoDetalheMatriculas = null;
+            }
+
+            if (graficoDetalheParticipacao) {
+                graficoDetalheParticipacao.destroy();
+                graficoDetalheParticipacao = null;
+            }
+
+            document
+                .getElementById("placeholderGraficoMatriculas")
+                ?.classList.remove("hidden");
+
+            document
+                .getElementById("placeholderGraficoParticipacao")
+                ?.classList.remove("hidden");
+        }
+
+        function obterFiltros() {
+
+            return {
+                ano: document.getElementById("filtroAno")?.value || "",
+                meses: tomSelectPeriodo ? tomSelectPeriodo.getValue() : [],
+                subregiao: document.getElementById("filtroSubregiao")?.value || ""
+            };
+
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarUsuario();
+            inicializarFiltroPeriodo();
+            carregarFiltroSubregioes();
+            inicializarEventosFiltros();
+            inicializarFiltroIndicador();
+            atualizarPaginaSubregioes();
+            inicializarAbasSubregioes();
+
+            const indicadorInicial =
+                document.getElementById("filtroIndicador")?.value ||
+                "matriculas";
+
+            atualizarTitulosPorIndicador(indicadorInicial);
+            destacarKpiDetalhamento(indicadorInicial);
+        });
+
+        function inicializarAbasSubregioes() {
+
+            const tabs = document.querySelectorAll(".tab-ind");
+
+            tabs.forEach(tab => {
+
+                tab.addEventListener("click", () => {
+
+                    tabs.forEach(t =>
+                        t.classList.remove("active")
+                    );
+
+                    tab.classList.add("active");
+
+                    document
+                        .querySelectorAll(".aba-subregioes")
+                        .forEach(aba =>
+                            aba.classList.remove("active")
+                        );
+
+                    const nomeAba =
+                        tab.dataset.aba;
+
+                    document
+                        .getElementById(
+                            `aba-${nomeAba}`
+                        )
+                        .classList.add("active");
+
+                });
+
+            });
+
+        }
+
+        async function carregarRankingSubregioes() {
+
+            try {
+
+                const filtros = obterFiltros();
+
+                const params = new URLSearchParams();
+
+                if (filtros.ano) {
+                    params.append("ano", filtros.ano);
+                }
+
+                if (filtros.meses.length) {
+                    params.append("meses", filtros.meses.join(","));
+                }
+
+                if (filtros.subregiao) {
+                    params.append("subregiao", filtros.subregiao);
+                }
+
+                const resp = await fetch(
+                    `${API}/executivo/subregioes/ranking?${params}`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar ranking");
+                }
+
+                const dados = await resp.json();
+                rankingSubregioes = dados;
+
+                renderizarRankingSubregioes();
+                atualizarGraficoTopSubregioes();
+
+                const tbody =
+                    document.getElementById(
+                        "tbodyRankingSubregioes"
+                    );
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar ranking:",
+                    erro
+                );
+
+            }
+
+        }
+
+        function renderizarRankingSubregioes() {
+
+            const tbody =
+                document.getElementById("tbodyRankingSubregioes");
+
+            if (!tbody) return;
+
+            const indicador =
+                document.getElementById("filtroIndicador")?.value ||
+                "matriculas";
+
+            const campos = {
+                matriculas: "matriculas",
+                hora_aluno: "hora_aluno",
+                receita: "receita",
+                turmas: "turmas"
+            };
+
+            const campo = campos[indicador] || "matriculas";
+
+            const dadosOrdenados = [...rankingSubregioes]
+                .sort((a, b) => Number(b[campo] || 0) - Number(a[campo] || 0));
+
+            tbody.innerHTML = dadosOrdenados.map((item, index) => {
+
+                const rank = index + 1;
+
+                return `
+        <tr data-subregiao="${item.subregiao}">
+
+            <td>
+                <span class="
+                    rank-badge
+                    ${rank === 1 ? "top1" : ""}
+                    ${rank === 2 ? "top2" : ""}
+                    ${rank === 3 ? "top3" : ""}
+                ">
+                    ${rank}º
+                </span>
+            </td>
+
+            <td>${item.subregiao}</td>
+            <td>${item.modalidade_lider}</td>
+            <td>${Number(item.matriculas || 0).toLocaleString("pt-BR")}</td>
+            <td>${Number(item.hora_aluno || 0).toLocaleString("pt-BR")}</td>
+            <td>${Number(item.receita || 0).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL"
+                })}</td>
+            <td>${Number(item.turmas || 0).toLocaleString("pt-BR")}</td>
+            <td>
+                <span class="status ${item.classe || "ok"}">
+                    ${item.status || "Com dados"}
+                </span>
+            </td>
+        </tr>
+    `;
+            }).join("");
+
+            inicializarCliqueRanking();
+            inicializarBuscaSubregiao();
+            inicializarBotaoVerTodas();
+
+            destacarColunaIndicador(indicador);
+
+        }
+
+        function inicializarFiltroIndicador() {
+
+            const filtro = document.getElementById("filtroIndicador");
+
+            if (!filtro) return;
+
+            filtro.addEventListener("change", () => {
+
+                const indicador = filtro.value;
+
+                atualizarTitulosPorIndicador(indicador);
+                renderizarRankingSubregioes();
+                atualizarGraficoTopSubregioes();
+                atualizarGraficoModalidades();
+                atualizarCardsResumoModalidades();
+
+                if (subregiaoSelecionada) {
+                    carregarDetalhamentoSubregiao(subregiaoSelecionada);
+                }
+
+            });
+
+        }
+
+        function atualizarTitulosPorIndicador(indicador) {
+
+            const textos = {
+                matriculas: {
+                    titulo: "RANKING DAS SUB-REGIÕES POR MATRÍCULAS",
+                    subtitulo: "Classificação das sub-regiões com base nas matrículas acumuladas do período selecionado."
+                },
+                hora_aluno: {
+                    titulo: "RANKING DAS SUB-REGIÕES POR HORA-ALUNO",
+                    subtitulo: "Classificação das sub-regiões com base na hora-aluno acumulada do período selecionado."
+                },
+                receita: {
+                    titulo: "RANKING DAS SUB-REGIÕES POR RECEITA",
+                    subtitulo: "Classificação das sub-regiões com base na receita acumulada do período selecionado."
+                },
+                turmas: {
+                    titulo: "RANKING DAS SUB-REGIÕES POR TURMAS",
+                    subtitulo: "Classificação das sub-regiões com base no total de turmas ativas no período selecionado."
+                }
+            };
+
+            const texto = textos[indicador] || textos.matriculas;
+
+            document.getElementById("tituloRanking").textContent = texto.titulo;
+            document.getElementById("subtituloRanking").textContent = texto.subtitulo;
+
+            const titulosGraficos = {
+                matriculas: {
+                    top: "TOP 10 SUB-REGIÕES POR MATRÍCULAS",
+                    modalidades: "DESEMPENHO POR MODALIDADE — MATRÍCULAS"
+                },
+                hora_aluno: {
+                    top: "TOP 10 SUB-REGIÕES POR HORA-ALUNO",
+                    modalidades: "DESEMPENHO POR MODALIDADE — HORA-ALUNO"
+                },
+                receita: {
+                    top: "TOP 10 SUB-REGIÕES POR RECEITA",
+                    modalidades: "DESEMPENHO POR MODALIDADE — RECEITA"
+                },
+                turmas: {
+                    top: "TOP 10 SUB-REGIÕES POR TURMAS",
+                    modalidades: "DESEMPENHO POR MODALIDADE — TURMAS"
+                }
+            };
+
+            const titulos = titulosGraficos[indicador] || titulosGraficos.matriculas;
+
+            document.getElementById("tituloGraficoTop").textContent = titulos.top;
+            document.getElementById("tituloGraficoModalidades").textContent = titulos.modalidades;
+
+            const titulosDetalhamento = {
+                matriculas: {
+                    tabela: "MODALIDADES DA SUB-REGIÃO — MATRÍCULAS",
+                    barras: "MATRÍCULAS POR MODALIDADE",
+                    donut: "PARTICIPAÇÃO POR MODALIDADE — MATRÍCULAS"
+                },
+                hora_aluno: {
+                    tabela: "MODALIDADES DA SUB-REGIÃO — HORA-ALUNO",
+                    barras: "HORA-ALUNO POR MODALIDADE",
+                    donut: "PARTICIPAÇÃO POR MODALIDADE — HORA-ALUNO"
+                },
+                receita: {
+                    tabela: "MODALIDADES DA SUB-REGIÃO — RECEITA",
+                    barras: "RECEITA POR MODALIDADE",
+                    donut: "PARTICIPAÇÃO POR MODALIDADE — RECEITA"
+                },
+                turmas: {
+                    tabela: "MODALIDADES DA SUB-REGIÃO — TURMAS",
+                    barras: "TURMAS POR MODALIDADE",
+                    donut: "PARTICIPAÇÃO POR MODALIDADE — TURMAS"
+                }
+            };
+
+            const tituloDetalhe = titulosDetalhamento[indicador] || titulosDetalhamento.matriculas;
+
+            document.getElementById("tituloTabelaDetalhamento").textContent = tituloDetalhe.tabela;
+            document.getElementById("tituloGraficoDetalheBarras").textContent = tituloDetalhe.barras;
+            document.getElementById("tituloGraficoDetalheDonut").textContent = tituloDetalhe.donut;
+
+            atualizarTabelaRanking(indicador);
+            destacarColunaIndicador(indicador);
+            destacarKpiDetalhamento(indicador);
+
+        }
+
+        function atualizarTabelaRanking(indicador) {
+
+            const nomesColuna = {
+                matriculas: "Matrículas",
+                hora_aluno: "Hora-Aluno",
+                receita: "Receita",
+                turmas: "Turmas"
+            };
+
+            const colunaDetalhamento = document.getElementById("colunaIndicadorDetalhamento");
+
+            if (colunaDetalhamento) {
+                colunaDetalhamento.textContent =
+                    nomesColuna[indicador] || nomesColuna.matriculas;
+            }
+
+        }
+
+        function destacarColunaIndicador(indicador) {
+
+            document
+                .querySelectorAll(".coluna-indicador-ativa")
+                .forEach(el => el.classList.remove("coluna-indicador-ativa"));
+
+            const mapaRanking = {
+                matriculas: 4,
+                hora_aluno: 5,
+                receita: 6,
+                turmas: 7
+            };
+
+            const colunaRanking = mapaRanking[indicador];
+
+            if (colunaRanking) {
+                document
+                    .querySelectorAll(`#aba-ranking .tabela-sub tr > *:nth-child(${colunaRanking})`)
+                    .forEach(el => el.classList.add("coluna-indicador-ativa"));
+            }
+
+            const mapaDetalhamento = {
+                matriculas: 2,
+                hora_aluno: 5,
+                receita: 6,
+                turmas: 7
+            };
+
+            const colunaDetalhamento = mapaDetalhamento[indicador];
+
+            if (colunaDetalhamento) {
+                document
+                    .querySelectorAll(`#aba-detalhamento .tabela-sub tr > *:nth-child(${colunaDetalhamento})`)
+                    .forEach(el => el.classList.add("coluna-indicador-ativa"));
+            }
+
+        }
+
+        function destacarKpiDetalhamento(indicador) {
+
+            document
+                .querySelectorAll(".detalhe-kpis-sub [data-kpi]")
+                .forEach(card => {
+                    card.classList.toggle(
+                        "kpi-ativo",
+                        card.dataset.kpi === indicador
+                    );
+                });
+
+        }
+
+        function atualizarGraficoTopSubregioes() {
+
+            if (!window.graficoTopSubregioes) return;
+
+            const indicador =
+                document.getElementById("filtroIndicador")?.value ||
+                "matriculas";
+
+            const titulos = {
+                matriculas: "TOP 10 SUB-REGIÕES POR MATRÍCULAS",
+                hora_aluno: "TOP 10 SUB-REGIÕES POR HORA-ALUNO",
+                receita: "TOP 10 SUB-REGIÕES POR RECEITA",
+                turmas: "TOP 10 SUB-REGIÕES POR TURMAS"
+            };
+
+            const tituloEl = document.getElementById("tituloGraficoTop");
+
+            if (tituloEl) {
+                tituloEl.textContent =
+                    titulos[indicador] || titulos.matriculas;
+            }
+
+            const campos = {
+                matriculas: "matriculas",
+                hora_aluno: "hora_aluno",
+                receita: "receita",
+                turmas: "turmas"
+            };
+
+            const campo = campos[indicador] || "matriculas";
+
+            const top10 = [...rankingSubregioes]
+                .sort((a, b) => Number(b[campo] || 0) - Number(a[campo] || 0))
+                .slice(0, 10);
+
+            window.graficoTopSubregioes.data.labels =
+                top10.map(x => x.subregiao);
+
+            window.graficoTopSubregioes.data.datasets[0].data =
+                top10.map(x => Number(x[campo] || 0));
+
+            window.graficoTopSubregioes.update();
+
+        }
+
+        async function carregarResumoModalidades() {
+
+            try {
+
+                const filtros = obterFiltros();
+
+                const params = new URLSearchParams();
+
+                if (filtros.ano) {
+                    params.append("ano", filtros.ano);
+                }
+
+                if (filtros.meses.length) {
+                    params.append("meses", filtros.meses.join(","));
+                }
+
+                if (filtros.subregiao) {
+                    params.append("subregiao", filtros.subregiao);
+                }
+
+                const resp = await fetch(
+                    `${API}/executivo/subregioes/resumo-modalidades?${params}`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar resumo por modalidade");
+                }
+
+                resumoModalidades = await resp.json();
+
+                atualizarGraficoModalidades();
+                atualizarCardsResumoModalidades();
+
+            } catch (erro) {
+                console.error("Erro ao carregar resumo por modalidade:", erro);
+            }
+        }
+
+        function atualizarGraficoModalidades() {
+
+            if (!window.graficoModalidadesSub) return;
+
+            const indicador =
+                document.getElementById("filtroIndicador")?.value ||
+                "matriculas";
+
+            const campos = {
+                matriculas: "matriculas",
+                hora_aluno: "hora_aluno",
+                receita: "receita",
+                turmas: "turmas"
+            };
+
+            const campo = campos[indicador] || "matriculas";
+
+            const dados = [...resumoModalidades]
+                .filter(x => Number(x[campo] || 0) > 0)
+                .sort((a, b) => Number(b[campo] || 0) - Number(a[campo] || 0));
+
+            window.graficoModalidadesSub.data.labels =
+                dados.map(x => x.modalidade);
+
+            window.graficoModalidadesSub.data.datasets[0].data =
+                dados.map(x => Number(x[campo] || 0));
+
+            window.graficoModalidadesSub.data.datasets[0].backgroundColor = [
+                "#3b82f6",
+                "#f95d7f",
+                "#f59e0b",
+                "#f2c94c",
+                "#4db6ac",
+                "#8b5cf6",
+                "#c4c4c4",
+                "#60a5fa",
+                "#fb7185",
+                "#f97316"
+            ];
+
+            window.graficoModalidadesSub.update();
+
+        }
+
+        function atualizarCardsResumoModalidades() {
+
+            const grid = document.getElementById("resumoModalidadesGrid");
+
+            if (!grid) return;
+
+            const indicador =
+                document.getElementById("filtroIndicador")?.value ||
+                "matriculas";
+
+            const campos = {
+                matriculas: "matriculas",
+                hora_aluno: "hora_aluno",
+                receita: "receita",
+                turmas: "turmas"
+            };
+
+            const rotulos = {
+                matriculas: "Matrículas realizadas",
+                hora_aluno: "Hora-Aluno realizada",
+                receita: "Receita realizada",
+                turmas: "Turmas ativas"
+            };
+
+            const campo = campos[indicador] || "matriculas";
+
+            const dados = [...resumoModalidades]
+                .filter(item => Number(item[campo] || 0) > 0)
+                .sort((a, b) => Number(b[campo] || 0) - Number(a[campo] || 0))
+                .slice(0, 4);
+
+            grid.innerHTML = dados.map(item => {
+
+                const valor = Number(item[campo] || 0);
+
+                const valorFormatado =
+                    indicador === "receita"
+                        ? valor.toLocaleString("pt-BR", {
+                            style: "currency",
+                            currency: "BRL"
+                        })
+                        : valor.toLocaleString("pt-BR");
+
+                return `
+        <div class="modalidade-resumo">
+            <h3>${item.modalidade}</h3>
+            <strong>${valorFormatado}</strong>
+            <p>${rotulos[indicador]}</p>
+            <div class="barra-resumo">
+                <span style="width: 100%;"></span>
+            </div>
+            <small>Consolidado no período</small>
+        </div>
+    `;
+
+            }).join("");
+
+        }
+
+        function inicializarBuscaSubregiao() {
+
+            const campoBusca = document.getElementById("buscaSubregiao");
+
+            if (!campoBusca) return;
+
+            campoBusca.oninput = () => {
+
+                const termo = campoBusca.value
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .trim();
+
+                const linhas = document.querySelectorAll("#tbodyRankingSubregioes tr");
+
+                let visiveis = 0;
+
+                linhas.forEach(linha => {
+
+                    const subregiao = linha.dataset.subregiao
+                        ?.toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "") || "";
+
+                    const mostrar = subregiao.includes(termo);
+
+                    linha.style.display = mostrar ? "" : "none";
+
+                    if (mostrar) {
+                        visiveis++;
+                    }
+
+                });
+
+                document
+                    .getElementById("msgBuscaVazia")
+                    ?.classList.toggle("hidden", visiveis > 0);
+
+            };
+
+        }
+
+        function inicializarBotaoVerTodas() {
+
+            const btn = document.getElementById("btnVerTodas");
+            const campoBusca = document.getElementById("buscaSubregiao");
+            const filtroSubregiao = document.getElementById("filtroSubregiao");
+
+            if (!btn) return;
+
+            btn.onclick = () => {
+
+                if (campoBusca) {
+                    campoBusca.value = "";
+                }
+
+                if (filtroSubregiao) {
+                    filtroSubregiao.value = "";
+                }
+
+                subregiaoSelecionada = null;
+
+                atualizarPaginaSubregioes();
+
+                document
+                    .getElementById("msgBuscaVazia")
+                    ?.classList.add("hidden");
+            };
+        }
+
+        function inicializarCliqueRanking() {
+
+            const linhas = document.querySelectorAll("#tbodyRankingSubregioes tr");
+
+            linhas.forEach(linha => {
+
+                linha.addEventListener("click", () => {
+
+                    const subregiao = linha.dataset.subregiao;
+
+                    if (!subregiao) return;
+
+                    abrirDetalhamentoSubregiao(subregiao);
+
+                });
+
+            });
+
+        }
+
+        let rankingSubregioes = [];
+        let resumoModalidades = [];
+        let subregiaoSelecionada = null;
+
+        function abrirDetalhamentoSubregiao(subregiao) {
+
+            subregiaoSelecionada = subregiao;
+
+            document.getElementById("detalheSubregiaoNome").textContent = subregiao;
+
+            document.querySelectorAll("#tbodyRankingSubregioes tr").forEach(linha => {
+                linha.classList.remove("linha-selecionada");
+
+                if (linha.dataset.subregiao === subregiao) {
+                    linha.classList.add("linha-selecionada");
+                }
+            });
+
+            document.querySelectorAll(".tab-ind").forEach(tab => {
+                tab.classList.remove("active");
+            });
+
+            document
+                .querySelector('.tab-ind[data-aba="detalhamento"]')
+                .classList.add("active");
+
+            document.querySelectorAll(".aba-subregioes").forEach(aba => {
+                aba.classList.remove("active");
+            });
+
+            document
+                .getElementById("aba-detalhamento")
+                .classList.add("active");
+
+            carregarDetalhamentoSubregiao(subregiao);
+
+        }
+
+        let graficoDetalheMatriculas = null;
+        let graficoDetalheParticipacao = null;
+
+        function atualizarGraficosDetalhamento(linhas) {
+
+            const indicador =
+                document.getElementById("filtroIndicador")?.value ||
+                "matriculas";
+
+            const labels = linhas.map(item => item.modalidade);
+
+            let valores = [];
+
+            switch (indicador) {
+
+                case "hora_aluno":
+                    valores = linhas.map(item =>
+                        Number(String(item.horaAluno).replace(/\./g, ""))
+                    );
+                    break;
+
+                case "receita":
+                    valores = linhas.map(item =>
+                        Number(
+                            String(item.receita)
+                                .replace("R$", "")
+                                .replace(/\./g, "")
+                                .replace(",", ".")
+                                .trim()
+                        )
+                    );
+                    break;
+
+                case "turmas":
+                    valores = linhas.map(item => item.turmas);
+                    break;
+
+                default:
+                    valores = linhas.map(item => item.matriculas);
+            }
+
+            const placeholderMatriculas = document.getElementById("placeholderGraficoMatriculas");
+            const placeholderParticipacao = document.getElementById("placeholderGraficoParticipacao");
+
+            if (!linhas.length) {
+
+                placeholderMatriculas?.classList.remove("hidden");
+                placeholderParticipacao?.classList.remove("hidden");
+
+                if (graficoDetalheMatriculas) {
+                    graficoDetalheMatriculas.destroy();
+                    graficoDetalheMatriculas = null;
+                }
+
+                if (graficoDetalheParticipacao) {
+                    graficoDetalheParticipacao.destroy();
+                    graficoDetalheParticipacao = null;
+                }
+
+                return;
+            }
+
+            placeholderMatriculas?.classList.add("hidden");
+            placeholderParticipacao?.classList.add("hidden");
+
+            if (graficoDetalheMatriculas) {
+                graficoDetalheMatriculas.destroy();
+            }
+
+            if (graficoDetalheParticipacao) {
+                graficoDetalheParticipacao.destroy();
+            }
+
+            graficoDetalheMatriculas = new Chart(
+                document.getElementById("graficoDetalheMatriculas"),
+                {
+                    type: "bar",
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: document.getElementById("filtroIndicador")
+                                ?.selectedOptions[0]?.text || "Indicador",
+                            data: valores,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            },
+                            x: {
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+
+            graficoDetalheParticipacao = new Chart(
+                document.getElementById("graficoDetalheParticipacao"),
+                {
+                    type: "doughnut",
+                    data: {
+                        labels,
+                        datasets: [{
+                            data: valores
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: "right",
+                                labels: {
+                                    boxWidth: 12,
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+
+        }
+
+        function calcularStatusMeta(realizado, meta) {
+            realizado = Number(realizado || 0);
+            meta = Number(meta || 0);
+
+            if (meta === 0 && realizado > 0) {
+                return { status: "Realizado sem meta", classe: "sem-meta" };
+            }
+
+            if (meta === 0 && realizado === 0) {
+                return { status: "Sem movimento", classe: "sem-dados" };
+            }
+
+            const percentual = (realizado / meta) * 100;
+
+            if (percentual >= 100) {
+                return { status: "Meta atingida", classe: "ok" };
+            }
+
+            if (percentual >= 75) {
+                return { status: "No caminho", classe: "no-caminho" };
+            }
+
+            if (percentual >= 51) {
+                return { status: "Atenção", classe: "atencao" };
+            }
+
+            return { status: "Crítico", classe: "critico" };
+        }
+
+        async function carregarDetalhamentoSubregiao(subregiao) {
+
+            try {
+
+                const filtros = obterFiltros();
+
+                const params = new URLSearchParams();
+
+                params.append("subregiao", subregiao);
+
+                if (filtros.ano) {
+                    params.append("ano", filtros.ano);
+                }
+
+                if (filtros.meses.length) {
+                    params.append("meses", filtros.meses.join(","));
+                }
+
+                if (filtros.subregiao) {
+                    params.append("subregiao", filtros.subregiao);
+                }
+
+                const resp = await fetch(
+                    `${API}/executivo/subregioes/detalhamento?${params}`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar detalhamento da sub-região");
+                }
+
+                const linhas = await resp.json();
+
+                const tbody = document.getElementById("tbodyDetalhamentoSub");
+
+                const totalMatriculas = linhas.reduce(
+                    (soma, item) => soma + Number(item.matriculas || 0),
+                    0
+                );
+
+                const totalHoraAluno = linhas.reduce(
+                    (soma, item) => soma + Number(item.horaAluno || 0),
+                    0
+                );
+
+                const totalReceita = linhas.reduce(
+                    (soma, item) => soma + Number(item.receita || 0),
+                    0
+                );
+
+                const totalTurmas = linhas.reduce(
+                    (soma, item) => soma + Number(item.turmas || 0),
+                    0
+                );
+
+                document.getElementById("detSubMatriculas").textContent =
+                    totalMatriculas.toLocaleString("pt-BR");
+
+                document.getElementById("detSubHoraAluno").textContent =
+                    totalHoraAluno.toLocaleString("pt-BR");
+
+                document.getElementById("detSubReceita").textContent =
+                    totalReceita.toLocaleString(
+                        "pt-BR",
+                        {
+                            style: "currency",
+                            currency: "BRL"
+                        }
+                    );
+
+                document.getElementById("detSubTurmas").textContent =
+                    totalTurmas.toLocaleString("pt-BR");
+
+                const statusEl = document.getElementById("detSubStatus");
+
+                if (!linhas.length) {
+
+                    statusEl.className = "status sem-dados";
+                    statusEl.textContent = "Sem dados";
+
+                    tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align:center;color:#64748b;">
+                    Nenhum dado encontrado para esta sub-região.
+                </td>
+            </tr>
+        `;
+
+                    atualizarGraficosDetalhamento([]);
+                    return;
+                }
+
+                const itemRanking = rankingSubregioes.find(
+                    item => item.subregiao === subregiao
+                );
+
+                statusEl.className = `status ${itemRanking?.classe || "sem-dados"}`;
+                statusEl.textContent = itemRanking?.status || "Sem dados";
+
+                tbody.innerHTML = linhas.map(item => {
+                    const statusMeta = calcularStatusMeta(item.matriculas, item.meta);
+
+                    return `
+        <tr>
+            <td>${item.modalidade}</td>
+            <td>${Number(item.matriculas || 0).toLocaleString("pt-BR")}</td>
+            <td>${Number(item.meta || 0).toLocaleString("pt-BR")}</td>
+            <td>${item.percentual || "-"}</td>
+            <td>${Number(item.horaAluno || 0).toLocaleString("pt-BR")}</td>
+            <td>${Number(item.receita || 0).toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL"
+                    })}</td>
+            <td>${Number(item.turmas || 0).toLocaleString("pt-BR")}</td>
+            <td>
+                <span class="status ${statusMeta.classe}">
+                    ${statusMeta.status}
+                </span>
+            </td>
+        </tr>
+    `;
+                }).join("");
+
+                const indicadorAtual =
+                    document.getElementById("filtroIndicador")?.value ||
+                    "matriculas";
+
+                destacarColunaIndicador(indicadorAtual);
+                destacarKpiDetalhamento(indicadorAtual);
+                atualizarGraficosDetalhamento(linhas);
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar detalhamento da sub-região:",
+                    erro
+                );
+
+            }
+
+        }
+
+        async function carregarFiltroSubregioes() {
+
+            try {
+
+                const resp = await fetch(
+                    `${API}/executivo/subregioes/lista`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao carregar sub-regiões");
+                }
+
+                const dados = await resp.json();
+
+                const select = document.getElementById("filtroSubregiao");
+
+                select.innerHTML = `
+        <option value="">Todas as sub-regiões</option>
+    `;
+
+                select.innerHTML += dados.map(item => `
+        <option value="${item.nome}">
+            ${item.nome}
+        </option>
+    `).join("");
+
+            } catch (erro) {
+                console.error("Erro ao carregar filtro de sub-regiões:", erro);
+            }
+
+        }
+    </script>
+
+    <script>
+        window.graficoTopSubregioes =
+            new Chart(document.getElementById("graficoTopSubregioes"), {
+                type: "bar",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: "Matrículas",
+                        data: [],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+        window.graficoModalidadesSub =
+            new Chart(document.getElementById("graficoModalidadesSub"), {
+                type: "doughnut",
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: []
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }
+            });
+    </script>
+
+</body>
+
+</html>
