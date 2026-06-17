@@ -528,6 +528,11 @@
       <div class="filters">
 
         <div class="field">
+          <label for="subregioes">Sub-região</label>
+          <select id="subregioes" multiple></select>
+        </div>
+
+        <div class="field">
           <label for="modalidades">Modalidades</label>
           <select id="modalidades" multiple></select>
         </div>
@@ -674,28 +679,44 @@
       return Array.from(sel.selectedOptions).map(o => o.value).join(",");
     }
 
+    function textoSelecionados(id, rotulo, textoTodos) {
+      const sel = document.getElementById(id);
+
+      const selecionados = Array.from(sel.selectedOptions)
+        .map(o => o.textContent.trim());
+
+      if (!selecionados.length) {
+        return `${rotulo}: ${textoTodos}`;
+      }
+
+      if (selecionados.length <= 2) {
+        return `${rotulo}: ${selecionados.join(", ")}`;
+      }
+
+      return `${rotulo}: ${selecionados.slice(0, 2).join(", ")} +${selecionados.length - 2}`;
+    }
+
     function atualizarBadgeFiltro() {
-      const selMod = document.getElementById("modalidades");
       const badge = document.getElementById("badge-filtro");
       if (!badge) return;
 
-      const selecionadas = Array.from(selMod.selectedOptions)
-        .map(o => o.textContent.trim());
+      const subTxt = textoSelecionados(
+        "subregioes",
+        "Sub-região",
+        "todas"
+      );
 
-      const disponiveis = Array.from(selMod.options)
-        .map(o => o.textContent.trim());
+      const modTxt = textoSelecionados(
+        "modalidades",
+        "Modalidades",
+        "todas com resultados no período"
+      );
 
-      let modTxt = "";
-
-      if (selecionadas.length) {
-        modTxt = selecionadas.length <= 2
-          ? selecionadas.join(", ")
-          : `${selecionadas.slice(0, 2).join(", ")} +${selecionadas.length - 2}`;
-
-        modTxt = `Modalidades: ${modTxt}`;
-      } else {
-        modTxt = "Modalidades: todas com resultados no período";
-      }
+      const finTxt = textoSelecionados(
+        "financiamentos",
+        "Financiamento",
+        "todos"
+      );
 
       const ano = document.getElementById("ano").value || "2026";
 
@@ -719,11 +740,13 @@
         }
       }
 
-      badge.innerHTML = `<span class="dot"></span>Filtro: ${modTxt} • Ano: ${ano} • Meses: ${periodoTxt}`;
+      badge.innerHTML =
+        `<span class="dot"></span>` +
+        `Filtro: ${subTxt} • ${modTxt} • ${finTxt} • Ano: ${ano} • Meses: ${periodoTxt}`;
     }
 
     async function limparSelecao() {
-      ["modalidades", "financiamentos"].forEach(id => {
+      ["subregioes", "modalidades", "financiamentos"].forEach(id => {
         const sel = document.getElementById(id);
         Array.from(sel.options).forEach(o => o.selected = false);
       });
@@ -733,11 +756,38 @@
 
       aplicarAnoMesPadrao();
 
+      await carregarSubregioes();
       await carregarModalidades();
       await carregarFinanciamentos();
 
       atualizarBadgeFiltro();
       await carregarTudo();
+    }
+
+    async function carregarSubregioes() {
+      const ano = document.getElementById("ano").value || "2026";
+
+      const qs = new URLSearchParams({ ano });
+
+      const resp = await fetch(`${API}/modalidades/subregioes?${qs.toString()}`);
+
+      if (!resp.ok) {
+        console.error("Erro ao carregar sub-regiões:", resp.status);
+        return;
+      }
+
+      const dados = await resp.json();
+
+      const select = document.getElementById("subregioes");
+
+      if (!Array.isArray(dados)) {
+        console.error("Resposta inválida em /modalidades/subregioes:", dados);
+        return;
+      }
+
+      select.innerHTML = dados.map(s =>
+        `<option value="${s.subregiao}">${s.subregiao}</option>`
+      ).join("");
     }
 
     async function carregarModalidades() {
@@ -844,6 +894,7 @@
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(o => o.value);
 
+      const subs = selecionados("subregioes");
       const mods = selecionados("modalidades");
       const fins = selecionados("financiamentos");
 
@@ -853,6 +904,7 @@
         qs.set("meses", meses.join(","));
       }
 
+      if (subs) qs.set("subregioes", subs);
       if (mods) qs.set("modalidades", mods);
       if (fins) qs.set("financiamentos", fins);
 
@@ -936,6 +988,7 @@
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(o => o.value);
 
+      const subs = selecionados("subregioes");
       const mods = selecionados("modalidades");
       const fins = selecionados("financiamentos");
 
@@ -953,6 +1006,7 @@
           qs.set("meses", meses.join(","));
         }
 
+        if (subs) qs.set("subregioes", subs);
         if (modalidade_id) qs.set("modalidades", modalidade_id);
         if (fins) qs.set("financiamentos", fins);
 
@@ -1063,6 +1117,7 @@
           aplicarAnoMesPadrao();
         }
 
+        await carregarSubregioes();
         await carregarModalidades();
 
         // força atualização depois do DOM estabilizar
@@ -1089,6 +1144,7 @@
 
     document.getElementById("ano").addEventListener("change", async () => {
       salvarAnoMesPreferidos();
+      await carregarSubregioes();
       await carregarModalidades();
       await carregarFinanciamentos();
       atualizarBadgeFiltro();
@@ -1097,6 +1153,14 @@
 
     document.getElementById("periodoMeses").addEventListener("change", async () => {
       salvarAnoMesPreferidos();
+      await carregarSubregioes();
+      await carregarModalidades();
+      await carregarFinanciamentos();
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
+    document.getElementById("subregioes").addEventListener("change", async () => {
       await carregarModalidades();
       await carregarFinanciamentos();
       atualizarBadgeFiltro();
@@ -1189,11 +1253,13 @@
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(opt => opt.value);
 
+      const subregioes = selecionados("subregioes");
       const modalidades = selecionados("modalidades");
 
       const qs = new URLSearchParams({ ano });
 
       if (meses.length) qs.set("meses", meses.join(","));
+      if (subregioes) qs.set("subregioes", subregioes);
       if (modalidades) qs.set("modalidades", modalidades);
 
       const res = await fetch(`${API}/modalidades/financiamentos?${qs.toString()}`);
@@ -1235,6 +1301,19 @@
         console.error(e);
       }
     }
+
+    function obterSubregioesSelecionadas() {
+      return Array
+        .from(document.getElementById("subregioes").selectedOptions)
+        .map(o => o.value);
+    }
+
+    document.getElementById("subregioes").addEventListener("change", async () => {
+      await carregarModalidades();
+      await carregarFinanciamentos();
+      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
 
     async function logout() {
       try {
