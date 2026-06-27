@@ -116,23 +116,8 @@
     }
 
     .field.periodo-field {
-      flex: 0 0 auto;
+      flex: 0 0 320px;
       min-width: 320px;
-      max-width: none;
-    }
-
-    .field.periodo-field .ts-wrapper {
-      width: fit-content;
-      min-width: 320px;
-      max-width: none;
-    }
-
-    .field.periodo-field .ts-control {
-      width: fit-content;
-      min-width: 320px;
-      max-width: none;
-      flex-wrap: nowrap;
-      overflow: visible;
     }
 
     .field label {
@@ -154,10 +139,18 @@
 
     select[multiple] {
       height: 42px !important;
+      line-height: 24px;
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
 
     .actions {
       flex: 0 0 auto;
+    }
+
+    .actions .btn-primary {
+      height: 42px;
+      padding: 0 18px;
     }
 
     button {
@@ -342,11 +335,10 @@
     }
 
     .card-executivo .big {
-      margin-top: 16px;
-      font-size: 34px;
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -0.6px;
+      margin-top: 10px;
+      font-size: 26px;
+      font-weight: 820;
+      letter-spacing: .2px;
     }
 
     .progress-info {
@@ -745,51 +737,78 @@
 
     /* ===== TOM SELECT ===== */
 
-    .ts-wrapper.single .ts-control,
-    .ts-wrapper.multi .ts-control {
-      min-height: 42px;
-      height: 42px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fff;
-      box-shadow: none;
-      padding: 8px 12px;
+    .ts-wrapper {
+      width: 100%;
     }
 
-    .ts-wrapper.focus .ts-control {
-      border-color: #003B8F;
-      box-shadow: 0 0 0 2px rgba(0, 59, 143, .10);
+    .ts-control {
+      height: 42px !important;
+      min-height: 42px !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      padding: 8px 10px !important;
+      background: #fff !important;
+      display: flex !important;
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+      overflow: visible !important;
+      box-shadow: none !important;
     }
 
-    .ts-wrapper.multi .ts-control>div {
-      background: #003B8F15;
-      border-radius: 999px;
-      color: #003B8F;
-      font-size: 12px;
-      padding: 2px 8px;
+    .field.periodo-field {
+      flex: 0 0 auto;
+      min-width: 320px;
+      width: max-content;
+      max-width: 100%;
     }
 
-    .ts-wrapper .ts-control input {
-      font-size: 14px;
+    .periodo-field .ts-wrapper {
+      display: inline-block;
+      width: max-content;
+      min-width: 320px;
+      max-width: 100%;
+    }
+
+    .periodo-field .ts-control {
+      width: max-content !important;
+      min-width: 320px !important;
+      max-width: 100% !important;
+      overflow: visible !important;
+    }
+
+    .ts-control>.item {
+      margin: 0 6px 0 0 !important;
+      padding: 2px 8px !important;
+      border-radius: 999px !important;
+      background: rgba(0, 59, 143, .10) !important;
+      border: 1px solid rgba(0, 59, 143, .25) !important;
+      color: #003B8F !important;
+      font-size: 12px !important;
+      line-height: 18px !important;
+      white-space: nowrap !important;
+      flex: 0 0 auto !important;
+    }
+
+    .ts-control input {
+      min-width: 1px !important;
+      height: 22px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: #000 !important;
+    }
+
+    .ts-control input::placeholder {
+      color: #000 !important;
+      opacity: 1 !important;
+    }
+
+    .ts-wrapper.has-items .ts-control input::placeholder {
+      color: transparent !important;
     }
 
     .ts-dropdown {
       border-radius: 12px;
       border: 1px solid var(--border);
-    }
-
-    .field.periodo-field .ts-control {
-      flex-wrap: nowrap;
-      overflow: hidden;
-    }
-
-    .field.periodo-field .ts-control>div {
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-
-    .field.periodo-field .ts-control input {
-      min-width: 40px;
     }
 
     /* ===== META X REALIZADO ===== */
@@ -1000,6 +1019,59 @@
     .footer-right {
       font-weight: 600;
     }
+
+    #periodoMeses+.ts-wrapper .ts-control input::placeholder {
+      color: #000;
+      opacity: 1;
+    }
+
+    #periodoMeses+.ts-wrapper .ts-control input {
+      color: #000;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .usuario-badge {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .btn-sair {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 8px 14px;
+
+      border-radius: 999px;
+      background: #fff;
+
+      color: #991b1b;
+      border: 1px solid #fecaca;
+
+      font-size: 12px;
+      font-weight: 700;
+
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .btn-sair:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
   </style>
 </head>
 
@@ -1066,7 +1138,7 @@
           <a href="indicadores.html">📈 Indicadores</a>
           <a href="regioes.html">🌎 Regiões</a>
           <a href="subregioes.html">📍 Sub-regiões</a>
-          <a href="turmas.html">🎓 Turmas</a>
+          <a href="turmas.html">🏫 Turmas</a>
           <a href="acoes.html">✅ Ações</a>
           <a href="relatoriosexecutivos.html">📄 Relatórios</a>
         </nav>
@@ -1078,14 +1150,24 @@
 
         <div class="header">
           <div class="title">
-            <h1>Painel Educação Profissional</h1>
+            <h1>Dashboard</h1>
           </div>
 
-          <div style="display:flex; gap:12px; align-items:center;">
-            <div class="badge" id="badge-filtro">
-              <span class="dot"></span>Filtro: todas as sub-regiões
+          <div class="header-actions">
+
+            <div class="user-area">
+              <div class="badge usuario-badge" id="usuario-logado">
+                <span class="dot"></span>
+                Usuário: —
+              </div>
+
+              <button class="btn-sair" onclick="logout()">
+                Sair
+              </button>
             </div>
+
           </div>
+
         </div>
 
         <div class="panel">
@@ -1101,18 +1183,7 @@
             <div class="field periodo-field">
               <label for="periodoMeses">Período</label>
               <select id="periodoMeses" multiple>
-                <option value="1">Janeiro</option>
-                <option value="2">Fevereiro</option>
-                <option value="3">Março</option>
-                <option value="4">Abril</option>
-                <option value="5">Maio</option>
-                <option value="6">Junho</option>
-                <option value="7">Julho</option>
-                <option value="8">Agosto</option>
-                <option value="9">Setembro</option>
-                <option value="10">Outubro</option>
-                <option value="11">Novembro</option>
-                <option value="12">Dezembro</option>
+                <option value="">Selecione...</option>
               </select>
             </div>
 
@@ -1292,6 +1363,8 @@
           </div>
 
         </footer>
+
+      </main>
 
     </div>
 
@@ -1550,50 +1623,9 @@
         };
       }
 
-      function atualizarBadgeFiltro() {
-        const badge = document.getElementById("badge-filtro");
-        if (!badge) return;
-
-        const subSelect = document.getElementById("subregioes");
-        const mesSelect = document.getElementById("periodoMeses");
-
-        const subNomes = Array.from(subSelect?.selectedOptions || [])
-          .map(o => o.textContent.trim());
-
-        const mesNomes = Array.from(mesSelect?.selectedOptions || [])
-          .map(o => o.textContent.trim());
-
-        let subTxt = "";
-
-        if (subNomes.length) {
-          const resumoSubs = subNomes.length <= 3
-            ? subNomes.join(", ")
-            : `${subNomes.slice(0, 3).join(", ")} +${subNomes.length - 3}`;
-
-          subTxt = `Sub-regiões: ${resumoSubs}`;
-        } else {
-          subTxt = "Sub-regiões: todas";
-        }
-
-        let mesTxt = "";
-
-        if (mesNomes.length) {
-          const resumoMeses = mesNomes.length <= 3
-            ? mesNomes.join(", ")
-            : `${mesNomes.slice(0, 3).join(", ")} +${mesNomes.length - 3}`;
-
-          mesTxt = `Meses: ${resumoMeses}`;
-        } else {
-          mesTxt = "Meses: todos";
-        }
-
-        badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${mesTxt}`;
-      }
-
       function selecionarTudo() {
         const sel = document.getElementById("subregioes");
         Array.from(sel.options).forEach(o => o.selected = true);
-        atualizarBadgeFiltro();
       }
 
       async function limparSelecao() {
@@ -1611,7 +1643,6 @@
         }
 
         await atualizarOpcoesFiltros();
-        atualizarBadgeFiltro();
         await carregarPerformanceSubregioes();
       }
 
@@ -2280,7 +2311,6 @@
 
       async function aplicarFiltros() {
         await atualizarOpcoesFiltros();
-        atualizarBadgeFiltro();
         await carregarPerformanceSubregioes();
       }
 
@@ -2303,6 +2333,38 @@
       });
 
       (async function init() {
+        const periodo = document.getElementById("periodoMeses");
+
+        if (periodo && !periodo.tomselect) {
+          periodo.innerHTML = "";
+
+          new TomSelect(periodo, {
+            plugins: ["remove_button"],
+            maxItems: null,
+            persist: false,
+            create: false,
+            placeholder: "Selecione...",
+            hidePlaceholder: false,
+            closeAfterSelect: false,
+            options: [
+              { value: "1", text: "Janeiro" },
+              { value: "2", text: "Fevereiro" },
+              { value: "3", text: "Março" },
+              { value: "4", text: "Abril" },
+              { value: "5", text: "Maio" },
+              { value: "6", text: "Junho" },
+              { value: "7", text: "Julho" },
+              { value: "8", text: "Agosto" },
+              { value: "9", text: "Setembro" },
+              { value: "10", text: "Outubro" },
+              { value: "11", text: "Novembro" },
+              { value: "12", text: "Dezembro" }
+            ]
+          });
+
+          periodo.tomselect.clear(true);
+        }
+
         const usuario = await validarSessao();
         if (!usuario) return;
 
@@ -2312,28 +2374,6 @@
         }
 
         await atualizarOpcoesFiltros();
-
-
-        ["periodoMeses"].forEach(id => {
-          const el = document.getElementById(id);
-
-          if (el && !el.tomselect) {
-            new TomSelect(el, {
-              plugins: ["remove_button"],
-              maxItems: null,
-              persist: false,
-              create: false,
-              placeholder: "Selecione...",
-              hidePlaceholder: true
-            });
-          }
-        });
-
-        const periodo = document.getElementById("periodoMeses");
-        if (periodo) {
-          Array.from(periodo.options).forEach(o => o.selected = false);
-        }
-
         await aplicarFiltros();
       })();
 
@@ -2506,9 +2546,11 @@
             method: "POST",
             credentials: "include"
           });
-        } catch (e) { }
-
-        window.location.href = "/login.html";
+        } catch (e) {
+          console.error("Erro ao sair:", e);
+        } finally {
+          window.location.href = "login.html";
+        }
       }
 
     </script>

@@ -23,7 +23,7 @@
             --radius: 14px;
             --radius-sm: 12px;
 
-            --brand: #2563eb;
+            --brand: #003B8F;
             --ok: #16a34a;
             --warn: #f59e0b;
             --bad: #ef4444;
@@ -144,8 +144,19 @@
         }
 
         .field.sm {
-            flex: 0 0 160px;
-            min-width: 160px;
+            flex: 0 0 110px;
+            min-width: 110px;
+        }
+
+        .field.periodo-field {
+            flex: 0 1 520px;
+            min-width: 320px;
+            max-width: 560px;
+        }
+
+        .field.field-xxl {
+            flex: 2.2 1 340px;
+            min-width: 320px;
         }
 
         label {
@@ -179,9 +190,8 @@
         .actions {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-            align-self: flex-end;
+            align-items: flex-end;
+            margin-left: auto;
         }
 
         button {
@@ -213,7 +223,7 @@
         }
 
         .btn-primary:hover {
-            background: #1d4ed8;
+            background: #0F5FFF;
         }
 
         .status-bar {
@@ -726,6 +736,47 @@
         /* ===== CONTEÚDO ===== */
         .main-executiva {
             flex: 1;
+        }
+
+        .bloco-executivo {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .bloco-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .bloco-kicker {
+            font-size: 11px;
+            font-weight: 850;
+            letter-spacing: .12em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .bloco-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .bloco-badge {
+            background: rgba(0, 59, 143, .08);
+            color: #003B8F;
+            border: 1px solid rgba(0, 59, 143, .15);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
         }
 
         /* submenu */
@@ -1321,7 +1372,7 @@
             color: #991b1b;
         }
 
-        .mapa-placeholder {
+        /*.mapa-placeholder {
             position: relative;
             flex: 1;
             min-height: 430px;
@@ -1342,7 +1393,7 @@
             position: absolute;
             inset: 0;
             pointer-events: none;
-        }
+        }*/
 
         .pin {
             position: absolute;
@@ -1361,28 +1412,34 @@
         }
 
         .legenda-mapa {
-            margin-top: auto;
-            padding-top: 20px;
+            margin-top: 14px;
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
-            gap: 26px;
-            color: #64748b;
-            font-size: 14px;
-            font-weight: 600;
-
-        }
-
-        .legenda-mapa span {
-            display: flex;
-            align-items: center;
+            justify-content: center;
             gap: 10px;
         }
 
+        .legenda-mapa span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 12px;
+
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 800;
+            color: #475569;
+        }
+
         .leg {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
+            flex-shrink: 0;
         }
 
         @media (max-width: 1100px) {
@@ -1481,14 +1538,14 @@
             align-items: start;
         }
 
-        #aba-mapa .mapa-placeholder {
+        /*#aba-mapa .mapa-placeholder {
             min-height: 520px;
         }
 
         #aba-mapa .mapa-img {
             width: 125%;
             max-height: 520px;
-        }
+        }*/
 
         #aba-mapa .cards {
             grid-template-columns: repeat(2, minmax(180px, 1fr));
@@ -1617,6 +1674,614 @@
             background: #f1f5f9;
             color: #64748b;
         }
+
+        .cards-executivos {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .card-executivo {
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(180deg,
+                    rgba(0, 59, 143, .03) 0%,
+                    #ffffff 100%);
+        }
+
+        .card-topo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icone {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .card-executivo h3 {
+            margin: 0;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .card-executivo .big {
+            margin-top: 10px;
+            font-size: 26px;
+            font-weight: 820;
+            letter-spacing: .2px;
+        }
+
+        .card-executivo .sub {
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--muted);
+            background: transparent;
+            padding: 0;
+        }
+
+        /* ABAS NO PADRÃO DO indicadores.html */
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin: 0 0 24px;
+            padding-left: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0 0 12px;
+            border-radius: 0;
+        }
+
+        .tab-ind:hover {
+            background: transparent;
+            color: #003B8F;
+        }
+
+        .tab-ind.active {
+            color: #003B8F;
+            border-bottom: 3px solid #003B8F;
+        }
+
+        /* FILTROS NO PADRÃO DO indicadores.html */
+        .field {
+            flex: 0 0 220px;
+            min-width: 220px;
+        }
+
+        .field.sm {
+            flex: 0 0 110px;
+            min-width: 110px;
+        }
+
+        .field.field-xxl {
+            flex: 2.2 1 340px;
+            min-width: 320px;
+        }
+
+        .field.periodo-field {
+            flex: 0 0 auto;
+            min-width: 320px;
+            width: max-content;
+            max-width: 100%;
+        }
+
+        .actions {
+            flex: 0 0 auto;
+        }
+
+        .actions .btn-primary {
+            height: 42px;
+            padding: 0 18px;
+            white-space: nowrap;
+        }
+
+        select,
+        input {
+            height: 42px !important;
+            min-height: 42px !important;
+            max-height: 42px !important;
+        }
+
+        .periodo-field .ts-wrapper {
+            display: inline-block;
+            width: max-content;
+            min-width: 320px;
+            max-width: 100%;
+        }
+
+        .periodo-field .ts-control {
+            width: max-content !important;
+            min-width: 320px !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+        }
+
+        .ts-control {
+            height: 42px !important;
+            min-height: 42px !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 12px !important;
+            padding: 8px 10px !important;
+            background: #fff !important;
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            overflow: visible !important;
+            box-shadow: none !important;
+        }
+
+        .ts-control>.item {
+            margin: 0 6px 0 0 !important;
+            padding: 2px 8px !important;
+            border-radius: 999px !important;
+            background: rgba(0, 59, 143, .10) !important;
+            border: 1px solid rgba(0, 59, 143, .25) !important;
+            color: #003B8F !important;
+            font-size: 12px !important;
+            line-height: 18px !important;
+            white-space: nowrap !important;
+            flex: 0 0 auto !important;
+        }
+
+        .ts-control input {
+            min-width: 1px !important;
+            height: 22px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            color: #000 !important;
+        }
+
+        .ts-control input::placeholder {
+            color: #000 !important;
+            opacity: 1 !important;
+        }
+
+        .periodo-field .ts-control input {
+            width: 90px !important;
+            min-width: 90px !important;
+            flex: 0 0 90px !important;
+        }
+
+        .periodo-field .ts-wrapper.has-items .ts-control input {
+            width: 1px !important;
+            min-width: 1px !important;
+            flex: 0 0 1px !important;
+        }
+
+        /* BLOCO RANKING - PADRÃO EXECUTIVO */
+        .bloco-ranking {
+            padding: 24px;
+        }
+
+        .bloco-ranking .bloco-header {
+            margin-bottom: 18px;
+        }
+
+        .bloco-ranking .bloco-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .bloco-ranking .ranking-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .bloco-ranking .ranking-tab {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #475569;
+            padding: 8px 13px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .bloco-ranking .ranking-tab:hover {
+            background: #f8fafc;
+            color: #003B8F;
+        }
+
+        .bloco-ranking .ranking-tab.active {
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            border-color: rgba(0, 59, 143, .35);
+        }
+
+        /* TABELA RANKING - PADRÃO EXECUTIVO */
+        .bloco-ranking .tabela-regioes {
+            margin-top: 18px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .bloco-ranking .tabela-regioes th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+            padding: 14px 12px;
+        }
+
+        .bloco-ranking .tabela-regioes td {
+            padding: 15px 12px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .bloco-ranking .tabela-regioes tr:last-child td {
+            border-bottom: none;
+        }
+
+        .bloco-ranking .tabela-regioes tbody tr:hover {
+            background: rgba(0, 59, 143, .035);
+        }
+
+        /* BLOCO MAPA - PADRÃO EXECUTIVO */
+        .bloco-mapa {
+            padding: 24px;
+        }
+
+        .bloco-mapa .bloco-header {
+            margin-bottom: 10px;
+        }
+
+        .bloco-mapa .bloco-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        /*.bloco-mapa .mapa-placeholder {
+            min-height: 420px;
+        }
+
+        .bloco-mapa .mapa-img {
+            width: 125%;
+            max-height: 440px;
+        }*/
+
+        .bloco-mapa .legenda-mapa {
+            padding-top: 12px;
+            gap: 18px;
+            font-size: 13px;
+        }
+
+        /* BLOCO DETALHAMENTO - RESUMO */
+        .bloco-detalhe-resumo {
+            padding: 24px;
+        }
+
+        .detalhe-header {
+            margin-bottom: 10px;
+        }
+
+        .bloco-detalhe-resumo .bloco-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .bloco-detalhe-resumo #detalhePeriodo {
+            margin: 0 0 18px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .bloco-detalhe-resumo .detalhe-rank {
+            margin: 0;
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+        }
+
+        /* Ajuste do badge "Geral" no detalhamento */
+        .bloco-detalhe-resumo .detalhe-rank {
+            width: auto;
+            height: auto;
+            min-width: auto;
+
+            padding: 8px 14px;
+            border-radius: 999px;
+
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+
+            font-size: 13px;
+            font-weight: 900;
+            line-height: 1;
+
+            white-space: nowrap;
+        }
+
+        /* Indicadores internos do bloco Detalhamento */
+        .bloco-detalhe-resumo .detalhe-indicador {
+            margin-top: 18px;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: #f8fafc;
+        }
+
+        .bloco-detalhe-resumo .detalhe-linha {
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .bloco-detalhe-resumo .detalhe-linha span {
+            font-size: 13px;
+            font-weight: 900;
+            color: #334155;
+        }
+
+        .bloco-detalhe-resumo .detalhe-linha strong {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        .bloco-detalhe-resumo .bar {
+            margin-top: 8px;
+            height: 9px;
+            background: #e5e7eb;
+            border: none;
+        }
+
+        .bloco-detalhe-resumo .fill {
+            background: #003B8F;
+        }
+
+        .bloco-detalhe-resumo .detalhe-indicador small {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        /* Mini-cards do bloco Detalhamento */
+        .bloco-detalhe-resumo .detalhe-mini-cards {
+            margin-top: 18px;
+            gap: 12px;
+        }
+
+        .bloco-detalhe-resumo .detalhe-mini-cards div {
+            background:
+                linear-gradient(180deg,
+                    rgba(0, 59, 143, .035) 0%,
+                    #ffffff 100%);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .bloco-detalhe-resumo .detalhe-mini-cards span {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .06em;
+            color: #64748b;
+        }
+
+        .bloco-detalhe-resumo .detalhe-mini-cards strong {
+            display: block;
+            margin-top: 6px;
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        /* BLOCO TABELA DETALHAMENTO */
+        .detalhe-tabela-card {
+            padding: 24px;
+        }
+
+        .detalhe-tabela-card .ranking-header {
+            margin-bottom: 18px;
+        }
+
+        .detalhe-tabela-card h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .detalhe-tabela-card .tabela-regioes {
+            margin-top: 0;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .detalhe-tabela-card .tabela-regioes th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        .detalhe-tabela-card .tabela-regioes td {
+            font-size: 13px;
+            padding: 14px 12px;
+        }
+
+        .detalhe-tabela-card .tabela-regioes tbody tr:hover {
+            background: rgba(0, 59, 143, .035);
+        }
+
+        /* FOOTER PADRÃO EXECUTIVO */
+        .dashboard-footer {
+            margin-top: 24px;
+            padding: 14px 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            border-top: 1px solid var(--border);
+
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .dashboard-footer strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .footer-right {
+            font-weight: 600;
+        }
+
+        /* Força abas do Detalhamento a usar o mesmo padrão do Ranking */
+        .detalhe-tab {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #475569;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .detalhe-tab.active {
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            border-color: rgba(0, 59, 143, .35);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .usuario-badge {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .btn-sair {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .btn-sair:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+
+        /*.mapa-placeholder {
+            position: relative;
+            flex: 1;
+            min-height: 430px;
+            background: transparent;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: visible;
+        }
+
+        .mapa-img {
+            width: 150%;
+            max-height: 600px;
+            object-fit: contain;
+        }
+
+        #pinsMapa {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }*/
+
+        .mapa-placeholder {
+            position: relative;
+            width: 100%;
+            min-height: 430px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: visible;
+            background: transparent;
+        }
+
+        .mapa-canvas {
+            position: relative;
+
+            width: 520px;
+            height: 430px;
+
+            flex: 0 0 520px;
+        }
+
+        .mapa-img {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+            object-position: center center;
+        }
+
+        #pinsMapa {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            pointer-events: none;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -1658,79 +2323,51 @@
     </script>
 
     <div class="container">
-
-        <nav class="topnav">
-            <a href="index.html" class="navlink">Dashboard</a>
-            <a href="po.html" class="navlink">PO</a>
-            <a href="programas.html?v=2" class="navlink">Programas</a>
-            <a href="performance.html" class="navlink">Performance</a>
-            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-            <a href="unidades.html" class="navlink">Unidades</a>
-            <a href="sge_turmas.html" class="navlink">Turmas</a>
-            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
-
-            <div class="topnav-right">
-                <a href="alterar_senha.html" class="navlink">
-                    Alterar senha
-                </a>
-                <div id="usuario-logado" class="badge">
-                    <span class="dot"></span>
-                    Usuário: —
-                </div>
-                <button onclick="logout()">Sair</button>
-            </div>
-        </nav>
         <div class="page-layout">
             <aside class="sidebar-executiva">
-                <div class="sidebar-logo">
-                    <img src="/assets/logo.png" alt="SENAI">
-                </div>
-                <nav class="sidebar-nav">
-                    <a href="visao_executiva.html">
-                        🏠
-                        <span>Visão Executiva</span>
-                    </a>
-                    <a href="indicadores.html">
-                        📊
-                        <span>Indicadores</span>
-                    </a>
-                    <a href="regioes.html" class="active">
-                        🌎
-                        <span>Regiões</span>
-                    </a>
 
-                    <a href="subregioes.html">
-                        📍
-                        <span>Sub-regiões</span>
-                    </a>
-                    <a href="turmas.html">
-                        👥
-                        <span>Turmas</span>
-                    </a>
-                    <a href="acoes.html">
-                        🎯
-                        <span>Ações</span>
-                    </a>
-                    <a href="relatoriosexecutivos.html">
-                        📄
-                        <span>Relatórios</span>
-                    </a>
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="index.html">🏠 Dashboard</a>
+                    <a href="po.html">🎯 PO</a>
+                    <a href="programas.html?v=2">🧩 Programas</a>
+                    <a href="performance.html">📊 Performance</a>
+                    <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+                    <a href="unidades.html">🏢 Unidades</a>
+                    <a href="sge_turmas.html">📚 Ofertas</a>
+                    <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+                    <a href="visao_executiva.html">🧠 Visão Executiva</a>
+                    <a href="indicadores.html">📈 Indicadores</a>
+                    <a href="regioes.html" class="active">🌎 Regiões</a>
+                    <a href="subregioes.html">📍 Sub-regiões</a>
+                    <a href="turmas.html">🏫 Turmas</a>
+                    <a href="acoes.html">✅ Ações</a>
+                    <a href="relatoriosexecutivos.html">📄 Relatórios</a>
                 </nav>
+
             </aside>
             <main class="main-executiva">
 
                 <div class="header">
                     <div class="title">
-                        <h1>Desempenho Regional</h1>
-                        <p>Acompanhe resultados, metas e evolução das regiões do programa.</p>
+                        <h1>Regiões</h1>
                     </div>
 
-                    <button class="btn-exportar" onclick="exportarDados()">
+                    <div class="header-actions">
 
-                        ⬇ Exportar
+                        <div class="badge usuario-badge" id="usuario-logado">
+                            <span class="dot"></span>
+                            Usuário: —
+                        </div>
 
-                    </button>
+                        <button class="btn-sair" onclick="logout()">
+                            Sair
+                        </button>
+
+                    </div>
                 </div>
 
                 <div class="tabs-indicadores">
@@ -1740,9 +2377,18 @@
 
                 <div class="panel">
                     <div class="filters">
+
+                        <div class="field sm">
+                            <label>Ano</label>
+                            <select id="filtroAnoRegiao">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+
                         <div class="field periodo-field">
                             <label>Período</label>
-                            <select id="periodoRegiao" multiple>
+                            <select id="periodoRegiao" multiple placeholder="Selecione...">
                                 <option value="1">Janeiro</option>
                                 <option value="2">Fevereiro</option>
                                 <option value="3">Março</option>
@@ -1758,50 +2404,68 @@
                             </select>
                         </div>
 
-                        <div class="field sm">
-                            <label>Ano</label>
-                            <select id="filtroAnoRegiao">
-                                <option value="2026">2026</option>
-                                <option value="2025">2025</option>
+                        <div class="field field-xxl">
+                            <label>Região</label>
+                            <select id="filtroRegiao">
+                                <option value="">Selecione...</option>
                             </select>
                         </div>
 
-                        <div class="field sm">
-                            <label>Região</label>
-                            <select id="filtroRegiao">
-                                <option value="">Todas as regiões</option>
-                            </select>
+                        <div class="actions">
+                            <button class="btn-primary" onclick="limparFiltrosRegioes()">
+                                Limpar
+                            </button>
                         </div>
+
                     </div>
                 </div>
 
                 <section id="aba-ranking" class="aba-regioes active">
 
-                    <div class="cards cards-ranking">
-                        <div class="card">
-                            <h4>Matrículas</h4>
+                    <div class="cards cards-executivos cards-ranking">
+                        <div class="card card-executivo">
+                            <div class="card-topo">
+                                <span class="card-icone">🎓</span>
+                                <h3>MATRÍCULAS</h3>
+                            </div>
+
                             <div class="big" id="cardRankingMatriculas">—</div>
-                            <div id="cardRankingPctMatriculas">—</div>
+
+                            <div class="sub" id="cardRankingPctMatriculas"></div>
                         </div>
 
-                        <div class="card">
-                            <h4>Hora-Aluno</h4>
+                        <div class="card card-executivo">
+                            <div class="card-topo">
+                                <span class="card-icone">⏱️</span>
+                                <h3>HORA-ALUNO</h3>
+                            </div>
+
                             <div class="big" id="cardRankingHA">—</div>
-                            <div id="cardRankingPctHA">—</div>
+
+                            <div class="sub" id="cardRankingPctHA"></div>
                         </div>
 
-                        <div class="card">
-                            <h4>Receita</h4>
+                        <div class="card card-executivo">
+                            <div class="card-topo">
+                                <span class="card-icone">💰</span>
+                                <h3>RECEITA</h3>
+                            </div>
+
                             <div class="big" id="cardRankingReceita">—</div>
-                            <div id="cardRankingPctReceita">—</div>
+
+                            <div class="sub" id="cardRankingPctReceita"></div>
                         </div>
                     </div>
 
                     <div class="regioes-grid">
 
-                        <section class="card regioes-card">
-                            <div class="ranking-header">
-                                <h3>Ranking de Regiões x Indicador</h3>
+                        <section class="card regioes-card bloco-ranking">
+
+                            <div class="bloco-header ranking-header">
+                                <div>
+                                    <div class="bloco-kicker">ANÁLISE REGIONAL</div>
+                                    <h2>Desempenho Regional</h2>
+                                </div>
 
                                 <div class="ranking-tabs">
                                     <button class="ranking-tab active" data-ranking="matriculas">Matrículas</button>
@@ -1813,7 +2477,7 @@
                             <table class="tabela-regioes">
                                 <thead>
                                     <tr>
-                                        <th>Pos.</th>
+                                        <th>Posição</th>
                                         <th>Região</th>
                                         <th>Matrículas %</th>
                                         <th>Hora-Aluno %</th>
@@ -1828,11 +2492,24 @@
                             </table>
                         </section>
 
-                        <section class="card mapa-card">
-                            <h3>Mapa de Desempenho x Indicador</h3>
+                        <section class="card mapa-card bloco-mapa">
+
+                            <div class="bloco-header mapa-header">
+                                <div>
+                                    <div class="bloco-kicker">VISÃO GEOGRÁFICA</div>
+                                    <h2>Mapa de Desempenho</h2>
+                                </div>
+
+                                <div class="bloco-badge">
+                                    🌎 Mapa
+                                </div>
+                            </div>
+
                             <div class="mapa-placeholder">
-                                <img src="/assets/mapa-rs.png" class="mapa-img" alt="Mapa do RS">
-                                <div id="pinsMapa"></div>
+                                <div class="mapa-canvas">
+                                    <img src="/assets/mapa-rs.png" class="mapa-img" alt="Mapa do RS">
+                                    <div id="pinsMapa"></div>
+                                </div>
                             </div>
 
                             <div class="legenda-mapa">
@@ -1850,11 +2527,19 @@
 
                     <div class="detalhamento-grid">
 
-                        <aside class="card detalhe-resumo-card">
-                            <div class="detalhe-rank" id="detalheRank">—</div>
+                        <aside class="card detalhe-resumo-card bloco-detalhe-resumo">
+                            <div class="bloco-header detalhe-header">
+                                <div>
+                                    <div class="bloco-kicker">DETALHAMENTO REGIONAL</div>
+                                    <h2 id="detalheRegiaoNome">Todas as regiões</h2>
+                                </div>
 
-                            <h3 id="detalheRegiaoNome">Selecione uma região</h3>
-                            <p class="muted" id="detalhePeriodo">Desempenho no período selecionado.</p>
+                                <div class="detalhe-rank" id="detalheRank">Geral</div>
+                            </div>
+
+                            <p class="muted" id="detalhePeriodo">
+                                Desempenho consolidado no período selecionado.
+                            </p>
 
                             <div class="detalhe-indicador">
                                 <div class="detalhe-linha">
@@ -1903,7 +2588,10 @@
 
                         <section class="card detalhe-tabela-card">
                             <div class="ranking-header">
-                                <h3 id="tituloTabelaDetalhe">Desempenho por Unidade</h3>
+                                <div>
+                                    <div class="bloco-kicker">DETALHAMENTO OPERACIONAL</div>
+                                    <h3 id="tituloTabelaDetalhe">Desempenho por Unidade</h3>
+                                </div>
 
                                 <div class="ranking-tabs">
                                     <button class="ranking-tab detalhe-tab active"
@@ -1934,6 +2622,14 @@
                     </div>
 
                 </section>
+
+                <footer class="dashboard-footer">
+                    <div class="footer-left">
+                        <strong>Fontes dos dados:</strong>
+                        Solução Integradora • Cubo Orçamento
+                    </div>
+                </footer>
+
             </main>
         </div>
     </div>
@@ -2371,47 +3067,42 @@
             }
         }
 
+        function normalizarRegiaoMapa(valor) {
+            return String(valor || "")
+                .trim()
+                .toUpperCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        const POSICOES_MAPA_REGIOES = {
+            "NOROESTE": { top: "16%", left: "45%" },
+            "NORTE": { top: "20%", left: "64%" },
+            "ENCOSTA DA SERRA": { top: "34%", left: "81%" },
+            "SERRA": { top: "28%", left: "73%" },
+            "CENTRAL": { top: "42%", left: "35%" },
+            "VALE DO TAQUARI": { top: "37%", left: "67%" },
+            "VALE DOS SINOS": { top: "40%", left: "75%" },
+            "METROPOLITANA": { top: "50%", left: "69%" },
+            "VALE DO RIO PARDO": { top: "40%", left: "62%" },
+            "SUL": { top: "63%", left: "53%" }
+        };
+
         function renderizarMapa(listaRegioes) {
-
-            const pins =
-                document.getElementById("pinsMapa");
-
+            const pins = document.getElementById("pinsMapa");
             if (!pins) return;
 
             pins.innerHTML = "";
 
-            const posicoes = {
-
-                "NOROESTE": { top: "22%", left: "45%" }, // 4
-
-                "NORTE": { top: "22%", left: "69%" }, // 5
-
-                "ENCOSTA DA SERRA": { top: "37%", left: "88%" }, // 2
-
-                "SERRA": { top: "31%", left: "79%" }, // 6
-
-                "CENTRAL": { top: "42%", left: "35%" }, // 1
-
-                "VALE DO TAQUARI": { top: "36%", left: "71%" }, // 9
-
-                "VALE DOS SINOS": { top: "41%", left: "81%" }, // 10
-
-                "METROPOLITANA": { top: "50%", left: "74%" }, // 3
-
-                "VALE DO RIO PARDO": { top: "41%", left: "66%" }, // 8
-
-                "SUL": { top: "63%", left: "53%" }  // 7
-            };
-
             listaRegioes.forEach((r, index) => {
+                const nomeRegiao = normalizarRegiaoMapa(r.regiao || r.nome_regiao || r.descricao || "");
 
-                const nomeRegiao =
-                    String(r.regiao || "")
-                        .trim()
-                        .toUpperCase();
+                const pos = POSICOES_MAPA_REGIOES[nomeRegiao];
 
-                const pos =
-                    posicoes[nomeRegiao];
+                if (!pos) {
+                    console.warn("Região sem posição no mapa:", r);
+                    return;
+                }
 
                 const percentualMapa =
                     rankingIndicadorAtual === "ha"
@@ -2435,19 +3126,22 @@
 
                 const classe = classeStatusPorPct(percentualMapa, metaMapa, realizadoMapa);
 
-                if (!pos) return;
-
-                pins.innerHTML += `<span class="pin ${classe}" style="top:${pos.top};left:${pos.left};">${r.posicao_geral || index + 1}</span>`;
-
+                pins.innerHTML += `
+            <span 
+                class="pin ${classe}" 
+                style="top:${pos.top}; left:${pos.left};"
+                title="${r.regiao || ""}">
+                ${r.posicao_geral || index + 1}
+            </span>
+        `;
             });
-
         }
 
         async function carregarFiltroRegioes() {
             const select = document.getElementById("filtroRegiao");
             if (!select) return;
 
-            select.innerHTML = `<option value="">Todas as regiões</option>`;
+            select.innerHTML = `<option value="">Selecione...</option>`;
 
             const ano = obterAnoRegiao();
 
@@ -2478,6 +3172,8 @@
                 });
 
             select.addEventListener("change", async () => {
+                atualizarBadgeFiltroRegioes();
+
                 await carregarRankingRegioes();
                 await carregarTabelaDetalhamento();
             });
@@ -2520,7 +3216,7 @@
                 ? (totais.receita_real / totais.receita_meta) * 100
                 : 0;
 
-            document.getElementById("detalheRank").innerText = "G";
+            document.getElementById("detalheRank").innerText = "Geral";
             document.getElementById("detalheRegiaoNome").innerText = "Todas as regiões";
 
             document.getElementById("detalheMatriculas").innerText =
@@ -2566,6 +3262,57 @@
 `;
         }
 
+        function atualizarBadgeFiltroRegioes() {
+            const badge = document.getElementById("badge-filtro");
+            if (!badge) return;
+
+            const ano = document.getElementById("filtroAnoRegiao")?.value || "2026";
+
+            const periodoSelect = document.getElementById("periodoRegiao");
+            const meses = periodoSelect?.tomselect
+                ? periodoSelect.tomselect.getValue()
+                : [];
+
+            const nomesMeses = {
+                1: "Janeiro",
+                2: "Fevereiro",
+                3: "Março",
+                4: "Abril",
+                5: "Maio",
+                6: "Junho",
+                7: "Julho",
+                8: "Agosto",
+                9: "Setembro",
+                10: "Outubro",
+                11: "Novembro",
+                12: "Dezembro"
+            };
+
+            const regiaoSelect = document.getElementById("filtroRegiao");
+            const regiaoTexto = regiaoSelect?.value
+                ? regiaoSelect.options[regiaoSelect.selectedIndex]?.textContent.trim()
+                : "";
+
+            const partes = [
+                `Ano: ${ano}`
+            ];
+
+            if (meses.length) {
+                partes.push(
+                    `Período: ${meses.map(m => nomesMeses[m]).join(", ")}`
+                );
+            }
+
+            if (regiaoTexto) {
+                partes.push(`Região: ${regiaoTexto}`);
+            }
+
+            badge.innerHTML = `
+        <span class="dot"></span>
+        Filtro: ${partes.join(" • ")}
+    `;
+        }
+
         async function carregarResumoGeralDetalhamento() {
             let meses = document.getElementById("periodoRegiao")?.tomselect?.getValue() || [];
 
@@ -2593,6 +3340,26 @@
             document.getElementById("detalheTurmasAtivas").innerText =
                 dados.reduce((s, x) => s + Number(x.turmas_ativas || 0), 0)
                     .toLocaleString("pt-BR");
+        }
+
+        function limparFiltrosRegioes() {
+            const ano = document.getElementById("filtroAnoRegiao");
+            const regiao = document.getElementById("filtroRegiao");
+            const periodo = document.getElementById("periodoRegiao");
+
+            if (ano) ano.value = "2026";
+            if (regiao) regiao.value = "";
+
+            if (periodo?.tomselect) {
+                periodo.tomselect.clear(true);
+                periodo.tomselect.control_input.placeholder = "Selecione...";
+            } else if (periodo) {
+                Array.from(periodo.options).forEach(o => o.selected = false);
+            }
+
+            atualizarBadgeFiltroRegioes();
+
+            carregarRankingRegioes();
         }
 
         function preencherDetalhamentoRegiao(item, atualizarTurmas = true) {
@@ -2660,7 +3427,7 @@
                 preencherDetalhamentoGeral([]);
                 tbody.innerHTML = `
         <tr>
-            <td colspan="5">Selecione um ou mais meses.</td>
+            <td colspan="5">Selecione...</td>
         </tr>
     `;
                 return;
@@ -2677,7 +3444,7 @@
                     `
     <tr>
         <td colspan="5">
-            Selecione um ou mais meses.
+            Selecione...
         </td>
     </tr>
     `;
@@ -2903,12 +3670,12 @@
 
         <td>
             ${Number(meta)
-                .toLocaleString("pt-BR")}
+                            .toLocaleString("pt-BR")}
         </td>
 
         <td>
             ${Number(realizado)
-                .toLocaleString("pt-BR")}
+                            .toLocaleString("pt-BR")}
         </td>
 
         <td>
@@ -2984,12 +3751,13 @@
         document.addEventListener("DOMContentLoaded", async () => {
             const tsPeriodo = new TomSelect("#periodoRegiao", {
                 plugins: ["remove_button"],
-                placeholder: "Selecione um ou mais meses",
+                placeholder: "Selecione...",
                 maxItems: null,
                 hideSelected: true,
                 closeAfterSelect: false,
                 persist: false,
                 onChange() {
+                    atualizarBadgeFiltroRegioes();
                     carregarRankingRegioes();
                 },
                 onItemAdd() {
@@ -2997,16 +3765,20 @@
                 },
                 onItemRemove() {
                     if (!this.items.length) {
-                        this.control_input.placeholder = "Selecione um ou mais meses";
+                        this.control_input.placeholder = "Selecione...";
                     }
                 }
             });
 
             tsPeriodo.clear(true);
 
+            atualizarBadgeFiltroRegioes();
+
             await carregarFiltroRegioes();
 
             document.getElementById("filtroAnoRegiao")?.addEventListener("change", async () => {
+                atualizarBadgeFiltroRegioes();
+
                 await carregarFiltroRegioes();
                 carregarRankingRegioes();
 

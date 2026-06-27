@@ -1,326 +1,319 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel • Unidades</title>
 
-  <style>
-    :root{
-      --bg:#f6f7fb;
-      --panel:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:#e5e7eb;
-      --shadow: 0 10px 24px rgba(15,23,42,.08);
-      --radius:14px;
-      --radius-sm:12px;
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
-      --brand:#2563eb;
-      --ok:#16a34a;
-      --warn:#f59e0b;
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e5e7eb;
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --radius: 14px;
+      --radius-sm: 12px;
+
+      --brand: #003B8F;
+      --ok: #16a34a;
+      --warn: #f59e0b;
     }
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
-    .container{
+    .container {
       max-width: 1800px;
       margin: 0 auto;
       padding: 18px 18px 36px;
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
-    }
-    .navlink{
-      text-decoration:none;
-      color: var(--muted);
-      font-weight: 750;
-      font-size: 13px;
-      padding:8px 12px;
-      border-radius: 12px;
-      border:1px solid transparent;
-    }
-    .navlink:hover{
-      background:#fff;
-      border-color: var(--border);
-    }
-    .navlink.active{
-      background: rgba(37,99,235,.10);
-      color: var(--text);
-      border-color: rgba(37,99,235,.25);
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
-    .header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
-    }
-    .title h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.2px;
-    }
-    .title p{
-      margin:6px 0 0;
-      color: var(--muted);
-      font-size:13px;
+    .title h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: .2px;
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border:1px solid var(--border);
+    .title p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
       border-radius: 999px;
       background: #fff;
       color: var(--muted);
-      font-size:12px;
-      box-shadow: 0 6px 14px rgba(15,23,42,.06);
-      white-space:nowrap;
+      font-size: 12px;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+      white-space: nowrap;
       max-width: 55vw;
-      overflow:hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
     }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
       background: var(--brand);
-      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
       flex: 0 0 auto;
     }
 
-    .panel{
+    .panel {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
       margin-bottom: 14px;
     }
 
-    .filters{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      align-items:flex-start;
-    }
-
-    .field{
-      flex:1;
-      min-width:320px;
-    }
-
-    /* Selects grandes */
-    #subregioes, #uos{
-      height: 140px;
-    }
-
-    /* Selects pequenos */
-    .field.small select{
-      height: 44px;      /* padrão “profissional” */
-    }
-
-    label{
-      display:block;
-      font-size:12px;
-      color: var(--muted);
-      margin-bottom:8px;
-    }
-
-    select{
-      width:100%;
-      height:140px;
-      border:1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding:10px;
-      background:#fff;
-      outline:none;
-    }
-
-    .field.sm select{
-      height: 44px;
-    }
-
-    select:focus{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
-    }
-
-    select[multiple]{
-      height:140px;
-    }
-
-    #periodoMeses{
-      height:140px;
-    }
-
-    .field.sm{
-      flex:0 0 160px;
-      min-width:160px;
-      max-width:160px;
-      align-self:flex-end;
-    }
-
-    .field.field-meses{
-      flex: 0 0 160px;
-      min-width: 160px;
-      max-width: 160px;
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      align-self:flex-end;
-    }
-
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background:#fff;
-      color: var(--text);
-      padding:10px 12px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-weight: 650;
-      font-size:13px;
-      transition: transform .05s ease, background .15s ease, border-color .15s ease;
-    }
-    button:hover{ background:#f8fafc; border-color:#dbe3ef; }
-    button:active{ transform: translateY(1px); }
-    .btn-primary{
-      background: var(--brand);
-      color:#fff;
-      border-color: rgba(37,99,235,.65);
-    }
-    .btn-primary:hover{ background:#1d4ed8; }
-
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 10px;
-    }
-    @media (max-width: 1180px){
-      .cards{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 720px){
-      .cards{ grid-template-columns: 1fr; }
-      .field{ min-width: 100%; }
+      align-items: flex-end;
     }
 
-    .card{
+    .field {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .field.sm {
+      flex: 0 0 110px;
+      min-width: 110px;
+    }
+
+    .field.periodo-field {
+      flex: 0 0 320px;
+      min-width: 320px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      height: 42px !important;
+      min-height: 42px !important;
+      max-height: 42px !important;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: #fff;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: rgba(37, 99, 235, .45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      align-self: flex-end;
+    }
+
+    .actions .btn-primary {
+      height: 42px;
+      padding: 0 18px;
+    }
+
+    .cards-executivos {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 1200px) {
+      .cards-executivos {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .cards-executivos {
+        grid-template-columns: 1fr;
+      }
+
+      .field {
+        min-width: 100%;
+      }
+    }
+
+    .card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 14px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg,
+          rgba(0, 59, 143, .03) 0%,
+          #ffffff 100%);
     }
-    .card h3{
-      margin:0;
-      font-size:13px;
+
+    .card-topo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-icone {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(0, 59, 143, .10);
+      color: #003B8F;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 12px;
       color: var(--muted);
-      font-weight: 750;
-      letter-spacing: .2px;
+      font-weight: 850;
+      letter-spacing: .5px;
+      text-transform: uppercase;
     }
-    .big{
+
+    .big {
       margin-top: 10px;
       font-size: 26px;
       font-weight: 820;
       letter-spacing: .2px;
     }
-    .sub{
+
+    .sub {
       margin-top: 4px;
       font-size: 12px;
       color: var(--muted);
     }
 
-    .chips{
-      display:flex;
-      gap:8px;
+    .chips {
+      display: flex;
+      gap: 8px;
       margin-top: 12px;
       flex-wrap: nowrap;
       overflow-x: auto;
       padding-bottom: 2px;
     }
-    .chips::-webkit-scrollbar{ height: 6px; }
-    .chips::-webkit-scrollbar-thumb{ background:#dbe3ef; border-radius:999px; }
 
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:#fff;
-      font-size:11px;
-      line-height:1.1;
-      white-space:nowrap;
-      flex:0 0 auto;
+    .chips::-webkit-scrollbar {
+      height: 6px;
     }
 
-    .chip .k{
-      font-weight:800;
-      letter-spacing:.2px;
+    .chips::-webkit-scrollbar-thumb {
+      background: #dbe3ef;
+      border-radius: 999px;
     }
 
-    .chip.status-low{
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 11px;
+      line-height: 1.1;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .chip .k {
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    .chip.status-low {
       background: rgba(220, 38, 38, .12);
       border-color: rgba(220, 38, 38, .28);
       color: #b91c1c;
     }
 
-    .chip.status-mid{
+    .chip.status-mid {
       background: rgba(245, 158, 11, .14);
       border-color: rgba(245, 158, 11, .30);
       color: #b45309;
     }
 
-    .chip.status-high{
+    .chip.status-high {
       background: rgba(22, 163, 74, .12);
       border-color: rgba(22, 163, 74, .28);
       color: #15803d;
     }
 
-    .chip.status-blue{
+    .chip.status-blue {
       background: rgba(37, 99, 235, .10);
       border-color: rgba(37, 99, 235, .25);
       color: #1d4ed8;
     }
 
-    .legend{
-      display:flex;
-      gap:16px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin:6px 4px 16px;
-      font-size:12px;
-      color:var(--muted);
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 6px 4px 16px;
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    .legend-item{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      color:var(--muted);
-      font-weight:500;
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-weight: 500;
     }
 
-    .section-title{
+    .section-title {
       margin: 16px 2px 10px;
       font-size: 12px;
       color: var(--muted);
@@ -329,102 +322,405 @@
       text-transform: uppercase;
     }
 
-    .table-card{
+    .table-card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      overflow:hidden;
+      overflow: hidden;
       margin-bottom: 14px;
     }
-    .table-wrap{ overflow:auto; }
-    table{
-      width:100%;
-      border-collapse: collapse;
-      min-width: 0;
-    }
-    thead th{
-      position: sticky;
-      top:0;
-      background: #fbfcfe;
-      border-bottom:1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .28px;
-      padding: 12px 10px;
-      text-align:right;
-      white-space:nowrap;
-    }
-    thead th:first-child{ text-align:left; }
-    tbody td{
-      border-bottom:1px solid #eef2f7;
-      padding: 10px;
-      text-align:right;
-      white-space:nowrap;
-    }
-    tbody td:first-child{ text-align:left; }
-    tbody tr:nth-child(odd){ background:#fcfdff; }
-    tbody tr:hover{ background: rgba(37,99,235,.06); }
 
-    .status{
-      margin-top: 10px;
-      font-size:12px;
-      color: var(--muted);
+    .table-wrap {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
-    /* 🔽 Ajuste geral da tabela */
-    #tabela-unidades {
-      table-layout: fixed;
+    table {
       width: 100%;
+      border-collapse: collapse;
+      min-width: 1250px;
     }
 
-    /* 🔽 Reduz levemente a fonte */
-    #tabela-unidades th,
-    #tabela-unidades td {
-      font-size: 12px;
-      padding: 8px 6px;
-    }
-
-    /* 🔽 Coluna UO */
-    #tabela-unidades th:nth-child(1),
-    #tabela-unidades td:nth-child(1){
-      width: 280px;
-      white-space: nowrap;
-    }
-
-    #tabela-unidades th:nth-child(n+2),
-    #tabela-unidades td:nth-child(n+2){
-      width: 90px;
-      white-space: nowrap;
+    thead th {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+      border-bottom: 2px solid #dbe3ef;
+      color: #64748b;
+      font-weight: 800;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 12px 8px;
       text-align: right;
+      white-space: nowrap;
+      z-index: 2;
     }
 
-    .chip.status-neutral{
+    thead th:first-child {
+      text-align: left;
+    }
+
+    tbody td {
+      border-bottom: 1px solid #eef2f7;
+      padding: 8px 8px;
+      text-align: right;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    tbody td:first-child {
+      text-align: left;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: #fafbfd;
+    }
+
+    tbody tr:hover {
+      background: #eef5ff;
+    }
+
+    tbody tr.selected {
+      background: #e8f0ff !important;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .chip.status-neutral {
       background: #f3f4f6;
       border-color: #d1d5db;
       color: #374151;
     }
 
-    .sem-meta-zero{
+    .sem-meta-zero {
       color: #111827;
       font-weight: 600;
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
-      flex-wrap:wrap;
+    .ts-wrapper {
+      width: 100%;
     }
 
-    .topnav-right{
-      margin-left:auto;
-      display:flex;
-      align-items:center;
-      gap:10px;
+    .ts-control {
+      min-height: 42px !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      padding: 8px 10px !important;
+      background: #fff !important;
+      display: flex !important;
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+      overflow: hidden !important;
+      box-shadow: none !important;
     }
+
+    .ts-control>.item {
+      margin: 0 6px 0 0 !important;
+      padding: 2px 8px !important;
+      border-radius: 999px !important;
+      background: rgba(0, 59, 143, .10) !important;
+      border: 1px solid rgba(0, 59, 143, .18) !important;
+      color: #003B8F !important;
+      font-size: 12px !important;
+      white-space: nowrap !important;
+    }
+
+    .ts-dropdown {
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      box-shadow: var(--shadow) !important;
+      overflow: hidden !important;
+    }
+
+    .ts-dropdown .option {
+      font-size: 13px;
+      padding: 8px 10px;
+    }
+
+    /* ===== LAYOUT EXECUTIVO IGUAL MODALIDADES ===== */
+
+    .page-layout {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .sidebar-executiva {
+      width: 220px;
+      min-height: calc(100vh - 90px);
+      background: #003B8F;
+      border-radius: 20px;
+      padding: 20px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 18px;
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-logo img {
+      width: 100px;
+      max-width: 100%;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: .2s;
+      font-size: 15px;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .sidebar-nav a.active {
+      background: #0F5FFF;
+    }
+
+    .main-executiva {
+      flex: 1;
+    }
+
+    @media (max-width: 1200px) {
+      .page-layout {
+        flex-direction: column;
+      }
+
+      .sidebar-executiva {
+        width: 100%;
+        min-height: auto;
+        position: relative;
+      }
+    }
+
+    .bloco-executivo {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-top: 18px;
+      margin-bottom: 24px;
+    }
+
+    .bloco-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .bloco-kicker {
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .bloco-header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .bloco-badge {
+      background: rgba(0, 59, 143, .08);
+      color: #003B8F;
+      border: 1px solid rgba(0, 59, 143, .15);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .bloco-executivo .table-card {
+      border: none;
+      box-shadow: none;
+      margin-bottom: 0;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .dashboard-footer {
+      margin-top: 24px;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-footer strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .field.periodo-field {
+      flex: 0 0 auto;
+      min-width: 320px;
+      width: max-content;
+      max-width: 100%;
+    }
+
+    .periodo-field .ts-wrapper {
+      display: inline-block;
+      width: max-content;
+      min-width: 320px;
+      max-width: 100%;
+    }
+
+    .periodo-field .ts-control {
+      width: max-content !important;
+      min-width: 320px !important;
+      max-width: 100% !important;
+      overflow: visible !important;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 650;
+      font-size: 13px;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+    }
+
+    button:hover {
+      background: #f8fafc;
+      border-color: #dbe3ef;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: rgba(37, 99, 235, .65);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .ts-control input {
+      min-width: 1px !important;
+      width: auto !important;
+      height: 22px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: #000 !important;
+    }
+
+    .ts-wrapper:not(.has-items) .ts-control input::placeholder {
+      color: #000 !important;
+      opacity: 1 !important;
+    }
+
+    .ts-wrapper.has-items .ts-control input::placeholder {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+
+    .progress-info {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .progress-info strong {
+      color: var(--brand);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .progress-bar {
+      margin-top: 8px;
+      height: 9px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: var(--brand);
+      transition: width .3s ease;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .usuario-badge {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .btn-sair {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .btn-sair:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
   </style>
 </head>
 
@@ -436,13 +732,13 @@
         : "/api";
   </script>
   <script>
-    (async function validarSessao(){
-      try{
+    (async function validarSessao() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok){
+        if (!resp.ok) {
           window.location.href = "/login.html";
           return;
         }
@@ -450,176 +746,265 @@
         const data = await resp.json();
 
         // 🔥 AQUI é o que faltava
-        if(data.deve_trocar_senha){
+        if (data.deve_trocar_senha) {
           window.location.href = "/alterar_senha.html";
           return;
         }
 
-      }catch(e){
+      } catch (e) {
         window.location.href = "/login.html";
       }
     })();
+
   </script>
 
   <div class="container">
 
-    <nav class="topnav">
-      <a href="index.html" class="navlink">Dashboard</a>
-      <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html?v=2" class="navlink">Programas</a>
-      <a href="performance.html" class="navlink">Performance</a>
-      <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-      <a href="unidades.html" class="navlink active">Unidades</a>
-      <a href="sge_turmas.html" class="navlink">Turmas</a>
-      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
-    
-      <div class="topnav-right">
-        <a href="alterar_senha.html" class="navlink">
-          Alterar senha
-        </a>
-        <div id="usuario-logado" class="badge">
-          <span class="dot"></span>
-          Usuário: —
-        </div>
-    
-        <button onclick="logout()">Sair</button>
-      </div>
-    </nav>
+    <div class="page-layout">
 
-    <div class="header">
-      <div class="title">
-        <h1>Painel • Unidades</h1>
-        <p>Visão por Sub-região e Unidade Operacional • Matrículas, Hora-Aluno e Receita (meta/projetado/realizado)</p><br>
-        <p>Pressione Ctrl + clique para múltiplas seleções nos filtros.</p>
-      </div>
-      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões • todas as UOs • 2026/01</div>
-    </div>
+      <aside class="sidebar-executiva">
 
-    <div class="panel">
-      <div class="filters">
-    
-        <div class="field">
-          <label for="subregioes">Sub-regiões</label>
-          <select id="subregioes" multiple></select>
-        </div>
-    
-        <div class="field">
-          <label for="uos">Unidades Operacionais</label>
-          <select id="uos" multiple></select>
+        <div class="sidebar-logo">
+          <img src="assets/logo.png" alt="Logo">
         </div>
 
-        <div class="field field-meses">
-          <label for="periodoMeses">Meses</label>
-          <select id="periodoMeses" multiple>
-            <option value="1">Janeiro</option>
-            <option value="2">Fevereiro</option>
-            <option value="3">Março</option>
-            <option value="4">Abril</option>
-            <option value="5">Maio</option>
-            <option value="6">Junho</option>
-            <option value="7">Julho</option>
-            <option value="8">Agosto</option>
-            <option value="9">Setembro</option>
-            <option value="10">Outubro</option>
-            <option value="11">Novembro</option>
-            <option value="12">Dezembro</option>
-          </select>
+        <nav class="sidebar-nav">
+          <a href="index.html">🏠 Dashboard</a>
+          <a href="po.html">🎯 PO</a>
+          <a href="programas.html?v=2">🧩 Programas</a>
+          <a href="performance.html">📊 Performance</a>
+          <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+          <a href="unidades.html" class="active">🏢 Unidades</a>
+          <a href="sge_turmas.html">📚 Ofertas</a>
+          <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+          <a href="visao_executiva.html">🧠 Visão Executiva</a>
+          <a href="indicadores.html">📈 Indicadores</a>
+          <a href="regioes.html">🌎 Regiões</a>
+          <a href="subregioes.html">📍 Sub-regiões</a>
+          <a href="turmas.html">🏫 Turmas</a>
+          <a href="acoes.html">✅ Ações</a>
+          <a href="relatoriosexecutivos.html">📄 Relatórios</a>
+        </nav>
+
+      </aside>
+
+      <main class="main-executiva">
+
+        <div class="header">
+          <div class="title">
+            <h1>Unidades</h1>
+          </div>
+
+          <div class="header-actions">
+
+            <div class="badge usuario-badge" id="usuario-logado">
+              <span class="dot"></span>
+              Usuário: —
+            </div>
+
+            <button class="btn-sair" onclick="logout()">
+              Sair
+            </button>
+
+          </div>
         </div>
-    
-        <div class="field sm">
-          <label for="ano">Ano</label>
-          <select id="ano"></select>
+
+        <div class="panel">
+          <div class="filters">
+
+            <div class="field sm">
+              <label for="ano">Ano</label>
+              <select id="ano"></select>
+            </div>
+
+            <div class="field periodo-field">
+              <label for="periodoMeses">Período</label>
+              <select id="periodoMeses" multiple placeholder="Selecione...">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="regioes">Região</label>
+              <select id="regioes">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="subregioes">Sub-região</label>
+              <select id="subregioes">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="uos">UO</label>
+              <select id="uos">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" onclick="resetPagina()">Limpar</button>
+            </div>
+
+          </div>
         </div>
-    
-        <div class="actions">
-          <button class="btn-primary" onclick="resetPagina()">Limpar</button>
+
+        <div class="cards cards-executivos">
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">🎓</span>
+              <h3>MATRÍCULAS</h3>
+            </div>
+            <div class="big" id="mat-real">—</div>
+            <div class="progress-info">
+              <span id="mat-sub">Meta: —</span>
+              <strong id="mat-pct">—%</strong>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="mat-progress"></div>
+            </div>
+          </div>
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">⏱️</span>
+              <h3>HORA-ALUNO</h3>
+            </div>
+            <div class="big" id="ha-real">—</div>
+            <div class="progress-info">
+              <span id="ha-sub">Meta: —</span>
+              <strong id="ha-pct">—%</strong>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="ha-progress"></div>
+            </div>
+          </div>
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">💰</span>
+              <h3>RECEITA</h3>
+            </div>
+            <div class="big" id="rec-real">—</div>
+            <div class="progress-info">
+              <span id="rec-sub">Meta: —</span>
+              <strong id="rec-pct">—%</strong>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="rec-progress"></div>
+            </div>
+          </div>
+
         </div>
-    
-      </div>
-    </div>
 
-    <div class="cards">
-      <div class="card">
-        <h3>Matrículas Realizadas</h3>
-        <div class="big" id="mat-real">—</div>
-        <div class="sub" id="mat-sub">Meta: — • Projetado: —</div>
-        <div class="chips" id="mat-chips"></div>
-      </div>
+        <div class="bloco-executivo">
 
-      <div class="card">
-        <h3>Hora-Aluno Realizada</h3>
-        <div class="big" id="ha-real">—</div>
-        <div class="sub" id="ha-sub">Meta: — • Projetado: —</div>
-        <div class="chips" id="ha-chips"></div>
-      </div>
+          <div class="bloco-header">
+            <div>
+              <div class="bloco-kicker">ANÁLISE EXECUTIVA</div>
+              <h2>Desempenho por Unidade</h2>
+            </div>
 
-      <div class="card">
-        <h3>Receita Realizada</h3>
-        <div class="big" id="rec-real">—</div>
-        <div class="sub" id="rec-sub">Meta: — • Projetado: —</div>
-        <div class="chips" id="rec-chips"></div>
-      </div>
-    </div>
+            <div class="bloco-badge">
+              🏢 Unidades
+            </div>
+          </div>
 
-    <div class="legend">
-      <span class="legend-item">
-        <span class="chip status-high"><strong>≥ 100%</strong></span>
-        <span>Meta atingida</span>
-      </span>
-    
-      <span class="legend-item">
-        <span class="chip status-blue"><strong>75% – 99,9%</strong></span>
-        <span>No caminho</span>
-      </span>
-    
-      <span class="legend-item">
-        <span class="chip status-mid"><strong>51% – 74,9%</strong></span>
-        <span>Atenção</span>
-      </span>
-    
-      <span class="legend-item">
-        <span class="chip status-low"><strong>&lt; 51%</strong></span>
-        <span>Crítico</span>
-      </span>
+          <div class="table-card">
+            <div class="table-wrap">
+              <table id="tabela-unidades"></table>
+            </div>
+          </div>
 
-      <span class="legend-item">
-        <span class="chip status-neutral"><strong>100%</strong></span>
-        <span>Sem meta (com realizado)</span>
-      </span>
-      
-      <span class="legend-item">
-        <span class="sem-meta-zero"><strong>–</strong></span>
-        <span>Sem dados (meta = 0 e realizado = 0)</span>
-      </span>
-    </div>
+        </div>
 
-    <div class="section-title">Por Unidade</div>
-    <div class="table-card">
-      <div class="table-wrap">
-        <table id="tabela-unidades"></table>
-      </div>
+        <div class="legend">
+          <span class="legend-item">
+            <span class="chip status-high"><strong>≥ 100%</strong></span>
+            <span>Meta atingida</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="chip status-blue"><strong>75% – 99,9%</strong></span>
+            <span>No caminho</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="chip status-mid"><strong>51% – 74,9%</strong></span>
+            <span>Atenção</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="chip status-low"><strong>&lt; 51%</strong></span>
+            <span>Crítico</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="chip status-neutral"><strong>100%</strong></span>
+            <span>Sem meta (com realizado)</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="sem-meta-zero"><strong>–</strong></span>
+            <span>Sem dados (meta = 0 e realizado = 0)</span>
+          </span>
+        </div>
+
+        <footer class="dashboard-footer">
+          <div class="footer-left">
+            <strong>Fontes dos dados:</strong>
+            Solução Integradora • Cubo Orçamento
+          </div>
+        </footer>
+
+      </main>
+
     </div>
 
   </div>
 
   <script>
 
-    let ALL_SUB_OPTIONS = []; // [{value,text}]
-    let ALL_UO_OPTIONS  = []; // [{value,text}]
+    let ALL_SUB_OPTIONS = [];
+    let ALL_UO_OPTIONS = [];
     let INIT_DONE = false;
+    let tsRegioes = null;
+    let tsSubregioes = null;
+    let tsUos = null;
+    let tsMeses = null;
+    let TODAS_REGIOES = [];
+    let TODAS_SUBREGIOES = [];
+    let UO_SUBS_CACHE = new Map();
 
-    function snapshotOptions(sel){
-    return Array.from(sel.options).map(o => ({ value: o.value, text: o.textContent }));
+    function snapshotOptions(sel) {
+      return Array.from(sel.options).map(o => ({ value: o.value, text: o.textContent }));
     }
 
-    function restoreOptions(sel, snap, clearSelection=false){
+    function restoreOptions(sel, snap, clearSelection = false) {
       const selected = clearSelection
         ? new Set()
         : new Set(Array.from(sel.selectedOptions).map(o => o.value));
 
       sel.innerHTML = "";
-      snap.forEach(it=>{
+      snap.forEach(it => {
         const opt = document.createElement("option");
         opt.value = it.value;
         opt.textContent = it.text;
@@ -628,81 +1013,21 @@
       });
     }
 
-    function format(n){ return Number(n||0).toLocaleString("pt-BR"); }
-    function moeda(n){ return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+    function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
+    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
 
-    function setStatus(msg){
+    function setStatus(msg) {
       const el = document.getElementById("status");
-      if(el) el.textContent = msg || "";
+      if (el) el.textContent = msg || "";
     }
 
-    function selecionados(id){
+    function selecionados(id) {
       const sel = document.getElementById(id);
       const vals = Array.from(sel.selectedOptions).map(o => String(o.value).trim()).filter(Boolean);
       return vals.join(",");
     }
 
-    function atualizarBadgeFiltro(){
-      const badge = document.getElementById("badge-filtro");
-      if(!badge) return;
-
-      const selSub = document.getElementById("subregioes");
-      const selUo = document.getElementById("uos");
-
-      const subs = Array.from(selSub?.selectedOptions || [])
-        .map(o => o.textContent.trim());
-
-      const uos = Array.from(selUo?.selectedOptions || [])
-        .map(o => o.textContent.trim());
-
-      let subTxt = "";
-      if (subs.length) {
-        const resumo = subs.length <= 2
-          ? subs.join(", ")
-          : `${subs.slice(0,2).join(", ")} +${subs.length-2}`;
-        subTxt = `Sub-regiões: ${resumo}`;
-      } else {
-        subTxt = "Sub-regiões: todas";
-      }
-
-      let uoTxt = "";
-      if (uos.length) {
-        const resumo = uos.length <= 2
-          ? uos.join(", ")
-          : `${uos.slice(0,2).join(", ")} +${uos.length-2}`;
-        uoTxt = `UOs: ${resumo}`;
-      } else {
-        uoTxt = "UOs: todas";
-      }
-
-      const ano = document.getElementById("ano")?.value || "2026";
-
-      const meses = Array.from(document.getElementById("periodoMeses")?.selectedOptions || [])
-        .map(o => Number(o.value));
-
-      const nomesMeses = [
-        "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-      ];
-
-      let periodoTxt = "";
-
-      if (meses.length > 0) {
-        const mesesOrdenados = [...meses].sort((a, b) => a - b);
-
-        if (mesesOrdenados.length <= 3) {
-          periodoTxt = mesesOrdenados.map(m => nomesMeses[m]).join(", ");
-        } else {
-          periodoTxt = `${nomesMeses[mesesOrdenados[0]]} - ${nomesMeses[mesesOrdenados[mesesOrdenados.length - 1]]}`;
-        }
-      } else {
-        periodoTxt = "todos";
-      }
-
-      badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${uoTxt} • Ano: ${ano} • Meses: ${periodoTxt}`;
-    }
-
-    function chipPct(real, meta){
+    function chipPct(real, meta) {
       real = Number(real || 0);
       meta = Number(meta || 0);
 
@@ -737,122 +1062,386 @@
       return `<span class="chip ${cls}"><span class="k">Real/Meta</span>${t}</span>`;
     }
 
-    async function carregarSubregioes(){
-      const ano = Number(document.getElementById("ano").value || 2026);
+    function destruirTomSelectUnidades() {
+      if (tsSubregioes) {
+        tsSubregioes.destroy();
+        tsSubregioes = null;
+      }
 
-      const res = await fetch(API + `/planejamento/filtros/subregioes?ano=${ano}`);
-      const data = await res.json();
+      if (tsUos) {
+        tsUos.destroy();
+        tsUos = null;
+      }
 
-      const sel = document.getElementById("subregioes");
-      const prev = new Set(Array.from(sel.selectedOptions).map(o => String(o.value)));
-
-      sel.innerHTML = "";
-
-      data.forEach(r => {
-        const opt = document.createElement("option");
-        opt.value = r.codigo;
-        opt.textContent = r.nome;
-        if (prev.has(String(r.codigo))) opt.selected = true;
-        sel.appendChild(opt);
-      });
-
-      ALL_SUB_OPTIONS = snapshotOptions(sel);
-    }
-
-    // Cascata: se sub-região selecionada, lista UOs daquela(s) sub-região(ões)
-    async function carregarUOs(){
-      const subs = selecionados("subregioes");
-      const ano = Number(document.getElementById("ano").value || 2026);
-
-      const qs = new URLSearchParams();
-      if (subs) qs.set("subregioes", subs);
-      if (ano) qs.set("ano", String(ano));
-
-      const url = API + "/uo/list" + (qs.toString() ? "?" + qs.toString() : "");
-      const res = await fetch(url);
-      const data = await res.json();
-
-      const sel = document.getElementById("uos");
-      const prev = new Set(Array.from(sel.selectedOptions).map(o=> String(o.value)));
-
-      sel.innerHTML = "";
-      data.forEach(r=>{
-        const opt = document.createElement("option");
-        opt.value = r.codigo;
-        opt.textContent = r.nome;
-        if(prev.has(String(r.codigo))) opt.selected = true;
-        sel.appendChild(opt);
-      });
-      if(!ALL_UO_OPTIONS.length){
-        ALL_UO_OPTIONS = snapshotOptions(document.getElementById("uos"));
+      if (tsMeses) {
+        tsMeses.destroy();
+        tsMeses = null;
       }
     }
 
-    async function carregarCards(){
-      atualizarBadgeFiltro();
+    function atualizarTomSelectUnidades() {
+      iniciarTomSelectUnidades();
+    }
 
-      const ano = Number(document.getElementById("ano").value || 2026);
-      const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
+    function norm(v) {
+      return String(v || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toUpperCase()
+        .trim();
+    }
+
+    function anoSelecionado() {
+      return document.getElementById("ano").value || "2026";
+    }
+
+    function mesesSelecionados() {
+      return Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(o => o.value);
+    }
 
-      const subs = selecionados("subregioes");
-      const uos  = selecionados("uos");
+    function regiaoSelecionada() {
+      return document.getElementById("regioes")?.value || "";
+    }
 
-      const qs = new URLSearchParams({ ano: String(ano) });
+    function subregiaoSelecionada() {
+      return document.getElementById("subregioes")?.value || "";
+    }
+
+    function uoSelecionada() {
+      return document.getElementById("uos")?.value || "";
+    }
+
+    function regiaoDaSubregiao(nomeSub) {
+      const sub = norm(nomeSub);
+
+      return TODAS_REGIOES.find(r => {
+        const reg = norm(r);
+        return sub === reg || sub.startsWith(reg + " ");
+      }) || "";
+    }
+
+    function subPertenceRegiao(sub, regiao) {
+      if (!regiao) return true;
+      return regiaoDaSubregiao(sub.nome) === regiao;
+    }
+
+    async function carregarTodasSubregioes() {
+      const ano = anoSelecionado();
+      const meses = mesesSelecionados();
+
+      const qs = new URLSearchParams({ ano });
+      if (meses.length) qs.set("meses", meses.join(","));
+
+      const data = await (await fetch(API + `/planejamento/filtros/subregioes?${qs.toString()}`)).json();
+      TODAS_SUBREGIOES = data || [];
+
+      return TODAS_SUBREGIOES;
+    }
+
+    async function buscarSubregioesDaUO(uo) {
+      if (!uo) return [];
+
+      if (UO_SUBS_CACHE.has(uo)) {
+        return UO_SUBS_CACHE.get(uo);
+      }
+
+      const res = await fetch(API + `/uo/subregioes?uos=${encodeURIComponent(uo)}`);
+      const data = await res.json();
+
+      const ids = (data || []).map(String);
+      UO_SUBS_CACHE.set(uo, ids);
+
+      return ids;
+    }
+
+    function subregioesDaRegiao(regiao) {
+      if (!regiao) return [];
+
+      return TODAS_SUBREGIOES
+        .filter(s => subPertenceRegiao(s, regiao))
+        .map(s => String(s.codigo));
+    }
+
+    async function subregioesContexto() {
+      const sub = subregiaoSelecionada();
+      const uo = uoSelecionada();
+      const regiao = regiaoSelecionada();
+
+      if (sub) return [String(sub)];
+
+      if (uo) {
+        return await buscarSubregioesDaUO(uo);
+      }
+
+      if (regiao) {
+        return subregioesDaRegiao(regiao);
+      }
+
+      return [];
+    }
+
+    async function carregarRegioes() {
+      const ano = anoSelecionado();
+      const meses = mesesSelecionados();
+      const sub = subregiaoSelecionada();
+      const uo = uoSelecionada();
+
+      const qs = new URLSearchParams({ ano });
+      if (meses.length) qs.set("meses", meses.join(","));
+
+      const data = await (await fetch(API + `/regioes/ranking?${qs.toString()}`)).json();
+
+      TODAS_REGIOES = (data || [])
+        .map(r => r.regiao || r.nome || r.codigo)
+        .filter(Boolean)
+        .sort((a, b) => String(a).localeCompare(String(b), "pt-BR"));
+
+      if (!TODAS_SUBREGIOES.length) {
+        await carregarTodasSubregioes();
+      }
+
+      let regioesPermitidas = [...TODAS_REGIOES];
+
+      if (sub) {
+        const subObj = TODAS_SUBREGIOES.find(s => String(s.codigo) === String(sub));
+        const reg = regiaoDaSubregiao(subObj?.nome || "");
+        regioesPermitidas = reg ? [reg] : [];
+      }
+
+      if (uo) {
+        const subIds = await buscarSubregioesDaUO(uo);
+        const regs = new Set();
+
+        TODAS_SUBREGIOES
+          .filter(s => subIds.includes(String(s.codigo)))
+          .forEach(s => {
+            const reg = regiaoDaSubregiao(s.nome);
+            if (reg) regs.add(reg);
+          });
+
+        regioesPermitidas = [...regs];
+      }
+
+      const sel = document.getElementById("regioes");
+      const valorAnterior = sel.value || "";
+
+      sel.innerHTML = `<option value="">Selecione...</option>`;
+
+      regioesPermitidas.forEach(nome => {
+        const opt = document.createElement("option");
+        opt.value = nome;
+        opt.textContent = nome;
+        sel.appendChild(opt);
+      });
+
+      const opcoesValidas = Array.from(sel.options).filter(o => o.value);
+
+      if (Array.from(sel.options).some(o => o.value === valorAnterior)) {
+        sel.value = valorAnterior;
+      } else if ((subregiaoSelecionada() || uoSelecionada()) && opcoesValidas.length === 1) {
+        sel.value = opcoesValidas[0].value;
+      } else {
+        sel.value = "";
+      }
+    }
+
+    async function carregarSubregioes() {
+      const regiao = regiaoSelecionada();
+      const uo = uoSelecionada();
+
+      await carregarTodasSubregioes();
+
+      let lista = [...TODAS_SUBREGIOES];
+
+      if (regiao) {
+        lista = lista.filter(s => subPertenceRegiao(s, regiao));
+      }
+
+      if (uo) {
+        const subIds = await buscarSubregioesDaUO(uo);
+        lista = lista.filter(s => subIds.includes(String(s.codigo)));
+      }
+
+      const sel = document.getElementById("subregioes");
+      const valorAnterior = sel.value || "";
+
+      sel.innerHTML = `<option value="">Selecione...</option>`;
+
+      lista
+        .sort((a, b) => String(a.nome).localeCompare(String(b.nome), "pt-BR"))
+        .forEach(s => {
+          const opt = document.createElement("option");
+          opt.value = s.codigo;
+          opt.textContent = s.nome;
+          sel.appendChild(opt);
+        });
+
+      const opcoesValidas = Array.from(sel.options).filter(o => o.value);
+
+      if (Array.from(sel.options).some(o => o.value === valorAnterior)) {
+        sel.value = valorAnterior;
+      } else if (uoSelecionada() && opcoesValidas.length === 1) {
+        sel.value = opcoesValidas[0].value;
+      } else {
+        sel.value = "";
+      }
+    }
+
+    async function carregarUOs() {
+      const ano = anoSelecionado();
+      const meses = mesesSelecionados();
+      const uoAtual = uoSelecionada();
+
+      const subIds = await subregioesContexto();
+
+      const qs = new URLSearchParams({ ano });
 
       if (meses.length) qs.set("meses", meses.join(","));
-      if (subs) qs.set("subregioes", subs);
-      if (uos)  qs.set("uos", uos);
+      if (subIds.length) qs.set("subregioes", subIds.join(","));
 
-      // Usa a MESMA fonte da tabela para garantir números idênticos
-      const url = API + "/unidades/tabela?" + qs.toString();
-      const data = await (await fetch(url)).json();
+      const data = await (await fetch(API + `/uo/list?${qs.toString()}`)).json();
+
+      const sel = document.getElementById("uos");
+      const valorAnterior = uoAtual || "";
+
+      sel.innerHTML = `<option value="">Selecione...</option>`;
+
+      (data || []).forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.codigo;
+        opt.textContent = r.nome || r.nome_fantasia || r.descricao || r.codigo;
+        sel.appendChild(opt);
+      });
+
+      sel.value = Array.from(sel.options).some(o => o.value === valorAnterior)
+        ? valorAnterior
+        : "";
+    }
+
+    async function montarQueryUnidades() {
+      const ano = anoSelecionado();
+      const meses = mesesSelecionados();
+      const uo = uoSelecionada();
+      const subIds = await subregioesContexto();
+
+      const qs = new URLSearchParams({ ano });
+
+      if (meses.length) qs.set("meses", meses.join(","));
+      if (uo) qs.set("uos", uo);
+      else if (subIds.length) qs.set("subregioes", subIds.join(","));
+
+      return qs;
+    }
+
+    async function carregarCards() {
+
+      const qs = await montarQueryUnidades();
+      const data = await (await fetch(API + "/unidades/tabela?" + qs.toString())).json();
 
       const totais = data.reduce((acc, r) => {
         acc.mat_meta += Number(r.mat_meta || 0);
-        acc.mat_proj += Number(r.mat_proj || 0);
         acc.mat_real += Number(r.mat_real || 0);
 
         acc.ha_meta += Number(r.ha_meta || 0);
-        acc.ha_proj += Number(r.ha_proj || 0);
         acc.ha_real += Number(r.ha_real || 0);
 
         acc.rec_meta += Number(r.rec_meta || 0);
-        acc.rec_proj += Number(r.rec_proj || 0);
         acc.rec_real += Number(r.rec_real || 0);
+
         return acc;
       }, {
-        mat_meta: 0, mat_proj: 0, mat_real: 0,
-        ha_meta: 0, ha_proj: 0, ha_real: 0,
-        rec_meta: 0, rec_proj: 0, rec_real: 0
+        mat_meta: 0,
+        mat_real: 0,
+        ha_meta: 0,
+        ha_real: 0,
+        rec_meta: 0,
+        rec_real: 0
       });
 
-      // Matrículas
-      document.getElementById("mat-real").textContent = format(totais.mat_real);
-      document.getElementById("mat-sub").textContent =
-        `Meta: ${format(totais.mat_meta)}`;
-      document.getElementById("mat-chips").innerHTML = chipPct(totais.mat_real, totais.mat_meta);
+      function atualizarCard({ real, meta, realEl, metaEl, pctEl, progressEl, moedaFlag = false }) {
+        real = Number(real || 0);
+        meta = Number(meta || 0);
 
-      // Hora-aluno
-      document.getElementById("ha-real").textContent = format(totais.ha_real);
-      document.getElementById("ha-sub").textContent =
-        `Meta: ${format(totais.ha_meta)}`;
-      document.getElementById("ha-chips").innerHTML = chipPct(totais.ha_real, totais.ha_meta);
+        const pct = meta > 0 ? (real / meta) * 100 : 0;
+        const pctBarra = Math.min(pct, 100);
 
-      // Receita
-      document.getElementById("rec-real").textContent = moeda(totais.rec_real);
-      document.getElementById("rec-sub").textContent =
-        `Meta: ${moeda(totais.rec_meta)}`;
-      document.getElementById("rec-chips").innerHTML = chipPct(totais.rec_real, totais.rec_meta);
+        document.getElementById(realEl).textContent = moedaFlag ? moeda(real) : format(real);
+        document.getElementById(metaEl).textContent = `Meta: ${moedaFlag ? moeda(meta) : format(meta)}`;
+        document.getElementById(pctEl).textContent =
+          pct.toLocaleString("pt-BR", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+          }) + "%";
+        document.getElementById(progressEl).style.width = pctBarra + "%";
+      }
+
+      atualizarCard({
+        real: totais.mat_real,
+        meta: totais.mat_meta,
+        realEl: "mat-real",
+        metaEl: "mat-sub",
+        pctEl: "mat-pct",
+        progressEl: "mat-progress"
+      });
+
+      atualizarCard({
+        real: totais.ha_real,
+        meta: totais.ha_meta,
+        realEl: "ha-real",
+        metaEl: "ha-sub",
+        pctEl: "ha-pct",
+        progressEl: "ha-progress"
+      });
+
+      atualizarCard({
+        real: totais.rec_real,
+        meta: totais.rec_meta,
+        realEl: "rec-real",
+        metaEl: "rec-sub",
+        pctEl: "rec-pct",
+        progressEl: "rec-progress",
+        moedaFlag: true
+      });
     }
 
-    function montarTabela(id, colunas, linhas){
+    async function carregarTabela() {
+      const qs = await montarQueryUnidades();
+      const data = await (await fetch(API + "/unidades/tabela?" + qs.toString())).json();
+
+      montarTabela(
+        "tabela-unidades",
+        [
+          "UO",
+          "MAT META", "MAT REAL", "MAT STATUS",
+          "HA META", "HA REAL", "HA STATUS",
+          "REC META", "REC REAL", "REC STATUS"
+        ],
+        data.map(r => ({
+          "UO": r.uo,
+
+          "MAT META": format(r.mat_meta),
+          "MAT REAL": format(r.mat_real),
+          "MAT STATUS": statusBadge(r.mat_real, r.mat_meta),
+
+          "HA META": format(r.ha_meta),
+          "HA REAL": format(r.ha_real),
+          "HA STATUS": statusBadge(r.ha_real, r.ha_meta),
+
+          "REC META": moeda(r.rec_meta),
+          "REC REAL": moeda(r.rec_real),
+          "REC STATUS": statusBadge(r.rec_real, r.rec_meta),
+        }))
+      );
+    }
+
+    function montarTabela(id, colunas, linhas) {
       const t = document.getElementById(id);
       t.innerHTML = "";
 
       const thead = document.createElement("thead");
       const trh = document.createElement("tr");
-      colunas.forEach(c=>{
+      colunas.forEach(c => {
         const th = document.createElement("th");
         th.textContent = c;
         trh.appendChild(th);
@@ -860,9 +1449,9 @@
       thead.appendChild(trh);
 
       const tbody = document.createElement("tbody");
-      linhas.forEach(l=>{
+      linhas.forEach(l => {
         const tr = document.createElement("tr");
-        colunas.forEach(c=>{
+        colunas.forEach(c => {
           const td = document.createElement("td");
           td.innerHTML = l[c] ?? "";
           tr.appendChild(td);
@@ -874,7 +1463,7 @@
       t.appendChild(tbody);
     }
 
-    function statusBadge(real, meta){
+    function statusBadge(real, meta) {
       real = Number(real || 0);
       meta = Number(meta || 0);
 
@@ -907,133 +1496,53 @@
       return `<span class="chip ${cls}">${t}</span>`;
     }
 
-    async function carregarTabela(){
-      const ano = Number(document.getElementById("ano").value || 2026);
-      const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
-        .map(o => o.value);
-
-      const subs = selecionados("subregioes");
-      const uos  = selecionados("uos");
-
-      const qs = new URLSearchParams({ ano: String(ano) });
-      if (meses.length) qs.set("meses", meses.join(","));
-      if (subs) qs.set("subregioes", subs);
-      if (uos)  qs.set("uos", uos);
-
-      const url = API + "/unidades/tabela?" + qs.toString();
-      const data = await (await fetch(url)).json();
-
-      montarTabela(
-        "tabela-unidades",
-        [
-          "UO",
-          "MAT META","MAT REAL","MAT STATUS",
-          "HA META","HA REAL","HA STATUS",
-          "REC META","REC REAL","REC STATUS"
-        ],
-        data.map(r => ({
-          "UO": r.uo,
-
-          "MAT META": format(r.mat_meta),
-          "MAT REAL": format(r.mat_real),
-          "MAT STATUS": statusBadge(r.mat_real, r.mat_meta),
-
-          "HA META": format(r.ha_meta),
-          "HA REAL": format(r.ha_real),
-          "HA STATUS": statusBadge(r.ha_real, r.ha_meta),
-
-          "REC META": moeda(r.rec_meta),
-          "REC REAL": moeda(r.rec_real),
-          "REC STATUS": statusBadge(r.rec_real, r.rec_meta),
-        }))
-      );
-    }
-
-    async function carregarTudo(){
-      try{
+    async function carregarTudo() {
+      try {
         setStatus("Carregando visão de unidades…");
         await carregarCards();
         await carregarTabela();
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao carregar dados. Verifique endpoints /unidades/* e /uo/list.");
       }
     }
 
-    document.getElementById("uos").addEventListener("change", async ()=>{
-      
-      atualizarBadgeFiltro();
-
-      // Se usuário escolheu UO e NÃO escolheu sub-região, preencher sub-região automaticamente
-      const subsSelecionadas = selecionados("subregioes");
-      const uosSelecionadas  = selecionados("uos");
-      // Se o usuário limpou a seleção de UOs (Ctrl+clique), volta ao padrão
-      if(!uosSelecionadas){
-        // restaura sub-regiões se estava restrito
-        const selSub = document.getElementById("subregioes");
-        if(ALL_SUB_OPTIONS.length && selSub.options.length !== ALL_SUB_OPTIONS.length){
-          restoreOptions(selSub, ALL_SUB_OPTIONS);
-        }
-
-        // recarrega UOs sem filtro (todas)
-        await carregarUOs();
-
-        atualizarBadgeFiltro();
-        await carregarTudo();
-        return;
-      }
-      if(!subsSelecionadas && uosSelecionadas){
-          try{
-          const res = await fetch(API + "/uo/subregioes?uos=" + encodeURIComponent(uosSelecionadas));
-          const subIds = await res.json(); // [20000003, ...]
-
-          const selSub = document.getElementById("subregioes");
-          const setIds = new Set(subIds.map(String));
-
-          // RESTRINGE LISTA (mostra só as sub-regiões possíveis)
-          selSub.innerHTML = "";
-          ALL_SUB_OPTIONS
-          .filter(it => setIds.has(String(it.value)))
-          .forEach(it=>{
-              const opt = document.createElement("option");
-              opt.value = it.value;
-              opt.textContent = it.text;
-              opt.selected = true; // já seleciona automaticamente
-              selSub.appendChild(opt);
-          });
-
-          // Agora que sub-região foi preenchida, atualiza lista de UOs (mas mantendo as já selecionadas)
-          await carregarUOs();
-          }catch(e){
-          console.error("Falha ao inferir sub-região pela UO", e);
-          }
-      }
-
-      atualizarBadgeFiltro();
+    document.getElementById("uos").addEventListener("change", async () => {
+      await carregarSubregioes();
+      await carregarRegioes();
       await carregarTudo();
     });
-    document.getElementById("ano").addEventListener("change", async ()=>{
-      salvarAnoMesPreferidos();
+
+    document.getElementById("regioes").addEventListener("change", async () => {
+
+      await carregarSubregioes();
       await carregarUOs();
-      atualizarBadgeFiltro();
       await carregarTudo();
     });
 
-    document.getElementById("periodoMeses").addEventListener("change", async ()=>{
+    document.getElementById("ano").addEventListener("change", async () => {
       salvarAnoMesPreferidos();
-      atualizarBadgeFiltro();
+
+      await carregarRegioes();
+      await carregarSubregioes();
+      await carregarUOs();
       await carregarTudo();
     });
 
-    function pad2(n){ return String(n).padStart(2,"0"); }
+    document.getElementById("periodoMeses").addEventListener("change", async () => {
+      salvarAnoMesPreferidos();
+      await carregarTudo();
+    });
 
-    function nomeMesPT(m){
-      const nomes = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-      return nomes[m-1] || "";
+    function pad2(n) { return String(n).padStart(2, "0"); }
+
+    function nomeMesPT(m) {
+      const nomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+      return nomes[m - 1] || "";
     }
 
-    function carregarAnoMes(){
+    function carregarAnoMes() {
       const anoSel = document.getElementById("ano");
       const mesesSel = document.getElementById("periodoMeses");
 
@@ -1042,11 +1551,11 @@
       const mesAtual = String(agora.getMonth() + 1);
 
       anoSel.innerHTML = "";
-      for(let y = anoAtual - 1; y <= anoAtual + 1; y++){
+      for (let y = anoAtual - 1; y <= anoAtual + 1; y++) {
         const opt = document.createElement("option");
         opt.value = String(y);
         opt.textContent = String(y);
-        if(y === anoAtual) opt.selected = true;
+        if (y === anoAtual) opt.selected = true;
         anoSel.appendChild(opt);
       }
 
@@ -1066,7 +1575,7 @@
         });
       } else {
         Array.from(mesesSel.options).forEach(o => {
-          o.selected = o.value === mesAtual;
+          o.selected = false;
         });
       }
     }
@@ -1079,12 +1588,9 @@
         .map(v => v.trim())
         .filter(Boolean);
 
-      if (anoUrl && mesesUrl.length) return { ano: anoUrl, meses: mesesUrl };
-
-      const anoLs = Number(localStorage.getItem("filtro_ano"));
-      const mesesLs = JSON.parse(localStorage.getItem("filtro_meses") || "[]");
-
-      if (anoLs && mesesLs.length) return { ano: anoLs, meses: mesesLs };
+      if (anoUrl && mesesUrl.length) {
+        return { ano: anoUrl, meses: mesesUrl };
+      }
 
       return null;
     }
@@ -1098,17 +1604,20 @@
       localStorage.setItem("filtro_meses", JSON.stringify(meses));
     }
 
-    (async function init(){
+    (async function init() {
       await carregarUsuario();
-      try{
+      try {
         setStatus("Carregando filtros…");
         carregarAnoMes();
-        await carregarSubregioes(); 
-        await carregarUOs(); // sem filtro -> todas
-        atualizarBadgeFiltro();
+
+        document.getElementById("periodoMeses").tomselect?.clear(true);
+
+        await carregarRegioes();
+        await carregarSubregioes();
+        await carregarUOs();
         await carregarTudo();
         setStatus("");
-      } catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao iniciar. Verifique endpoints no backend.");
       }
@@ -1116,19 +1625,26 @@
 
     window.addEventListener("pageshow", async (e) => {
       carregarAnoMes();
-      atualizarBadgeFiltro();
       await carregarTudo();
     });
 
-    async function resetPagina(){
+    async function resetPagina() {
       const selSub = document.getElementById("subregioes");
-      const selUo  = document.getElementById("uos");
+      const selUo = document.getElementById("uos");
+      const selRegiao = document.getElementById("regioes");
 
       if (ALL_SUB_OPTIONS.length) restoreOptions(selSub, ALL_SUB_OPTIONS);
-      if (ALL_UO_OPTIONS.length)  restoreOptions(selUo,  ALL_UO_OPTIONS);
+      if (ALL_UO_OPTIONS.length) restoreOptions(selUo, ALL_UO_OPTIONS);
 
       Array.from(selSub.options).forEach(o => o.selected = false);
       Array.from(selUo.options).forEach(o => o.selected = false);
+
+      if (selRegiao) {
+        selRegiao.value = "";
+        if (selRegiao.tomselect) {
+          selRegiao.tomselect.clear(true);
+        }
+      }
 
       localStorage.removeItem("filtro_ano");
       localStorage.removeItem("filtro_meses");
@@ -1141,60 +1657,76 @@
 
       carregarAnoMes();
 
+      Array.from(document.getElementById("periodoMeses").options)
+        .forEach(o => o.selected = false);
+
+      if (document.getElementById("periodoMeses").tomselect) {
+        document.getElementById("periodoMeses").tomselect.clear(true);
+      }
+
+      await carregarRegioes();
+      await carregarSubregioes();
       await carregarUOs();
-      if(!ALL_UO_OPTIONS.length){
+      if (!ALL_UO_OPTIONS.length) {
         ALL_UO_OPTIONS = snapshotOptions(selUo);
       }
 
-      atualizarBadgeFiltro();
       await carregarTudo();
     }
+
     document.getElementById("subregioes").addEventListener("change", async () => {
-      const selSub = document.getElementById("subregioes");
-      const temSelecao = selSub.selectedOptions.length > 0;
 
-      // Se estava restrito e agora ficou vazio (Ctrl+clique) -> volta todas sub-regiões
-      if (!temSelecao && ALL_SUB_OPTIONS.length && selSub.options.length !== ALL_SUB_OPTIONS.length) {
-        restoreOptions(selSub, ALL_SUB_OPTIONS, true);
-      }
-
-      // Sempre que sub-região muda, atualiza UOs
+      await carregarRegioes();
       await carregarUOs();
 
-      atualizarBadgeFiltro();
       await carregarTudo();
     });
 
-    async function carregarUsuario(){
-      try{
+    async function carregarUsuario() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok) return;
+        if (!resp.ok) return;
 
         const data = await resp.json();
 
         const el = document.getElementById("usuario-logado");
-        if(el){
+        if (el) {
           el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
         }
-      }catch(e){
+      } catch (e) {
         console.error(e);
       }
     }
 
-    async function logout(){
-      try{
+    async function logout() {
+      try {
         await fetch(`${API}/auth/logout`, {
           method: "POST",
           credentials: "include"
         });
-      } catch(e) {}
+      } catch (e) { }
 
       window.location.href = "/login.html";
     }
 
   </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (document.getElementById("periodoMeses")) {
+        new TomSelect("#periodoMeses", {
+          plugins: ["remove_button"],
+          hideSelected: true,
+          closeAfterSelect: false,
+          placeholder: "Selecione..."
+        });
+      }
+    });
+  </script>
+
 </body>
+
 </html>

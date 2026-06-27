@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel • Modalidades</title>
 
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
   <style>
     :root {
       --bg: #f6f7fb;
@@ -17,7 +20,7 @@
       --radius: 14px;
       --radius-sm: 12px;
 
-      --brand: #2563eb;
+      --brand: #003B8F;
       /* azul executivo */
       --ok: #16a34a;
       --warn: #f59e0b;
@@ -127,20 +130,22 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      align-items: flex-start;
+      align-items: flex-end;
     }
 
     .field {
-      flex: 1;
-      min-width: 320px;
-      align-self: flex-end;
+      flex: 0 0 220px;
+      min-width: 220px;
     }
 
     .field.sm {
-      flex: 0 0 160px;
-      min-width: 160px;
-      max-width: 160px;
-      align-self: flex-end;
+      flex: 0 0 110px;
+      min-width: 110px;
+    }
+
+    .field.periodo-field {
+      flex: 0 0 320px;
+      min-width: 320px;
     }
 
     label {
@@ -152,10 +157,12 @@
 
     select {
       width: 100%;
-      height: 40px;
+      height: 42px !important;
+      min-height: 42px !important;
+      max-height: 42px !important;
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px;
+      border-radius: 12px;
+      padding: 8px 10px;
       background: #fff;
       outline: none;
     }
@@ -166,19 +173,23 @@
     }
 
     select[multiple] {
-      height: 150px;
+      height: 42px !important;
+      line-height: 24px;
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
 
     #periodoMeses {
-      height: 150px;
+      height: 42px !important;
     }
 
     .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      align-self: flex-end;
+      flex: 0 0 auto;
+    }
+
+    .actions .btn-primary {
+      height: 42px;
+      padding: 0 18px;
     }
 
     button {
@@ -215,18 +226,18 @@
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 10px;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 14px;
     }
 
-    @media (max-width: 1180px) {
+    @media (max-width: 1200px) {
       .cards {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
       }
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 760px) {
       .cards {
         grid-template-columns: 1fr;
       }
@@ -241,15 +252,40 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 14px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg,
+          rgba(0, 59, 143, .03) 0%,
+          #ffffff 100%);
     }
 
     .card h3 {
       margin: 0;
-      font-size: 13px;
+      font-size: 12px;
       color: var(--muted);
-      font-weight: 750;
-      letter-spacing: .2px;
+      font-weight: 850;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .card-topo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-icone {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(0, 59, 143, .10);
+      color: #003B8F;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
     }
 
     .big {
@@ -358,21 +394,23 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 0;
+      min-width: 1250px;
     }
 
     thead th {
       position: sticky;
       top: 0;
-      background: #fbfcfe;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
+      background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+      border-bottom: 2px solid #dbe3ef;
+      color: #64748b;
+      font-weight: 800;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: .28px;
-      padding: 12px 10px;
+      letter-spacing: .08em;
+      padding: 12px 8px;
       text-align: right;
       white-space: nowrap;
+      z-index: 2;
     }
 
     thead th:first-child {
@@ -381,7 +419,7 @@
 
     tbody td {
       border-bottom: 1px solid #eef2f7;
-      padding: 10px;
+      padding: 8px 8px;
       text-align: right;
       white-space: nowrap;
       font-size: 12px;
@@ -389,14 +427,20 @@
 
     tbody td:first-child {
       text-align: left;
+      font-weight: 700;
+      color: #1e293b;
     }
 
     tbody tr:nth-child(odd) {
-      background: #fcfdff;
+      background: #fafbfd;
     }
 
     tbody tr:hover {
-      background: rgba(37, 99, 235, .06);
+      background: #eef5ff;
+    }
+
+    tbody tr.selected {
+      background: #e8f0ff !important;
     }
 
     .chip .k {
@@ -453,6 +497,384 @@
       align-items: center;
       gap: 10px;
     }
+
+    /* ===== TOM SELECT ===== */
+
+    .ts-wrapper {
+      width: 100%;
+    }
+
+    .ts-control {
+      height: 42px !important;
+      min-height: 42px !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      padding: 8px 10px !important;
+      background: #fff !important;
+      display: flex !important;
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+      overflow: visible !important;
+      box-shadow: none !important;
+    }
+
+    .field.periodo-field {
+      flex: 0 0 auto;
+      min-width: 320px;
+      width: max-content;
+      max-width: 100%;
+    }
+
+    .periodo-field .ts-wrapper {
+      display: inline-block;
+      width: max-content;
+      min-width: 320px;
+      max-width: 100%;
+    }
+
+    .periodo-field .ts-control {
+      width: max-content !important;
+      min-width: 320px !important;
+      max-width: 100% !important;
+      overflow: visible !important;
+    }
+
+    .ts-control>.item {
+      margin: 0 6px 0 0 !important;
+      padding: 2px 8px !important;
+      border-radius: 999px !important;
+      background: rgba(0, 59, 143, .10) !important;
+      border: 1px solid rgba(0, 59, 143, .25) !important;
+      color: #003B8F !important;
+      font-size: 12px !important;
+      line-height: 18px !important;
+      white-space: nowrap !important;
+      flex: 0 0 auto !important;
+    }
+
+    .ts-control input {
+      min-width: 1px !important;
+      height: 22px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: #000 !important;
+    }
+
+    .ts-control input::placeholder {
+      color: #000 !important;
+      opacity: 1 !important;
+    }
+
+    .ts-wrapper.has-items .ts-control input::placeholder {
+      color: transparent !important;
+    }
+
+    .ts-dropdown {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    /* ===== LAYOUT EXECUTIVO ===== */
+
+    .page-layout {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .sidebar-executiva {
+      width: 220px;
+      min-height: calc(100vh - 90px);
+      background: #003B8F;
+      border-radius: 20px;
+      padding: 20px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 18px;
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-logo img {
+      width: 100px;
+      max-width: 100%;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: .2s;
+      font-size: 15px;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .sidebar-nav a.active {
+      background: #0F5FFF;
+    }
+
+    .main-executiva {
+      flex: 1;
+    }
+
+    /* RESPONSIVO */
+
+    @media (max-width: 1200px) {
+
+      .page-layout {
+        flex-direction: column;
+      }
+
+      .sidebar-executiva {
+        width: 100%;
+        min-height: auto;
+        position: relative;
+      }
+
+    }
+
+    .cards-executivos {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-executivo {
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg,
+          rgba(0, 59, 143, .03) 0%,
+          #ffffff 100%);
+    }
+
+    .card-topo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-icone {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(0, 59, 143, .10);
+      color: #003B8F;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .card-executivo h3 {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .card-executivo .big {
+      margin-top: 10px;
+      font-size: 26px;
+      font-weight: 820;
+      letter-spacing: .2px;
+    }
+
+    .card-executivo .chips {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .card-executivo .chip {
+      font-size: 11px;
+      padding: 6px 10px;
+      max-width: 100%;
+    }
+
+    @media (max-width: 1200px) {
+      .cards-executivos {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .cards-executivos {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .bloco-executivo {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-top: 18px;
+      margin-bottom: 24px;
+    }
+
+    .bloco-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .bloco-kicker {
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .bloco-header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .bloco-badge {
+      background: rgba(0, 59, 143, .08);
+      color: #003B8F;
+      border: 1px solid rgba(0, 59, 143, .15);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .bloco-executivo .table-card {
+      border: none;
+      box-shadow: none;
+      margin-bottom: 0;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .field.field-xl {
+      flex: 0 0 300px;
+      min-width: 300px;
+    }
+
+    .field-xxl {
+      flex: 2.2 1 340px;
+      min-width: 320px;
+    }
+
+    .dashboard-footer {
+      margin-top: 24px;
+      padding: 14px 20px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      border-top: 1px solid var(--border);
+
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-footer strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .footer-right {
+      font-weight: 600;
+    }
+
+    .progress-info {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .progress-info strong {
+      color: var(--brand);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .progress-bar {
+      margin-top: 8px;
+      height: 9px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: var(--brand);
+      transition: width .3s ease;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .usuario-badge {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .btn-sair {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .btn-sair:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
   </style>
 </head>
 
@@ -491,150 +913,251 @@
 
   <div class="container">
 
-    <nav class="topnav">
-      <a href="index.html" class="navlink">Dashboard</a>
-      <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html?v=2" class="navlink">Programas</a>
-      <a href="performance.html" class="navlink">Performance</a>
-      <a href="modalidades.html" class="navlink active">Modalidades</a>
-      <a href="unidades.html" class="navlink">Unidades</a>
-      <a href="sge_turmas.html" class="navlink">Turmas</a>
-      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
+    <div class="page-layout">
 
-      <div class="topnav-right">
-        <a href="alterar_senha.html" class="navlink">
-          Alterar senha
-        </a>
-        <div id="usuario-logado" class="badge">
-          <span class="dot"></span>
-          Usuário: —
+      <aside class="sidebar-executiva">
+
+        <div class="sidebar-logo">
+          <img src="assets/logo.png" alt="Logo">
         </div>
 
-        <button onclick="logout()">Sair</button>
-      </div>
-    </nav>
+        <nav class="sidebar-nav">
+          <a href="index.html">🏠 Dashboard</a>
+          <a href="po.html">🎯 PO</a>
+          <a href="programas.html?v=2">🧩 Programas</a>
+          <a href="performance.html">📊 Performance</a>
+          <a href="modalidades.html?v=2" class="active">🏷️ Modalidades</a>
+          <a href="unidades.html">🏢 Unidades</a>
+          <a href="sge_turmas.html">📚 Ofertas</a>
+          <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+          <a href="visao_executiva.html">🧠 Visão Executiva</a>
+          <a href="indicadores.html">📈 Indicadores</a>
+          <a href="regioes.html">🌎 Regiões</a>
+          <a href="subregioes.html">📍 Sub-regiões</a>
+          <a href="turmas.html">🏫 Turmas</a>
+          <a href="acoes.html">✅ Ações</a>
+          <a href="relatoriosexecutivos.html">📄 Relatórios</a>
+        </nav>
 
-    <div class="header">
-      <div class="title">
-        <h1>Painel • Modalidades</h1>
-        <p>Visão por modalidade • Matrículas, Hora-Aluno e Receita (meta/realizado) + tabela por programas</p><br>
-        <p>Pressione Ctrl + clique para múltiplas seleções nos filtros.</p>
-      </div>
-      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as modalidades • 2026/01</div>
-    </div>
+      </aside>
 
-    <div class="panel">
-      <div class="filters">
+      <main class="main-executiva">
 
-        <div class="field">
-          <label for="subregioes">Sub-região</label>
-          <select id="subregioes" multiple></select>
+        <div class="header">
+          <div class="title">
+            <h1>Modalidades</h1>
+          </div>
+
+          <div class="header-actions">
+
+            <div class="badge usuario-badge" id="usuario-logado">
+              <span class="dot"></span>
+              Usuário: —
+            </div>
+
+            <button class="btn-sair" onclick="logout()">
+              Sair
+            </button>
+
+          </div>
         </div>
 
-        <div class="field">
-          <label for="modalidades">Modalidades</label>
-          <select id="modalidades" multiple></select>
+        <div class="panel">
+          <div class="filters">
+
+            <div class="field sm">
+              <label for="ano">Ano</label>
+              <select id="ano">
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+              </select>
+            </div>
+
+            <div class="field periodo-field">
+              <label for="periodoMeses">Período</label>
+              <select id="periodoMeses" multiple placeholder="Selecione...">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </div>
+
+            <div class="field field-xxl">
+              <label for="programas">Programa</label>
+              <select id="programas">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="regioes">Região</label>
+              <select id="regioes">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="subregioes">Sub-região</label>
+              <select id="subregioes">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field field-xl">
+              <label for="modalidades">Modalidade</label>
+              <select id="modalidades">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field field-xl">
+              <label for="financiamentos">Financiamento</label>
+              <select id="financiamentos">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" onclick="limparSelecao()">Limpar</button>
+            </div>
+
+          </div>
         </div>
 
-        <div class="field">
-          <label for="financiamentos">Financiamento</label>
-          <select id="financiamentos" multiple></select>
+        <div class="cards cards-executivos">
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">🏷️</span>
+              <h3>MODALIDADES</h3>
+            </div>
+            <div class="big" id="modalidades-distintas">—</div>
+            <div class="sub">Total de Modalidades</div>
+          </div>
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">🎓</span>
+              <h3>MATRÍCULAS</h3>
+            </div>
+            <div class="big" id="mat-real">—</div>
+            <div class="progress-info">
+              <span id="mat-sub">Meta: —</span>
+              <strong id="mat-pct">—%</strong>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="mat-progress"></div>
+            </div>
+          </div>
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">⏱️</span>
+              <h3>HORA-ALUNO</h3>
+            </div>
+            <div class="big" id="ha-real">—</div>
+            <div class="progress-info">
+              <span id="ha-sub">Meta: —</span>
+              <strong id="ha-pct">—%</strong>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="ha-progress"></div>
+            </div>
+          </div>
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">💰</span>
+              <h3>RECEITA</h3>
+            </div>
+            <div class="big" id="rec-real">—</div>
+            <div class="progress-info">
+              <span id="rec-sub">Meta: —</span>
+              <strong id="rec-pct">—%</strong>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="rec-progress"></div>
+            </div>
+          </div>
+
         </div>
 
-        <div class="field sm">
-          <label for="periodoMeses">Meses</label>
-          <select id="periodoMeses" multiple>
-            <option value="1">Janeiro</option>
-            <option value="2">Fevereiro</option>
-            <option value="3">Março</option>
-            <option value="4">Abril</option>
-            <option value="5">Maio</option>
-            <option value="6">Junho</option>
-            <option value="7">Julho</option>
-            <option value="8">Agosto</option>
-            <option value="9">Setembro</option>
-            <option value="10">Outubro</option>
-            <option value="11">Novembro</option>
-            <option value="12">Dezembro</option>
-          </select>
+        <div class="bloco-executivo">
+
+          <div class="bloco-header">
+            <div>
+              <div class="bloco-kicker">ANÁLISE EXECUTIVA</div>
+              <h2>Desempenho por Modalidades</h2>
+            </div>
+
+            <div class="bloco-badge">
+              🏷️ Modalidades
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-wrap">
+              <table id="tabela-modalidades"></table>
+            </div>
+          </div>
+
         </div>
 
-        <div class="field sm">
-          <label for="ano">Ano</label>
-          <select id="ano">
-            <option value="2026" selected>2026</option>
-            <option value="2025">2025</option>
-            <option value="2024">2024</option>
-          </select>
+        <div class="legend">
+          <span class="legend-item">
+            <span class="chip status-high"><strong>≥ 100%</strong></span>
+            <span>Meta atingida</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="chip status-blue"><strong>75% – 99,9%</strong></span>
+            <span>No caminho</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="chip status-mid"><strong>51% – 74,9%</strong></span>
+            <span>Atenção</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="chip status-low"><strong>&lt; 51%</strong></span>
+            <span>Crítico</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="chip status-neutral"><strong>100%</strong></span>
+            <span>Sem meta (com realizado)</span>
+          </span>
+
+          <span class="legend-item">
+            <span class="sem-meta-zero"><strong>–</strong></span>
+            <span>Sem dados (meta = 0 e realizado = 0)</span>
+          </span>
         </div>
 
-        <div class="actions">
-          <button class="btn-primary" onclick="limparSelecao()">Limpar</button>
-        </div>
-      </div>
-    </div>
+        <footer class="dashboard-footer">
 
-    <div class="cards">
-      <div class="card">
-        <h3>Matrículas</h3>
-        <div class="big" id="mat-real">—</div>
-        <div class="sub" id="mat-sub">Meta: — • Projetado: —</div>
-        <div class="chips" id="mat-chips"></div>
-      </div>
+          <div class="footer-left">
+            <strong>Fontes dos dados:</strong>
+            Solução Integradora • Cubo Orçamento
+          </div>
 
-      <div class="card">
-        <h3>Hora-Aluno</h3>
-        <div class="big" id="ha-real">—</div>
-        <div class="sub" id="ha-sub">Meta: — • Projetado: —</div>
-        <div class="chips" id="ha-chips"></div>
-      </div>
+        </footer>
 
-      <div class="card">
-        <h3>Receita</h3>
-        <div class="big" id="rec-real">—</div>
-        <div class="sub" id="rec-sub">Meta: — • Projetado: —</div>
-        <div class="chips" id="rec-chips"></div>
-      </div>
-    </div>
+      </main>
 
-    <div class="legend">
-      <span class="legend-item">
-        <span class="chip status-high"><strong>≥ 100%</strong></span>
-        <span>Meta atingida</span>
-      </span>
-
-      <span class="legend-item">
-        <span class="chip status-blue"><strong>75% – 99,9%</strong></span>
-        <span>No caminho</span>
-      </span>
-
-      <span class="legend-item">
-        <span class="chip status-mid"><strong>51% – 74,9%</strong></span>
-        <span>Atenção</span>
-      </span>
-
-      <span class="legend-item">
-        <span class="chip status-low"><strong>&lt; 51%</strong></span>
-        <span>Crítico</span>
-      </span>
-
-      <span class="legend-item">
-        <span class="chip status-neutral"><strong>100%</strong></span>
-        <span>Sem meta (com realizado)</span>
-      </span>
-
-      <span class="legend-item">
-        <span class="sem-meta-zero"><strong>–</strong></span>
-        <span>Sem dados (meta = 0 e realizado = 0)</span>
-      </span>
-    </div>
-
-    <div class="section-title">Por Programas</div>
-    <div class="table-card">
-      <div class="table-wrap">
-        <table id="tabela-programas"></table>
-      </div>
     </div>
 
   </div>
@@ -644,21 +1167,50 @@
     function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
     function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
 
+    function destruirTomSelect(id) {
+      const el = document.getElementById(id);
+      if (el && el.tomselect) {
+        el.tomselect.destroy();
+      }
+    }
+
+    function criarTomSelect(id, multiple = false) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      if (el.tomselect) {
+        el.tomselect.destroy();
+      }
+
+      new TomSelect(el, {
+        plugins: multiple ? ["remove_button"] : [],
+        hideSelected: true,
+        closeAfterSelect: !multiple,
+        create: false,
+        allowEmptyOption: true
+      });
+    }
+
     function aplicarAnoMesPadrao() {
       const agora = new Date();
       const anoAtual = String(agora.getFullYear());
-      const mesAtual = String(agora.getMonth() + 1);
 
       const anoSel = document.getElementById("ano");
       const mesesSel = document.getElementById("periodoMeses");
 
-      if (Array.from(anoSel.options).some(o => o.value === anoAtual)) {
+      if (anoSel && Array.from(anoSel.options).some(o => o.value === anoAtual)) {
         anoSel.value = anoAtual;
       }
 
-      Array.from(mesesSel.options).forEach(o => {
-        o.selected = o.value === mesAtual;
-      });
+      if (mesesSel) {
+        Array.from(mesesSel.options).forEach(o => {
+          o.selected = false;
+        });
+
+        if (mesesSel.tomselect) {
+          mesesSel.tomselect.clear(true);
+        }
+      }
     }
 
     function salvarAnoMesPreferidos() {
@@ -696,57 +1248,8 @@
       return `${rotulo}: ${selecionados.slice(0, 2).join(", ")} +${selecionados.length - 2}`;
     }
 
-    function atualizarBadgeFiltro() {
-      const badge = document.getElementById("badge-filtro");
-      if (!badge) return;
-
-      const subTxt = textoSelecionados(
-        "subregioes",
-        "Sub-região",
-        "todas"
-      );
-
-      const modTxt = textoSelecionados(
-        "modalidades",
-        "Modalidades",
-        "todas com resultados no período"
-      );
-
-      const finTxt = textoSelecionados(
-        "financiamentos",
-        "Financiamento",
-        "todos"
-      );
-
-      const ano = document.getElementById("ano").value || "2026";
-
-      const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
-        .map(o => Number(o.value));
-
-      const nomesMeses = [
-        "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-      ];
-
-      let periodoTxt = "todos os meses";
-
-      if (meses.length > 0) {
-        const mesesOrdenados = [...meses].sort((a, b) => a - b);
-
-        if (mesesOrdenados.length <= 3) {
-          periodoTxt = mesesOrdenados.map(m => nomesMeses[m]).join(", ");
-        } else {
-          periodoTxt = `${nomesMeses[mesesOrdenados[0]]} - ${nomesMeses[mesesOrdenados[mesesOrdenados.length - 1]]}`;
-        }
-      }
-
-      badge.innerHTML =
-        `<span class="dot"></span>` +
-        `Filtro: ${subTxt} • ${modTxt} • ${finTxt} • Ano: ${ano} • Meses: ${periodoTxt}`;
-    }
-
     async function limparSelecao() {
-      ["subregioes", "modalidades", "financiamentos"].forEach(id => {
+      ["programas", "regioes", "subregioes", "modalidades", "financiamentos"].forEach(id => {
         const sel = document.getElementById(id);
         Array.from(sel.options).forEach(o => o.selected = false);
       });
@@ -756,18 +1259,66 @@
 
       aplicarAnoMesPadrao();
 
+      await carregarProgramas();
+      await carregarRegioes();
       await carregarSubregioes();
       await carregarModalidades();
       await carregarFinanciamentos();
 
-      atualizarBadgeFiltro();
       await carregarTudo();
+    }
+
+    async function carregarProgramas() {
+      const ano = document.getElementById("ano").value || "2026";
+      const financiamentos = selecionados("financiamentos");
+      const modalidades = selecionados("modalidades");
+      const regiao = document.getElementById("regioes").value || "";
+      const subregioes = selecionados("subregioes");
+
+      const qs = new URLSearchParams({ ano });
+
+      if (financiamentos) qs.set("financiamentos", financiamentos);
+      if (modalidades) qs.set("modalidades", modalidades);
+      if (regiao) qs.set("regiao", regiao);
+      if (subregioes) qs.set("subregioes", subregioes);
+
+      const resp = await fetch(`${API}/modalidades/programas?${qs.toString()}`);
+
+      if (!resp.ok) {
+        console.error("Erro ao carregar programas:", resp.status);
+        return;
+      }
+
+      const dados = await resp.json();
+      const select = document.getElementById("programas");
+
+      const valorAnterior = select.value || "";
+
+      select.innerHTML = `<option value="">Selecione...</option>` + dados.map(p =>
+        `<option value="${p.codigo}">${p.programa}</option>`
+      ).join("");
+
+      const aindaExiste = Array.from(select.options)
+        .some(o => o.value === valorAnterior);
+
+      select.value = aindaExiste ? valorAnterior : "";
     }
 
     async function carregarSubregioes() {
       const ano = document.getElementById("ano").value || "2026";
+      const regiao = document.getElementById("regioes").value || "";
+      const programa = document.getElementById("programas").value || "";
+      const modalidades = selecionados("modalidades");
+      const financiamentos = selecionados("financiamentos");
 
       const qs = new URLSearchParams({ ano });
+
+      if (regiao) {
+        qs.set("regiao", regiao);
+      }
+      if (programa) qs.set("programa", programa);
+      if (modalidades) qs.set("modalidades", modalidades);
+      if (financiamentos) qs.set("financiamentos", financiamentos);
 
       const resp = await fetch(`${API}/modalidades/subregioes?${qs.toString()}`);
 
@@ -777,17 +1328,55 @@
       }
 
       const dados = await resp.json();
-
       const select = document.getElementById("subregioes");
 
-      if (!Array.isArray(dados)) {
-        console.error("Resposta inválida em /modalidades/subregioes:", dados);
+      const valorAnterior = select.value || "";
+
+      select.innerHTML = `<option value="">Selecione...</option>` + dados.map(s =>
+        `<option value="${s.subregiao}">${s.subregiao}</option>`
+      ).join("");
+
+      const aindaExiste = Array.from(select.options)
+        .some(o => o.value === valorAnterior);
+
+      select.value = aindaExiste ? valorAnterior : "";
+
+    }
+
+    async function carregarRegioes() {
+      const ano = document.getElementById("ano").value || "2026";
+
+      const modalidades = selecionados("modalidades");
+      const financiamentos = selecionados("financiamentos");
+      const subregioes = selecionados("subregioes");
+      const programa = document.getElementById("programas").value || "";
+
+      const qs = new URLSearchParams({ ano });
+
+      if (programa) qs.set("programa", programa);
+      if (modalidades) qs.set("modalidades", modalidades);
+      if (financiamentos) qs.set("financiamentos", financiamentos);
+      if (subregioes) qs.set("subregioes", subregioes);
+
+      const resp = await fetch(`${API}/modalidades/regioes?${qs.toString()}`);
+
+      if (!resp.ok) {
+        console.error("Erro ao carregar regiões:", resp.status);
         return;
       }
 
-      select.innerHTML = dados.map(s =>
-        `<option value="${s.subregiao}">${s.subregiao}</option>`
+      const dados = await resp.json();
+      const select = document.getElementById("regioes");
+      const valorAnterior = select.value || "";
+
+      select.innerHTML = `<option value="">Selecione...</option>` + dados.map(r =>
+        `<option value="${r.regiao}">${r.regiao}</option>`
       ).join("");
+
+      const aindaExiste = Array.from(select.options)
+        .some(o => o.value === valorAnterior);
+
+      select.value = aindaExiste ? valorAnterior : "";
     }
 
     async function carregarModalidades() {
@@ -795,17 +1384,24 @@
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(opt => opt.value);
 
+      const regiao = selecionados("regioes");
+      const subregioes = selecionados("subregioes");
+
       const selecionadasAntes = Array.from(
         document.getElementById("modalidades").selectedOptions
       ).map(o => o.value);
 
       const qs = new URLSearchParams({ ano });
       const financiamentos = selecionados("financiamentos");
+      const programa = document.getElementById("programas").value || "";
 
       if (meses.length) {
         qs.set("meses", meses.join(","));
       }
 
+      if (regiao) qs.set("regiao", regiao);
+      if (subregioes) qs.set("subregioes", subregioes);
+      if (programa) qs.set("programa", programa);
       if (financiamentos) {
         qs.set("financiamentos", financiamentos);
       }
@@ -816,13 +1412,13 @@
       const fins = selecionados("financiamentos");
       const sel = document.getElementById("modalidades");
 
-      if ((!data || data.length === 0)
+      /*if ((!data || data.length === 0)
         && fins
         && sel.options.length > 0) {
         return;
-      }
+      }*/
 
-      sel.innerHTML = "";
+      sel.innerHTML = `<option value="">Selecione...</option>`;
 
       data.forEach(r => {
         const opt = document.createElement("option");
@@ -836,10 +1432,6 @@
         sel.appendChild(opt);
       });
 
-      // ✅ se só existe uma modalidade disponível, seleciona automaticamente
-      if (data.length === 1) {
-        Array.from(sel.options).forEach(o => o.selected = true);
-      }
     }
 
     function chipPct(pct) {
@@ -888,46 +1480,102 @@
     }
 
     async function carregarCards() {
-      atualizarBadgeFiltro();
 
       const ano = Number(document.getElementById("ano").value || 2026);
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(o => o.value);
 
+      const programa = document.getElementById("programas").value || "";
+      const regiao = selecionados("regioes");
       const subs = selecionados("subregioes");
       const mods = selecionados("modalidades");
       const fins = selecionados("financiamentos");
 
-      const qs = new URLSearchParams({ ano: String(ano) });
+      const qsReal = new URLSearchParams({ ano: String(ano) });
+      const qsMeta = new URLSearchParams({ ano: String(ano) });
 
-      if (meses.length) {
-        qs.set("meses", meses.join(","));
+      const periodoTemSelecaoReal =
+        document.getElementById("periodoMeses").tomselect?.items?.length > 0;
+
+      if (periodoTemSelecaoReal) {
+        qsReal.set("meses", meses.join(","));
+        qsMeta.set("meses", meses.join(","));
       }
 
-      if (subs) qs.set("subregioes", subs);
-      if (mods) qs.set("modalidades", mods);
-      if (fins) qs.set("financiamentos", fins);
+      if (regiao) {
+        qsReal.set("regiao", regiao);
+        qsMeta.set("regiao", regiao);
+      }
 
-      const url = API + "/modalidades/summary?" + qs.toString();
-      const d = await (await fetch(url)).json();
+      if (programa) {
+        qsReal.set("programa", programa);
+        qsMeta.set("programa", programa);
+      }
 
-      document.getElementById("mat-real").textContent = format(d.matriculas?.realizado || 0);
-      document.getElementById("mat-sub").textContent =
-        `Meta: ${format(d.matriculas?.meta || 0)}`;
-      document.getElementById("mat-chips").innerHTML =
-        chipPct(d.matriculas?.realizado || 0, d.matriculas?.meta || 0);
+      if (subs) {
+        qsReal.set("subregioes", subs);
+        qsMeta.set("subregioes", subs);
+      }
 
-      document.getElementById("ha-real").textContent = format(d.hora_aluno?.realizado || 0);
-      document.getElementById("ha-sub").textContent =
-        `Meta: ${format(d.hora_aluno?.meta || 0)}`;
-      document.getElementById("ha-chips").innerHTML =
-        chipPct(d.hora_aluno?.realizado || 0, d.hora_aluno?.meta || 0);
+      if (mods) {
+        qsReal.set("modalidades", mods);
+        qsMeta.set("modalidades", mods);
+      }
 
-      document.getElementById("rec-real").textContent = moeda(d.receita?.realizado || 0);
-      document.getElementById("rec-sub").textContent =
-        `Meta: ${moeda(d.receita?.meta || 0)}`;
-      document.getElementById("rec-chips").innerHTML =
-        chipPct(d.receita?.realizado || 0, d.receita?.meta || 0);
+      if (fins) {
+        qsReal.set("financiamentos", fins);
+        qsMeta.set("financiamentos", fins);
+      }
+
+      const d = await (await fetch(API + "/modalidades/summary?" + qsReal.toString())).json();
+      const dMeta = await (await fetch(API + "/modalidades/summary?" + qsMeta.toString())).json();
+
+      const linhasTabela = document.querySelectorAll("#tabela-modalidades tbody tr").length;
+
+      document.getElementById("modalidades-distintas").textContent =
+        format(linhasTabela || Math.max(document.getElementById("modalidades").options.length - 1, 0));
+
+      function atualizarCard({ real, meta, realEl, metaEl, pctEl, progressEl, moedaFlag = false }) {
+        real = Number(real || 0);
+        meta = Number(meta || 0);
+
+        const pct = meta > 0 ? (real / meta) * 100 : 0;
+        const pctBarra = Math.min(pct, 100);
+
+        document.getElementById(realEl).textContent = moedaFlag ? moeda(real) : format(real);
+        document.getElementById(metaEl).textContent = `Meta: ${moedaFlag ? moeda(meta) : format(meta)}`;
+        document.getElementById(pctEl).textContent =
+          pct.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
+        document.getElementById(progressEl).style.width = pctBarra + "%";
+      }
+
+      atualizarCard({
+        real: d.matriculas?.realizado,
+        meta: dMeta.matriculas?.meta,
+        realEl: "mat-real",
+        metaEl: "mat-sub",
+        pctEl: "mat-pct",
+        progressEl: "mat-progress"
+      });
+
+      atualizarCard({
+        real: d.hora_aluno?.realizado,
+        meta: dMeta.hora_aluno?.meta,
+        realEl: "ha-real",
+        metaEl: "ha-sub",
+        pctEl: "ha-pct",
+        progressEl: "ha-progress"
+      });
+
+      atualizarCard({
+        real: d.receita?.realizado,
+        meta: dMeta.receita?.meta,
+        realEl: "rec-real",
+        metaEl: "rec-sub",
+        pctEl: "rec-pct",
+        progressEl: "rec-progress",
+        moedaFlag: true
+      });
     }
 
     function montarTabela(id, colunas, linhas) {
@@ -988,6 +1636,8 @@
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(o => o.value);
 
+      const programa = document.getElementById("programas").value || "";
+      const regiao = selecionados("regioes");
       const subs = selecionados("subregioes");
       const mods = selecionados("modalidades");
       const fins = selecionados("financiamentos");
@@ -1006,19 +1656,23 @@
           qs.set("meses", meses.join(","));
         }
 
+        if (regiao) qs.set("regiao", regiao);
+
+        if (programa) qs.set("programa", programa);
+
         if (subs) qs.set("subregioes", subs);
         if (modalidade_id) qs.set("modalidades", modalidade_id);
         if (fins) qs.set("financiamentos", fins);
 
-        const url = API + "/modalidades/tabela/programas?" + qs.toString();
+        const url = API + "/modalidades/tabela/modalidades?" + qs.toString();
         const data = await (await fetch(url)).json();
 
         for (const r of data) {
-          const chave = r.programa;
+          const chave = r.modalidade || r.nome_modalidade || r.descricao_modalidade || r.programa;
 
           if (!mapa.has(chave)) {
             mapa.set(chave, {
-              programa: r.programa,
+              modalidade: chave,
               matriculas_meta: 0,
               matriculas_proj: 0,
               matriculas_real: 0,
@@ -1046,19 +1700,19 @@
 
       const dataFinal = Array.from(mapa.values())
         .sort((a, b) =>
-          String(a.programa).localeCompare(String(b.programa), "pt-BR")
+          String(a.modalidade).localeCompare(String(b.modalidade), "pt-BR")
         );
 
       montarTabela(
-        "tabela-programas",
+        "tabela-modalidades",
         [
-          "Programa",
+          "Modalidade",
           "Mat Meta", "Mat Real", "Status Mat",
           "HA Meta", "HA Real", "Status HA",
           "Rec Meta", "Rec Real", "Status Rec"
         ],
         dataFinal.map(r => ({
-          "Programa": r.programa,
+          "Modalidade": r.modalidade,
           "Mat Meta": format(r.matriculas_meta),
           "Mat Real": format(r.matriculas_real),
           "Status Mat": badgeStatusTabela(r.matriculas_real, r.matriculas_meta),
@@ -1077,8 +1731,8 @@
     async function carregarTudo() {
       try {
         setStatus("Carregando visão de modalidades…");
-        await carregarCards();
         await carregarTabela();
+        await carregarCards();
         setStatus("");
       } catch (e) {
         console.error(e);
@@ -1118,14 +1772,14 @@
         }
 
         await carregarSubregioes();
+        await carregarProgramas();
+        await carregarRegioes();
         await carregarModalidades();
 
         // força atualização depois do DOM estabilizar
         setTimeout(async () => {
 
           await carregarFinanciamentos();
-
-          atualizarBadgeFiltro();
 
           await carregarTudo();
 
@@ -1147,7 +1801,6 @@
       await carregarSubregioes();
       await carregarModalidades();
       await carregarFinanciamentos();
-      atualizarBadgeFiltro();
       await carregarTudo();
     });
 
@@ -1156,26 +1809,45 @@
       await carregarSubregioes();
       await carregarModalidades();
       await carregarFinanciamentos();
-      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
+    document.getElementById("regioes").addEventListener("change", async () => {
+      await carregarSubregioes();
+      await carregarModalidades();
+      await carregarFinanciamentos();
       await carregarTudo();
     });
 
     document.getElementById("subregioes").addEventListener("change", async () => {
+      await carregarRegioes();
+      await carregarProgramas();
       await carregarModalidades();
       await carregarFinanciamentos();
-      atualizarBadgeFiltro();
-      await carregarTudo();
-    });
-
-    document.getElementById("financiamentos").addEventListener("change", async () => {
-      await carregarModalidades();
-      atualizarBadgeFiltro();
       await carregarTudo();
     });
 
     document.getElementById("modalidades").addEventListener("change", async () => {
+      await carregarProgramas();
+      await carregarRegioes();
+      await carregarSubregioes();
       await carregarFinanciamentos();
-      atualizarBadgeFiltro();
+      await carregarTudo();
+    });
+
+    document.getElementById("financiamentos").addEventListener("change", async () => {
+      await carregarProgramas();
+      await carregarRegioes();
+      await carregarSubregioes();
+      await carregarModalidades();
+      await carregarTudo();
+    });
+
+    document.getElementById("programas").addEventListener("change", async () => {
+      await carregarRegioes();
+      await carregarSubregioes();
+      await carregarModalidades();
+      await carregarFinanciamentos();
       await carregarTudo();
     });
 
@@ -1253,34 +1925,40 @@
       const meses = Array.from(document.getElementById("periodoMeses").selectedOptions)
         .map(opt => opt.value);
 
+      const programa = document.getElementById("programas").value || "";
+      const regiao = document.getElementById("regioes").value || "";
       const subregioes = selecionados("subregioes");
       const modalidades = selecionados("modalidades");
 
       const qs = new URLSearchParams({ ano });
 
+      if (regiao) qs.set("regiao", regiao);
       if (meses.length) qs.set("meses", meses.join(","));
       if (subregioes) qs.set("subregioes", subregioes);
       if (modalidades) qs.set("modalidades", modalidades);
+      if (programa) qs.set("programa", programa);
 
       const res = await fetch(`${API}/modalidades/financiamentos?${qs.toString()}`);
       const data = await res.json();
 
       const sel = document.getElementById("financiamentos");
-      const selecionadosAntes = Array.from(sel.selectedOptions).map(o => o.value);
 
-      sel.innerHTML = "";
+      const selecionadosAntes = Array.from(
+        sel.selectedOptions
+      ).map(o => String(o.value));
+
+      sel.innerHTML = `<option value="">Selecione...</option>`;
 
       data.forEach(r => {
         const opt = document.createElement("option");
         opt.value = r.codigo;
         opt.textContent = r.financiamento;
-
         if (selecionadosAntes.includes(String(r.codigo))) {
           opt.selected = true;
         }
-
         sel.appendChild(opt);
       });
+
     }
 
     async function carregarUsuario() {
@@ -1308,13 +1986,6 @@
         .map(o => o.value);
     }
 
-    document.getElementById("subregioes").addEventListener("change", async () => {
-      await carregarModalidades();
-      await carregarFinanciamentos();
-      atualizarBadgeFiltro();
-      await carregarTudo();
-    });
-
     async function logout() {
       try {
         await fetch(`${API}/auth/logout`, {
@@ -1327,6 +1998,22 @@
     }
 
   </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      if (document.getElementById("periodoMeses")) {
+        new TomSelect("#periodoMeses", {
+          plugins: ["remove_button"],
+          hideSelected: true,
+          closeAfterSelect: false,
+          placeholder: "Selecione..."
+        });
+      }
+
+    });
+  </script>
+
 </body>
 
 </html>

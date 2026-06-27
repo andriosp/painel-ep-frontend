@@ -80,7 +80,7 @@
             align-items: flex-start;
             justify-content: space-between;
             gap: 14px;
-            margin-bottom: 14px;
+            margin-bottom: 24px;
         }
 
         .title h1 {
@@ -397,12 +397,14 @@
         }
 
         /* Cards clicáveis */
-        .card {
+        .card:not(.grafico-card) {
             cursor: pointer;
-            transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+            transition: transform .12s ease,
+                box-shadow .12s ease,
+                border-color .12s ease;
         }
 
-        .card:hover {
+        .card:not(.grafico-card):hover {
             transform: translateY(-2px);
             box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
             border-color: rgba(37, 99, 235, .35);
@@ -1177,6 +1179,382 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .field {
+            flex: 0 0 220px;
+            min-width: 220px;
+        }
+
+        .field.sm {
+            flex: 0 0 110px;
+            min-width: 110px;
+        }
+
+        .field.field-xxl {
+            flex: 2.2 1 340px;
+            min-width: 320px;
+        }
+
+        .field.periodo-field {
+            flex: 0 0 auto;
+            min-width: 320px;
+            width: max-content;
+            max-width: 100%;
+        }
+
+        .actions {
+            flex: 0 0 auto;
+        }
+
+        .actions .btn-primary {
+            height: 42px;
+            padding: 0 18px;
+            white-space: nowrap;
+        }
+
+        select,
+        input {
+            height: 42px !important;
+            min-height: 42px !important;
+            max-height: 42px !important;
+        }
+
+        .periodo-field .ts-wrapper {
+            display: inline-block;
+            width: max-content;
+            min-width: 320px;
+            max-width: 100%;
+        }
+
+        .periodo-field .ts-control {
+            width: max-content !important;
+            min-width: 320px !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+        }
+
+        .ts-control {
+            height: 42px !important;
+            min-height: 42px !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 12px !important;
+            padding: 8px 10px !important;
+            background: #fff !important;
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            overflow: visible !important;
+            box-shadow: none !important;
+        }
+
+        .ts-control>.item {
+            margin: 0 6px 0 0 !important;
+            padding: 2px 8px !important;
+            border-radius: 999px !important;
+            background: rgba(0, 59, 143, .10) !important;
+            border: 1px solid rgba(0, 59, 143, .25) !important;
+            color: #003B8F !important;
+            font-size: 12px !important;
+            line-height: 18px !important;
+            white-space: nowrap !important;
+            flex: 0 0 auto !important;
+        }
+
+        .ts-control input {
+            min-width: 1px !important;
+            height: 22px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            color: #000 !important;
+        }
+
+        .periodo-field .ts-control input {
+            width: 90px !important;
+            min-width: 90px !important;
+            flex: 0 0 90px !important;
+        }
+
+        .periodo-field .ts-wrapper.has-items .ts-control input {
+            width: 1px !important;
+            min-width: 1px !important;
+            flex: 0 0 1px !important;
+        }
+
+        .cards-executivos {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .card-executivo {
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(180deg,
+                    rgba(0, 59, 143, .03) 0%,
+                    #ffffff 100%);
+        }
+
+        .card-topo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icone {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .card-executivo h3 {
+            margin: 0;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .card-executivo .big {
+            margin-top: 10px;
+            font-size: 26px;
+            font-weight: 820;
+            letter-spacing: .2px;
+        }
+
+        .card-executivo .sub {
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--muted);
+            background: transparent;
+            padding: 0;
+        }
+
+        .card-executivo .meta-info {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1200px) {
+            .cards-executivos {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .cards-executivos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bloco-executivo {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-top: 18px;
+            margin-bottom: 24px;
+        }
+
+        .bloco-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .bloco-kicker {
+            font-size: 11px;
+            font-weight: 850;
+            letter-spacing: .12em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .bloco-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .bloco-badge {
+            background: rgba(0, 59, 143, .08);
+            color: #003B8F;
+            border: 1px solid rgba(0, 59, 143, .15);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .graficos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 0;
+        }
+
+        .grafico-card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            min-height: 360px;
+            border: 1px solid var(--border);
+        }
+
+        .grafico-card h3 {
+            margin: 0 0 12px;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        @media (max-width: 1000px) {
+            .graficos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin: 0 0 24px;
+            padding-left: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0 0 12px;
+            border-radius: 0;
+        }
+
+        .tab-ind:hover {
+            background: transparent;
+            color: #003B8F;
+        }
+
+        .tab-ind.active {
+            color: #003B8F;
+            border-bottom: 3px solid #003B8F;
+        }
+
+        :root {
+            --brand: #003B8F;
+        }
+
+        .btn-primary {
+            background: #003B8F;
+            border-color: #003B8F;
+        }
+
+        .btn-primary:hover {
+            background: #0F5FFF;
+        }
+
+        .dot {
+            background: #003B8F;
+            box-shadow: 0 0 0 5px rgba(0, 59, 143, .12);
+        }
+
+        .card:hover .prog {
+            color: #003B8F;
+        }
+
+        .hist-icon.azul {
+            background: #003B8F;
+        }
+
+        .tab-ind.active {
+            color: #003B8F;
+            border-bottom-color: #003B8F;
+        }
+
+        /* Placeholder "Selecione..." em preto */
+        .ts-control input::placeholder {
+            color: #000 !important;
+            opacity: 1 !important;
+        }
+
+        /* Quando não houver item selecionado */
+        .ts-wrapper:not(.has-items) .ts-control input {
+            color: #000 !important;
+        }
+
+        .dashboard-footer {
+            margin-top: 24px;
+            padding: 14px 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            border-top: 1px solid var(--border);
+
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .dashboard-footer strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .footer-right {
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .usuario-badge {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .btn-sair {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .btn-sair:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -1215,63 +1593,28 @@
     </script>
 
     <div class="container">
-
-        <nav class="topnav">
-            <a href="index.html" class="navlink">Dashboard</a>
-            <a href="po.html" class="navlink">PO</a>
-            <a href="programas.html?v=2" class="navlink">Programas</a>
-            <a href="performance.html" class="navlink">Performance</a>
-            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-            <a href="unidades.html" class="navlink">Unidades</a>
-            <a href="sge_turmas.html" class="navlink">Turmas</a>
-            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
-
-            <div class="topnav-right">
-                <a href="alterar_senha.html" class="navlink">
-                    Alterar senha
-                </a>
-                <div id="usuario-logado" class="badge">
-                    <span class="dot"></span>
-                    Usuário: —
-                </div>
-                <button onclick="logout()">Sair</button>
-            </div>
-        </nav>
         <div class="page-layout">
             <aside class="sidebar-executiva">
                 <div class="sidebar-logo">
-                    <img src="/assets/logo.png" alt="SENAI">
+                    <img src="assets/logo.png" alt="Logo">
                 </div>
+
                 <nav class="sidebar-nav">
-                    <a href="visao_executiva.html">
-                        🏠
-                        <span>Visão Executiva</span>
-                    </a>
-                    <a href="indicadores.html" class="active">
-                        📊
-                        <span>Indicadores</span>
-                    </a>
-                    <a href="regioes.html">
-                        🌎
-                        <span>Regiões</span>
-                    </a>
-                    <a href="subregioes.html">
-                        📍
-                        <span>Sub-regiões</span>
-                    </a>
-                    <a href="turmas.html">
-                        👥
-                        <span>Turmas</span>
-                    </a>
-                    <a href="acoes.html">
-                        🎯
-                        <span>Ações</span>
-                    </a>
-                    <a href="relatoriosexecutivos.html">
-                        📄
-                        <span>Relatórios</span>
-                    </a>
+                    <a href="index.html">🏠 Dashboard</a>
+                    <a href="po.html">🎯 PO</a>
+                    <a href="programas.html?v=2">🧩 Programas</a>
+                    <a href="performance.html">📊 Performance</a>
+                    <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+                    <a href="unidades.html">🏢 Unidades</a>
+                    <a href="sge_turmas.html">📚 Ofertas</a>
+                    <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+                    <a href="visao_executiva.html">🧠 Visão Executiva</a>
+                    <a href="indicadores.html" class="active">📈 Indicadores</a>
+                    <a href="regioes.html">🌎 Regiões</a>
+                    <a href="subregioes.html">📍 Sub-regiões</a>
+                    <a href="turmas.html">🏫 Turmas</a>
+                    <a href="acoes.html">✅ Ações</a>
+                    <a href="relatoriosexecutivos.html">📄 Relatórios</a>
                 </nav>
             </aside>
             <main class="main-executiva">
@@ -1282,7 +1625,18 @@
                             Acompanhe o desempenho dos principais indicadores do programa
                         </p>
                     </div>
-                    <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões</div>
+                    <div class="header-actions">
+
+                        <div class="badge usuario-badge" id="usuario-logado">
+                            <span class="dot"></span>
+                            Usuário: —
+                        </div>
+
+                        <button class="btn-sair" onclick="logout()">
+                            Sair
+                        </button>
+
+                    </div>
                 </div>
 
                 <div class="tabs-indicadores">
@@ -1294,14 +1648,15 @@
 
                 <div class="panel">
                     <div class="filters">
-                        <div class="field">
-                            <label>Programa</label>
-                            <select id="programa">
-                            </select>
+
+                        <div class="field sm">
+                            <label>Ano</label>
+                            <input id="ano" type="number" value="2026">
                         </div>
-                        <div class="field">
+
+                        <div class="field periodo-field">
                             <label>Período</label>
-                            <select id="periodo" multiple>
+                            <select id="periodo" multiple placeholder="Selecione...">
                                 <option value="1">Janeiro</option>
                                 <option value="2">Fevereiro</option>
                                 <option value="3">Março</option>
@@ -1316,25 +1671,33 @@
                                 <option value="12">Dezembro</option>
                             </select>
                         </div>
-                        <div class="field sm">
-                            <label>Ano</label>
-                            <input id="ano" type="number" value="2026">
+
+                        <div class="field field-xxl">
+                            <label>Programa</label>
+                            <select id="programa"></select>
                         </div>
+
                         <div class="actions">
                             <button class="btn-primary" onclick="gerarIndicadores()">
                                 Gerar Indicadores
                             </button>
+
+                            <button class="btn-primary" onclick="limparFiltrosIndicadores()">
+                                Limpar
+                            </button>
                         </div>
+
                     </div>
                 </div>
-                <div id="secao-visao" class="cards cards-indicadores">
 
-                    <div class="card">
-                        <div class="h-card">
-                            <h3>Matrículas</h3>
-                            <div class="card-variation" id="matriculasVariacao">0%</div>
+                <div id="secao-visao" class="cards cards-executivos">
+
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">🎓</span>
+                            <h3>MATRÍCULAS</h3>
                         </div>
-                        
+
                         <div class="big" id="matriculasTotal">0</div>
 
                         <div class="sub" id="matriculasStatus">
@@ -1346,349 +1709,411 @@
                         </div>
 
                         <div style="margin-top:18px;">
-
-                            <div style="
-                                display:flex;
-                                justify-content:space-between;
-                                font-size:13px;
-                                margin-bottom:6px;
-                            ">
+                            <div
+                                style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
                                 <span>Ocupação média</span>
                                 <strong>-</strong>
                             </div>
 
-                            <div style="
-                                height:10px;
-                                background:#eee;
-                                border-radius:999px;
-                                overflow:hidden;
-                            ">
-                                <div id="taxaOcupacaoBarra" style="
-                                        width:0%;
-                                        height:100%;
-                                        background:#f59e0b;
-                                     ">
-                                </div>
+                            <div style="height:10px; background:#eee; border-radius:999px; overflow:hidden;">
+                                <div id="taxaOcupacaoBarra" style="width:0%; height:100%; background:#f59e0b;"></div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <div class="h-card">
-                            <h3>Hora-Aluno</h3>
-                            <div class="card-variation" id="horaAlunoVariacao">0%</div>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">⏱️</span>
+                            <h3>HORA-ALUNO</h3>
                         </div>
-                        
+
                         <div class="big" id="horaAlunoTotal">0</div>
+
                         <div class="sub" id="horaAlunoStatus">
                             Produção
                         </div>
+
                         <div class="meta-info" id="horaAlunoMeta">
                             Meta: —
                         </div>
                     </div>
 
-                    <div class="card">
-                        <div class="h-card">
-                            <h3>Receita</h3>
-                            <div class="card-variation" id="receitaVariacao">0%</div>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">💰</span>
+                            <h3>RECEITA</h3>
                         </div>
-                        
+
                         <div class="big" id="receitaTotal">R$ 0</div>
+
                         <div class="sub" id="receitaStatus">
                             Financeiro
                         </div>
+
                         <div class="meta-info" id="receitaMeta">
                             Meta: —
                         </div>
                     </div>
 
-                    <div class="card">
-                        <h3>Turmas</h3>
-                        <div class="big" id="turmasTotal">
-                            0
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">🏫</span>
+                            <h3>TURMAS</h3>
                         </div>
+
+                        <div class="big" id="turmasTotal">0</div>
+
                         <div class="sub" id="turmasStatus">
                             Oferta Ativa
                         </div>
                     </div>
+
                 </div>
 
-                <div id="secao-graficos-geral" class="graficos-grid">
-                    <div class="card grafico-card">
-                        <h3>Desempenho Acumulado x Meta</h3>
-                        <div class="chart-box">
-                            <div class="grafico-placeholder">
-                                Selecione filtros e clique em Gerar Indicadores
-                            </div>
-                            <canvas id="graficoMeta"></canvas>
+                <div id="secao-graficos-geral" class="bloco-executivo">
+
+                    <div class="bloco-header">
+                        <div>
+                            <div class="bloco-kicker">VISÃO GERAL</div>
+                            <h2>Desempenho dos Indicadores</h2>
+                        </div>
+
+                        <div class="bloco-badge">
+                            📊 Gráficos
                         </div>
                     </div>
 
-                    <div class="card grafico-card">
-                        <h3>Evolução Mensal • Matrículas</h3>
-                        <div class="chart-box">
-                            <div class="grafico-placeholder">
-                                Selecione filtros e clique em Gerar Indicadores
+                    <div class="graficos-grid">
+                        <div class="card grafico-card">
+                            <h3>Desempenho Acumulado x Meta</h3>
+                            <div class="chart-box">
+                                <div class="grafico-placeholder">
+                                    Selecione filtros e clique em Gerar Indicadores
+                                </div>
+                                <canvas id="graficoMeta"></canvas>
                             </div>
-                            <canvas id="graficoEvolucaoMatriculas"></canvas>
+                        </div>
+
+                        <div class="card grafico-card">
+                            <h3>Evolução Mensal • Matrículas</h3>
+                            <div class="chart-box">
+                                <div class="grafico-placeholder">
+                                    Selecione filtros e clique em Gerar Indicadores
+                                </div>
+                                <canvas id="graficoEvolucaoMatriculas"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card grafico-card">
+                            <h3>Evolução Mensal • Hora-Aluno</h3>
+                            <div class="chart-box">
+                                <div class="grafico-placeholder">
+                                    Selecione filtros e clique em Gerar Indicadores
+                                </div>
+                                <canvas id="graficoEvolucaoHoraAluno"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card grafico-card">
+                            <h3>Evolução Mensal • Receita</h3>
+                            <div class="chart-box">
+                                <div class="grafico-placeholder">
+                                    Selecione filtros e clique em Gerar Indicadores
+                                </div>
+                                <canvas id="graficoEvolucaoReceita"></canvas>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="card grafico-card">
-                        <h3>Evolução Mensal • Hora-Aluno</h3>
-                        <div class="chart-box">
-                            <div class="grafico-placeholder">
-                                Selecione filtros e clique em Gerar Indicadores
-                            </div>
-                            <canvas id="graficoEvolucaoHoraAluno"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="card grafico-card">
-                        <h3>Evolução Mensal • Receita</h3>
-                        <div class="chart-box">
-                            <div class="grafico-placeholder">
-                                Selecione filtros e clique em Gerar Indicadores
-                            </div>
-                            <canvas id="graficoEvolucaoReceita"></canvas>
-                        </div>
-                    </div>
                 </div>
 
                 <div id="secao-historico" style="display:none;">
-                    <div class="cards cards-indicadores historico-cards">
-                        <div class="card card-historico">
-                            <div class="hist-top">
-                                <div class="hist-titulo">
-                                    <span class="hist-icon azul"></span>
-                                    <h3>Matrículas</h3>
-                                </div>
-                                <div class="hist-variacao" id="histMatriculasVariacao">
-                                    0%
-                                </div>
+
+                    <div class="bloco-executivo">
+
+                        <div class="bloco-header">
+                            <div>
+                                <div class="bloco-kicker">ANÁLISE TEMPORAL</div>
+                                <h2>Histórico Mensal</h2>
                             </div>
-                            <div class="hist-valor" id="histMatriculasTotal">
-                                0
-                            </div>
-                            <div class="chart-box mini-hist">
-                                <canvas id="graficoHistMatriculas"></canvas>
+
+                            <div class="bloco-badge">
+                                📈 Evolução
                             </div>
                         </div>
 
-                        <div class="card card-historico">
-                            <div class="hist-top">
-                                <div class="hist-titulo">
-                                    <span class="hist-icon roxo"></span>
-                                    <h3>Hora-Aluno</h3>
+                        <div class="cards cards-indicadores historico-cards">
+                            <div class="card card-historico">
+                                <div class="hist-top">
+                                    <div class="hist-titulo">
+                                        <span class="hist-icon azul"></span>
+                                        <h3>Matrículas</h3>
+                                    </div>
+                                    <div class="hist-variacao" id="histMatriculasVariacao">
+                                        0%
+                                    </div>
                                 </div>
-                                <div class="hist-variacao" id="histHoraAlunoVariacao">
-                                    0%
+                                <div class="hist-valor" id="histMatriculasTotal">
+                                    0
                                 </div>
-                            </div>
-                            <div class="hist-valor" id="histHoraAlunoTotal">
-                                0
-                            </div>
-                            <div class="chart-box mini-hist">
-                                <canvas id="graficoHistHoraAluno"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="card card-historico">
-                            <div class="hist-top">
-                                <div class="hist-titulo">
-                                    <span class="hist-icon verde"></span>
-                                    <h3>Receita</h3>
-                                </div>
-                                <div class="hist-variacao" id="histReceitaVariacao">
-                                    0%
+                                <div class="chart-box mini-hist">
+                                    <canvas id="graficoHistMatriculas"></canvas>
                                 </div>
                             </div>
-                            <div class="hist-valor" id="histReceitaTotal">
-                                R$ 0
+
+                            <div class="card card-historico">
+                                <div class="hist-top">
+                                    <div class="hist-titulo">
+                                        <span class="hist-icon roxo"></span>
+                                        <h3>Hora-Aluno</h3>
+                                    </div>
+                                    <div class="hist-variacao" id="histHoraAlunoVariacao">
+                                        0%
+                                    </div>
+                                </div>
+                                <div class="hist-valor" id="histHoraAlunoTotal">
+                                    0
+                                </div>
+                                <div class="chart-box mini-hist">
+                                    <canvas id="graficoHistHoraAluno"></canvas>
+                                </div>
                             </div>
-                            <div class="chart-box mini-hist">
-                                <canvas id="graficoHistReceita"></canvas>
+
+                            <div class="card card-historico">
+                                <div class="hist-top">
+                                    <div class="hist-titulo">
+                                        <span class="hist-icon verde"></span>
+                                        <h3>Receita</h3>
+                                    </div>
+                                    <div class="hist-variacao" id="histReceitaVariacao">
+                                        0%
+                                    </div>
+                                </div>
+                                <div class="hist-valor" id="histReceitaTotal">
+                                    R$ 0
+                                </div>
+                                <div class="chart-box mini-hist">
+                                    <canvas id="graficoHistReceita"></canvas>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="nota-metas">
-                        ℹ️ O histórico mensal apresenta a evolução dos indicadores no período selecionado.
-                    </div>
-                </div>
-
-                <div id="secao-metas" style="display:none;">
-                    <div class="card metas-card">
-                        <div class="metas-header">
-                            <h3>Metas do Período</h3>
-                            <button class="btn-exportar" onclick="exportarMetas()">
-                                ⬇ Exportar
-                            </button>
-                        </div>
-
-                        <div class="tabela-metas-wrap">
-                            <table class="tabela-metas">
-                                <thead>
-                                    <tr>
-                                        <th>Indicador</th>
-                                        <th id="thRealizadoMes">Realizado no mês</th>
-                                        <th id="thMetaMes">Meta do mês</th>
-                                        <th>% Atingimento</th>
-                                        <th>Acumulado no ano</th>
-                                        <th>Meta acumulada</th>
-                                        <th>% Atingimento</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <tr>
-                                        <td>🔵 Matrículas</td>
-                                        <td id="metaMatRealizadoMes">—</td>
-                                        <td id="metaMatMetaMes">—</td>
-                                        <td id="metaMatPctMes">—</td>
-                                        <td id="metaMatAcumulado">—</td>
-                                        <td id="metaMatMetaAcumulada">—</td>
-                                        <td id="metaMatPctAcumulado">—</td>
-                                        <td><span id="metaMatStatus" class="status-meta">—</span></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>🟣 Hora-Aluno</td>
-                                        <td id="metaHaRealizadoMes">—</td>
-                                        <td id="metaHaMetaMes">—</td>
-                                        <td id="metaHaPctMes">—</td>
-                                        <td id="metaHaAcumulado">—</td>
-                                        <td id="metaHaMetaAcumulada">—</td>
-                                        <td id="metaHaPctAcumulado">—</td>
-                                        <td><span id="metaHaStatus" class="status-meta">—</span></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>🟢 Receita</td>
-                                        <td id="metaRecRealizadoMes">—</td>
-                                        <td id="metaRecMetaMes">—</td>
-                                        <td id="metaRecPctMes">—</td>
-                                        <td id="metaRecAcumulado">—</td>
-                                        <td id="metaRecMetaAcumulada">—</td>
-                                        <td id="metaRecPctAcumulado">—</td>
-                                        <td><span id="metaRecStatus" class="status-meta">—</span></td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
                         </div>
 
                         <div class="nota-metas">
-                            ℹ️ As metas são definidas conforme o planejamento anual do programa.
+                            ℹ️ O histórico mensal apresenta a evolução dos indicadores no período selecionado.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="secao-metas" style="display:none;">
+
+                    <div class="bloco-executivo">
+
+                        <div class="bloco-header">
+                            <div>
+                                <div class="bloco-kicker">PLANEJAMENTO</div>
+                                <h2>Acompanhamento das Metas</h2>
+                            </div>
+
+                            <div class="bloco-badge">
+                                🎯 Metas
+                            </div>
+                        </div>
+
+                        <div class="card metas-card">
+                            <div class="metas-header">
+                                <h3>Metas do Período</h3>
+                                <button class="btn-exportar" onclick="exportarMetas()">
+                                    ⬇ Exportar
+                                </button>
+                            </div>
+
+                            <div class="tabela-metas-wrap">
+                                <table class="tabela-metas">
+                                    <thead>
+                                        <tr>
+                                            <th>Indicador</th>
+                                            <th id="thRealizadoMes">Realizado no mês</th>
+                                            <th id="thMetaMes">Meta do mês</th>
+                                            <th>% Atingimento</th>
+                                            <th>Acumulado no ano</th>
+                                            <th>Meta acumulada</th>
+                                            <th>% Atingimento</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>🔵 Matrículas</td>
+                                            <td id="metaMatRealizadoMes">—</td>
+                                            <td id="metaMatMetaMes">—</td>
+                                            <td id="metaMatPctMes">—</td>
+                                            <td id="metaMatAcumulado">—</td>
+                                            <td id="metaMatMetaAcumulada">—</td>
+                                            <td id="metaMatPctAcumulado">—</td>
+                                            <td><span id="metaMatStatus" class="status-meta">—</span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>🟣 Hora-Aluno</td>
+                                            <td id="metaHaRealizadoMes">—</td>
+                                            <td id="metaHaMetaMes">—</td>
+                                            <td id="metaHaPctMes">—</td>
+                                            <td id="metaHaAcumulado">—</td>
+                                            <td id="metaHaMetaAcumulada">—</td>
+                                            <td id="metaHaPctAcumulado">—</td>
+                                            <td><span id="metaHaStatus" class="status-meta">—</span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>🟢 Receita</td>
+                                            <td id="metaRecRealizadoMes">—</td>
+                                            <td id="metaRecMetaMes">—</td>
+                                            <td id="metaRecPctMes">—</td>
+                                            <td id="metaRecAcumulado">—</td>
+                                            <td id="metaRecMetaAcumulada">—</td>
+                                            <td id="metaRecPctAcumulado">—</td>
+                                            <td><span id="metaRecStatus" class="status-meta">—</span></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="nota-metas">
+                                ℹ️ As metas são definidas conforme o planejamento anual do programa.
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="secao-comparativos" style="display:none;">
-                    <div class="cards cards-comparativos">
 
-                        <div class="card card-comparativo">
-                            <div class="comp-top">
-                                <div class="hist-titulo">
-                                    <span class="hist-icon azul"></span>
-                                    <h3>Matrículas Realizadas</h3>
-                                </div>
+                    <div class="bloco-executivo">
+
+                        <div class="bloco-header">
+                            <div>
+                                <div class="bloco-kicker">BENCHMARK</div>
+                                <h2>Comparativos</h2>
                             </div>
 
-
-
-                            <div class="comp-valores">
-                                <div>
-                                    <div class="comp-numero" id="compMatAtual">0</div>
-                                    <div class="comp-label" id="compMatAtualLabel">Período atual</div>
-                                </div>
-
-                                <div class="comp-variacao" id="compMatVariacao">—</div>
-
-                                <div>
-                                    <div class="comp-numero menor" id="compMatAnterior">0</div>
-                                    <div class="comp-label" id="compMatAnteriorLabel">Período anterior</div>
-                                </div>
+                            <div class="bloco-badge">
+                                ⚖️ Comparação
                             </div>
                         </div>
 
-                        <div class="card card-comparativo">
-                            <div class="comp-top">
-                                <div class="hist-titulo">
-                                    <span class="hist-icon roxo"></span>
-                                    <h3>Hora-Aluno Realizada</h3>
+                        <div class="cards cards-comparativos">
+
+                            <div class="card card-comparativo">
+                                <div class="comp-top">
+                                    <div class="hist-titulo">
+                                        <span class="hist-icon azul"></span>
+                                        <h3>Matrículas Realizadas</h3>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="comp-valores">
+                                    <div>
+                                        <div class="comp-numero" id="compMatAtual">0</div>
+                                        <div class="comp-label" id="compMatAtualLabel">Período atual</div>
+                                    </div>
+
+                                    <div class="comp-variacao" id="compMatVariacao">—</div>
+
+                                    <div>
+                                        <div class="comp-numero menor" id="compMatAnterior">0</div>
+                                        <div class="comp-label" id="compMatAnteriorLabel">Período anterior</div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="comp-valores">
-                                <div>
-                                    <div class="comp-numero" id="compHaAtual">0</div>
-                                    <div class="comp-label" id="compHaAtualLabel">Período atual</div>
+                            <div class="card card-comparativo">
+                                <div class="comp-top">
+                                    <div class="hist-titulo">
+                                        <span class="hist-icon roxo"></span>
+                                        <h3>Hora-Aluno Realizada</h3>
+                                    </div>
                                 </div>
 
-                                <div class="comp-variacao" id="compHaVariacao">—</div>
+                                <div class="comp-valores">
+                                    <div>
+                                        <div class="comp-numero" id="compHaAtual">0</div>
+                                        <div class="comp-label" id="compHaAtualLabel">Período atual</div>
+                                    </div>
 
-                                <div>
-                                    <div class="comp-numero menor" id="compHaAnterior">0</div>
-                                    <div class="comp-label" id="compHaAnteriorLabel">Período anterior</div>
+                                    <div class="comp-variacao" id="compHaVariacao">—</div>
+
+                                    <div>
+                                        <div class="comp-numero menor" id="compHaAnterior">0</div>
+                                        <div class="comp-label" id="compHaAnteriorLabel">Período anterior</div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div class="card card-comparativo">
+                                <div class="comp-top">
+                                    <div class="hist-titulo">
+                                        <span class="hist-icon verde"></span>
+                                        <h3>Receita Realizada</h3>
+                                    </div>
+                                </div>
+
+                                <div class="comp-valores">
+                                    <div>
+                                        <div class="comp-numero receita" id="compRecAtual">R$ 0</div>
+                                        <div class="comp-label" id="compRecAtualLabel">Período atual</div>
+                                    </div>
+
+                                    <div class="comp-variacao" id="compRecVariacao">—</div>
+
+                                    <div>
+                                        <div class="comp-numero receita menor" id="compRecAnterior">R$ 0</div>
+                                        <div class="comp-label" id="compRecAnteriorLabel">Período anterior</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card card-comparativo">
+                                <div class="comp-top">
+                                    <div class="hist-titulo">
+                                        <span class="hist-icon laranja"></span>
+                                        <h3>Turmas Ativas</h3>
+                                    </div>
+                                </div>
+
+                                <div class="comp-valores">
+                                    <div>
+                                        <div class="comp-numero" id="compTurmasAtual">0</div>
+                                        <div class="comp-label" id="compTurmasAtualLabel">Período atual</div>
+                                    </div>
+
+                                    <div class="comp-variacao" id="compTurmasVariacao">—</div>
+
+                                    <div>
+                                        <div class="comp-numero menor" id="compTurmasAnterior">0</div>
+                                        <div class="comp-label" id="compTurmasAnteriorLabel">Período anterior</div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div class="card card-comparativo">
-                            <div class="comp-top">
-                                <div class="hist-titulo">
-                                    <span class="hist-icon verde"></span>
-                                    <h3>Receita Realizada</h3>
-                                </div>
-                            </div>
-
-                            <div class="comp-valores">
-                                <div>
-                                    <div class="comp-numero receita" id="compRecAtual">R$ 0</div>
-                                    <div class="comp-label" id="compRecAtualLabel">Período atual</div>
-                                </div>
-
-                                <div class="comp-variacao" id="compRecVariacao">—</div>
-
-                                <div>
-                                    <div class="comp-numero receita menor" id="compRecAnterior">R$ 0</div>
-                                    <div class="comp-label" id="compRecAnteriorLabel">Período anterior</div>
-                                </div>
-                            </div>
+                        <div class="nota-metas" id="notaComparativos">
+                            ℹ️ Comparação entre o período selecionado e o mesmo período do ano anterior.
                         </div>
-
-                        <div class="card card-comparativo">
-                            <div class="comp-top">
-                                <div class="hist-titulo">
-                                    <span class="hist-icon laranja"></span>
-                                    <h3>Turmas Ativas</h3>
-                                </div>
-                            </div>
-
-                            <div class="comp-valores">
-                                <div>
-                                    <div class="comp-numero" id="compTurmasAtual">0</div>
-                                    <div class="comp-label" id="compTurmasAtualLabel">Período atual</div>
-                                </div>
-
-                                <div class="comp-variacao" id="compTurmasVariacao">—</div>
-
-                                <div>
-                                    <div class="comp-numero menor" id="compTurmasAnterior">0</div>
-                                    <div class="comp-label" id="compTurmasAnteriorLabel">Período anterior</div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="nota-metas" id="notaComparativos">
-                        ℹ️ Comparação entre o período selecionado e o mesmo período do ano anterior.
                     </div>
                 </div>
+
+                <footer class="dashboard-footer">
+                    <div class="footer-left">
+                        <strong>Fontes dos dados:</strong>
+                        Solução Integradora • Cubo Orçamento
+                    </div>
+                </footer>
+
             </main>
         </div>
     </div>
@@ -1820,7 +2245,7 @@
         }
 
         function mesesSelecionados() {
-            const sel = document.getElementById("meses");
+            const sel = document.getElementById("periodo");
             if (!sel) return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
             const valores = Array.from(sel.selectedOptions)
@@ -1834,7 +2259,6 @@
         function selecionarTudo(id) {
             const sel = document.getElementById(id);
             Array.from(sel.options).forEach(o => o.selected = true);
-            atualizarBadgeFiltro();
         }
 
         async function limparFiltros() {
@@ -1844,80 +2268,7 @@
             });
 
             aplicarAnoMesPadrao();
-            atualizarBadgeFiltro();
             await aplicarFiltros();
-        }
-
-        function atualizarBadgeFiltro() {
-            const badge = document.getElementById("badge-filtro");
-            if (!badge) return;
-
-            const selSub = document.getElementById("subregioes");
-            const selProg = document.getElementById("programas");
-            const selMes = document.getElementById("meses");
-            const ano = document.getElementById("ano")?.value || new Date().getFullYear();
-
-            const subs = Array.from(selSub?.selectedOptions || [])
-                .map(o => o.textContent.trim());
-
-            const progs = Array.from(selProg?.selectedOptions || [])
-                .map(o => o.textContent.trim());
-
-            const mesesValores = Array.from(selMes?.selectedOptions || [])
-                .map(o => Number(o.value))
-                .filter(Boolean)
-                .sort((a, b) => a - b);
-
-            const nomesMeses = [
-                "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-            ];
-
-            const resumo = (lista, limite = 2) => {
-                return lista.length <= limite
-                    ? lista.join(", ")
-                    : `${lista.slice(0, limite).join(", ")} +${lista.length - limite}`;
-            };
-
-            const subTxt = subs.length
-                ? `Sub-regiões: ${resumo(subs)}`
-                : "Sub-regiões: todas";
-
-            const progTxt = progs.length
-                ? `Programas: ${resumo(progs)}`
-                : "Programas: todos";
-
-            let mesTxt = "";
-
-            if (mesesValores.length) {
-
-                const ehContinuo = mesesValores.every((m, i, arr) =>
-                    i === 0 || m === arr[i - 1] + 1
-                );
-
-                if (mesesValores.length === 1) {
-                    mesTxt = `Meses: ${nomesMeses[mesesValores[0]]}`;
-                }
-                else if (ehContinuo) {
-                    const primeiro = nomesMeses[mesesValores[0]];
-                    const ultimo = nomesMeses[mesesValores[mesesValores.length - 1]];
-                    mesTxt = `Meses: ${primeiro} - ${ultimo}`;
-                }
-                else {
-                    const lista = mesesValores.map(m => nomesMeses[m]);
-
-                    const resumo = lista.length <= 3
-                        ? lista.join(", ")
-                        : `${lista.slice(0, 3).join(", ")} +${lista.length - 3}`;
-
-                    mesTxt = `Meses: ${resumo}`;
-                }
-
-            } else {
-                mesTxt = "Meses: todos";
-            }
-
-            badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${progTxt} • ${mesTxt} • Ano: ${ano}`;
         }
 
         async function carregarSubregioes() {
@@ -1958,7 +2309,6 @@
             });
 
             setStatus("");
-            atualizarBadgeFiltro();
         }
 
         async function carregarProgramas() {
@@ -2013,7 +2363,6 @@
 
             try {
                 setStatus("Aplicando filtros…");
-                atualizarBadgeFiltro();
 
                 await carregarProgramas();
 
@@ -2077,48 +2426,6 @@
                 hora_aluno: Number(data?.hora_aluno?.meta_total || 0),
                 receita: Number(data?.receita?.meta_total || 0)
             };
-        }
-
-        async function renderizarGraficos(requestId = null) {
-            destruirGraficos();
-
-            const data = await carregarDadosPreditivos();
-            if (requestId !== null && requestId !== ultimoRequestId) return;
-            const totaisOficiais = await carregarTotaisOficiais();
-            if (requestId !== null && requestId !== ultimoRequestId) return;
-            atualizarCardsFechamento(data, totaisOficiais);
-
-            const labels = data.meses;
-
-            chartMatriculas = criarGrafico(
-                "graficoMatriculas",
-                "Matrículas",
-                labels,
-                data.matriculas.meta,
-                data.matriculas.realizado,
-                data.matriculas.previsao,
-                false
-            );
-
-            chartHoraAluno = criarGrafico(
-                "graficoHoraAluno",
-                "Hora-Aluno",
-                labels,
-                data.hora_aluno.meta,
-                data.hora_aluno.realizado,
-                data.hora_aluno.previsao,
-                false
-            );
-
-            chartReceita = criarGrafico(
-                "graficoReceita",
-                "Receita",
-                labels,
-                data.receita.meta,
-                data.receita.realizado,
-                data.receita.previsao,
-                true
-            );
         }
 
         function calcularFechamento(meta, realizado, previsao) {
@@ -2262,6 +2569,171 @@
             window.location.href = "/login.html";
         }
 
+        function limparFiltrosIndicadores() {
+
+            // Mantém o ano padrão
+            document.getElementById("ano").value = "2026";
+
+            // Limpa Programa
+            const programa = document.getElementById("programa");
+            if (programa) {
+                programa.value = "";
+            }
+
+            // Limpa Período
+            const periodo = document.getElementById("periodo");
+
+            if (periodo) {
+                Array.from(periodo.options).forEach(opt => {
+                    opt.selected = false;
+                });
+
+                if (periodo.tomselect) {
+                    periodo.tomselect.clear(true);
+                    periodo.tomselect.refreshOptions(false);
+                }
+            }
+
+            // Zera cards principais
+            document.getElementById("matriculasTotal").innerText = "0";
+            document.getElementById("horaAlunoTotal").innerText = "0";
+            document.getElementById("receitaTotal").innerText = "R$ 0";
+            document.getElementById("turmasTotal").innerText = "0";
+
+            document.getElementById("matriculasMeta").innerText = "Meta: —";
+            document.getElementById("horaAlunoMeta").innerText = "Meta: —";
+            document.getElementById("receitaMeta").innerText = "Meta: —";
+
+            document.getElementById("matriculasStatus").innerText = "Execução";
+            document.getElementById("horaAlunoStatus").innerText = "Produção";
+            document.getElementById("receitaStatus").innerText = "Financeiro";
+            document.getElementById("turmasStatus").innerText = "Oferta Ativa";
+
+            // Zera ocupação média
+            const taxaBarra = document.getElementById("taxaOcupacaoBarra");
+            if (taxaBarra) {
+                taxaBarra.style.width = "0%";
+
+                const taxaTexto = taxaBarra
+                    .parentElement
+                    ?.previousElementSibling
+                    ?.querySelector("strong");
+
+                if (taxaTexto) taxaTexto.innerText = "-";
+            }
+
+            // Zera variações, se existirem
+            ["matriculasVariacao", "horaAlunoVariacao", "receitaVariacao"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerText = "0%";
+                    el.style.color = "";
+                }
+            });
+
+            // Mostra placeholders dos gráficos novamente
+            document
+                .querySelectorAll(".grafico-placeholder")
+                .forEach(el => el.classList.remove("hidden"));
+
+            // Zera gráficos principais
+            [graficoMeta, graficoEvolucaoMatriculas, graficoEvolucaoHoraAluno, graficoEvolucaoReceita].forEach(g => {
+                if (!g) return;
+                g.data.labels = [];
+                g.data.datasets.forEach(ds => ds.data = []);
+                g.options.plugins.legend.display = false;
+                g.update();
+            });
+
+            // Zera gráficos do histórico
+            [graficoHistMatriculas, graficoHistHoraAluno, graficoHistReceita].forEach(g => {
+                if (!g) return;
+                g.data.labels = [];
+                g.data.datasets.forEach(ds => ds.data = []);
+                g.update();
+            });
+
+            // Zera histórico
+            document.getElementById("histMatriculasTotal").innerText = "0";
+            document.getElementById("histHoraAlunoTotal").innerText = "0";
+            document.getElementById("histReceitaTotal").innerText = "R$ 0";
+
+            document.getElementById("histMatriculasVariacao").innerText = "0%";
+            document.getElementById("histHoraAlunoVariacao").innerText = "0%";
+            document.getElementById("histReceitaVariacao").innerText = "0%";
+
+            // Zera metas
+            [
+                "metaMatRealizadoMes", "metaMatMetaMes", "metaMatPctMes", "metaMatAcumulado", "metaMatMetaAcumulada", "metaMatPctAcumulado",
+                "metaHaRealizadoMes", "metaHaMetaMes", "metaHaPctMes", "metaHaAcumulado", "metaHaMetaAcumulada", "metaHaPctAcumulado",
+                "metaRecRealizadoMes", "metaRecMetaMes", "metaRecPctMes", "metaRecAcumulado", "metaRecMetaAcumulada", "metaRecPctAcumulado"
+            ].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = "—";
+            });
+
+            ["metaMatStatus", "metaHaStatus", "metaRecStatus"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerText = "—";
+                    el.className = "status-meta";
+                }
+            });
+
+            document.getElementById("thRealizadoMes").innerText = "Realizado no mês";
+            document.getElementById("thMetaMes").innerText = "Meta do mês";
+
+            // Zera comparativos
+            [
+                "compMatAtual", "compMatAnterior",
+                "compHaAtual", "compHaAnterior",
+                "compTurmasAtual", "compTurmasAnterior"
+            ].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = "0";
+            });
+
+            ["compRecAtual", "compRecAnterior"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = "R$ 0";
+            });
+
+            ["compMatVariacao", "compHaVariacao", "compRecVariacao", "compTurmasVariacao"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerText = "—";
+                    el.className = "comp-variacao";
+                }
+            });
+
+            [
+                "compMatAtualLabel", "compHaAtualLabel", "compRecAtualLabel", "compTurmasAtualLabel"
+            ].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = "Período atual";
+            });
+
+            [
+                "compMatAnteriorLabel", "compHaAnteriorLabel", "compRecAnteriorLabel", "compTurmasAnteriorLabel"
+            ].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = "Período anterior";
+            });
+
+            document.getElementById("notaComparativos").innerText =
+                "ℹ️ Comparação entre o período selecionado e o mesmo período do ano anterior.";
+
+            // Volta para aba Visão Geral
+            document.querySelectorAll(".tab-ind").forEach(t => t.classList.remove("active"));
+            document.querySelector(".tab-ind").classList.add("active");
+
+            document.getElementById("secao-visao").style.display = "grid";
+            document.getElementById("secao-graficos-geral").style.display = "block";
+            document.getElementById("secao-historico").style.display = "none";
+            document.getElementById("secao-metas").style.display = "none";
+            document.getElementById("secao-comparativos").style.display = "none";
+        }
+
         async function gerarIndicadores() {
 
             const programa =
@@ -2328,6 +2800,8 @@
             );
 
             const pred = await respPred.json();
+
+            console.log("Preditiva indicadores:", pred);
 
             const mesesSelecionadosComparativo =
                 periodo
@@ -2739,6 +3213,7 @@ ${Number(
 
             function atualizarVariacao(elId, pct, meta) {
                 const el = document.getElementById(elId);
+                if (!el) return;
 
                 if (Number(meta || 0) === 0) {
                     el.innerHTML = `0%`;
@@ -2769,10 +3244,10 @@ ${Number(
                 .querySelectorAll(".grafico-placeholder")
                 .forEach(el => el.classList.add("hidden"));
 
-            graficoMeta.options.plugins.legend.display = true;
-            graficoEvolucaoMatriculas.options.plugins.legend.display = true;
-            graficoEvolucaoHoraAluno.options.plugins.legend.display = true;
-            graficoEvolucaoReceita.options.plugins.legend.display = true;
+            if (graficoMeta) graficoMeta.options.plugins.legend.display = true;
+            if (graficoEvolucaoMatriculas) graficoEvolucaoMatriculas.options.plugins.legend.display = true;
+            if (graficoEvolucaoHoraAluno) graficoEvolucaoHoraAluno.options.plugins.legend.display = true;
+            if (graficoEvolucaoReceita) graficoEvolucaoReceita.options.plugins.legend.display = true;
 
             graficoMeta.data.datasets = [
                 {
@@ -2799,7 +3274,7 @@ ${Number(
                 "Receita"
             ];
 
-            graficoMeta.update();
+            if (graficoMeta) graficoMeta.update();
 
             // MATRÍCULAS
             graficoEvolucaoMatriculas.data.labels =
@@ -2819,7 +3294,7 @@ ${Number(
                 }
             ];
 
-            graficoEvolucaoMatriculas.update();
+            if (graficoEvolucaoMatriculas) graficoEvolucaoMatriculas.update();
 
             // HORA-ALUNO
             graficoEvolucaoHoraAluno.data.labels =
@@ -2839,7 +3314,7 @@ ${Number(
                 }
             ];
 
-            graficoEvolucaoHoraAluno.update();
+            if (graficoEvolucaoHoraAluno) graficoEvolucaoHoraAluno.update();
 
             // RECEITA
             graficoEvolucaoReceita.data.labels =
@@ -2859,7 +3334,7 @@ ${Number(
                 }
             ];
 
-            graficoEvolucaoReceita.update();
+            if (graficoEvolucaoReceita) graficoEvolucaoReceita.update();
 
             graficoHistMatriculas.data.labels = pred.meses;
             graficoHistMatriculas.data.datasets = [{
@@ -2867,7 +3342,7 @@ ${Number(
                 data: pred.matriculas.realizado,
                 borderWidth: 3
             }];
-            graficoHistMatriculas.update();
+            if (graficoHistMatriculas) graficoHistMatriculas.update();
 
             graficoHistHoraAluno.data.labels = pred.meses;
             graficoHistHoraAluno.data.datasets = [{
@@ -2875,7 +3350,7 @@ ${Number(
                 data: pred.hora_aluno.realizado,
                 borderWidth: 3
             }];
-            graficoHistHoraAluno.update();
+            if (graficoHistHoraAluno) graficoHistHoraAluno.update();
 
             graficoHistReceita.data.labels = pred.meses;
             graficoHistReceita.data.datasets = [{
@@ -2883,7 +3358,7 @@ ${Number(
                 data: pred.receita.realizado,
                 borderWidth: 3
             }];
-            graficoHistReceita.update();
+            if (graficoHistReceita) graficoHistReceita.update();
 
         }
 
@@ -2923,15 +3398,21 @@ ${Number(
             "DOMContentLoaded",
             function () {
                 carregarProgramasExecutivos();
+                carregarUsuario();
                 new TomSelect("#periodo", {
                     plugins: ["remove_button"],
-                    placeholder: "Selecione um ou mais meses",
+                    placeholder: "Selecione...",
                     maxItems: null,
                     hideSelected: true,
                     closeAfterSelect: false
                 });
             }
         );
+
+        document.getElementById("ano")?.addEventListener("change", atualizarBadgeFiltro);
+        document.getElementById("programa")?.addEventListener("change", atualizarBadgeFiltro);
+        document.getElementById("periodo")?.addEventListener("change", atualizarBadgeFiltro);
+
         function desenharGrafico(periodos, valores) {
             const ctx =
                 document.getElementById(
@@ -2985,50 +3466,54 @@ ${Number(
                 );
         }
     </script>
+
     <script>
         function criarGraficoEvolucao(idCanvas, label) {
-            return new Chart(
-                document.getElementById(idCanvas),
-                {
-                    type: "line",
-                    data: {
-                        labels: [],
-                        datasets: [
-                            {
-                                label: label,
-                                data: [],
-                                borderWidth: 3,
-                                tension: 0.35
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
+            const canvas = document.getElementById(idCanvas);
+            if (!canvas) return null;
 
-                        plugins: {
-                            legend: {
+            return new Chart(canvas, {
+                type: "line",
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: label,
+                            data: [],
+                            borderWidth: 3,
+                            tension: 0.35,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
                                 display: false
                             }
                         },
 
-                        scales: {
-                            y: {
-                                grid: {
-                                    display: false
-                                }
-                            },
-
-                            x: {
-                                grid: {
-                                    display: false
-                                }
+                        x: {
+                            grid: {
+                                display: false
                             }
                         }
                     }
                 }
-            );
+            });
         }
+
         const graficoMeta =
             new Chart(
                 document.getElementById("graficoMeta"),
@@ -3124,7 +3609,7 @@ ${Number(
 
                 if (texto === "Visão Geral") {
                     document.getElementById("secao-visao").style.display = "grid";
-                    document.getElementById("secao-graficos-geral").style.display = "grid";
+                    document.getElementById("secao-graficos-geral").style.display = "block";
                 }
 
                 if (texto === "Histórico Mensal") {

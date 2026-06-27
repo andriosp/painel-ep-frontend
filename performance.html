@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel • Performance</title>
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
   <style>
     :root {
       --bg: #f6f7fb;
@@ -17,7 +20,7 @@
       --radius: 14px;
       --radius-sm: 12px;
 
-      --brand: #2563eb;
+      --brand: #003B8F;
       --ok: #16a34a;
       --warn: #f59e0b;
       --bad: #ef4444;
@@ -35,9 +38,9 @@
     }
 
     .container {
-      max-width: 1800px;
+      width: min(100%, 1800px);
       margin: 0 auto;
-      padding: 18px 18px 36px;
+      padding: 18px 16px 28px;
     }
 
     /* Top nav */
@@ -128,8 +131,8 @@
     }
 
     .field {
-      flex: 1;
-      min-width: 320px;
+      flex: 0 0 220px;
+      min-width: 220px;
     }
 
     .field:first-child {
@@ -138,8 +141,31 @@
     }
 
     .field.sm {
-      flex: 0 0 160px;
-      min-width: 160px;
+      flex: 0 0 110px;
+      min-width: 110px;
+    }
+
+    .field.periodo-field {
+      flex: 0 0 320px;
+      min-width: 320px;
+    }
+
+    select {
+      width: 100%;
+      height: 42px !important;
+      min-height: 42px !important;
+      max-height: 42px !important;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: #fff;
+    }
+
+    select[multiple] {
+      height: 42px !important;
+      line-height: 24px;
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
 
     label {
@@ -149,21 +175,6 @@
       margin-bottom: 8px;
     }
 
-    select,
-    input {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px;
-      background: #fff;
-      outline: none;
-      height: 40px;
-    }
-
-    select[multiple] {
-      height: 140px;
-    }
-
     select:focus,
     input:focus {
       border-color: rgba(37, 99, 235, .45);
@@ -171,11 +182,12 @@
     }
 
     .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      align-self: flex-end;
+      flex: 0 0 auto;
+    }
+
+    .actions .btn-primary {
+      height: 42px;
+      padding: 0 18px;
     }
 
     button {
@@ -398,6 +410,160 @@
       gap: 10px;
     }
 
+    /* ===== TOM SELECT ===== */
+
+    .ts-wrapper {
+      width: 100%;
+    }
+
+    .ts-control {
+      height: 42px !important;
+      min-height: 42px !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      padding: 8px 10px !important;
+      background: #fff !important;
+      display: flex !important;
+      align-items: center !important;
+      flex-wrap: wrap !important;
+      overflow: visible !important;
+      box-shadow: none !important;
+    }
+
+    .field.periodo-field {
+      flex: 0 0 auto;
+      min-width: 320px;
+      width: auto;
+      max-width: none;
+    }
+
+    .periodo-field .ts-wrapper {
+      display: inline-block;
+      width: auto;
+      min-width: 320px;
+      max-width: none;
+    }
+
+    .periodo-field .ts-control {
+      width: auto !important;
+      min-width: 320px !important;
+      max-width: none !important;
+      overflow: visible !important;
+      flex-wrap: nowrap !important;
+    }
+
+    .periodo-field .ts-control>.item {
+      flex: 0 0 auto !important;
+    }
+
+    .ts-control>.item {
+      margin: 0 6px 0 0 !important;
+      padding: 2px 8px !important;
+      border-radius: 999px !important;
+      background: rgba(0, 59, 143, .10) !important;
+      border: 1px solid rgba(0, 59, 143, .25) !important;
+      color: #003B8F !important;
+      font-size: 12px !important;
+      line-height: 18px !important;
+      white-space: nowrap !important;
+    }
+
+    .ts-control input {
+      min-width: 1px !important;
+      width: auto !important;
+      height: 22px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: #000 !important;
+    }
+
+    .ts-wrapper.has-items .ts-control input::placeholder {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+
+    .ts-wrapper:not(.has-items) .ts-control input::placeholder {
+      color: #000 !important;
+      opacity: 1 !important;
+    }
+
+    .ts-dropdown {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    /* ===== LAYOUT EXECUTIVO ===== */
+
+    .page-layout {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .sidebar-executiva {
+      width: 220px;
+      min-height: calc(100vh - 90px);
+      background: #003B8F;
+      border-radius: 20px;
+      padding: 20px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 18px;
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-logo img {
+      width: 100px;
+      max-width: 100%;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: .2s;
+      font-size: 15px;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .sidebar-nav a.active {
+      background: #0F5FFF;
+    }
+
+    .main-executiva {
+      flex: 1;
+    }
+
+    @media (max-width: 1200px) {
+      .page-layout {
+        flex-direction: column;
+      }
+
+      .sidebar-executiva {
+        width: 100%;
+        min-height: auto;
+        position: relative;
+      }
+    }
+
     .table-card {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -467,6 +633,166 @@
       font-size: 14px;
       color: #5f6f89;
     }
+
+    .ts-wrapper.has-items .ts-control input::placeholder {
+      color: transparent !important;
+      opacity: 0 !important;
+    }
+
+    .ts-control>.item {
+      color: #003B8F !important;
+    }
+
+    #financiamento-resumo-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    #financiamento-resumo-wrap thead th {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+      border-bottom: 2px solid #dbe3ef;
+      color: #64748b;
+      font-weight: 800;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 12px 8px;
+      text-align: right;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    #financiamento-resumo-wrap thead th:first-child {
+      text-align: left;
+    }
+
+    #financiamento-resumo-wrap tbody td {
+      border-bottom: 1px solid #eef2f7;
+      padding: 8px 8px;
+      text-align: right;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    #financiamento-resumo-wrap tbody td:first-child {
+      text-align: left;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    #financiamento-resumo-wrap tbody tr:nth-child(odd) {
+      background: #fafbfd;
+    }
+
+    #financiamento-resumo-wrap tbody tr:hover {
+      background: #eef5ff;
+    }
+
+    #financiamento-resumo-wrap tbody tr:last-child {
+      background: #f8fafc;
+      font-weight: 800;
+    }
+
+    #financiamento-resumo-wrap .total-row {
+      background: #f1f5f9 !important;
+      font-weight: 800;
+    }
+
+    #financiamento-resumo-wrap .total-row td {
+      color: #0f172a;
+    }
+
+    .dashboard-footer {
+      margin-top: 24px;
+      padding: 14px 20px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      border-top: 1px solid var(--border);
+
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-footer strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .footer-right {
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+      }
+    }
+
+    .field.cr-field {
+      flex: 1 1 360px;
+      min-width: 360px;
+    }
+
+    .cr-field .ts-wrapper {
+      width: 100%;
+      min-width: 360px;
+    }
+
+    .cr-field .ts-control {
+      min-height: 42px !important;
+      height: auto !important;
+
+      flex-wrap: wrap !important;
+
+      max-height: 120px;
+      overflow-y: auto !important;
+    }
+
+    .sem-dados {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 4px 0;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .usuario-badge {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .btn-sair {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .btn-sair:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
   </style>
 </head>
 
@@ -505,102 +831,150 @@
 
   <div class="container">
 
-    <nav class="topnav">
-      <a href="index.html" class="navlink">Dashboard</a>
-      <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html?v=2" class="navlink">Programas</a>
-      <a href="performance.html" class="navlink active">Performance</a>
-      <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-      <a href="unidades.html" class="navlink">Unidades</a>
-      <a href="sge_turmas.html" class="navlink">Turmas</a>
-      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
+    <div class="page-layout">
 
-      <div class="topnav-right">
-        <a href="alterar_senha.html" class="navlink">
-          Alterar senha
-        </a>
-        <div id="usuario-logado" class="badge">
-          <span class="dot"></span>
-          Usuário: —
+      <aside class="sidebar-executiva">
+
+        <div class="sidebar-logo">
+          <img src="assets/logo.png" alt="Logo">
         </div>
 
-        <button onclick="logout()">Sair</button>
-      </div>
-    </nav>
+        <nav class="sidebar-nav">
+          <a href="index.html">🏠 Dashboard</a>
+          <a href="po.html">🎯 PO</a>
+          <a href="programas.html?v=2">🧩 Programas</a>
+          <a href="performance.html" class="active">📊 Performance</a>
+          <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+          <a href="unidades.html">🏢 Unidades</a>
+          <a href="sge_turmas.html">📚 Ofertas</a>
+          <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+          <a href="visao_executiva.html">🧠 Visão Executiva</a>
+          <a href="indicadores.html">📈 Indicadores</a>
+          <a href="regioes.html">🌎 Regiões</a>
+          <a href="subregioes.html">📍 Sub-regiões</a>
+          <a href="turmas.html">🏫 Turmas</a>
+          <a href="acoes.html">✅ Ações</a>
+          <a href="relatoriosexecutivos.html">📄 Relatórios</a>
+        </nav>
 
-    <div class="header">
-      <div class="title">
-        <h1>Performance por Programa</h1>
-        <p>Visualização do período por indicador (Meta × Realizado)</p>
-      </div>
-      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões</div>
-    </div>
+      </aside>
 
-    <div class="panel">
-      <div class="filters">
+      <main class="main-executiva">
 
-        <div class="field">
-          <label for="subregioes">Sub-regiões (Ctrl + clique para múltiplas)</label>
-          <select id="subregioes" multiple></select>
+        <div class="header">
+          <div class="title">
+            <h1>Performance por Programa</h1>
+          </div>
 
+          <div class="header-actions">
+
+            <div class="badge usuario-badge" id="usuario-logado">
+              <span class="dot"></span>
+              Usuário: —
+            </div>
+
+            <button class="btn-sair" onclick="logout()">
+              Sair
+            </button>
+
+          </div>
         </div>
 
-        <div class="field">
-          <label for="programas">Programas (depende do filtro de sub-regiões)</label>
-          <select id="programas" multiple></select>
+        <div class="panel">
+          <div class="filters">
+
+            <div class="field sm">
+              <label for="ano">Ano</label>
+              <select id="ano"></select>
+            </div>
+
+            <div class="field periodo-field">
+              <label for="periodoMeses">Período</label>
+              <select id="periodoMeses" multiple placeholder="Selecione...">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="programa">Programa</label>
+              <select id="programa">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="regiao">Região</label>
+              <select id="regiao">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="subregiao">Sub-região</label>
+              <select id="subregiao">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field cr-field">
+              <label for="crs">CR</label>
+              <select id="crs" multiple placeholder="Selecione...">
+              </select>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" onclick="limparFiltros()">
+                Limpar
+              </button>
+            </div>
+
+          </div>
         </div>
 
-        <div class="field">
-          <label for="meses">Meses (Ctrl + clique para múltiplos)</label>
-          <select id="meses" multiple>
-            <option value="1">Janeiro</option>
-            <option value="2">Fevereiro</option>
-            <option value="3">Março</option>
-            <option value="4">Abril</option>
-            <option value="5">Maio</option>
-            <option value="6">Junho</option>
-            <option value="7">Julho</option>
-            <option value="8">Agosto</option>
-            <option value="9">Setembro</option>
-            <option value="10">Outubro</option>
-            <option value="11">Novembro</option>
-            <option value="12">Dezembro</option>
-          </select>
+        <div class="tabs">
+          <div class="tab active" data-ind="matriculas" onclick="trocarAba(this)">Matrículas</div>
+          <div class="tab" data-ind="hora_aluno" onclick="trocarAba(this)">Hora-Aluno</div>
+          <div class="tab" data-ind="receita" onclick="trocarAba(this)">Receita</div>
         </div>
 
-        <div class="field sm">
-          <label for="ano">Ano</label>
-          <input id="ano" type="number" min="2000" max="2100" />
+        <div id="cards" class="cards"></div>
+
+        <div id="financiamento-resumo-wrap" class="table-card" style="display:none; margin-top:14px;">
+          <div class="table-header">
+            <h3>
+              REALIZADO POR FINANCIAMENTO
+            </h3>
+
+            <p id="financiamento-resumo-subtitulo">
+            </p>
+          </div>
+
+          <div class="table-wrap">
+            <table id="tabela-financiamento-resumo"></table>
+          </div>
         </div>
 
-        <div class="actions">
-          <button class="btn-primary" onclick="limparFiltros()">Limpar</button>
-        </div>
-      </div>
-    </div>
+        <footer class="dashboard-footer">
 
-    <div class="tabs">
-      <div class="tab active" data-ind="matriculas" onclick="trocarAba(this)">Matrículas</div>
-      <div class="tab" data-ind="hora_aluno" onclick="trocarAba(this)">Hora-Aluno</div>
-      <div class="tab" data-ind="receita" onclick="trocarAba(this)">Receita</div>
-    </div>
+          <div class="footer-left">
+            <strong>Fontes dos dados:</strong>
+            Solução Integradora • Cubo Orçamento
+          </div>
 
-    <div id="cards" class="cards"></div>
+        </footer>
 
-    <div id="financiamento-resumo-wrap" class="table-card" style="display:none; margin-top:14px;">
-      <div class="table-header">
-        <h3>
-          Realizado por Financiamento
-        </h3>
-
-        <p id="financiamento-resumo-subtitulo">
-        </p>
-      </div>
-
-      <div class="table-wrap">
-        <table id="tabela-financiamento-resumo"></table>
-      </div>
+      </main>
     </div>
 
   </div>
@@ -608,6 +982,7 @@
   <script>
     let indicadorAtual = "matriculas";
     let programasValidosReceita = new Set();
+    let crsMemoria = [];
 
     function getDataAtual() {
       const agora = new Date();
@@ -617,16 +992,66 @@
       };
     }
 
+    function popularAno() {
+      const sel = document.getElementById("ano");
+      if (!sel) return;
+
+      sel.innerHTML = "";
+
+      const anoAtual = new Date().getFullYear();
+
+      for (let ano = anoAtual - 2; ano <= anoAtual + 1; ano++) {
+        const opt = document.createElement("option");
+        opt.value = ano;
+        opt.textContent = ano;
+        sel.appendChild(opt);
+      }
+    }
+
+    function popularPeriodoMeses() {
+      const sel = document.getElementById("periodoMeses");
+      if (!sel) return;
+
+      const meses = [
+        [1, "Janeiro"],
+        [2, "Fevereiro"],
+        [3, "Março"],
+        [4, "Abril"],
+        [5, "Maio"],
+        [6, "Junho"],
+        [7, "Julho"],
+        [8, "Agosto"],
+        [9, "Setembro"],
+        [10, "Outubro"],
+        [11, "Novembro"],
+        [12, "Dezembro"]
+      ];
+
+      sel.innerHTML = "";
+
+      meses.forEach(([valor, nome]) => {
+        const opt = document.createElement("option");
+        opt.value = valor;
+        opt.textContent = nome;
+        sel.appendChild(opt);
+      });
+    }
+
     function aplicarAnoMesPadrao() {
       const atual = getDataAtual();
+
       document.getElementById("ano").value = atual.ano;
 
-      const sel = document.getElementById("meses");
+      const sel = document.getElementById("periodoMeses");
       if (!sel) return;
 
       Array.from(sel.options).forEach(o => {
-        o.selected = Number(o.value) === atual.mes;
+        o.selected = false;
       });
+
+      if (sel.tomselect) {
+        sel.tomselect.clear(true);
+      }
     }
 
     function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
@@ -643,7 +1068,7 @@
     }
 
     function mesesSelecionados() {
-      const sel = document.getElementById("meses");
+      const sel = document.getElementById("periodoMeses");
       if (!sel) return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
       const valores = Array.from(sel.selectedOptions)
@@ -657,75 +1082,132 @@
     function selecionarTudo(id) {
       const sel = document.getElementById(id);
       Array.from(sel.options).forEach(o => o.selected = true);
-      atualizarBadgeFiltro();
+    }
+
+    function crsSelecionados() {
+      const sel = document.getElementById("crs");
+      if (!sel) return "";
+
+      return Array.from(sel.selectedOptions)
+        .map(o => o.value)
+        .filter(Boolean)
+        .join(",");
+    }
+
+    async function sincronizarFiltrosPorCR() {
+      const crs = crsSelecionados();
+      if (!crs) return;
+
+      await carregarProgramas();
+      await carregarRegioes();
+      await carregarSubregioes();
     }
 
     async function limparFiltros() {
-      ["subregioes", "programas", "meses"].forEach(id => {
-        const sel = document.getElementById(id);
-        if (sel) Array.from(sel.options).forEach(o => o.selected = false);
-      });
 
       indicadorAtual = "matriculas";
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      const abaPadrao = document.querySelector('.tab[data-ind="matriculas"]');
-      if (abaPadrao) abaPadrao.classList.add("active");
 
-      aplicarAnoMesPadrao();
-      atualizarBadgeFiltro();
-      await aplicarFiltros();
+      document.querySelectorAll(".tab")
+        .forEach(t => t.classList.remove("active"));
+
+      document
+        .querySelector('.tab[data-ind="matriculas"]')
+        ?.classList.add("active");
+
+      // Ano atual
+      const atual = getDataAtual();
+      document.getElementById("ano").value = atual.ano;
+
+      // Período (Tom Select)
+      const periodo = document.getElementById("periodoMeses");
+
+      if (periodo?.tomselect) {
+        periodo.tomselect.clear(true);
+      }
+
+      Array.from(periodo.options).forEach(o => {
+        o.selected = false;
+      });
+
+      // Programa
+      const programa = document.getElementById("programa");
+      programa.value = "";
+
+      // Região
+      const regiao = document.getElementById("regiao");
+      regiao.value = "";
+
+      // Sub-região
+      const subregiao = document.getElementById("subregiao");
+      subregiao.value = "";
+
+      // CR
+      crsMemoria = [];
+
+      const crs = document.getElementById("crs");
+
+      if (crs?.tomselect) {
+        crs.tomselect.clear(true);
+      } else if (crs) {
+        Array.from(crs.options).forEach(o => {
+          o.selected = false;
+        });
+      }
+
+      await carregarRegioes();
+      await carregarSubregioes();
+      await carregarProgramas();
+      await carregarCRs();
+      await carregarCards();
+      await carregarResumoFinanciamento();
     }
 
-    function atualizarBadgeFiltro() {
-      const badge = document.getElementById("badge-filtro");
-      if (!badge) return;
+    function subregioesNomesSelecionadas() {
+      const sel = document.getElementById("subregiao");
 
-      const subSel = document.getElementById("subregioes");
-      const progSel = document.getElementById("programas");
-      const mesSel = document.getElementById("meses");
-      const ano = document.getElementById("ano")?.value;
+      return Array.from(sel.selectedOptions)
+        .filter(o => o.value)
+        .map(o => o.textContent.trim())
+        .join(",");
+    }
 
-      const subs = Array.from(subSel?.selectedOptions || []).map(o => o.textContent.trim());
-      const progs = Array.from(progSel?.selectedOptions || []).map(o => o.textContent.trim());
-      const meses = Array.from(mesSel?.selectedOptions || []).map(o => o.textContent.trim());
+    async function carregarRegioes() {
+      const ano = document.getElementById("ano").value || "2026";
 
-      const filtros = [];
+      const programa = document.getElementById("programa").value || "";
+      const subregioes = selecionados("subregiao");
 
-      if (subs.length) {
-        const resumo = subs.length <= 3
-          ? subs.join(", ")
-          : `${subs.slice(0, 3).join(", ")} +${subs.length - 3}`;
+      const qs = new URLSearchParams({
+        ano: String(ano),
+        indicador: indicadorAtual,
+        meses: mesesSelecionados().join(",")
+      });
 
-        filtros.push(`Sub-região: ${resumo}`);
-      } else {
-        filtros.push("Sub-regiões: todas");
+      const crs = crsSelecionados();
+      if (crs) qs.set("crs", crs);
+
+      if (programa) qs.set("programas", programa);
+      if (subregioes) qs.set("subregioes", subregioes);
+
+      const resp = await fetch(`${API}/performance/filtros/regioes?${qs.toString()}`);
+
+      if (!resp.ok) {
+        console.error("Erro ao carregar regiões:", resp.status);
+        return;
       }
 
-      if (progs.length) {
-        const resumo = progs.length <= 3
-          ? progs.join(", ")
-          : `${progs.slice(0, 3).join(", ")} +${progs.length - 3}`;
+      const dados = await resp.json();
+      const select = document.getElementById("regiao");
+      const valorAnterior = select.value || "";
 
-        filtros.push(`Programas: ${resumo}`);
-      } else {
-        filtros.push("Programas: todos");
-      }
+      select.innerHTML = `<option value="">Selecione...</option>` + dados.map(r =>
+        `<option value="${r.regiao}">${r.regiao}</option>`
+      ).join("");
 
-      if (meses.length) {
-        const resumo = meses.length <= 3
-          ? meses.join(", ")
-          : `${meses.slice(0, 3).join(", ")} +${meses.length - 3}`;
-        filtros.push(`Meses: ${resumo}`);
-      }
+      const aindaExiste = Array.from(select.options)
+        .some(o => o.value === valorAnterior);
 
-      if (ano) {
-        filtros.push(`Ano: ${ano}`);
-      }
-
-      badge.innerHTML = `<span class="dot"></span> ${filtros.length
-        ? `Filtro: ${filtros.join(" • ")}`
-        : "Filtro: todas as sub-regiões • programas • meses"
-        }`;
+      select.value = aindaExiste ? valorAnterior : "";
     }
 
     async function carregarSubregioes() {
@@ -733,25 +1215,132 @@
 
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
+      const regiao = document.getElementById("regiao").value || "";
+      const programa = document.getElementById("programa").value || "";
+      const crs = crsSelecionados();
 
-      const res = await fetch(API + `/planejamento/filtros/subregioes?ano=${ano}`);
-      const data = await res.json();
+      const sel = document.getElementById("subregiao");
+      const valorAnterior = sel.value || "";
 
-      const sel = document.getElementById("subregioes");
-      const prev = new Set(Array.from(sel.selectedOptions).map(o => String(o.value)));
+      const resTodas = await fetch(API + `/planejamento/filtros/subregioes?ano=${ano}`);
+      const todas = await resTodas.json();
 
-      sel.innerHTML = "";
+      let listaFinal = todas;
 
-      data.forEach(r => {
+      if (regiao || programa || crs) {
+        const qs = new URLSearchParams({
+          ano: String(ano),
+          indicador: indicadorAtual,
+          meses: mesesSelecionados().join(",")
+        });
+
+        if (crs) qs.set("crs", crs);
+        if (regiao) qs.set("regiao", regiao);
+        if (programa) qs.set("programas", programa);
+
+        const resFiltro = await fetch(`${API}/performance/filtros/subregioes?${qs.toString()}`);
+        const subFiltradas = await resFiltro.json();
+
+        const codigosFiltrados = new Set(
+          subFiltradas.map(s => String(s.codigo))
+        );
+
+        listaFinal = todas.filter(s =>
+          codigosFiltrados.has(String(s.codigo))
+        );
+      }
+
+      sel.innerHTML = `<option value="">Selecione...</option>`;
+
+      listaFinal.forEach(r => {
         const opt = document.createElement("option");
         opt.value = r.codigo;
         opt.textContent = r.nome;
-        if (prev.has(String(r.codigo))) opt.selected = true;
         sel.appendChild(opt);
       });
 
+      const aindaExiste = Array.from(sel.options)
+        .some(o => o.value === valorAnterior);
+
+      sel.value = aindaExiste ? valorAnterior : "";
+
       setStatus("");
-      atualizarBadgeFiltro();
+    }
+
+    async function carregarCRs() {
+      const ano = document.getElementById("ano").value || "2026";
+
+      const programa = document.getElementById("programa").value || "";
+      const regiao = document.getElementById("regiao").value || "";
+      const subregiao = document.getElementById("subregiao").value || "";
+
+      const qs = new URLSearchParams({
+        ano,
+        indicador: indicadorAtual,
+        meses: mesesSelecionados().join(",")
+      });
+
+      if (programa) qs.set("programas", programa);
+      if (regiao) qs.set("regiao", regiao);
+      if (subregiao) qs.set("subregioes", subregiao);
+
+      const resp = await fetch(`${API}/performance/filtros/crs?${qs.toString()}`);
+      if (!resp.ok) return false;
+
+      const dados = await resp.json();
+      const select = document.getElementById("crs");
+
+      const valoresAtuais = Array.from(select.selectedOptions)
+        .map(o => String(o.value));
+
+      if (valoresAtuais.length) {
+        crsMemoria = valoresAtuais;
+      }
+
+      const crsDisponiveis = new Set(
+        dados.map(item => String(item.cr))
+      );
+
+      let valoresParaRestaurar = crsMemoria.filter(v =>
+        crsDisponiveis.has(String(v))
+      );
+
+      if (select.tomselect) {
+        select.tomselect.clear(true);
+        select.tomselect.clearOptions();
+      } else {
+        select.innerHTML = "";
+      }
+
+      dados.forEach(item => {
+        const texto = `${item.cr} - ${item.descricao}`;
+
+        if (select.tomselect) {
+          select.tomselect.addOption({
+            value: item.cr,
+            text: texto
+          });
+        } else {
+          const opt = document.createElement("option");
+          opt.value = item.cr;
+          opt.textContent = texto;
+          select.appendChild(opt);
+        }
+      });
+
+      if (select.tomselect) {
+        select.tomselect.refreshOptions(false);
+
+        valoresParaRestaurar.forEach(v => {
+          select.tomselect.addItem(v, true);
+        });
+      } else {
+        Array.from(select.options).forEach(opt => {
+          opt.selected = valoresParaRestaurar.includes(String(opt.value));
+        });
+      }
+
+      return valoresParaRestaurar.length > 0;
     }
 
     function nomeProgramaOficial(nome) {
@@ -818,11 +1407,35 @@
       return Array.from(mapa.values());
     }
 
+    function subregioesFiltro() {
+      const sel = document.getElementById("subregiao");
+      if (!sel) return "";
+
+      const selecionadas = Array.from(sel.selectedOptions)
+        .map(o => o.value)
+        .filter(Boolean);
+
+      if (selecionadas.length) {
+        return selecionadas.join(",");
+      }
+
+      const regiao = document.getElementById("regiao").value || "";
+
+      if (regiao) {
+        return Array.from(sel.options)
+          .map(o => o.value)
+          .filter(Boolean)
+          .join(",");
+      }
+
+      return "";
+    }
+
     async function carregarProgramas() {
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
-      const subs = selecionados("subregioes");
+      const subs = subregioesFiltro();
 
       const qs = new URLSearchParams({
         indicador: indicadorAtual,
@@ -830,31 +1443,33 @@
         meses: meses.join(","),
       });
 
+      const crs = crsSelecionados();
+      if (crs) qs.set("crs", crs);
+
       if (subs) qs.set("subregioes", subs);
 
-      const res = await fetch(API + "/performance/cards?" + qs.toString());
+      const regiao = document.getElementById("regiao").value || "";
+
+      if (regiao) qs.set("regiao", regiao);
+
+      const res = await fetch(API + "/performance/filtros/programas?" + qs.toString());
       const data = await res.json();
 
-      const dataConsolidada = consolidarProgramas(data);
-
-      const validos = (dataConsolidada || []).filter(item =>
-        Number(item.meta || 0) > 0 ||
-        Number(item.projetado || 0) > 0 ||
-        Number(item.realizado || 0) > 0
-      );
-
       const mapa = new Map();
-      validos.forEach(item => {
-        mapa.set(String(item.programa_id), {
-          codigo: item.programa_id,
-          nome: item.programa
+      data.forEach(item => {
+        mapa.set(String(item.codigo), {
+          codigo: item.codigo,
+          nome: item.nome
         });
       });
 
-      const sel = document.getElementById("programas");
+      const sel = document.getElementById("programa");
       const prev = new Set(Array.from(sel.selectedOptions).map(o => String(o.value)));
 
-      sel.innerHTML = "";
+      const valorAnterior = sel.value || "";
+      const textoAnterior = sel.options[sel.selectedIndex]?.textContent || "";
+
+      sel.innerHTML = `<option value="">Selecione...</option>`;
 
       Array.from(mapa.values())
         .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
@@ -865,6 +1480,18 @@
           if (prev.has(String(r.codigo))) opt.selected = true;
           sel.appendChild(opt);
         });
+
+      if (sel.tomselect) {
+        sel.tomselect.clearOptions();
+        sel.tomselect.sync();
+        sel.tomselect.clear(true);
+      }
+
+      const aindaExiste = Array.from(sel.options)
+        .some(o => o.value === valorAnterior);
+
+      sel.value = aindaExiste ? valorAnterior : "";
+
     }
 
     function emojiStatus(status) {
@@ -886,14 +1513,19 @@
       lista = (lista || [])
         .sort((a, b) => (a.programa || "").localeCompare(b.programa || "", "pt-BR"));
 
-      lista = (lista || []).filter(item =>
-        Number(item.meta || 0) > 0 ||
-        Number(item.projetado || 0) > 0 ||
-        Number(item.realizado || 0) > 0
-      );
+      const temCRSelecionado = crsSelecionados();
+
+      lista = (lista || []).filter(item => {
+        if (temCRSelecionado) {
+          return Number(item.meta || 0) > 0 ||
+            Number(item.projetado || 0) > 0;
+        }
+
+        return Number(item.realizado || 0) > 0;
+      });
 
       if (!lista || !lista.length) {
-        root.innerHTML = `<div class="muted">Sem dados para os filtros selecionados.</div>`;
+        root.innerHTML = `<div class="muted sem-dados">Sem dados para o(s) filtro(s) selecionado(s).</div>`;
         return;
       }
 
@@ -943,7 +1575,7 @@
           const atual = getDataAtual();
           const ano = document.getElementById("ano").value || String(atual.ano);
           const indicador = indicadorAtual;
-          const subs = selecionados("subregioes"); // mantém o recorte atual
+          const subs = selecionados("subregiao"); // mantém o recorte atual
           const meses = mesesSelecionados();
           const url = new URL("programa_performance.html", window.location.href);
           // Monta URL relativa ao arquivo atual (mesma pasta)
@@ -968,8 +1600,10 @@
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
 
-      const subs = selecionados("subregioes");
-      const progs = selecionados("programas");
+      const regiao = document.getElementById("regiao").value || "";
+      const subs = subregioesFiltro();
+      const progs = selecionados("programa");
+      const crs = crsSelecionados();
 
       const qs = new URLSearchParams({
         indicador: indicadorAtual,
@@ -978,6 +1612,7 @@
       });
       if (subs) qs.set("subregioes", subs);
       if (progs) qs.set("programas", progs);
+      if (crs) qs.set("crs", crs);
 
       setStatus("Carregando performance…");
       const res = await fetch(API + "/performance/cards?" + qs.toString());
@@ -990,7 +1625,7 @@
     }
 
     function filtrarSelectProgramas() {
-      const sel = document.getElementById("programas");
+      const sel = document.getElementById("programa");
       if (!sel) return;
 
       Array.from(sel.options).forEach(o => o.hidden = false);
@@ -1001,9 +1636,9 @@
       const tabela = document.getElementById("tabela-financiamento-resumo");
       const subtitulo = document.getElementById("financiamento-resumo-subtitulo");
 
-      const progs = selecionados("programas");
+      const progs = selecionados("programa");
 
-      if (!progs || indicadorAtual === "receita") {
+      if (!progs || indicadorAtual !== "matriculas") {
         wrap.style.display = "none";
         tabela.innerHTML = "";
         return;
@@ -1012,7 +1647,8 @@
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
-      const subs = selecionados("subregioes");
+      const subs = subregioesFiltro();
+      const crs = crsSelecionados();
 
       const qs = new URLSearchParams({
         indicador: indicadorAtual,
@@ -1022,6 +1658,7 @@
       });
 
       if (subs) qs.set("subregioes", subs);
+      if (crs) qs.set("crs", crs);
 
       const res = await fetch(API + "/performance/financiamento-resumo?" + qs.toString());
       const data = await res.json();
@@ -1044,9 +1681,9 @@
       tabela.innerHTML = `
         <thead>
           <tr>
-            <th>Financiamento</th>
-            <th>Realizado</th>
-            <th>% Participação</th>
+            <th>FINACIAMENTO</th>
+            <th>REALIZADO</th>
+            <th>% PARTICIPAÇÃO</th>
           </tr>
         </thead>
         <tbody>
@@ -1065,10 +1702,10 @@
               </tr>
             `;
       }).join("")}
-          <tr>
-            <td><strong>Total</strong></td>
-            <td><strong>${format(total)}</strong></td>
-            <td><strong>100,0%</strong></td>
+          <tr class="total-row">
+            <td>Total</td>
+            <td>${format(total)}</td>
+            <td>100,0%</td>
           </tr>
         </tbody>
       `;
@@ -1077,7 +1714,6 @@
     async function aplicarFiltros() {
       try {
         setStatus("Aplicando filtros…");
-        atualizarBadgeFiltro();
         await carregarProgramas();
         await carregarCards();
         await carregarResumoFinanciamento();
@@ -1091,32 +1727,88 @@
     async function trocarAba(el) {
       document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
       el.classList.add("active");
+
       indicadorAtual = el.getAttribute("data-ind");
-      await aplicarFiltros();
+
+      await carregarCRs();
+
+      await carregarCards();
+      await carregarResumoFinanciamento();
     }
 
     // Atualiza programas quando muda sub-região
-    document.getElementById("subregioes").addEventListener("change", async () => {
-      await aplicarFiltros();
+    document.getElementById("subregiao").addEventListener("change", async () => {
+      await carregarRegioes();
+      await carregarProgramas();
+      await carregarCRs();
+      await carregarCards();
+      await carregarResumoFinanciamento();
     });
 
-    document.getElementById("programas").addEventListener("change", async () => {
-      await aplicarFiltros();
+    document.getElementById("programa").addEventListener("change", async () => {
+      await carregarRegioes();
+      await carregarSubregioes();
+      await carregarCRs();
+      await carregarCards();
+      await carregarResumoFinanciamento();
+    });
+
+    document.getElementById("regiao").addEventListener("change", async () => {
+      await carregarSubregioes();
+      await carregarProgramas();
+      await carregarCRs();
+      await carregarCards();
+      await carregarResumoFinanciamento();
     });
 
     // Atualiza quando mudar mês/ano
-    document.getElementById("meses").addEventListener("change", async () => {
+    document.getElementById("periodoMeses").addEventListener("change", async () => {
+      await carregarRegioes();
+      await carregarSubregioes();
+      await carregarProgramas();
+      await carregarCRs();
       await aplicarFiltros();
     });
-    document.getElementById("ano").addEventListener("change", aplicarFiltros);
+
+    document.getElementById("ano").addEventListener("change", async () => {
+      await carregarRegioes();
+      await carregarSubregioes();
+      await carregarProgramas();
+      await carregarCRs();
+      await aplicarFiltros();
+    });
+
+    document.getElementById("crs").addEventListener("change", async () => {
+      const crs = crsSelecionados();
+
+      const programaAtual = document.getElementById("programa").value || "";
+      const regiaoAtual = document.getElementById("regiao").value || "";
+      const subregiaoAtual = document.getElementById("subregiao").value || "";
+
+      crsMemoria = crs ? crs.split(",") : [];
+
+      const jaTemFiltroContexto =
+        programaAtual || regiaoAtual || subregiaoAtual;
+
+      if (!jaTemFiltroContexto) {
+        await carregarProgramas();
+        await carregarRegioes();
+        await carregarSubregioes();
+      }
+
+      await carregarCards();
+      await carregarResumoFinanciamento();
+    });
 
     (async function init() {
       await carregarUsuario();
       try {
         setStatus("Carregando…");
+        popularAno();
         aplicarAnoMesPadrao();
+        await carregarRegioes();
         await carregarSubregioes();
-        atualizarBadgeFiltro();
+        await carregarCRs();
         await aplicarFiltros();
         setStatus("");
       } catch (e) {
@@ -1156,6 +1848,31 @@
     }
 
   </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      if (document.getElementById("periodoMeses")) {
+        new TomSelect("#periodoMeses", {
+          plugins: ["remove_button"],
+          hideSelected: true,
+          closeAfterSelect: false,
+          placeholder: "Selecione..."
+        });
+
+        new TomSelect("#crs", {
+          plugins: ["remove_button"],
+          create: false,
+          hideSelected: true,
+          closeAfterSelect: false,
+          placeholder: "Selecione..."
+        });
+      }
+
+    });
+
+  </script>
+
 </body>
 
 </html>

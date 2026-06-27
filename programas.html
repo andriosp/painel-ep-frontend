@@ -17,7 +17,7 @@
       --radius: 14px;
       --radius-sm: 12px;
 
-      --brand: #2563eb;
+      --brand: #003B8F;
       /* azul executivo */
       --ok: #16a34a;
       --warn: #f59e0b;
@@ -74,6 +74,7 @@
       justify-content: space-between;
       gap: 14px;
       margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
     .title h1 {
@@ -125,9 +126,10 @@
 
     .filters {
       display: grid;
-      grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr) auto;
-      gap: 18px;
-      align-items: start;
+      grid-template-columns:
+        minmax(250px, 1fr) minmax(250px, 1fr) minmax(250px, 1fr) auto;
+      gap: 12px;
+      align-items: end;
     }
 
     .field {
@@ -170,11 +172,12 @@
 
     .actions {
       display: flex;
-      align-items: flex-end;
-      justify-content: flex-start;
-      height: calc(150px + 22px);
-      padding: 0;
-      margin: 0;
+      align-items: end;
+    }
+
+    .actions .btn-primary {
+      height: 42px;
+      padding: 0 18px;
     }
 
     button {
@@ -351,13 +354,15 @@
     }
 
     .table-wrap {
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      table-layout: auto;
+      min-width: 1250px;
     }
 
     table th,
@@ -369,16 +374,27 @@
     thead th {
       position: sticky;
       top: 0;
-      background: #fbfcfe;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
+
+      background: linear-gradient(to bottom,
+          #f8fafc,
+          #f1f5f9);
+
+      border-bottom: 2px solid #dbe3ef;
+
+      color: #64748b;
+
+      font-weight: 800;
+      font-size: 10px;
+
       text-transform: uppercase;
-      letter-spacing: .2px;
-      padding: 6px 6px;
+      letter-spacing: .08em;
+
+      padding: 12px 8px;
+
       text-align: right;
       white-space: nowrap;
-      line-height: 1.15;
+
+      z-index: 2;
     }
 
     thead th:first-child {
@@ -387,12 +403,10 @@
 
     tbody td {
       border-bottom: 1px solid #eef2f7;
-      font-size: 12px;
-      padding: 5px 6px;
+      padding: 8px 8px;
       text-align: right;
       white-space: nowrap;
-      word-break: break-word;
-      line-height: 1.15;
+      font-size: 12px;
     }
 
     td {
@@ -403,16 +417,6 @@
     th {
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    thead th:first-child,
-    tbody td:first-child {
-      width: 180px;
-      max-width: 180px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align: left;
     }
 
     tbody tr:nth-child(odd) {
@@ -430,24 +434,6 @@
       min-height: 0;
     }
 
-    @media (max-width: 1366px) {
-
-      thead th {
-        font-size: 9px;
-        padding: 5px 5px;
-      }
-
-      tbody td {
-        font-size: 9px;
-        padding: 5px 5px;
-      }
-
-      .table-card {
-        overflow-x: hidden;
-      }
-
-    }
-
     .topnav {
       display: flex;
       gap: 10px;
@@ -462,6 +448,394 @@
       align-items: center;
       gap: 10px;
     }
+
+    .page-layout {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .sidebar-executiva {
+      width: 220px;
+      min-height: calc(100vh - 90px);
+      background: #003B8F;
+      border-radius: 20px;
+      padding: 20px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 18px;
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-logo img {
+      width: 100px;
+      max-width: 100%;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: .2s;
+      font-size: 15px;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .sidebar-nav a.active {
+      background: #0F5FFF;
+    }
+
+    .main-executiva {
+      flex: 1;
+    }
+
+    .panel .filters select {
+      height: 42px !important;
+      min-height: 42px !important;
+      max-height: 42px !important;
+      padding: 8px 10px !important;
+    }
+
+    .panel .filters .field {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .panel .filters .actions {
+      align-self: flex-end;
+    }
+
+    .cards-executivos {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-executivo {
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg,
+          rgba(0, 59, 143, .03) 0%,
+          #ffffff 100%);
+    }
+
+    .card-topo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-icone {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(0, 59, 143, .10);
+      color: #003B8F;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .card-executivo h3 {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .card-executivo .big {
+      margin-top: 10px;
+      font-size: 26px;
+      font-weight: 820;
+      letter-spacing: .2px;
+    }
+
+    @media (max-width: 1200px) {
+      .cards-executivos {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .cards-executivos {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card-executivo .chips {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .card-executivo .chip {
+      font-size: 11px;
+      padding: 6px 10px;
+      max-width: 100%;
+    }
+
+    .bloco-executivo {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-top: 18px;
+      margin-bottom: 24px;
+    }
+
+    .bloco-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .bloco-kicker {
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .bloco-header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .bloco-badge {
+      background: rgba(0, 59, 143, .08);
+      color: #003B8F;
+      border: 1px solid rgba(0, 59, 143, .15);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .bloco-executivo .table-card {
+      border: none;
+      box-shadow: none;
+      margin-bottom: 0;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .chip-label {
+      font-size: 10px;
+      font-weight: 850;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    .comparativo-financiamento {
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .comp-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+    }
+
+    .comp-label {
+      font-size: 12px;
+      font-weight: 800;
+      min-width: 40px;
+    }
+
+    .comp-label.gr {
+      color: #2563eb;
+    }
+
+    .comp-label.gnr {
+      color: #b45309;
+    }
+
+    .comp-label.pg {
+      color: #15803d;
+    }
+
+    .comp-valor {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .bloco-header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1450px;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+      border-bottom: 2px solid #dbe3ef;
+      color: #64748b;
+      font-weight: 800;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 14px 10px;
+      text-align: right;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    thead th:first-child {
+      text-align: left;
+    }
+
+    tbody td {
+      border-bottom: 1px solid #eef2f7;
+      padding: 10px 10px;
+      text-align: right;
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    thead th:first-child,
+    tbody td:first-child {
+      width: 260px;
+      min-width: 260px;
+      max-width: 260px;
+      text-align: left;
+    }
+
+    tbody td:first-child {
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: #fcfdff;
+    }
+
+    tbody tr:hover {
+      background: rgba(37, 99, 235, .06);
+    }
+
+    .dashboard-footer {
+      margin-top: 24px;
+      padding: 14px 20px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      border-top: 1px solid var(--border);
+
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-footer strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .footer-right {
+      font-weight: 600;
+    }
+
+    .comp-pct {
+      color: var(--muted);
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .usuario-badge {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .btn-sair {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #fff;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .btn-sair:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
   </style>
 </head>
 
@@ -500,503 +874,668 @@
 
   <div class="container">
 
-    <nav class="topnav">
-      <a href="index.html" class="navlink">Dashboard</a>
-      <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html" class="navlink active">Programas</a>
-      <a href="performance.html" class="navlink">Performance</a>
-      <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-      <a href="unidades.html" class="navlink">Unidades</a>
-      <a href="sge_turmas.html" class="navlink">Turmas</a>
-      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
+    <div class="page-layout">
 
-      <div class="topnav-right">
-        <a href="alterar_senha.html" class="navlink">
-          Alterar senha
-        </a>
-        <div id="usuario-logado" class="badge">
-          <span class="dot"></span>
-          Usuário: —
+      <aside class="sidebar-executiva">
+
+        <div class="sidebar-logo">
+          <img src="assets/logo.png" alt="Logo">
         </div>
 
-        <button onclick="logout()">Sair</button>
-      </div>
-    </nav>
+        <nav class="sidebar-nav">
+          <a href="index.html">🏠 Dashboard</a>
+          <a href="po.html">🎯 PO</a>
+          <a href="programas.html?v=2" class="active">🧩 Programas</a>
+          <a href="performance.html">📊 Performance</a>
+          <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+          <a href="unidades.html">🏢 Unidades</a>
+          <a href="sge_turmas.html">📚 Ofertas</a>
+          <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+          <a href="visao_executiva.html">🧠 Visão Executiva</a>
+          <a href="indicadores.html">📈 Indicadores</a>
+          <a href="regioes.html">🌎 Regiões</a>
+          <a href="subregioes.html">📍 Sub-regiões</a>
+          <a href="turmas.html">🏫 Turmas</a>
+          <a href="acoes.html">✅ Ações</a>
+          <a href="relatoriosexecutivos.html">📄 Relatórios</a>
+        </nav>
 
-    <div class="header">
-      <div class="title">
-        <h1>Painel • Programas</h1>
-        <p>Visão por programas (com recorte de sub-regiões) • Matrículas, Hora-Aluno, Receita e financiamentos</p>
-      </div>
-      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões • todos os programas
-      </div>
-    </div>
+      </aside>
 
-    <div class="panel">
-      <div class="filters">
+      <main class="main-executiva">
 
-        <div class="field">
-          <label for="subregioes">Sub-regiões (Ctrl + clique para múltiplas)</label>
-          <select id="subregioes" multiple></select>
+        <div class="header">
+          <div class="title">
+            <h1>Programas</h1>
+          </div>
+
+          <div class="header-actions">
+
+            <div class="user-area">
+              <div class="badge usuario-badge" id="usuario-logado">
+                <span class="dot"></span>
+                Usuário: —
+              </div>
+
+              <button class="btn-sair" onclick="logout()">
+                Sair
+              </button>
+            </div>
+
+          </div>
         </div>
 
-        <div class="field">
-          <label for="programas">Programas (Ctrl + clique para múltiplas)</label>
-          <select id="programas" multiple></select>
-          <div class="status" id="status"></div>
+        <div class="panel">
+          <div class="filters">
+
+            <div class="field">
+              <label for="regioes">Região</label>
+              <select id="regioes">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="subregioes">Sub-região</label>
+              <select id="subregioes">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="programas">Programa</label>
+              <select id="programas">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" onclick="limparSelecao()">
+                Limpar
+              </button>
+            </div>
+
+          </div>
         </div>
 
-        <div class="actions">
-          <button class="btn-primary" onclick="limparSelecao()">Limpar</button>
+        <div class="cards cards-executivos">
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">🧩</span>
+              <h3>PROGRAMAS</h3>
+            </div>
+            <div class="big" id="prog-distintos">—</div>
+            <div class="sub">Total de Programas</div>
+          </div>
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">🎓</span>
+              <h3>MATRÍCULAS</h3>
+            </div>
+
+            <div class="big" id="mat-total">—</div>
+            <div class="sub" id="mat-meta">Meta</div>
+
+            <div class="chip-label">FINANCIAMENTO</div>
+            <div class="comparativo-financiamento" id="mat-comparativo"></div>
+          </div>
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">⏱️</span>
+              <h3>HORA-ALUNO</h3>
+            </div>
+
+            <div class="big" id="ha-total">—</div>
+            <div class="sub" id="ha-meta">Meta</div>
+
+            <div class="chip-label">FINANCIAMENTO</div>
+            <div class="comparativo-financiamento" id="ha-comparativo"></div>
+          </div>
+
+          <div class="card card-executivo">
+            <div class="card-topo">
+              <span class="card-icone">💰</span>
+              <h3>RECEITA</h3>
+            </div>
+            <div class="big" id="rec-total">—</div>
+            <div class="sub">Meta</div>
+          </div>
+
         </div>
-      </div>
+
+        <div class="legend">
+          <span class="legend-item">
+            <span class="chip gr"><strong>GR</strong></span>
+            <span>Gratuidade Regimental</span>
+          </span>
+          <span class="legend-item">
+            <span class="chip gnr"><strong>GNR</strong></span>
+            <span>Gratuidade Não Regimental</span>
+          </span>
+          <span class="legend-item">
+            <span class="chip pago"><strong>PG</strong></span>
+            <span>Pago</span>
+          </span>
+        </div>
+
+        <section class="bloco-executivo">
+
+          <div class="bloco-header">
+            <div>
+              <div class="bloco-kicker">Análise por programa</div>
+              <h2 id="titulo-tabela">Desempenho por Programa</h2>
+            </div>
+
+            <div class="bloco-badge">
+              🧩 Programas
+            </div>
+          </div>
+
+          <div class="table-card" id="tbl-programas">
+            <div class="table-wrap">
+              <table id="tabela-programas"></table>
+            </div>
+          </div>
+
+          <div class="table-card" id="tbl-subregioes" style="display:none;">
+            <div class="table-wrap">
+              <table id="tabela-subregioes"></table>
+            </div>
+          </div>
+
+        </section>
+
+        <footer class="dashboard-footer">
+
+          <div class="footer-left">
+            <strong>Fontes dos dados:</strong>
+            Solução Integradora • Cubo Orçamento
+          </div>
+
+        </footer>
+
+      </main>
+
     </div>
 
-    <div class="cards">
-      <div class="card">
-        <h3>Programas</h3>
-        <div class="big" id="prog-distintos">—</div>
-        <div class="sub">Total de Programas</div>
-      </div>
+    <script>
 
-      <div class="card">
-        <h3>Matrículas</h3>
-        <div class="big" id="mat-total">—</div>
-        <div class="sub">Meta consolidada</div>
-        <div class="chips" id="mat-chips"></div>
-      </div>
-
-      <div class="card">
-        <h3>Hora-Aluno</h3>
-        <div class="big" id="ha-total">—</div>
-        <div class="sub">Meta consolidada</div>
-        <div class="chips" id="ha-chips"></div>
-      </div>
-
-      <div class="card">
-        <h3>Receita</h3>
-        <div class="big" id="rec-total">—</div>
-        <div class="sub">Meta consolidada</div>
-      </div>
-    </div>
-
-    <div class="legend">
-      <span class="legend-item">
-        <span class="chip gr"><strong>GR</strong></span>
-        <span>Gratuidade Regimental</span>
-      </span>
-      <span class="legend-item">
-        <span class="chip gnr"><strong>GNR</strong></span>
-        <span>Gratuidade Não Regimental</span>
-      </span>
-      <span class="legend-item">
-        <span class="chip pago"><strong>PG</strong></span>
-        <span>Pago</span>
-      </span>
-    </div>
-
-    <div class="section-title" id="titulo-tabela">Por Programa</div>
-    <div class="table-card" id="tbl-programas">
-      <div class="table-wrap">
-        <table id="tabela-programas"></table>
-      </div>
-    </div>
-
-    <div class="table-card" id="tbl-subregioes" style="display:none;">
-      <div class="table-wrap">
-        <table id="tabela-subregioes"></table>
-      </div>
-    </div>
-
-  </div>
-
-  <script>
-
-    function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
-    function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
-    function compact(n) {
-      return Number(n || 0).toLocaleString("pt-BR", {
-        notation: "compact",
-        maximumFractionDigits: 1
-      });
-    }
-
-    function moedaCompacta(n) {
-      return Number(n || 0).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-        notation: "compact",
-        maximumFractionDigits: 1
-      });
-    }
-    function pct(parte, total) {
-      total = Number(total || 0);
-      parte = Number(parte || 0);
-      if (!total) return 0;
-      return (parte / total) * 100;
-    }
-
-    function setStatus(msg) {
-      const el = document.getElementById("status");
-      if (el) el.textContent = msg || "";
-    }
-
-    function selecionados(id) {
-      const sel = document.getElementById(id);
-      return Array.from(sel.selectedOptions).map(o => o.value).join(",");
-    }
-
-    function atualizarBadgeFiltro() {
-      const badge = document.getElementById("badge-filtro");
-      if (!badge) return;
-
-      const selSub = document.getElementById("subregioes");
-      const selProg = document.getElementById("programas");
-
-      const subs = Array.from(selSub?.selectedOptions || [])
-        .map(o => o.textContent.trim());
-
-      const progs = Array.from(selProg?.selectedOptions || [])
-        .map(o => o.textContent.trim());
-
-      let subTxt = "";
-      if (subs.length) {
-        const resumo = subs.length <= 2
-          ? subs.join(", ")
-          : `${subs.slice(0, 2).join(", ")} +${subs.length - 2}`;
-        subTxt = `Sub-regiões: ${resumo}`;
-      } else {
-        subTxt = "Sub-regiões: todas";
-      }
-
-      let progTxt = "";
-      if (progs.length) {
-        const resumo = progs.length <= 2
-          ? progs.join(", ")
-          : `${progs.slice(0, 2).join(", ")} +${progs.length - 2}`;
-        progTxt = `Programas: ${resumo}`;
-      } else {
-        progTxt = "Programas: todos";
-      }
-
-      badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${progTxt}`;
-    }
-
-    function selecionarTudo(id) {
-      const sel = document.getElementById(id);
-      Array.from(sel.options).forEach(o => o.selected = true);
-      atualizarBadgeFiltro();
-    }
-
-    async function limparSelecao() {
-      ["subregioes", "programas"].forEach(id => {
-        const sel = document.getElementById(id);
-        Array.from(sel.options).forEach(o => o.selected = false);
-      });
-
-      await carregarSubregioes();
-      await carregarProgramas();
-      atualizarBadgeFiltro();
-      await carregarTudo();
-    }
-
-    async function carregarSubregioes() {
-      const ano = 2026;
-      const res = await fetch(API + `/planejamento/filtros/subregioes?ano=${ano}`);
-      const data = await res.json();
-
-      const sel = document.getElementById("subregioes");
-      sel.innerHTML = "";
-
-      data.forEach(r => {
-        const opt = document.createElement("option");
-        opt.value = r.codigo;
-        opt.textContent = r.nome;
-        sel.appendChild(opt);
-      });
-    }
-
-    async function carregarProgramas() {
-      const subs = selecionados("subregioes");
-
-      const url = API + "/programas/list" + (subs ? "?subregioes=" + encodeURIComponent(subs) : "");
-      const res = await fetch(url);
-      const data = await res.json();
-
-      const sel = document.getElementById("programas");
-      sel.innerHTML = "";
-
-      data.forEach(r => {
-        const opt = document.createElement("option");
-        opt.value = r.codigo;
-        opt.textContent = r.nome;
-        sel.appendChild(opt);
-      });
-    }
-
-    function montarTabela(id, colunas, linhas) {
-      const t = document.getElementById(id);
-      t.innerHTML = "";
-
-      const thead = document.createElement("thead");
-      const trh = document.createElement("tr");
-      colunas.forEach(c => {
-        const th = document.createElement("th");
-        th.textContent = c;
-        trh.appendChild(th);
-      });
-      thead.appendChild(trh);
-
-      const tbody = document.createElement("tbody");
-      linhas.forEach(l => {
-        const tr = document.createElement("tr");
-        colunas.forEach(c => {
-          const td = document.createElement("td");
-          td.textContent = l[c] ?? "";
-          tr.appendChild(td);
+      function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
+      function moeda(n) { return Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+      function compact(n) {
+        return Number(n || 0).toLocaleString("pt-BR", {
+          notation: "compact",
+          maximumFractionDigits: 1
         });
-        tbody.appendChild(tr);
-      });
-
-      t.appendChild(thead);
-      t.appendChild(tbody);
-    }
-
-    async function carregarCards() {
-      atualizarBadgeFiltro();
-
-      const subs = selecionados("subregioes");
-      const progs = selecionados("programas");
-
-      const qs = new URLSearchParams();
-      if (subs) qs.set("subregioes", subs);
-      if (progs) qs.set("programas", progs);
-
-      const url = API + "/programas/summary" + (qs.toString() ? "?" + qs.toString() : "");
-      const d = await (await fetch(url)).json();
-
-      document.getElementById("prog-distintos").textContent = format(d.programas_distintos || 0);
-
-      document.getElementById("mat-total").textContent =
-        format(d.matriculas?.meta_total || 0);
-
-      document.getElementById("mat-chips").innerHTML = `
-        <span class="chip gr"><strong>GR</strong> ${format(d.matriculas?.meta_gr || 0)}</span>
-        <span class="chip gnr"><strong>GNR</strong> ${format(d.matriculas?.meta_g || 0)}</span>
-        <span class="chip pago"><strong>PG</strong> ${format(d.matriculas?.meta_p || 0)}</span>
-      `;
-
-      document.getElementById("ha-total").textContent =
-        format(d.hora_aluno?.meta_total || 0);
-
-      document.getElementById("ha-chips").innerHTML = `
-        <span class="chip gr"><strong>GR</strong> ${format(d.hora_aluno?.meta_gr || 0)}</span>
-        <span class="chip gnr"><strong>GNR</strong> ${format(d.hora_aluno?.meta_g || 0)}</span>
-        <span class="chip pago"><strong>PG</strong> ${format(d.hora_aluno?.meta_p || 0)}</span>
-      `;
-
-      document.getElementById("rec-total").textContent =
-        moeda(d.receita?.meta_total || 0);
-    }
-
-    async function carregarTabelaProgramas() {
-      const subs = selecionados("subregioes");
-      const progs = selecionados("programas");
-
-      const qs = new URLSearchParams();
-      if (subs) qs.set("subregioes", subs);
-      if (progs) qs.set("programas", progs);
-
-      const url = API + "/programas/tabela/programas" + (qs.toString() ? "?" + qs.toString() : "");
-      const data = await (await fetch(url)).json();
-
-      montarTabela(
-        "tabela-programas",
-        ["Programa", "Matrículas", "Hora-Aluno", "Receita",
-          "GR MAT", "GR HA", "% GR (MAT)",
-          "GNR MAT", "GNR HA", "% GNR (MAT)",
-          "PG MAT", "PG HA", "% PG (MAT)"],
-        data.map(r => ({
-          "Programa": r.programa,
-          "Matrículas": format(r.matriculas_total),
-          "Hora-Aluno": format(r.hora_aluno_total),
-          "Receita": moeda(r.receita_total),
-
-          "GR MAT": format(r.gr_matriculas),
-          "GR HA": format(r.gr_hora_aluno),
-          "% GR (MAT)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
-
-          "GNR MAT": format(r.g_matriculas),
-          "GNR HA": format(r.g_hora_aluno),
-          "% GNR (MAT)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
-
-          "PG MAT": format(r.p_matriculas),
-          "PG HA": format(r.p_hora_aluno),
-          "% PG (MAT)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
-        }))
-      );
-    }
-
-    async function carregarTabelaSubregioesPorPrograma() {
-      const subs = selecionados("subregioes");
-      const progs = selecionados("programas");
-
-      const qs = new URLSearchParams();
-      if (subs) qs.set("subregioes", subs);
-      if (progs) qs.set("programas", progs);
-
-      const url = API + "/programas/tabela/subregioes" + (qs.toString() ? "?" + qs.toString() : "");
-      const data = await (await fetch(url)).json();
-
-      montarTabela(
-        "tabela-subregioes",
-        ["Sub-região", "Matrículas", "Hora-Aluno", "Receita",
-          "GR Matrículas", "GR Hora-Aluno", "% GR (Mat)",
-          "GNR Matrículas", "GNR Hora-Aluno", "% GNR (Mat)",
-          "PG Matrículas", "PG Hora-Aluno", "% PG (Mat)"],
-        data.map(r => ({
-          "Sub-região": r.subregiao,
-          "Matrículas": format(r.matriculas_total),
-          "Hora-Aluno": format(r.hora_aluno_total),
-          "Receita": moeda(r.receita_total),
-
-          "GR Matrículas": format(r.gr_matriculas),
-          "GR Hora-Aluno": format(r.gr_hora_aluno),
-          "% GR (Mat)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
-
-          "GNR Matrículas": format(r.g_matriculas),
-          "GNR Hora-Aluno": format(r.g_hora_aluno),
-          "% GNR (Mat)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
-
-          "PG Matrículas": format(r.p_matriculas),
-          "PG Hora-Aluno": format(r.p_hora_aluno),
-          "% PG (Mat)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
-        }))
-      );
-    }
-
-    async function carregarTabelaProgramasOuSubregioes() {
-      const subs = selecionados("subregioes");
-      const progs = selecionados("programas");
-
-      const temSubs = !!subs;
-      const temProgs = !!progs;
-
-      const blocoProg = document.getElementById("tbl-programas");
-      const blocoSub = document.getElementById("tbl-subregioes");
-      const titulo = document.getElementById("titulo-tabela");
-
-      // ✅ Se tem programa selecionado e NÃO tem sub-região selecionada:
-      // troca para "Por Sub-regiões"
-      if (temProgs && !temSubs) {
-        if (titulo) titulo.textContent = "Por Sub-regiões (do(s) programa(s) selecionado(s))";
-        if (blocoProg) blocoProg.style.display = "none";
-        if (blocoSub) blocoSub.style.display = "block";
-
-        await carregarTabelaSubregioesPorPrograma();
-        return;
       }
 
-      // padrão: Por Programa
-      if (titulo) titulo.textContent = "Por Programa";
-      if (blocoSub) blocoSub.style.display = "none";
-      if (blocoProg) blocoProg.style.display = "block";
-
-      await carregarTabelaProgramas();
-    }
-
-    async function carregarTudo() {
-      try {
-        setStatus("Carregando visão de programas…");
-        await carregarCards();
-        await carregarTabelaProgramasOuSubregioes();
-        setStatus("");
-      } catch (e) {
-        console.error(e);
-        setStatus("Erro ao carregar dados. Verifique se os endpoints /programas/* estão ativos no backend.");
+      function moedaCompacta(n) {
+        return Number(n || 0).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+          notation: "compact",
+          maximumFractionDigits: 1
+        });
       }
-    }
+      function pct(parte, total) {
+        total = Number(total || 0);
+        parte = Number(parte || 0);
+        if (!total) return 0;
+        return (parte / total) * 100;
+      }
 
-    (async function init() {
-      await carregarUsuario();
-      try {
-        setStatus("Carregando filtros…");
+      function setStatus(msg) {
+        const el = document.getElementById("status");
+        if (el) el.textContent = msg || "";
+      }
+
+      function selecionados(id) {
+        const sel = document.getElementById(id);
+        if (!sel) return "";
+        return Array.from(sel.selectedOptions)
+          .map(o => o.value)
+          .filter(Boolean)
+          .join(",");
+      }
+
+      function selecionarTudo(id) {
+        const sel = document.getElementById(id);
+        Array.from(sel.options).forEach(o => o.selected = true);
+      }
+
+      async function limparSelecao() {
+        ["regioes", "subregioes", "programas"].forEach(id => {
+          const sel = document.getElementById(id);
+          if (sel) sel.value = "";
+        });
+
+        await carregarRegioes();
         await carregarSubregioes();
-
-        // carrega programas (sem seleção de sub-região ainda => lista completa)
         await carregarProgramas();
 
-        atualizarBadgeFiltro();
-
-        // carrega cards + tabela
         await carregarTudo();
-
-        setStatus("");
-      } catch (e) {
-        console.error(e);
-        setStatus("Erro ao iniciar. Abra o Console (F12) e veja a falha.");
       }
-    })();
 
-    document.getElementById("subregioes").addEventListener("change", async () => {
-      try {
-        setStatus("Atualizando programas do recorte…");
+      async function carregarRegioes() {
+        const res = await fetch(API + `/regioes/ranking?ano=2026`);
+        const data = await res.json();
 
-        await carregarProgramas();      // <- atualiza opções conforme sub-região
-        atualizarBadgeFiltro();
-        await carregarTudo();           // <- recarrega cards e tabela
+        const sel = document.getElementById("regioes");
+        sel.innerHTML = `<option value="">Selecione...</option>`;
 
-        setStatus("");
-      } catch (e) {
-        console.error(e);
-        setStatus("Erro ao atualizar. Veja o Console (F12).");
-      }
-    });
-
-    document.getElementById("programas").addEventListener("change", async () => {
-      try {
-        setStatus("Atualizando visão…");
-        atualizarBadgeFiltro();
-        await carregarTudo(); // recarrega cards + (tabela por programa ou por sub-região)
-        setStatus("");
-      } catch (e) {
-        console.error(e);
-        setStatus("Erro ao atualizar. Veja o Console (F12).");
-      }
-    });
-
-    async function carregarUsuario() {
-      try {
-        const resp = await fetch(`${API}/auth/me`, {
-          credentials: "include"
+        const regioesOrdenadas = [...data].sort((a, b) => {
+          const nomeA = String(a.regiao || a.nome || a.codigo || "");
+          const nomeB = String(b.regiao || b.nome || b.codigo || "");
+          return nomeA.localeCompare(nomeB, "pt-BR");
         });
 
-        if (!resp.ok) return;
+        regioesOrdenadas.forEach(r => {
+          const nome = r.regiao || r.nome || r.codigo;
 
-        const data = await resp.json();
+          const opt = document.createElement("option");
+          opt.value = nome;
+          opt.textContent = nome;
+          sel.appendChild(opt);
+        });
 
-        const el = document.getElementById("usuario-logado");
-        if (el) {
-          el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+        sel.value = "";
+      }
+
+      async function carregarSubregioes() {
+        const regiao = selecionados("regioes");
+
+        const qs = new URLSearchParams();
+        qs.set("ano", 2026);
+
+        if (regiao) qs.set("regiao", regiao);
+
+        const res = await fetch(API + `/dashboard/filtros/opcoes?${qs.toString()}`);
+        const data = await res.json();
+
+        const sel = document.getElementById("subregioes");
+        sel.innerHTML = `<option value="">Selecione...</option>`;
+
+        const lista = [...(data.subregioes || [])].sort((a, b) =>
+          String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR")
+        );
+
+        lista.forEach(r => {
+          const opt = document.createElement("option");
+          opt.value = r.codigo;
+          opt.textContent = r.nome;
+          sel.appendChild(opt);
+        });
+
+        sel.value = "";
+      }
+
+      async function carregarProgramas() {
+        const regiao = selecionados("regioes");
+        const subs = selecionados("subregioes");
+
+        const qs = new URLSearchParams();
+        qs.set("ano", 2026);
+
+        if (regiao) qs.set("regiao", regiao);
+        if (subs) qs.set("subregioes", subs);
+
+        const res = await fetch(API + `/dashboard/filtros/opcoes?${qs.toString()}`);
+        const data = await res.json();
+
+        const sel = document.getElementById("programas");
+        sel.innerHTML = `<option value="">Selecione...</option>`;
+
+        const lista = [...(data.programas || [])].sort((a, b) =>
+          String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR")
+        );
+
+        lista.forEach(r => {
+          const opt = document.createElement("option");
+          opt.value = r.codigo;
+          opt.textContent = r.nome;
+          sel.appendChild(opt);
+        });
+
+        sel.value = "";
+      }
+
+      function montarTabela(id, colunas, linhas) {
+        const t = document.getElementById(id);
+        t.innerHTML = "";
+
+        const thead = document.createElement("thead");
+        const trh = document.createElement("tr");
+        colunas.forEach(c => {
+          const th = document.createElement("th");
+          th.textContent = c;
+          trh.appendChild(th);
+        });
+        thead.appendChild(trh);
+
+        const tbody = document.createElement("tbody");
+        linhas.forEach(l => {
+          const tr = document.createElement("tr");
+          colunas.forEach(c => {
+            const td = document.createElement("td");
+            td.textContent = l[c] ?? "";
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+
+        t.appendChild(thead);
+        t.appendChild(tbody);
+      }
+
+      async function carregarCards() {
+
+        const subs = selecionados("subregioes");
+        const progs = selecionados("programas");
+        const regiao = selecionados("regioes");
+
+        const qs = new URLSearchParams();
+        if (regiao) qs.set("regiao", regiao);
+        if (subs) qs.set("subregioes", subs);
+        if (progs) qs.set("programas", progs);
+
+        const url = API + "/programas/summary" + (qs.toString() ? "?" + qs.toString() : "");
+        const d = await (await fetch(url)).json();
+
+        const matTotal = Number(d?.matriculas?.meta_total || 0);
+        const matGR = Number(d?.matriculas?.meta_gr || 0);
+        const matGNR = Number(d?.matriculas?.meta_g || 0);
+        const matPG = Number(d?.matriculas?.meta_p || 0);
+
+        const haTotal = Number(d?.hora_aluno?.meta_total || 0);
+        const haGR = Number(d?.hora_aluno?.meta_gr || 0);
+        const haGNR = Number(d?.hora_aluno?.meta_g || 0);
+        const haPG = Number(d?.hora_aluno?.meta_p || 0);
+
+        function pctTxt(valor, total) {
+          if (!total) return "0,0%";
+          return ((Number(valor || 0) / Number(total || 0)) * 100)
+            .toLocaleString("pt-BR", {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 1
+            }) + "%";
         }
-      } catch (e) {
-        console.error(e);
+
+        document.getElementById("prog-distintos").textContent = format(d.programas_distintos || 0);
+
+        document.getElementById("mat-total").textContent =
+          format(d.matriculas?.meta_total || 0);
+
+        document.getElementById("mat-comparativo").innerHTML = `
+          <div class="comp-item">
+            <span class="comp-label gr">GR</span>
+            <span class="comp-valor">${format(matGR)} <span class="comp-pct">(${pctTxt(matGR, matTotal)})</span></span>
+          </div>
+          <div class="comp-item">
+            <span class="comp-label gnr">GNR</span>
+            <span class="comp-valor">${format(matGNR)} <span class="comp-pct">(${pctTxt(matGNR, matTotal)})</span></span>
+          </div>
+          <div class="comp-item">
+            <span class="comp-label pg">PG</span>
+            <span class="comp-valor">${format(matPG)} <span class="comp-pct">(${pctTxt(matPG, matTotal)})</span></span>
+          </div>
+        `;
+
+        document.getElementById("ha-total").textContent =
+          format(d.hora_aluno?.meta_total || 0);
+
+        document.getElementById("ha-comparativo").innerHTML = `
+          <div class="comp-item">
+            <span class="comp-label gr">GR</span>
+            <span class="comp-valor">${format(haGR)} <span class="comp-pct">(${pctTxt(haGR, haTotal)})</span></span>
+          </div>
+          <div class="comp-item">
+            <span class="comp-label gnr">GNR</span>
+            <span class="comp-valor">${format(haGNR)} <span class="comp-pct">(${pctTxt(haGNR, haTotal)})</span></span>
+          </div>
+          <div class="comp-item">
+            <span class="comp-label pg">PG</span>
+            <span class="comp-valor">${format(haPG)} <span class="comp-pct">(${pctTxt(haPG, haTotal)})</span></span>
+          </div>
+        `;
+
+        document.getElementById("rec-total").textContent =
+          moeda(d.receita?.meta_total || 0);
       }
-    }
 
-    async function logout() {
-      try {
-        await fetch(`${API}/auth/logout`, {
-          method: "POST",
-          credentials: "include"
-        });
-      } catch (e) { }
+      async function carregarTabelaProgramas() {
+        const regiao = selecionados("regioes");
+        const subs = selecionados("subregioes");
+        const progs = selecionados("programas");
 
-      window.location.href = "login.html";
-    }
+        const qs = new URLSearchParams();
 
-  </script>
+        if (regiao) qs.set("regiao", regiao);
+        if (subs) qs.set("subregioes", subs);
+        if (progs) qs.set("programas", progs);
+
+        const url = API + "/programas/tabela/programas" + (qs.toString() ? "?" + qs.toString() : "");
+
+        console.log("URL TABELA PROGRAMAS:", url);
+
+        const data = await (await fetch(url)).json();
+
+        montarTabela(
+          "tabela-programas",
+          ["Programa", "Matrículas", "Hora-Aluno", "Receita",
+            "GR MAT", "GR HA", "% GR (MAT)",
+            "GNR MAT", "GNR HA", "% GNR (MAT)",
+            "PG MAT", "PG HA", "% PG (MAT)"],
+          data.map(r => ({
+            "Programa": r.programa,
+            "Matrículas": format(r.matriculas_total),
+            "Hora-Aluno": format(r.hora_aluno_total),
+            "Receita": moeda(r.receita_total),
+
+            "GR MAT": format(r.gr_matriculas),
+            "GR HA": format(r.gr_hora_aluno),
+            "% GR (MAT)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
+
+            "GNR MAT": format(r.g_matriculas),
+            "GNR HA": format(r.g_hora_aluno),
+            "% GNR (MAT)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
+
+            "PG MAT": format(r.p_matriculas),
+            "PG HA": format(r.p_hora_aluno),
+            "% PG (MAT)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
+          }))
+        );
+      }
+
+      async function carregarTabelaSubregioesPorPrograma() {
+        const subs = selecionados("subregioes");
+        const progs = selecionados("programas");
+        const regiao = selecionados("regioes");
+
+        const qs = new URLSearchParams();
+        if (regiao) qs.set("regiao", regiao);
+        if (subs) qs.set("subregioes", subs);
+        if (progs) qs.set("programas", progs);
+
+        const url = API + "/programas/tabela/subregioes" + (qs.toString() ? "?" + qs.toString() : "");
+        const data = await (await fetch(url)).json();
+
+        montarTabela(
+          "tabela-subregioes",
+          ["Sub-região", "Matrículas", "Hora-Aluno", "Receita",
+            "GR Matrículas", "GR Hora-Aluno", "% GR (Mat)",
+            "GNR Matrículas", "GNR Hora-Aluno", "% GNR (Mat)",
+            "PG Matrículas", "PG Hora-Aluno", "% PG (Mat)"],
+          data.map(r => ({
+            "Sub-região": r.subregiao,
+            "Matrículas": format(r.matriculas_total),
+            "Hora-Aluno": format(r.hora_aluno_total),
+            "Receita": moeda(r.receita_total),
+
+            "GR Matrículas": format(r.gr_matriculas),
+            "GR Hora-Aluno": format(r.gr_hora_aluno),
+            "% GR (Mat)": Number(r.gr_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
+
+            "GNR Matrículas": format(r.g_matriculas),
+            "GNR Hora-Aluno": format(r.g_hora_aluno),
+            "% GNR (Mat)": Number(r.g_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
+
+            "PG Matrículas": format(r.p_matriculas),
+            "PG Hora-Aluno": format(r.p_hora_aluno),
+            "% PG (Mat)": Number(r.p_matriculas_pct || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%",
+          }))
+        );
+      }
+
+      async function carregarTabelaProgramasOuSubregioes() {
+        const blocoProg = document.getElementById("tbl-programas");
+        const blocoSub = document.getElementById("tbl-subregioes");
+        const titulo = document.getElementById("titulo-tabela");
+
+        if (titulo) titulo.textContent = "Desempenho por Programa";
+        if (blocoSub) blocoSub.style.display = "none";
+        if (blocoProg) blocoProg.style.display = "block";
+
+        await carregarTabelaProgramas();
+      }
+
+      async function carregarTudo() {
+        try {
+          setStatus("Carregando visão de programas…");
+          await carregarCards();
+          await carregarTabelaProgramasOuSubregioes();
+          setStatus("");
+        } catch (e) {
+          console.error(e);
+          setStatus("Erro ao carregar dados. Verifique se os endpoints /programas/* estão ativos no backend.");
+        }
+      }
+
+      (async function init() {
+        await carregarUsuario();
+
+        try {
+          setStatus("Carregando filtros…");
+
+          await carregarRegioes();
+          await carregarSubregioes();
+          await carregarProgramas();
+
+          await carregarTudo();
+
+          setStatus("");
+        } catch (e) {
+          console.error(e);
+          setStatus("Erro ao iniciar. Abra o Console (F12) e veja a falha.");
+        }
+      })();
+
+      async function sincronizarRegiaoPelaSubregiao() {
+        const subs = selecionados("subregioes");
+        if (!subs) return;
+
+        const qs = new URLSearchParams();
+        qs.set("ano", 2026);
+        qs.set("subregioes", subs);
+
+        const res = await fetch(API + `/dashboard/filtros/opcoes?${qs.toString()}`);
+        const data = await res.json();
+
+        const regioes = data.regioes || [];
+        const sel = document.getElementById("regioes");
+
+        sel.innerHTML = `<option value="">Selecione...</option>`;
+
+        regioes
+          .sort((a, b) => String(a.nome || "").localeCompare(String(b.nome || ""), "pt-BR"))
+          .forEach(r => {
+            const opt = document.createElement("option");
+            opt.value = r.nome;
+            opt.textContent = r.nome;
+            sel.appendChild(opt);
+          });
+
+        if (regioes.length === 1) {
+          sel.value = regioes[0].nome;
+        }
+      }
+
+      document.getElementById("regioes").addEventListener("change", async () => {
+        try {
+          setStatus("Atualizando recorte da região…");
+
+          await carregarSubregioes();
+          await carregarProgramas();
+
+          await carregarTudo();
+
+          setStatus("");
+        } catch (e) {
+          console.error(e);
+          setStatus("Erro ao atualizar região. Veja o Console (F12).");
+        }
+      });
+
+      document.getElementById("subregioes").addEventListener("change", async () => {
+        try {
+          setStatus("Atualizando recorte…");
+
+          await sincronizarRegiaoPelaSubregiao();
+          await carregarProgramas();
+
+          await carregarTudo();
+
+          setStatus("");
+        } catch (e) {
+          console.error(e);
+          setStatus("Erro ao atualizar. Veja o Console (F12).");
+        }
+      });
+
+      document.getElementById("programas").addEventListener("change", async () => {
+        try {
+          setStatus("Atualizando visão…");
+          await carregarTudo(); // recarrega cards + (tabela por programa ou por sub-região)
+          setStatus("");
+        } catch (e) {
+          console.error(e);
+          setStatus("Erro ao atualizar. Veja o Console (F12).");
+        }
+      });
+
+      async function carregarUsuario() {
+        try {
+          const resp = await fetch(`${API}/auth/me`, {
+            credentials: "include"
+          });
+
+          if (!resp.ok) return;
+
+          const data = await resp.json();
+
+          const el = document.getElementById("usuario-logado");
+          if (el) {
+            el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      async function logout() {
+        try {
+          await fetch(`${API}/auth/logout`, {
+            method: "POST",
+            credentials: "include"
+          });
+        } catch (e) { }
+
+        window.location.href = "login.html";
+      }
+
+    </script>
 </body>
 
 </html>

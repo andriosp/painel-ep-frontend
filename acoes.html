@@ -247,8 +247,9 @@
         .tabs-indicadores {
             display: flex;
             gap: 28px;
-            margin-bottom: 24px;
+            margin: 0 0 24px;
             padding-left: 6px;
+            border-bottom: 1px solid var(--border);
         }
 
         .tab-ind {
@@ -258,12 +259,24 @@
             font-weight: 700;
             color: #64748b;
             cursor: pointer;
-            padding-bottom: 12px;
+            padding: 0 0 12px;
+            border-radius: 0;
+        }
+
+        .tab-ind:hover {
+            background: transparent;
+            color: #003B8F;
         }
 
         .tab-ind.active {
-            color: #2563eb;
-            border-bottom: 3px solid #2563eb;
+            color: #003B8F;
+            border-bottom: 3px solid #003B8F;
+        }
+
+        .tab-ind:focus,
+        .tab-ind:focus-visible {
+            outline: none;
+            box-shadow: none;
         }
 
         .filtros-subregioes {
@@ -651,26 +664,29 @@
         }
 
         .acoes-formulario {
-            margin-top: 20px;
+            margin-top: 24px;
             display: flex;
             justify-content: flex-end;
+            gap: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
         }
 
         .btn-salvar-acao {
-            background: #2563eb;
+            background: #003B8F;
             color: white;
             border: none;
-            min-width: 180px;
-            height: 48px;
-            border-radius: 12px;
+            min-width: 200px;
+            height: 46px;
+            border-radius: 14px;
             font-size: 14px;
             font-weight: 800;
-            box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
+            box-shadow: 0 8px 20px rgba(0, 59, 143, .25);
             transition: .2s;
         }
 
         .btn-salvar-acao:hover {
-            background: #1d4ed8;
+            background: #0F5FFF;
             transform: translateY(-2px);
         }
 
@@ -785,13 +801,9 @@
 
         .acoes-lista-botoes button {
             height: 42px;
-            min-width: 92px;
-            padding: 0 14px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            line-height: 1;
+            padding: 0 18px;
+            border-radius: 14px;
+            font-weight: 800;
         }
 
         .filtro-item.periodo-field {
@@ -846,6 +858,366 @@
             padding: 0 !important;
             opacity: 0 !important;
         }
+
+        /* ===== CARDS EXECUTIVOS - AÇÕES ===== */
+
+        .cards-executivos {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .card-executivo {
+            background: linear-gradient(180deg, rgba(0, 59, 143, .03) 0%, #ffffff 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+            transition: .2s;
+        }
+
+        .card-executivo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+            border-color: rgba(0, 59, 143, .35);
+        }
+
+        .card-topo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icone {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .card-executivo h3 {
+            margin: 0;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .card-executivo .big {
+            margin-top: 10px;
+            font-size: 26px;
+            font-weight: 820;
+            color: var(--text);
+            line-height: 1.1;
+        }
+
+        .card-executivo .sub {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--muted);
+            background: transparent;
+            padding: 0;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1500px) {
+            .cards-executivos {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .cards-executivos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== FILTROS PADRÃO EXECUTIVO ===== */
+
+        .panel .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .panel .field {
+            flex: 0 0 220px;
+            min-width: 220px;
+        }
+
+        .panel .field.field-xxl {
+            flex: 2.2 1 340px;
+            min-width: 320px;
+        }
+
+        .panel label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .panel select,
+        .panel input {
+            height: 42px !important;
+            min-height: 42px !important;
+            max-height: 42px !important;
+            border-radius: 12px;
+        }
+
+        .panel .field.periodo-field {
+            flex: 0 0 auto;
+            min-width: 320px;
+            width: max-content;
+            max-width: 100%;
+        }
+
+        /* ===== TABELA EXECUTIVA ===== */
+
+        .tabela-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .tabela-sub {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 14px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .tabela-sub th,
+        .tabela-sub td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .tabela-sub th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        .tabela-sub tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tabela-sub tbody tr:hover {
+            background: rgba(0, 59, 143, .035);
+        }
+
+        .sub-card-title.linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .sub-card-title h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .ranking-subtitulo {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* ===== FORMULÁRIO EXECUTIVO ===== */
+
+        .form-acoes-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 1400px) {
+            .form-acoes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .form-acoes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-acoes-grid .filtro-item {
+            min-width: auto;
+        }
+
+        .bloco-formulario {
+            margin-top: 18px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: #f8fafc;
+        }
+
+        .bloco-formulario h3 {
+            margin: 0 0 12px;
+            font-size: 13px;
+            font-weight: 900;
+            color: #071b52;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+        }
+
+        .campo-textarea {
+            min-height: 140px;
+            background: white;
+        }
+
+        .campo-textarea.menor {
+            min-height: 100px;
+        }
+
+        /* ===== LABELS DO FORMULÁRIO IGUAIS AOS FILTROS ===== */
+
+        .form-acoes-grid .field label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .form-acoes-grid .field select,
+        .form-acoes-grid .field input {
+            height: 42px !important;
+            min-height: 42px !important;
+            max-height: 42px !important;
+            border-radius: 12px;
+        }
+
+        .form-acoes-grid {
+            row-gap: 14px;
+            column-gap: 16px;
+        }
+
+        .btn-limpar-filtros {
+            height: 42px;
+            min-width: 110px;
+            padding: 0 18px;
+            border-radius: 12px;
+            font-weight: 800;
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid var(--border);
+        }
+
+        .btn-limpar-filtros:hover {
+            background: #e2e8f0;
+        }
+
+        .panel .field.limpar-field {
+            flex: 0 0 auto;
+            min-width: auto;
+        }
+
+        /* ===== AJUSTE AZUL PADRÃO ===== */
+
+        .dot {
+            background: #003B8F;
+            box-shadow: 0 0 0 5px rgba(0, 59, 143, .12);
+        }
+
+        .btn-limpar-filtros {
+            background: #003B8F;
+            color: #fff;
+            border: 1px solid #003B8F;
+        }
+
+        .btn-limpar-filtros:hover {
+            background: #0F5FFF;
+            border-color: #0F5FFF;
+            color: #fff;
+        }
+
+        /* ===== FOOTER PADRÃO EXECUTIVO ===== */
+
+        .dashboard-footer {
+            margin-top: 24px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .dashboard-footer strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .footer-right {
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .usuario-badge {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .btn-sair {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .btn-sair:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+
     </style>
 </head>
 
@@ -884,73 +1256,54 @@
 
     <div class="container">
 
-        <nav class="topnav">
-            <a href="index.html" class="navlink">Dashboard</a>
-            <a href="po.html" class="navlink">PO</a>
-            <a href="programas.html?v=2" class="navlink">Programas</a>
-            <a href="performance.html" class="navlink">Performance</a>
-            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-            <a href="unidades.html" class="navlink">Unidades</a>
-            <a href="sge_turmas.html" class="navlink">Turmas</a>
-            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
-
-            <div class="topnav-right">
-                <a href="alterar_senha.html" class="navlink">
-                    Alterar senha
-                </a>
-                <div id="usuario-logado" class="badge">
-                    <span class="dot"></span>
-                    Usuário: —
-                </div>
-                <button onclick="logout()">Sair</button>
-            </div>
-        </nav>
         <div class="page-layout">
-            <aside class="sidebar-executiva">
-                <div class="sidebar-logo">
-                    <img src="/assets/logo.png" alt="SENAI">
-                </div>
-                <nav class="sidebar-nav">
-                    <a href="visao_executiva.html">
-                        🏠
-                        <span>Visão Executiva</span>
-                    </a>
-                    <a href="indicadores.html">
-                        📊
-                        <span>Indicadores</span>
-                    </a>
-                    <a href="regioes.html">
-                        🌎
-                        <span>Regiões</span>
-                    </a>
 
-                    <a href="subregioes.html">
-                        📍
-                        <span>Sub-regiões</span>
-                    </a>
-                    <a href="turmas.html">
-                        👥
-                        <span>Turmas</span>
-                    </a>
-                    <a href="acoes.html" class="active">
-                        🎯
-                        <span>Ações</span>
-                    </a>
-                    <a href="relatoriosexecutivos.html">
-                        📄
-                        <span>Relatórios</span>
-                    </a>
+            <aside class="sidebar-executiva">
+
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="index.html">🏠 Dashboard</a>
+                    <a href="po.html">🎯 PO</a>
+                    <a href="programas.html?v=2">🧩 Programas</a>
+                    <a href="performance.html">📊 Performance</a>
+                    <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+                    <a href="unidades.html">🏢 Unidades</a>
+                    <a href="sge_turmas.html">📚 Ofertas</a>
+                    <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+                    <a href="visao_executiva.html">🧠 Visão Executiva</a>
+                    <a href="indicadores.html">📈 Indicadores</a>
+                    <a href="regioes.html">🌎 Regiões</a>
+                    <a href="subregioes.html">📍 Sub-regiões</a>
+                    <a href="turmas.html">🏫 Turmas</a>
+                    <a href="acoes.html" class="active">✅ Ações</a>
+                    <a href="relatoriosexecutivos.html">📄 Relatórios</a>
                 </nav>
+
             </aside>
+
             <main class="main-executiva">
 
                 <div class="header">
                     <div class="title">
-                        <h1>Plano de Ação Executivo</h1>
-                        <p>Cadastre, acompanhe e monitore ações vinculadas aos programas, regiões e sub-regiões.
-                        </p>
+                        <h1>Ações</h1>
                     </div>
+
+                    <div class="header-actions">
+
+                        <div class="badge usuario-badge" id="usuario-logado">
+                            <span class="dot"></span>
+                            Usuário: —
+                        </div>
+
+                        <button class="btn-sair" onclick="logout()">
+                            Sair
+                        </button>
+
+                    </div>
+
                 </div>
 
                 <div class="tabs-indicadores">
@@ -958,126 +1311,135 @@
                     <button class="tab-ind" data-aba="nova">Nova Ação</button>
                 </div>
 
-                <div class="panel filtros-subregioes">
+                <div class="panel">
+                    <div class="filters">
 
-                    <div class="filtro-item">
-                        <label>Ano</label>
-                        <select id="filtroAno">
-                            <option value="2026">2026</option>
-                            <option value="2025">2025</option>
-                        </select>
+                        <div class="field">
+                            <label>Ano</label>
+                            <select id="filtroAno">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+
+                        <div class="field periodo-field">
+                            <label>Período</label>
+                            <select id="filtroPeriodo" multiple>
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Programa</label>
+                            <select id="filtroProgramaAcao">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Região</label>
+                            <select id="filtroRegiao">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Sub-região</label>
+                            <select id="filtroSubregiao">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>UO</label>
+                            <select id="filtroUo">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Status</label>
+                            <select id="filtroStatusAcao">
+                                <option value="">Todos</option>
+                                <option value="Planejada">Planejada</option>
+                                <option value="Em andamento">Em andamento</option>
+                                <option value="Concluída">Concluída</option>
+                                <option value="Cancelada">Cancelada</option>
+                            </select>
+                        </div>
+
+                        <div class="field field-xxl">
+                            <label>Buscar</label>
+                            <input type="text" id="buscaAcao" placeholder="Buscar ação, programa ou responsável..." />
+                        </div>
+
+                        <div class="field limpar-field">
+                            <label>&nbsp;</label>
+                            <button type="button" class="btn-limpar-filtros" onclick="limparFiltrosAcoes()">
+                                Limpar
+                            </button>
+                        </div>
+
                     </div>
-
-                    <div class="filtro-item periodo-field">
-                        <label>Período</label>
-                        <select id="filtroPeriodo" multiple>
-                            <option value="1">Janeiro</option>
-                            <option value="2">Fevereiro</option>
-                            <option value="3">Março</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Maio</option>
-                            <option value="6">Junho</option>
-                            <option value="7">Julho</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Setembro</option>
-                            <option value="10">Outubro</option>
-                            <option value="11">Novembro</option>
-                            <option value="12">Dezembro</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Sub-região</label>
-                        <select id="filtroSubregiao">
-                            <option value="">Todas as sub-regiões</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Região</label>
-                        <select id="filtroRegiao">
-                            <option value="">Todas as regiões</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>UO</label>
-                        <select id="filtroUo">
-                            <option value="">Todas as UOs</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item busca">
-                        <label>Buscar</label>
-                        <input type="text" id="buscaAcao" placeholder="Buscar ação, programa ou responsável..." />
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Status</label>
-                        <select id="filtroStatusAcao">
-                            <option value="">Todos</option>
-                            <option value="Planejada">Planejada</option>
-                            <option value="Em andamento">Em andamento</option>
-                            <option value="Concluída">Concluída</option>
-                            <option value="Cancelada">Cancelada</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Programa</label>
-                        <select id="filtroProgramaAcao">
-                            <option value="">Todos</option>
-                        </select>
-                    </div>
-
                 </div>
 
-                <section class="kpi-sub-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <section class="cards-executivos">
 
-                    <div class="kpi-sub-card azul">
-                        <div class="kpi-icon">🎯</div>
-                        <div>
+                    <div class="card-executivo">
+                        <div class="card-topo">
+                            <div class="card-icone">🎯</div>
                             <h3>TOTAL DE AÇÕES</h3>
-                            <strong id="kpiTotalAcoes">0</strong>
-                            <p> ações cadastradas</p>
-                            <span>Ações conforme filtros aplicados</span>
                         </div>
+
+                        <div class="big" id="kpiTotalAcoes">0</div>
+                        <span class="sub">Ações cadastradas conforme filtros</span>
                     </div>
 
-                    <div class="kpi-sub-card roxo">
-                        <div class="kpi-icon">📝</div>
-                        <div>
+                    <div class="card-executivo">
+                        <div class="card-topo">
+                            <div class="card-icone">📝</div>
                             <h3>PLANEJADAS</h3>
-                            <strong id="kpiPlanejadas">0</strong>
-                            <p> aguardando execução</p>
-                            <span>Conforme filtros aplicados</span>
                         </div>
+
+                        <div class="big" id="kpiPlanejadas">0</div>
+                        <span class="sub">Aguardando execução</span>
                     </div>
 
-                    <div class="kpi-sub-card laranja">
-                        <div class="kpi-icon">⏳</div>
-                        <div>
+                    <div class="card-executivo">
+                        <div class="card-topo">
+                            <div class="card-icone">⏳</div>
                             <h3>EM ANDAMENTO</h3>
-                            <strong id="kpiAndamento">0</strong>
-                            <p> em execução</p>
-                            <span>Conforme filtros aplicados</span>
                         </div>
+
+                        <div class="big" id="kpiAndamento">0</div>
+                        <span class="sub">Ações em execução</span>
                     </div>
 
-                    <div class="kpi-sub-card verde">
-                        <div class="kpi-icon">✅</div>
-                        <div>
+                    <div class="card-executivo">
+                        <div class="card-topo">
+                            <div class="card-icone">✅</div>
                             <h3>CONCLUÍDAS</h3>
-                            <strong id="kpiConcluidas">0</strong>
-                            <p> finalizadas</p>
-                            <span>Conforme filtros aplicados</span>
                         </div>
+
+                        <div class="big" id="kpiConcluidas">0</div>
+                        <span class="sub">Ações finalizadas</span>
                     </div>
 
                 </section>
 
                 <div id="aba-lista" class="aba-subregioes active">
-                    <section class="sub-card">
+                    <section class="tabela-card">
                         <div class="sub-card-title linha">
                             <div>
                                 <h2>AÇÕES CADASTRADAS</h2>
@@ -1117,22 +1479,25 @@
 
                 <div id="aba-nova" class="aba-subregioes">
 
-                    <section class="sub-card">
+                    <section class="tabela-card">
                         <div class="sub-card-title">
                             <h2>NOVA AÇÃO / PLANO DE AÇÃO</h2>
+                            <p class="ranking-subtitulo">
+                                Cadastre ações corretivas, preventivas, de expansão, mobilização ou acompanhamento.
+                            </p>
                         </div>
 
                         <div class="form-acoes-grid">
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Ano</label>
                                 <input id="acaoAno" type="number" value="2026">
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Mês</label>
                                 <select id="acaoMes">
-                                    <option value="">Selecione</option>
+                                    <option value="">Selecione...</option>
                                     <option value="1">Janeiro</option>
                                     <option value="2">Fevereiro</option>
                                     <option value="3">Março</option>
@@ -1148,37 +1513,38 @@
                                 </select>
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Programa</label>
                                 <select id="acaoPrograma">
-                                    <option value="">Selecione o programa</option>
+                                    <option value="">Selecione...</option>
                                 </select>
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Região</label>
                                 <select id="acaoRegiao">
-                                    <option value="">Selecione a região</option>
+                                    <option value="">Selecione...</option>
                                 </select>
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Sub-região</label>
                                 <select id="acaoSubregiao">
-                                    <option value="">Selecione a sub-região</option>
+                                    <option value="">Selecione...</option>
                                 </select>
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>UO</label>
                                 <select id="acaoUo">
-                                    <option value="">Selecione a UO</option>
+                                    <option value="">Selecione...</option>
                                 </select>
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Tipo da ação</label>
                                 <select id="acaoTipo">
+                                    <option value="">Selecione...</option>
                                     <option>Corretiva</option>
                                     <option>Preventiva</option>
                                     <option>Expansão</option>
@@ -1187,9 +1553,10 @@
                                 </select>
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Status</label>
                                 <select id="acaoStatus">
+                                    <option value="">Selecione...</option>
                                     <option>Planejada</option>
                                     <option>Em andamento</option>
                                     <option>Concluída</option>
@@ -1197,17 +1564,17 @@
                                 </select>
                             </div>
 
-                            <div class="filtro-item busca">
+                            <div class="field field-xxl">
                                 <label>Título</label>
-                                <input id="acaoTitulo" placeholder="Título da ação">
+                                <input id="acaoTitulo" placeholder="Digite aqui">
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Responsável</label>
-                                <input id="acaoResponsavel" placeholder="Responsável">
+                                <input id="acaoResponsavel" placeholder="Digite aqui">
                             </div>
 
-                            <div class="filtro-item">
+                            <div class="field">
                                 <label>Data prevista</label>
                                 <input id="acaoDataPrevista" type="date">
                             </div>
@@ -1241,6 +1608,13 @@
                     </section>
 
                 </div>
+
+                <footer class="dashboard-footer">
+                    <div class="footer-left">
+                        <strong>Fontes dos dados:</strong>
+                        Solução Integradora • Cubo Orçamento
+                    </div>
+                </footer>
 
             </main>
         </div>
@@ -1404,6 +1778,7 @@
                 `).join("");
 
                 atualizarKPIsAcoes(acoes);
+                sincronizarFiltrosAcoes();
                 aplicarFiltrosAcoes();
 
             } catch (erro) {
@@ -1530,6 +1905,24 @@
             }
         }
 
+        function limparFiltrosAcoes() {
+            document.getElementById("filtroAno").value = "2026";
+            document.getElementById("filtroProgramaAcao").value = "";
+            document.getElementById("filtroRegiao").value = "";
+            document.getElementById("filtroSubregiao").value = "";
+            document.getElementById("filtroUo").value = "";
+            document.getElementById("filtroStatusAcao").value = "";
+            document.getElementById("buscaAcao").value = "";
+
+            if (tomSelectPeriodo) {
+                tomSelectPeriodo.clear(true);
+                ajustarLarguraPeriodo();
+            }
+
+            sincronizarFiltrosAcoes();
+            aplicarFiltrosAcoes();
+        }
+
         function editarAcao(id) {
             const acao = acoes.find(a => Number(a.id) === Number(id));
 
@@ -1606,8 +1999,8 @@
             document.getElementById("acaoRegiao").value = "";
             document.getElementById("acaoSubregiao").value = "";
             document.getElementById("acaoUo").value = "";
-            document.getElementById("acaoTipo").value = "Corretiva";
-            document.getElementById("acaoStatus").value = "Planejada";
+            document.getElementById("acaoTipo").value = "";
+            document.getElementById("acaoStatus").value = "";
             document.getElementById("acaoTitulo").value = "";
             document.getElementById("acaoResponsavel").value = "";
             document.getElementById("acaoDataPrevista").value = "";
@@ -1775,10 +2168,10 @@
 
                 const dados = await resp.json();
 
-                select.innerHTML = `<option value="">Selecione a região</option>`;
+                select.innerHTML = `<option value="">Selecione...</option>`;
                 if (filtroRegiao) {
                     filtroRegiao.innerHTML =
-                        `<option value="">Todas as regiões</option>`;
+                        `<option value="">Selecione...</option>`;
                 }
 
                 dados.forEach(item => {
@@ -1830,7 +2223,7 @@
 
                 const dados = await resp.json();
 
-                select.innerHTML = `<option value="">Selecione o programa</option>`;
+                select.innerHTML = `<option value="">Selecione...</option>`;
 
                 if (filtroPrograma) {
                     filtroPrograma.innerHTML =
@@ -1896,11 +2289,11 @@
 
                 const dados = await resp.json();
 
-                select.innerHTML = `<option value="">Selecione a UO</option>`;
+                select.innerHTML = `<option value="">Selecione...</option>`;
 
                 if (filtroUo) {
                     filtroUo.innerHTML =
-                        `<option value="">Todas as UOs</option>`;
+                        `<option value="">Selecione...</option>`;
                 }
 
                 dados.forEach(item => {
@@ -1960,10 +2353,10 @@
 
                 const dados = await resp.json();
 
-                select.innerHTML = `<option value="">Selecione a sub-região</option>`;
+                select.innerHTML = `<option value="">Selecione...</option>`;
 
                 if (filtroSubregiao) {
-                    filtroSubregiao.innerHTML = `<option value="">Todas as sub-regiões</option>`;
+                    filtroSubregiao.innerHTML = `<option value="">Selecione...</option>`;
                 }
 
                 dados.forEach(item => {
@@ -2067,13 +2460,14 @@
 
             tomSelectPeriodo = new TomSelect("#filtroPeriodo", {
                 plugins: ["remove_button"],
-                placeholder: "Selecione um ou mais meses",
+                placeholder: "Selecione...",
                 maxItems: null,
                 hideSelected: true,
                 closeAfterSelect: false,
                 persist: false,
                 onChange() {
                     ajustarLarguraPeriodo();
+                    sincronizarFiltrosAcoes("filtroPeriodo");
                     aplicarFiltrosAcoes();
                 },
                 onItemAdd() {
@@ -2082,7 +2476,7 @@
                 },
                 onItemRemove() {
                     if (!this.items.length) {
-                        this.control_input.placeholder = "Selecione um ou mais meses";
+                        this.control_input.placeholder = "Selecione...";
                     }
 
                     ajustarLarguraPeriodo();
@@ -2107,6 +2501,151 @@
             campo.style.setProperty("--periodo-width", `${largura}px`);
         }
 
+        function obterBaseAcoesPorAnoPeriodo() {
+            const ano = document.getElementById("filtroAno")?.value || "";
+
+            const periodos = Array.from(
+                document.getElementById("filtroPeriodo")?.selectedOptions || []
+            ).map(opt => String(opt.value));
+
+            return acoes.filter(acao => {
+                const okAno =
+                    !ano || String(acao.ano || "") === String(ano);
+
+                const okPeriodo =
+                    !periodos.length || periodos.includes(String(acao.mes || ""));
+
+                return okAno && okPeriodo;
+            });
+        }
+
+        function popularSelectAcoes(id, valores, textoPadrao, valorAtual) {
+            const select = document.getElementById(id);
+
+            if (!select) return;
+
+            const valoresOrdenados = [...new Set(
+                valores
+                    .map(v => String(v || "").trim())
+                    .filter(Boolean)
+            )].sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+            select.innerHTML = `<option value="">${textoPadrao}</option>`;
+
+            valoresOrdenados.forEach(valor => {
+                const option = document.createElement("option");
+                option.value = valor;
+                option.textContent = valor;
+                select.appendChild(option);
+            });
+
+            if (valorAtual && valoresOrdenados.includes(valorAtual)) {
+                select.value = valorAtual;
+            } else {
+                select.value = "";
+            }
+        }
+
+        function obterBaseParaOpcoesAcoes(campoIgnorado = "") {
+            const ano = document.getElementById("filtroAno")?.value || "";
+
+            const periodos = Array.from(
+                document.getElementById("filtroPeriodo")?.selectedOptions || []
+            ).map(opt => String(opt.value));
+
+            const programa = document.getElementById("filtroProgramaAcao")?.value || "";
+            const regiao = document.getElementById("filtroRegiao")?.value || "";
+            const subregiao = document.getElementById("filtroSubregiao")?.value || "";
+            const uo = document.getElementById("filtroUo")?.value || "";
+            const status = document.getElementById("filtroStatusAcao")?.value || "";
+
+            return acoes.filter(acao => {
+                const okAno =
+                    !ano || String(acao.ano || "") === String(ano);
+
+                const okPeriodo =
+                    !periodos.length || periodos.includes(String(acao.mes || ""));
+
+                const okPrograma =
+                    campoIgnorado === "filtroProgramaAcao" ||
+                    !programa ||
+                    String(acao.programa || "") === programa;
+
+                const okRegiao =
+                    campoIgnorado === "filtroRegiao" ||
+                    !regiao ||
+                    normalizarTexto(acao.regiao || "") === normalizarTexto(regiao);
+
+                const okSubregiao =
+                    campoIgnorado === "filtroSubregiao" ||
+                    !subregiao ||
+                    String(acao.subregiao || "") === subregiao;
+
+                const okUo =
+                    campoIgnorado === "filtroUo" ||
+                    !uo ||
+                    normalizarTexto(acao.uo || "") === normalizarTexto(uo);
+
+                const okStatus =
+                    campoIgnorado === "filtroStatusAcao" ||
+                    !status ||
+                    String(acao.status || "") === status;
+
+                return (
+                    okAno &&
+                    okPeriodo &&
+                    okPrograma &&
+                    okRegiao &&
+                    okSubregiao &&
+                    okUo &&
+                    okStatus
+                );
+            });
+        }
+
+        function sincronizarFiltrosAcoes(origem = "") {
+            const programaAtual = document.getElementById("filtroProgramaAcao")?.value || "";
+            const regiaoAtual = document.getElementById("filtroRegiao")?.value || "";
+            const subregiaoAtual = document.getElementById("filtroSubregiao")?.value || "";
+            const uoAtual = document.getElementById("filtroUo")?.value || "";
+            const statusAtual = document.getElementById("filtroStatusAcao")?.value || "";
+
+            popularSelectAcoes(
+                "filtroProgramaAcao",
+                obterBaseParaOpcoesAcoes("filtroProgramaAcao").map(a => a.programa),
+                "Todos",
+                programaAtual
+            );
+
+            popularSelectAcoes(
+                "filtroRegiao",
+                obterBaseParaOpcoesAcoes("filtroRegiao").map(a => a.regiao),
+                "Selecione...",
+                regiaoAtual
+            );
+
+            popularSelectAcoes(
+                "filtroSubregiao",
+                obterBaseParaOpcoesAcoes("filtroSubregiao").map(a => a.subregiao),
+                "Selecione...",
+                subregiaoAtual
+            );
+
+            popularSelectAcoes(
+                "filtroUo",
+                obterBaseParaOpcoesAcoes("filtroUo").map(a => a.uo),
+                "Selecione...",
+                uoAtual
+            );
+
+            popularSelectAcoes(
+                "filtroStatusAcao",
+                obterBaseParaOpcoesAcoes("filtroStatusAcao").map(a => a.status),
+                "Todos",
+                statusAtual
+            );
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             carregarUsuario();
             inicializarAbasAcoes();
@@ -2118,29 +2657,19 @@
             carregarProgramasAcoes();
             carregarUosAcoes();
 
-            document
-                .getElementById("filtroStatusAcao")
-                ?.addEventListener("change", aplicarFiltrosAcoes);
-
-            document
-                .getElementById("filtroProgramaAcao")
-                ?.addEventListener("change", aplicarFiltrosAcoes);
-
-            document
-                .getElementById("filtroRegiao")
-                ?.addEventListener("change", aplicarFiltrosAcoes);
-
-            document
-                .getElementById("filtroUo")
-                ?.addEventListener("change", aplicarFiltrosAcoes);
-
-            document
-                .getElementById("filtroSubregiao")
-                ?.addEventListener("change", aplicarFiltrosAcoes);
-
-            document
-                .getElementById("filtroAno")
-                ?.addEventListener("change", aplicarFiltrosAcoes);
+            [
+                "filtroAno",
+                "filtroProgramaAcao",
+                "filtroRegiao",
+                "filtroSubregiao",
+                "filtroUo",
+                "filtroStatusAcao"
+            ].forEach(id => {
+                document.getElementById(id)?.addEventListener("change", () => {
+                    sincronizarFiltrosAcoes(id);
+                    aplicarFiltrosAcoes();
+                });
+            });
 
         });
 

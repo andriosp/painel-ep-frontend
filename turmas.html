@@ -22,7 +22,7 @@
             --radius: 14px;
             --radius-sm: 12px;
 
-            --brand: #2563eb;
+            --brand: #003B8F;
             --ok: #16a34a;
             --warn: #f59e0b;
             --bad: #ef4444;
@@ -45,27 +45,6 @@
             padding: 18px 18px 36px;
         }
 
-        .navlink {
-            text-decoration: none;
-            color: var(--muted);
-            font-weight: 750;
-            font-size: 13px;
-            padding: 8px 12px;
-            border-radius: 12px;
-            border: 1px solid transparent;
-        }
-
-        .navlink:hover {
-            background: #fff;
-            border-color: var(--border);
-        }
-
-        .navlink.active {
-            background: rgba(37, 99, 235, .10);
-            color: var(--text);
-            border-color: rgba(37, 99, 235, .25);
-        }
-
         .header {
             display: flex;
             align-items: flex-start;
@@ -76,14 +55,10 @@
 
         .title h1 {
             margin: 0;
-            font-size: 28px;
-            letter-spacing: .2px;
-        }
-
-        .title p {
-            margin: 6px 0 0;
-            color: var(--muted);
-            font-size: 13px;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -.4px;
+            color: var(--text);
         }
 
         .badge {
@@ -113,7 +88,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 14px 16px;
+            padding: 12px 16px;
             margin-bottom: 14px;
         }
 
@@ -154,21 +129,6 @@
 
         button:active {
             transform: translateY(1px);
-        }
-
-        .topnav {
-            display: flex;
-            gap: 10px;
-            padding: 10px 0 14px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .topnav-right {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         /* ===== LAYOUT ===== */
@@ -249,8 +209,9 @@
         .tabs-indicadores {
             display: flex;
             gap: 28px;
-            margin-bottom: 24px;
+            margin: 0 0 24px;
             padding-left: 6px;
+            border-bottom: 1px solid var(--border);
         }
 
         .tab-ind {
@@ -260,131 +221,27 @@
             font-weight: 700;
             color: #64748b;
             cursor: pointer;
-            padding-bottom: 12px;
+            padding: 0 0 12px;
+            border-radius: 0;
+        }
+
+        .tab-ind:hover {
+            background: transparent;
+            color: #003B8F;
         }
 
         .tab-ind.active {
-            color: #2563eb;
-            border-bottom: 3px solid #2563eb;
+            color: #003B8F;
+            border-bottom: 3px solid #003B8F;
         }
 
-        .filtros-subregioes {
-            display: flex;
-            gap: 14px;
-            align-items: center;
-            flex-wrap: wrap;
+        .tab-ind:focus,
+        .tab-ind:focus-visible {
+            outline: none;
+            box-shadow: none;
         }
 
-        .filtro-item {
-            min-width: 180px;
-        }
-
-        .filtro-item label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #64748b;
-            text-transform: none;
-            letter-spacing: 0;
-        }
-
-        .filtro-item select,
-        .filtro-item input {
-            height: 44px;
-            border-radius: 12px;
-        }
-
-        .filtro-item.busca {
-            flex: 1;
-            min-width: 260px;
-        }
-
-        .btn-exportar-sub {
-            margin-left: auto;
-            min-width: 120px;
-        }
-
-        .kpi-sub-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .kpi-sub-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 18px;
-            display: flex;
-            gap: 14px;
-            min-height: 150px;
-            box-shadow: var(--shadow);
-        }
-
-        .kpi-sub-card h3 {
-            margin: 0 0 8px;
-            font-size: 13px;
-            font-weight: 900;
-            color: #071b52;
-        }
-
-        .kpi-sub-card strong {
-            display: block;
-            font-size: 26px;
-            font-weight: 900;
-            color: #071b52;
-        }
-
-        .kpi-sub-card p {
-            margin: 8px 0 6px;
-            font-size: 13px;
-            font-weight: 800;
-            color: #071b52;
-        }
-
-        .kpi-sub-card span {
-            font-size: 13px;
-            color: #334155;
-        }
-
-        .kpi-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 999px;
-            display: grid;
-            place-items: center;
-            color: #fff;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .kpi-sub-card.azul .kpi-icon {
-            background: #0f5fff;
-        }
-
-        .kpi-sub-card.roxo .kpi-icon {
-            background: #6d5dfc;
-        }
-
-        .kpi-sub-card.verde .kpi-icon {
-            background: #16a34a;
-        }
-
-        .kpi-sub-card.laranja .kpi-icon {
-            background: #f97316;
-        }
-
-        .kpi-sub-card .ok {
-            color: #16a34a;
-        }
-
-        .kpi-sub-card .bad {
-            color: #dc2626;
-        }
-
-        @media (max-width: 1400px) {
+        @media (max-width: 1500px) {
             .kpi-sub-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
@@ -449,6 +306,17 @@
             table-layout: auto;
         }
 
+        .tabela-sub td:first-child {
+            color: #071b52;
+            font-weight: 900;
+        }
+
+        .tabela-sub td:nth-child(2) {
+            color: #071b52;
+            font-weight: 800;
+        }
+
+
         .tabela-sub th:nth-child(2),
         .tabela-sub td:nth-child(2) {
             width: 260px;
@@ -464,6 +332,11 @@
             font-size: 11px;
             font-weight: 900;
             color: #071b52;
+        }
+
+        .tabela-sub td {
+            color: #334155;
+            font-size: 13px;
         }
 
         .tabela-sub td:first-child,
@@ -961,6 +834,482 @@
         .kpi-pct-neutro {
             color: #64748b !important;
         }
+
+        /* AJUSTE DOS FILTROS - PADRÃO EXECUTIVO */
+
+        .panel .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .panel .field {
+            flex: 0 0 220px;
+            min-width: 220px;
+        }
+
+        .panel .field.sm {
+            flex: 0 0 110px;
+            min-width: 110px;
+        }
+
+        .panel .field.field-xxl {
+            flex: 2.2 1 340px;
+            min-width: 320px;
+        }
+
+        .panel .actions {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            margin-left: auto;
+            flex: 0 0 auto;
+        }
+
+        .panel label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .panel select,
+        .panel input {
+            height: 42px !important;
+            min-height: 42px !important;
+            max-height: 42px !important;
+            border-radius: 12px;
+        }
+
+        .panel .actions button {
+            height: 42px;
+            padding: 0 18px;
+            white-space: nowrap;
+        }
+
+        /* ===== CARDS EXECUTIVOS PADRÃO ===== */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .card {
+            background: linear-gradient(180deg,
+                    rgba(0, 59, 143, .03) 0%,
+                    #ffffff 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 18px;
+            transition: .2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+            border-color: rgba(0, 59, 143, .30);
+        }
+
+        .card-topo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icone {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .card .big {
+            margin-top: 10px;
+            font-size: 26px;
+            font-weight: 820;
+            color: var(--text);
+            line-height: 1.1;
+        }
+
+        .card .sub {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        @media (max-width: 1500px) {
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== BLOCO DE TABELA PADRÃO EXECUTIVO ===== */
+
+        .tabela-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .sub-card-title.linha {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .sub-card-title h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .ranking-subtitulo {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        #btnVerTodasTurmas {
+            background: rgba(0, 59, 143, .08);
+            color: #003B8F;
+            border: 1px solid rgba(0, 59, 143, .18);
+            border-radius: 999px;
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        #btnVerTodasTurmas:hover {
+            background: #003B8F;
+            color: #fff;
+        }
+
+        .tabela-sub {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 14px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .tabela-sub th,
+        .tabela-sub td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .tabela-sub th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        .tabela-sub tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tabela-sub tbody tr:hover {
+            background: rgba(0, 59, 143, .035);
+        }
+
+        .tabela-sub td:first-child,
+        .tabela-sub th:first-child,
+        .tabela-sub td:nth-child(2),
+        .tabela-sub th:nth-child(2) {
+            text-align: left;
+            font-weight: 800;
+        }
+
+        .tabela-sub td:nth-child(2) {
+            max-width: 300px;
+        }
+
+        .status {
+            display: inline-flex;
+            justify-content: center;
+            min-width: 105px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        /* ===== CARDS EXECUTIVOS - TURMAS ===== */
+
+        .cards-executivos {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .card-executivo {
+            background: linear-gradient(180deg, rgba(0, 59, 143, .03) 0%, #ffffff 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-executivo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+            border-color: rgba(0, 59, 143, .35);
+        }
+
+        .card-topo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icone {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .card-executivo h3 {
+            margin: 0;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .card-executivo .big {
+            margin-top: 10px;
+            font-size: 26px;
+            font-weight: 820;
+            color: var(--text);
+            line-height: 1.1;
+        }
+
+        .card-executivo .sub {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--muted);
+            background: transparent;
+            padding: 0;
+            font-weight: 700;
+        }
+
+        @media (max-width: 1500px) {
+            .cards-executivos {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .cards-executivos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== FOOTER PADRÃO EXECUTIVO ===== */
+
+        .dashboard-footer {
+            margin-top: 24px;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .dashboard-footer strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .footer-right {
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #003B8F;
+            color: #fff;
+            border-color: rgba(0, 59, 143, .65);
+            height: 42px;
+            padding: 0 18px;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            background: #0F5FFF;
+            color: #fff;
+        }
+
+        /* FILTRO PERÍODO - PADRÃO SUB-REGIÕES */
+
+        .panel .field.periodo-field {
+            flex: 0 0 auto;
+            min-width: 320px;
+            width: max-content;
+            max-width: 100%;
+        }
+
+        .periodo-field .ts-wrapper {
+            display: inline-block;
+            width: max-content;
+            min-width: 320px;
+            max-width: 100%;
+        }
+
+        .periodo-field .ts-control {
+            width: max-content !important;
+            min-width: 320px !important;
+            max-width: 100% !important;
+            height: 42px !important;
+            min-height: 42px !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 12px !important;
+            padding: 8px 10px !important;
+            background: #fff !important;
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            overflow: visible !important;
+            box-shadow: none !important;
+        }
+
+        .periodo-field .ts-control>.item {
+            margin: 0 6px 0 0 !important;
+            padding: 2px 8px !important;
+            border-radius: 999px !important;
+            background: rgba(0, 59, 143, .10) !important;
+            border: 1px solid rgba(0, 59, 143, .25) !important;
+            color: #003B8F !important;
+            font-size: 12px !important;
+            line-height: 18px !important;
+            white-space: nowrap !important;
+            flex: 0 0 auto !important;
+        }
+
+        .periodo-field .ts-control input {
+            width: 90px !important;
+            min-width: 90px !important;
+            flex: 0 0 90px !important;
+            height: 22px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .periodo-field .ts-wrapper.has-items .ts-control input {
+            width: 1px !important;
+            min-width: 1px !important;
+            flex: 0 0 1px !important;
+        }
+
+        .tabela-acoes {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-exportar-tabela {
+            background: #fff;
+            color: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .btn-exportar-tabela:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .usuario-badge {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .btn-sair {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .btn-sair:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+
     </style>
 </head>
 
@@ -999,72 +1348,54 @@
 
     <div class="container">
 
-        <nav class="topnav">
-            <a href="index.html" class="navlink">Dashboard</a>
-            <a href="po.html" class="navlink">PO</a>
-            <a href="programas.html?v=2" class="navlink">Programas</a>
-            <a href="performance.html" class="navlink">Performance</a>
-            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-            <a href="unidades.html" class="navlink">Unidades</a>
-            <a href="sge_turmas.html" class="navlink">Turmas</a>
-            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
-
-            <div class="topnav-right">
-                <a href="alterar_senha.html" class="navlink">
-                    Alterar senha
-                </a>
-                <div id="usuario-logado" class="badge">
-                    <span class="dot"></span>
-                    Usuário: —
-                </div>
-                <button onclick="logout()">Sair</button>
-            </div>
-        </nav>
         <div class="page-layout">
-            <aside class="sidebar-executiva">
-                <div class="sidebar-logo">
-                    <img src="/assets/logo.png" alt="SENAI">
-                </div>
-                <nav class="sidebar-nav">
-                    <a href="visao_executiva.html">
-                        🏠
-                        <span>Visão Executiva</span>
-                    </a>
-                    <a href="indicadores.html">
-                        📊
-                        <span>Indicadores</span>
-                    </a>
-                    <a href="regioes.html">
-                        🌎
-                        <span>Regiões</span>
-                    </a>
 
-                    <a href="subregioes.html">
-                        📍
-                        <span>Sub-regiões</span>
-                    </a>
-                    <a href="turmas.html" class="active">
-                        👥
-                        <span>Turmas</span>
-                    </a>
-                    <a href="acoes.html">
-                        🎯
-                        <span>Ações</span>
-                    </a>
-                    <a href="relatoriosexecutivos.html">
-                        📄
-                        <span>Relatórios</span>
-                    </a>
+            <aside class="sidebar-executiva">
+
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="index.html">🏠 Dashboard</a>
+                    <a href="po.html">🎯 PO</a>
+                    <a href="programas.html?v=2">🧩 Programas</a>
+                    <a href="performance.html">📊 Performance</a>
+                    <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+                    <a href="unidades.html">🏢 Unidades</a>
+                    <a href="sge_turmas.html">📚 Ofertas</a>
+                    <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+                    <a href="visao_executiva.html">🧠 Visão Executiva</a>
+                    <a href="indicadores.html">📈 Indicadores</a>
+                    <a href="regioes.html">🌎 Regiões</a>
+                    <a href="subregioes.html">📍 Sub-regiões</a>
+                    <a href="turmas.html" class="active">🏫 Turmas</a>
+                    <a href="acoes.html">✅ Ações</a>
+                    <a href="relatoriosexecutivos.html">📄 Relatórios</a>
                 </nav>
+
             </aside>
+
             <main class="main-executiva">
 
                 <div class="header">
                     <div class="title">
-                        <h1>Panorama de Turmas</h1>
-                        <p>Acompanhe a situação das turmas do programa.</p>
+                        <h1>Turmas</h1>
                     </div>
+
+                    <div class="header-actions">
+
+                        <div class="badge usuario-badge" id="usuario-logado">
+                            <span class="dot"></span>
+                            Usuário: —
+                        </div>
+
+                        <button class="btn-sair" onclick="logout()">
+                            Sair
+                        </button>
+
+                    </div>
+
                 </div>
 
                 <div class="tabs-indicadores">
@@ -1074,126 +1405,131 @@
                     <button class="tab-ind" data-aba="previstas">Turmas Previstas</button>
                 </div>
 
-                <div class="panel filtros-subregioes">
+                <div class="panel">
+                    <div class="filters">
 
-                    <div class="filtro-item">
-                        <label>Ano</label>
-                        <select id="filtroAno">
-                            <option value="2026">2026</option>
-                            <option value="2025">2025</option>
-                        </select>
+                        <div class="field">
+                            <label>Ano</label>
+                            <select id="filtroAno">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+
+                        <div class="field periodo-field">
+                            <label>Período</label>
+                            <select id="filtroPeriodo" multiple>
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Região</label>
+                            <select id="filtroRegiao">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Sub-região</label>
+                            <select id="filtroSubregiao">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>UO</label>
+                            <select id="filtroUo">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Status</label>
+                            <select id="filtroStatus">
+                                <option value="">Selecione...</option>
+                                <option value="ativa">Ativas</option>
+                                <option value="concluida">Concluídas</option>
+                                <option value="prevista">Previstas</option>
+                            </select>
+                        </div>
+
+                        <div class="field field-xxl">
+                            <label>Buscar</label>
+                            <input type="text" id="buscaTurma" placeholder="Buscar turma, curso, UO ou empresa..." />
+                        </div>
+
+                        <div class="actions">
+                            <button type="button" class="btn-primary" id="btnLimparFiltros">
+                                Limpar
+                            </button>
+                        </div>
+
                     </div>
-
-                    <div class="filtro-item">
-                        <label>Período</label>
-                        <select id="filtroPeriodo" multiple>
-                            <option value="1">Janeiro</option>
-                            <option value="2">Fevereiro</option>
-                            <option value="3">Março</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Maio</option>
-                            <option value="6">Junho</option>
-                            <option value="7">Julho</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Setembro</option>
-                            <option value="10">Outubro</option>
-                            <option value="11">Novembro</option>
-                            <option value="12">Dezembro</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Região</label>
-                        <select id="filtroRegiao">
-                            <option value="">Todas as regiões</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Sub-região</label>
-                        <select id="filtroSubregiao">
-                            <option value="">Todas as sub-regiões</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>UO</label>
-                        <select id="filtroUo">
-                            <option value="">Todas as UOs</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Status</label>
-                        <select id="filtroStatus">
-                            <option value="">Todos os status</option>
-                            <option value="ativa">Ativas</option>
-                            <option value="concluida">Concluídas</option>
-                            <option value="prevista">Previstas</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item busca">
-                        <label>Buscar</label>
-                        <input type="text" id="buscaTurma" placeholder="Buscar turma, curso, UO ou empresa..." />
-                    </div>
-
-                    <button class="btn-exportar-sub">
-                        Exportar
-                    </button>
 
                 </div>
 
-                <section class="kpi-sub-grid">
+                <section class="cards cards-executivos">
 
-                    <div class="kpi-sub-card azul">
-                        <div class="kpi-icon">👥</div>
-                        <div>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">👥</span>
                             <h3>TURMAS ATIVAS</h3>
-                            <strong id="kpiTurmasAtivas">0</strong>
-                            <p id="kpiOcupacao" class="kpi-pct-neutro">0,0% taxa de ocupação</p>
-                            <span id="kpiTurmasAtivasSub">No período selecionado</span>
                         </div>
+                        <div class="big" id="kpiTurmasAtivas">0</div>
+                        <span class="sub" id="kpiOcupacao">0,0% taxa de ocupação</span>
+                        <span class="sub" id="kpiTurmasAtivasSub">No período selecionado</span>
                     </div>
 
-                    <div class="kpi-sub-card roxo">
-                        <div class="kpi-icon">🎓</div>
-                        <div>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">🎓</span>
                             <h3>ALUNOS MATRICULADOS</h3>
-                            <strong id="kpiAlunos">0</strong>
-                            <p id="kpiMediaAlunos" class="kpi-pct-neutro">Média por turma: 0</p>
-                            <span>Turmas ativas e previstas</span>
                         </div>
+                        <div class="big" id="kpiAlunos">0</div>
+                        <span class="sub" id="kpiMediaAlunos">Média por turma: 0</span>
+                        <span class="sub">Turmas ativas e previstas</span>
                     </div>
 
-                    <div class="kpi-sub-card verde">
-                        <div class="kpi-icon">✅</div>
-                        <div>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">✅</span>
                             <h3>TURMAS CONCLUÍDAS</h3>
-                            <strong id="kpiConcluidas">0</strong>
-                            <p class="kpi-pct-neutro">Acumulado no ano</p>
-                            <span id="kpiConcluidasSub">No período selecionado</span>
                         </div>
+                        <div class="big" id="kpiConcluidas">0</div>
+                        <span class="sub">Acumulado no ano</span>
+                        <span class="sub" id="kpiConcluidasSub">No período selecionado</span>
                     </div>
 
-                    <div class="kpi-sub-card laranja">
-                        <div class="kpi-icon">📅</div>
-                        <div>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">📅</span>
                             <h3>TURMAS PREVISTAS</h3>
-                            <strong id="kpiPrevistas">0</strong>
-                            <p class="kpi-pct-neutro">Próximos períodos</p>
-                            <span id="kpiPrevistasSub">A iniciar</span>
                         </div>
+                        <div class="big" id="kpiPrevistas">0</div>
+                        <span class="sub">Próximos períodos</span>
+                        <span class="sub" id="kpiPrevistasSub">A iniciar</span>
                     </div>
 
-                    <div class="kpi-sub-card azul">
-                        <div class="kpi-icon">🏫</div>
-                        <div>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">🏫</span>
                             <h3>UOS COM TURMAS</h3>
-                            <strong id="kpiUos">0</strong>
-                            <p class="kpi-pct-neutro">Unidades ofertantes</p>
-                            <span>No escopo filtrado</span>
                         </div>
+                        <div class="big" id="kpiUos">0</div>
+                        <span class="sub">Unidades ofertantes</span>
+                        <span class="sub">No escopo filtrado</span>
                     </div>
 
                 </section>
@@ -1212,9 +1548,15 @@
                                     </p>
                                 </div>
 
-                                <button id="btnVerTodasTurmas">
-                                    Ver todas
-                                </button>
+                                <div class="tabela-acoes">
+                                    <button id="btnExportarTurmasExcel" class="btn-exportar-tabela">
+                                        ⬇ Exportar
+                                    </button>
+
+                                    <button id="btnVerTodasTurmas">
+                                        Ver todas
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="tabela-sub-wrap">
@@ -1353,6 +1695,13 @@
                     </section>
                 </div>
 
+                <footer class="dashboard-footer">
+                    <div class="footer-left">
+                        <strong>Fontes dos dados:</strong>
+                        Solução Integradora • Cubo Orçamento
+                    </div>
+                </footer>
+
             </main>
         </div>
     </div>
@@ -1402,8 +1751,27 @@
                 create: false,
                 persist: false,
                 hidePlaceholder: true,
-                placeholder: "Selecione um ou mais meses"
+                placeholder: "Selecione..."
             });
+        }
+
+        function limparFiltros() {
+            const anoAtual = document.getElementById("filtroAno").value;
+
+            if (tomSelectPeriodo) {
+                tomSelectPeriodo.clear(true);
+            }
+
+            document.getElementById("filtroRegiao").value = "";
+            document.getElementById("filtroSubregiao").value = "";
+            document.getElementById("filtroUo").value = "";
+            document.getElementById("filtroStatus").value = "";
+            document.getElementById("buscaTurma").value = "";
+
+            document.getElementById("filtroAno").value = anoAtual;
+
+            carregarOpcoesFiltrosTurmas();
+            carregarTurmas();
         }
 
         function inicializarAbasTurmas() {
@@ -1791,9 +2159,9 @@
 
                 const data = await resp.json();
 
-                preencherSelectFiltroTurmas("filtroRegiao", "Todas as regiões", data.regioes, filtros.regiao);
-                preencherSelectFiltroTurmas("filtroSubregiao", "Todas as sub-regiões", data.subregioes, filtros.subregiao);
-                preencherSelectFiltroTurmas("filtroUo", "Todas as UOs", data.uos, filtros.uo);
+                preencherSelectFiltroTurmas("filtroRegiao", "Selecione...", data.regioes, filtros.regiao);
+                preencherSelectFiltroTurmas("filtroSubregiao", "Selecione...", data.subregioes, filtros.subregiao);
+                preencherSelectFiltroTurmas("filtroUo", "Selecione...", data.uos, filtros.uo);
 
             } catch (erro) {
                 console.error("Erro ao carregar opções dos filtros:", erro);
@@ -1820,11 +2188,47 @@
             }
         }
 
+        function exportarTurmasExcel() {
+            const tabela = document.querySelector("#aba-visao-geral .tabela-sub");
+            if (!tabela) return;
+
+            const nomeArquivo = `turmas_${new Date().toISOString().slice(0, 10)}.xls`;
+
+            const html = `
+        <html>
+            <head>
+                <meta charset="UTF-8">
+            </head>
+            <body>
+                ${tabela.outerHTML}
+            </body>
+        </html>
+    `;
+
+            const blob = new Blob([html], {
+                type: "application/vnd.ms-excel;charset=utf-8;"
+            });
+
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = nomeArquivo;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             carregarUsuario();
             inicializarFiltroPeriodo();
             inicializarAbasTurmas();
             inicializarEventosFiltrosTurmas();
+
+            document.getElementById("btnLimparFiltros")?.addEventListener("click", limparFiltros);
+
+            document
+                .getElementById("btnExportarTurmasExcel")
+                ?.addEventListener("click", exportarTurmasExcel);
+
             carregarOpcoesFiltrosTurmas();
             carregarTurmas();
         });

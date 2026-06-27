@@ -22,7 +22,7 @@
             --radius: 14px;
             --radius-sm: 12px;
 
-            --brand: #2563eb;
+            --brand: #003B8F;
             --ok: #16a34a;
             --warn: #f59e0b;
             --bad: #ef4444;
@@ -268,41 +268,16 @@
             border-bottom: 3px solid #2563eb;
         }
 
-        .filtros-subregioes {
-            display: flex;
-            gap: 14px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        @media (max-width: 720px) {
 
-        .filtro-item {
-            min-width: 180px;
-        }
+            .filtro-item,
+            .filtro-item.busca {
+                min-width: 100%;
+            }
 
-        .filtro-item label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #64748b;
-            text-transform: none;
-            letter-spacing: 0;
-        }
-
-        .filtro-item select,
-        .filtro-item input {
-            height: 44px;
-            border-radius: 12px;
-        }
-
-        .filtro-item.busca {
-            flex: 1;
-            min-width: 260px;
-        }
-
-        .btn-exportar-sub {
-            margin-left: auto;
-            min-width: 120px;
+            .btn-exportar-sub {
+                width: 100%;
+            }
         }
 
         .kpi-sub-grid {
@@ -620,8 +595,8 @@
 
         .detalhamento-sub-grid {
             display: grid;
-            grid-template-columns: 520px 1fr;
-            gap: 20px;
+            grid-template-columns: 550px 1fr;
+            gap: 16px;
             align-items: stretch;
             margin-bottom: 16px;
         }
@@ -661,17 +636,17 @@
 
         .detalhe-kpis-sub {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            margin-top: 22px;
-            margin-bottom: 18px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 20px;
         }
 
         .detalhe-kpis-sub div {
+            background: #fff;
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 10px;
-            background: #f8fafc;
+            border-radius: 16px;
+            padding: 18px;
+            border-top: 4px solid #003B8F;
             min-width: 0;
         }
 
@@ -684,11 +659,19 @@
         }
 
         .detalhe-kpis-sub strong {
-            font-size: 24px;
+            display: block;
+            margin-top: 4px;
+            font-size: 30px;
             font-weight: 900;
             color: #071b52;
             line-height: 1.1;
             white-space: nowrap;
+        }
+
+        @media (max-width: 720px) {
+            .detalhe-kpis-sub {
+                grid-template-columns: 1fr;
+            }
         }
 
         #detSubReceita {
@@ -696,15 +679,6 @@
             font-weight: 900;
             line-height: 1.1;
             letter-spacing: -0.8px;
-        }
-
-        #detSubStatus {
-            width: 100%;
-            justify-content: center;
-            padding: 12px;
-            font-size: 13px;
-            font-weight: 900;
-            margin-top: 8px;
         }
 
         #tbodyRankingSubregioes tr.linha-selecionada {
@@ -870,62 +844,6 @@
             color: #64748b;
         }
 
-        .filtro-item .ts-wrapper {
-            width: 100%;
-        }
-
-        .filtro-item .ts-control {
-            min-height: 44px;
-            height: 44px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 7px 10px;
-            background: #fff;
-            box-shadow: none;
-            overflow: hidden;
-        }
-
-        .filtro-item .ts-wrapper.focus .ts-control {
-            border-color: rgba(37, 99, 235, .45);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
-        }
-
-        .filtro-item .ts-control>input {
-            height: auto;
-            padding: 0;
-        }
-
-        .filtro-item .ts-control .item {
-            background: #eff6ff !important;
-            border: 1px solid #bfdbfe !important;
-            color: #0f172a !important;
-            border-radius: 999px !important;
-            padding: 4px 10px !important;
-            font-size: 12px !important;
-            font-weight: 500 !important;
-        }
-
-        .filtro-item .ts-control.has-items input {
-            width: 2px !important;
-            min-width: 2px !important;
-        }
-
-        .filtro-item .ts-control.has-items input::placeholder {
-            color: transparent !important;
-        }
-
-        .filtro-item .ts-dropdown {
-            border-radius: 12px;
-            border-color: var(--border);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .filtro-item .ts-dropdown .option {
-            padding: 9px 12px;
-            font-size: 13px;
-        }
-
         .kpi-pct-ok {
             color: #16a34a !important;
         }
@@ -944,6 +862,703 @@
 
         .kpi-pct-neutro {
             color: #64748b !important;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .field {
+            flex: 0 0 220px;
+            min-width: 220px;
+        }
+
+        .field.sm {
+            flex: 0 0 110px;
+            min-width: 110px;
+        }
+
+        .field.field-xxl {
+            flex: 2.2 1 340px;
+            min-width: 320px;
+        }
+
+        .field.periodo-field {
+            flex: 0 0 auto;
+            min-width: 320px;
+            width: max-content;
+            max-width: 100%;
+        }
+
+        .actions {
+            flex: 0 0 auto;
+            margin-left: auto;
+        }
+
+        .btn-primary {
+            background: var(--brand);
+            color: #fff;
+            border-color: rgba(0, 59, 143, .65);
+            height: 42px;
+            padding: 0 18px;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            background: #0F5FFF;
+        }
+
+        select,
+        input {
+            height: 42px !important;
+            min-height: 42px !important;
+            max-height: 42px !important;
+        }
+
+        .periodo-field .ts-wrapper {
+            display: inline-block;
+            width: max-content;
+            min-width: 320px;
+            max-width: 100%;
+        }
+
+        .periodo-field .ts-control {
+            width: max-content !important;
+            min-width: 320px !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+        }
+
+        .ts-control {
+            height: 42px !important;
+            min-height: 42px !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 12px !important;
+            padding: 8px 10px !important;
+            background: #fff !important;
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            overflow: visible !important;
+            box-shadow: none !important;
+        }
+
+        .ts-control>.item {
+            margin: 0 6px 0 0 !important;
+            padding: 2px 8px !important;
+            border-radius: 999px !important;
+            background: rgba(0, 59, 143, .10) !important;
+            border: 1px solid rgba(0, 59, 143, .25) !important;
+            color: #003B8F !important;
+            font-size: 12px !important;
+            line-height: 18px !important;
+            white-space: nowrap !important;
+            flex: 0 0 auto !important;
+        }
+
+        .ts-control input {
+            min-width: 1px !important;
+            height: 22px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            color: #000 !important;
+        }
+
+        .ts-control input::placeholder {
+            color: #000 !important;
+            opacity: 1 !important;
+        }
+
+        .periodo-field .ts-control input {
+            width: 90px !important;
+            min-width: 90px !important;
+            flex: 0 0 90px !important;
+        }
+
+        .periodo-field .ts-wrapper.has-items .ts-control input {
+            width: 1px !important;
+            min-width: 1px !important;
+            flex: 0 0 1px !important;
+        }
+
+        /* AJUSTE FINAL DOS FILTROS - PADRÃO regioes.html */
+        .panel .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .panel .field {
+            flex: 0 0 220px;
+            min-width: 220px;
+        }
+
+        .panel .field.sm {
+            flex: 0 0 110px;
+            min-width: 110px;
+        }
+
+        .panel .field.periodo-field {
+            flex: 0 0 auto;
+            min-width: 320px;
+            width: max-content;
+            max-width: 100%;
+        }
+
+        .panel .field.field-xxl {
+            flex: 2.2 1 340px;
+            min-width: 320px;
+        }
+
+        .panel .actions {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            margin-left: auto;
+            flex: 0 0 auto;
+        }
+
+        .panel label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .panel select,
+        .panel input {
+            height: 42px !important;
+            min-height: 42px !important;
+            max-height: 42px !important;
+        }
+
+        .panel .actions .btn-primary {
+            height: 42px;
+            padding: 0 18px;
+            white-space: nowrap;
+            background: #003B8F;
+            border-color: rgba(0, 59, 143, .65);
+            color: #fff;
+        }
+
+        .panel .actions .btn-primary:hover {
+            background: #0F5FFF;
+        }
+
+        /* CARDS KPI - PADRÃO regioes.html */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .cards-executivos {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .cards-ranking {
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+            margin-bottom: 16px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+            border-color: rgba(37, 99, 235, .35);
+        }
+
+        .card-executivo {
+            padding: 18px;
+            background: linear-gradient(180deg, rgba(0, 59, 143, .03) 0%, #ffffff 100%);
+        }
+
+        .card-topo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icone {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .card-executivo h3 {
+            margin: 0;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .card-executivo .big {
+            margin-top: 10px;
+            font-size: 26px;
+            font-weight: 820;
+            letter-spacing: .2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-executivo .sub {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            color: var(--muted);
+            background: transparent;
+            padding: 0;
+            font-weight: 700;
+        }
+
+        /* BLOCO RANKING - PADRÃO regioes.html */
+        .bloco-ranking {
+            padding: 24px;
+        }
+
+        .bloco-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .bloco-kicker {
+            font-size: 11px;
+            font-weight: 850;
+            letter-spacing: .12em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .bloco-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .ranking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .ranking-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ranking-tab {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #475569;
+            padding: 8px 13px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .ranking-tab:hover {
+            background: #f8fafc;
+            color: #003B8F;
+        }
+
+        .ranking-tab.active {
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
+            border-color: rgba(0, 59, 143, .35);
+        }
+
+        .tabela-regioes {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 18px;
+            font-size: 13px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .tabela-regioes th,
+        .tabela-regioes td {
+            padding: 15px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .tabela-regioes th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .03em;
+        }
+
+        .tabela-regioes tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tabela-regioes tbody tr:hover {
+            background: rgba(0, 59, 143, .035);
+        }
+
+        .bloco-badge {
+            background: rgba(0, 59, 143, .08);
+            color: #003B8F;
+            border: 1px solid rgba(0, 59, 143, .15);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* CARDS DE MODALIDADES - PADRÃO EXECUTIVO */
+        .resumo-modalidades-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .modalidade-resumo {
+            background: linear-gradient(180deg, rgba(0, 59, 143, .03) 0%, #ffffff 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: none;
+            padding: 18px;
+        }
+
+        .modalidade-resumo h3 {
+            margin: 0 0 10px;
+            min-height: auto;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 850;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+
+        .modalidade-resumo strong {
+            display: block;
+            font-size: 26px;
+            font-weight: 820;
+            color: var(--text);
+            line-height: 1.1;
+        }
+
+        .modalidade-resumo p {
+            margin: 6px 0 10px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .barra-resumo {
+            height: 9px;
+            border-radius: 999px;
+            background: #eef2f7;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .barra-resumo span {
+            display: block;
+            height: 100%;
+            border-radius: 999px;
+            background: #003B8F;
+        }
+
+        .modalidade-resumo small {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        @media (max-width: 1200px) {
+            .resumo-modalidades-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .resumo-modalidades-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* GRÁFICOS PADRÃO EXECUTIVO */
+
+        .grafico-sub-card {
+            padding: 24px;
+        }
+
+        .grafico-sub-card .bloco-header,
+        .grafico-sub-card .sub-card-title {
+            margin-bottom: 16px;
+        }
+
+        .grafico-sub-card h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 360px;
+        }
+
+        .chart-box canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* ABAS NO PADRÃO DO regioes.html */
+        .tabs-indicadores {
+            display: flex;
+            gap: 28px;
+            margin: 0 0 24px;
+            padding-left: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-ind {
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0 0 12px;
+            border-radius: 0;
+        }
+
+        .tab-ind:hover {
+            background: transparent;
+            color: #003B8F;
+        }
+
+        .tab-ind.active {
+            color: #003B8F;
+            border-bottom: 3px solid #003B8F;
+        }
+
+        .aba-subregioes {
+            display: none;
+        }
+
+        .aba-subregioes.active {
+            display: block;
+        }
+
+        .tab-ind:focus,
+        .tab-ind:focus-visible {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .detalhe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .detalhe-sub-card {
+            position: relative;
+        }
+
+        #detSubStatus {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            margin: 0 !important;
+            width: auto;
+            min-width: 120px;
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 900;
+            z-index: 2;
+        }
+
+        .bloco-graficos-executivo {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+
+        .bloco-graficos-executivo .bloco-header {
+            margin-bottom: 18px;
+        }
+
+        .bloco-graficos-executivo .grafico-sub-card {
+            box-shadow: none;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            min-height: 360px;
+        }
+
+        .bloco-graficos-executivo .grafico-sub-card:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .bloco-graficos-executivo .chart-box {
+            height: 300px;
+        }
+
+        /* FOOTER PADRÃO EXECUTIVO */
+        .dashboard-footer {
+            margin-top: 24px;
+            padding: 14px 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            border-top: 1px solid var(--border);
+
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .dashboard-footer strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .footer-right {
+            font-weight: 600;
+        }
+
+        .page-layout {
+            display: flex;
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .sidebar-executiva {
+            width: 220px;
+            min-height: calc(100vh - 90px);
+            background: #003B8F;
+            border-radius: 20px;
+            padding: 20px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 18px;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .sidebar-logo img {
+            width: 100px;
+            max-width: 100%;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: .2s;
+            font-size: 15px;
+        }
+
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .sidebar-nav a.active {
+            background: #0F5FFF;
+        }
+
+        .main-executiva {
+            flex: 1;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .usuario-badge {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .btn-sair {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .btn-sair:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
         }
     </style>
 </head>
@@ -983,72 +1598,52 @@
 
     <div class="container">
 
-        <nav class="topnav">
-            <a href="index.html" class="navlink">Dashboard</a>
-            <a href="po.html" class="navlink">PO</a>
-            <a href="programas.html?v=2" class="navlink">Programas</a>
-            <a href="performance.html" class="navlink">Performance</a>
-            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-            <a href="unidades.html" class="navlink">Unidades</a>
-            <a href="sge_turmas.html" class="navlink">Turmas</a>
-            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
-
-            <div class="topnav-right">
-                <a href="alterar_senha.html" class="navlink">
-                    Alterar senha
-                </a>
-                <div id="usuario-logado" class="badge">
-                    <span class="dot"></span>
-                    Usuário: —
-                </div>
-                <button onclick="logout()">Sair</button>
-            </div>
-        </nav>
         <div class="page-layout">
-            <aside class="sidebar-executiva">
-                <div class="sidebar-logo">
-                    <img src="/assets/logo.png" alt="SENAI">
-                </div>
-                <nav class="sidebar-nav">
-                    <a href="visao_executiva.html">
-                        🏠
-                        <span>Visão Executiva</span>
-                    </a>
-                    <a href="indicadores.html">
-                        📊
-                        <span>Indicadores</span>
-                    </a>
-                    <a href="regioes.html">
-                        🌎
-                        <span>Regiões</span>
-                    </a>
 
-                    <a href="subregioes.html" class="active">
-                        📍
-                        <span>Sub-regiões</span>
-                    </a>
-                    <a href="turmas.html">
-                        👥
-                        <span>Turmas</span>
-                    </a>
-                    <a href="acoes.html">
-                        🎯
-                        <span>Ações</span>
-                    </a>
-                    <a href="relatoriosexecutivos.html">
-                        📄
-                        <span>Relatórios</span>
-                    </a>
+            <aside class="sidebar-executiva">
+
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="index.html">🏠 Dashboard</a>
+                    <a href="po.html">🎯 PO</a>
+                    <a href="programas.html?v=2">🧩 Programas</a>
+                    <a href="performance.html">📊 Performance</a>
+                    <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+                    <a href="unidades.html">🏢 Unidades</a>
+                    <a href="sge_turmas.html">📚 Ofertas</a>
+                    <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+                    <a href="visao_executiva.html">🧠 Visão Executiva</a>
+                    <a href="indicadores.html">📈 Indicadores</a>
+                    <a href="regioes.html">🌎 Regiões</a>
+                    <a href="subregioes.html" class="active">📍 Sub-regiões</a>
+                    <a href="turmas.html">🏫 Turmas</a>
+                    <a href="acoes.html">✅ Ações</a>
+                    <a href="relatoriosexecutivos.html">📄 Relatórios</a>
                 </nav>
+
             </aside>
+
             <main class="main-executiva">
 
                 <div class="header">
                     <div class="title">
-                        <h1>Desempenho das Modalidades nas Sub-Regiões</h1>
-                        <p>Acompanhe o desempenho das modalidades em cada sub-região e compare com as metas acumuladas.
-                        </p>
+                        <h1>Sub-regiões</h1>
+                    </div>
+
+                    <div class="header-actions">
+
+                        <div class="badge usuario-badge" id="usuario-logado">
+                            <span class="dot"></span>
+                            Usuário: —
+                        </div>
+
+                        <button class="btn-sair" onclick="logout()">
+                            Sair
+                        </button>
+
                     </div>
                 </div>
 
@@ -1057,138 +1652,116 @@
                     <button class="tab-ind" data-aba="detalhamento">Detalhamento</button>
                 </div>
 
-                <div class="panel filtros-subregioes">
+                <div class="panel">
+                    <div class="filters">
 
-                    <div class="filtro-item">
-                        <label>Ano</label>
-                        <select id="filtroAno">
-                            <option value="2026">2026</option>
-                            <option value="2025">2025</option>
-                        </select>
+                        <div class="field sm">
+                            <label>Ano</label>
+                            <select id="filtroAno">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+
+                        <div class="field periodo-field">
+                            <label>Período</label>
+                            <select id="filtroPeriodo" multiple placeholder="Selecione...">
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+
+                        <div class="field field-xxl">
+                            <label>Sub-região</label>
+                            <select id="filtroSubregiao">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Indicador</label>
+                            <select id="filtroIndicador">
+                                <option value="matriculas">Matrículas</option>
+                                <option value="hora_aluno">Hora-Aluno</option>
+                                <option value="receita">Receita</option>
+                                <option value="turmas">Turmas</option>
+                            </select>
+                        </div>
+
+                        <div class="actions">
+                            <button id="btnLimparFiltros" class="btn-primary" type="button">
+                                Limpar
+                            </button>
+                        </div>
+
                     </div>
-
-                    <div class="filtro-item">
-                        <label>Período</label>
-                        <select id="filtroPeriodo" multiple>
-                            <option value="1">Janeiro</option>
-                            <option value="2">Fevereiro</option>
-                            <option value="3">Março</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Maio</option>
-                            <option value="6">Junho</option>
-                            <option value="7">Julho</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Setembro</option>
-                            <option value="10">Outubro</option>
-                            <option value="11">Novembro</option>
-                            <option value="12">Dezembro</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Sub-região</label>
-                        <select id="filtroSubregiao">
-                            <option value="">Todas as sub-regiões</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item">
-                        <label>Indicador</label>
-                        <select id="filtroIndicador">
-                            <option value="matriculas">Matrículas</option>
-                            <option value="hora_aluno">Hora-Aluno</option>
-                            <option value="receita">Receita</option>
-                            <option value="turmas">Turmas</option>
-                        </select>
-                    </div>
-
-                    <div class="filtro-item busca">
-                        <label>Buscar</label>
-                        <input type="text" id="buscaSubregiao" placeholder="Buscar sub-região..." />
-                    </div>
-
-                    <button class="btn-exportar-sub">
-                        Exportar
-                    </button>
-
                 </div>
 
-                <section class="kpi-sub-grid">
+                <div class="cards cards-executivos cards-ranking">
 
-                    <div class="kpi-sub-card azul">
-                        <div class="kpi-icon">👤</div>
-                        <div>
-                            <h3>MATRÍCULAS REALIZADAS</h3>
-                            <strong id="kpiMatriculas">0</strong>
-                            <p id="kpiMatriculasPct" class="ok">0%</p>
-                            <span id="kpiMatriculasMeta">Meta: 0</span>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">🎓</span>
+                            <h3>MATRÍCULAS</h3>
                         </div>
+                        <div class="big" id="kpiMatriculas">0</div>
+                        <div class="sub" id="kpiMatriculasPct">Selecione o período</div>
+                        <div class="sub" id="kpiMatriculasMeta">Meta: —</div>
                     </div>
 
-                    <div class="kpi-sub-card roxo">
-                        <div class="kpi-icon">◷</div>
-                        <div>
-                            <h3>HORA-ALUNO REALIZADA</h3>
-                            <strong id="kpiHoraAluno">0</strong>
-                            <p id="kpiHoraAlunoPct" class="bad">0%</p>
-                            <span id="kpiHoraAlunoMeta">Meta: 0</span>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">⏱️</span>
+                            <h3>HORA-ALUNO</h3>
                         </div>
+                        <div class="big" id="kpiHoraAluno">0</div>
+                        <div class="sub" id="kpiHoraAlunoPct">Selecione o período</div>
+                        <div class="sub" id="kpiHoraAlunoMeta">Meta: —</div>
                     </div>
 
-                    <div class="kpi-sub-card verde">
-                        <div class="kpi-icon">💲</div>
-                        <div>
-                            <h3>RECEITA REALIZADA</h3>
-                            <strong id="kpiReceita">R$ 0,00</strong>
-                            <p id="kpiReceitaPct">Sem meta definida</p>
-                            <span id="kpiReceitaMeta">Meta: —</span>
+                    <div class="card card-executivo">
+                        <div class="card-topo">
+                            <span class="card-icone">💰</span>
+                            <h3>RECEITA</h3>
                         </div>
+                        <div class="big" id="kpiReceita">R$ 0,00</div>
+                        <div class="sub" id="kpiReceitaPct">Selecione o período</div>
+                        <div class="sub" id="kpiReceitaMeta">Meta: —</div>
                     </div>
 
-                    <div class="kpi-sub-card laranja">
-                        <div class="kpi-icon">🎓</div>
-                        <div>
-                            <h3>TURMAS ATIVAS</h3>
-                            <strong id="kpiTurmas">0</strong>
-                            <p id="kpiTaxaOcupacao">0,0% taxa de ocupação</p>
-                            <span id="kpiTurmasAcumulado">Acumulado: 0</span>
-                        </div>
-                    </div>
-
-                    <div class="kpi-sub-card azul">
-                        <div class="kpi-icon">📍</div>
-                        <div>
-                            <h3>SUB-REGIÕES ATIVAS</h3>
-                            <strong id="kpiSubregioes">0</strong>
-                        </div>
-                    </div>
-
-                </section>
+                </div>
 
                 <div id="aba-ranking" class="aba-subregioes active">
 
                     <section class="sub-main-grid">
 
-                        <div class="sub-card tabela-card">
-                            <div class="sub-card-title linha">
-
+                        <div class="card regioes-card bloco-ranking">
+                            <div class="bloco-header ranking-header">
                                 <div>
-                                    <h2 id="tituloRanking">RANKING DAS SUB-REGIÕES POR MATRÍCULAS</h2>
-
-                                    <p id="subtituloRanking" class="ranking-subtitulo">
-                                        Classificação das sub-regiões com base nas matrículas acumuladas do período
-                                        selecionado.
-                                    </p>
+                                    <div class="bloco-kicker">ANÁLISE POR SUB-REGIÃO</div>
+                                    <h2 id="tituloRanking">Desempenho das Sub-regiões</h2>
                                 </div>
 
-                                <button id="btnVerTodas">
-                                    Ver todas
-                                </button>
-
+                                <div class="ranking-tabs">
+                                    <button class="ranking-tab active" data-ranking-sub="matriculas">Matrículas</button>
+                                    <button class="ranking-tab" data-ranking-sub="hora_aluno">Hora-Aluno</button>
+                                    <button class="ranking-tab" data-ranking-sub="receita">Receita</button>
+                                    <button class="ranking-tab" data-ranking-sub="turmas">Turmas</button>
+                                </div>
                             </div>
 
                             <div class="tabela-sub-wrap">
-                                <table class="tabela-sub">
+                                <table class="tabela-sub tabela-regioes">
                                     <thead>
                                         <tr>
                                             <th>Rank</th>
@@ -1217,11 +1790,17 @@
 
                     </section>
 
-                    <section class="sub-card resumo-modalidades-card">
+                    <section class="card bloco-ranking resumo-modalidades-card">
 
-                        <div class="sub-card-title linha">
-                            <h2>RESUMO DAS PRINCIPAIS MODALIDADES</h2>
-                            <span class="resumo-info">Top 4 modalidades conforme o indicador selecionado</span>
+                        <div class="bloco-header ranking-header">
+                            <div>
+                                <div class="bloco-kicker">ANÁLISE POR MODALIDADE</div>
+                                <h2>Resumo das principais modalidades</h2>
+                            </div>
+
+                            <div class="bloco-badge">
+                                Top 4 modalidades
+                            </div>
                         </div>
 
                         <div class="resumo-modalidades-grid" id="resumoModalidadesGrid">
@@ -1229,23 +1808,34 @@
 
                     </section>
 
-                    <section class="graficos-sub-grid">
+                    <section class="bloco-graficos-executivo">
+                        <div class="bloco-header">
+                            <div>
+                                <div class="bloco-kicker">VISÃO GRÁFICA</div>
+                                <h2>Desempenho das Sub-regiões</h2>
+                            </div>
 
-                        <div class="sub-card grafico-sub-card">
-                            <div class="sub-card-title">
-                                <h2 id="tituloGraficoTop">TOP 10 SUB-REGIÕES POR MATRÍCULAS</h2>
-                            </div>
-                            <div class="chart-box">
-                                <canvas id="graficoTopSubregioes"></canvas>
-                            </div>
+                            <div class="bloco-badge">📊 Gráficos</div>
                         </div>
 
-                        <div class="sub-card grafico-sub-card">
-                            <div class="sub-card-title">
-                                <h2 id="tituloGraficoModalidades">DESEMPENHO POR MODALIDADE</h2>
+                        <div class="graficos-sub-grid">
+
+                            <div class="card bloco-ranking grafico-sub-card">
+                                <div class="sub-card-title">
+                                    <h2 id="tituloGraficoTop">TOP 10 SUB-REGIÕES POR MATRÍCULAS</h2>
+                                </div>
+                                <div class="chart-box">
+                                    <canvas id="graficoTopSubregioes"></canvas>
+                                </div>
                             </div>
-                            <div class="chart-box">
-                                <canvas id="graficoModalidadesSub"></canvas>
+
+                            <div class="card bloco-ranking grafico-sub-card">
+                                <div class="sub-card-title">
+                                    <h2 id="tituloGraficoModalidades">DESEMPENHO POR MODALIDADE</h2>
+                                </div>
+                                <div class="chart-box">
+                                    <canvas id="graficoModalidadesSub"></canvas>
+                                </div>
                             </div>
                         </div>
 
@@ -1256,13 +1846,19 @@
 
                     <section class="detalhamento-sub-grid">
 
-                        <div class="sub-card detalhe-sub-card">
-                            <div class="sub-card-title">
-                                <h2>DETALHAMENTO DA SUB-REGIÃO</h2>
-                            </div>
+                        <div class="card bloco-ranking detalhe-sub-card">
+                            <div class="bloco-header detalhe-header">
 
-                            <div class="detalhe-sub-nome" id="detalheSubregiaoNome">
-                                Selecione uma sub-região
+                                <div>
+                                    <div class="bloco-kicker">
+                                        SUB-REGIÃO SELECIONADA
+                                    </div>
+
+                                    <h2 id="detalheSubregiaoNome">
+                                        Selecione uma sub-região
+                                    </h2>
+                                </div>
+
                             </div>
 
                             <div class="detalhe-kpis-sub">
@@ -1294,9 +1890,12 @@
                             </div>
                         </div>
 
-                        <div class="sub-card detalhe-sub-tabela-card">
-                            <div class="sub-card-title">
-                                <h2 id="tituloTabelaDetalhamento">MODALIDADES DA SUB-REGIÃO — MATRÍCULAS</h2>
+                        <div class="card bloco-ranking detalhe-sub-tabela-card">
+                            <div class="bloco-header">
+                                <div>
+                                    <div class="bloco-kicker">DETALHAMENTO OPERACIONAL</div>
+                                    <h2 id="tituloTabelaDetalhamento">Modalidades da Sub-região — Matrículas</h2>
+                                </div>
                             </div>
 
                             <div class="tabela-sub-wrap">
@@ -1327,28 +1926,39 @@
 
                     </section>
 
-                    <section class="graficos-detalhe-sub-grid">
+                    <section class="bloco-graficos-executivo">
+                        <div class="bloco-header">
+                            <div>
+                                <div class="bloco-kicker">VISÃO GRÁFICA</div>
+                                <h2>Gráficos da Sub-região Selecionada</h2>
+                            </div>
 
-                        <div class="sub-card grafico-sub-card">
-                            <div class="sub-card-title">
-                                <h2 id="tituloGraficoDetalheBarras">MATRÍCULAS POR MODALIDADE</h2>
-                            </div>
-                            <div class="chart-box">
-                                <canvas id="graficoDetalheMatriculas"></canvas>
-                                <div id="placeholderGraficoMatriculas" class="grafico-vazio">
-                                    Clique em uma sub-região no Ranking para visualizar o gráfico.
-                                </div>
-                            </div>
+                            <div class="bloco-badge">📊 Gráficos</div>
                         </div>
 
-                        <div class="sub-card grafico-sub-card">
-                            <div class="sub-card-title">
-                                <h2 id="tituloGraficoDetalheDonut">PARTICIPAÇÃO POR MODALIDADE — MATRÍCULAS</h2>
+                        <div class="graficos-detalhe-sub-grid">
+
+                            <div class="card bloco-ranking grafico-sub-card">
+                                <div class="sub-card-title">
+                                    <h2 id="tituloGraficoDetalheBarras">MATRÍCULAS POR MODALIDADE</h2>
+                                </div>
+                                <div class="chart-box">
+                                    <canvas id="graficoDetalheMatriculas"></canvas>
+                                    <div id="placeholderGraficoMatriculas" class="grafico-vazio">
+                                        Clique em uma sub-região no Ranking para visualizar o gráfico.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="chart-box">
-                                <canvas id="graficoDetalheParticipacao"></canvas>
-                                <div id="placeholderGraficoParticipacao" class="grafico-vazio">
-                                    Clique em uma sub-região no Ranking para visualizar o gráfico.
+
+                            <div class="card bloco-ranking grafico-sub-card">
+                                <div class="sub-card-title">
+                                    <h2 id="tituloGraficoDetalheDonut">PARTICIPAÇÃO POR MODALIDADE — MATRÍCULAS</h2>
+                                </div>
+                                <div class="chart-box">
+                                    <canvas id="graficoDetalheParticipacao"></canvas>
+                                    <div id="placeholderGraficoParticipacao" class="grafico-vazio">
+                                        Clique em uma sub-região no Ranking para visualizar o gráfico.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1356,6 +1966,13 @@
                     </section>
 
                 </div>
+
+                <footer class="dashboard-footer">
+                    <div class="footer-left">
+                        <strong>Fontes dos dados:</strong>
+                        Solução Integradora • Cubo Orçamento
+                    </div>
+                </footer>
 
             </main>
         </div>
@@ -1513,19 +2130,6 @@
                         "Meta: —";
                 }
 
-                document.getElementById("kpiTurmas").textContent =
-                    Number(dados.turmas || 0).toLocaleString("pt-BR");
-
-                document.getElementById("kpiTaxaOcupacao").textContent =
-                    Number(dados.ocupacao || 0).toFixed(1).replace(".", ",") +
-                    "% taxa de ocupação";
-
-                document.getElementById("kpiTurmasAcumulado").textContent =
-                    "Acumulado no período: " + Number(dados.turmas_acumulado || 0).toLocaleString("pt-BR");
-
-                document.getElementById("kpiSubregioes").textContent =
-                    Number(dados.subregioes || 0).toLocaleString("pt-BR");
-
             } catch (erro) {
 
                 console.error(
@@ -1558,11 +2162,22 @@
 
             tomSelectPeriodo = new TomSelect(select, {
                 plugins: ["remove_button"],
-                create: false,
+                placeholder: "Selecione...",
+                maxItems: null,
+                hideSelected: true,
+                closeAfterSelect: false,
                 persist: false,
-                hidePlaceholder: true,
-                placeholder: "Selecione um ou mais meses"
+                onItemAdd() {
+                    this.control_input.placeholder = "";
+                },
+                onItemRemove() {
+                    if (!this.items.length) {
+                        this.control_input.placeholder = "Selecione...";
+                    }
+                }
             });
+
+            tomSelectPeriodo.clear(true);
 
         }
 
@@ -1611,8 +2226,13 @@
 
         function limparDadosSubregioes() {
 
+            rankingSubregioes = [];
+            resumoModalidades = [];
+
             ["kpiMatriculasPct", "kpiHoraAlunoPct", "kpiReceitaPct", "kpiTaxaOcupacao"].forEach(id => {
                 const el = document.getElementById(id);
+                if (!el) return;
+
                 el.classList.remove(
                     "kpi-pct-ok",
                     "kpi-pct-caminho",
@@ -1633,11 +2253,7 @@
             document.getElementById("kpiReceita").textContent = "R$ 0,00";
             document.getElementById("kpiReceitaPct").textContent = "Selecione o período";
             document.getElementById("kpiReceitaMeta").textContent = "Meta: —";
-            document.getElementById("kpiTurmas").textContent = "0";
-            document.getElementById("kpiTaxaOcupacao").textContent = "Selecione o período";
-            document.getElementById("kpiTurmasAcumulado").textContent = "Acumulado: —";
 
-            document.getElementById("kpiSubregioes").textContent = "0";
             document.getElementById("tbodyRankingSubregioes").innerHTML = `
     <tr>
         <td colspan="8" style="text-align:center;color:#64748b;">
@@ -1715,14 +2331,97 @@
 
         }
 
+        function limparFiltrosSubregioes() {
+
+            // Ano permanece selecionado
+            document.getElementById("filtroSubregiao").value = "";
+
+            document.getElementById("filtroIndicador").value =
+                "matriculas";
+
+            if (tomSelectPeriodo) {
+                tomSelectPeriodo.clear(true);
+            }
+
+            subregiaoSelecionada = null;
+
+            // volta para aba Ranking
+            document.querySelectorAll(".tab-ind")
+                .forEach(t => t.classList.remove("active"));
+
+            document
+                .querySelector('[data-aba="ranking"]')
+                .classList.add("active");
+
+            document.querySelectorAll(".aba-subregioes")
+                .forEach(a => a.classList.remove("active"));
+
+            document
+                .getElementById("aba-ranking")
+                .classList.add("active");
+
+            // volta para botão Matrículas
+            document
+                .querySelectorAll(".ranking-tab")
+                .forEach(t => t.classList.remove("active"));
+
+            document
+                .querySelector('[data-ranking-sub="matriculas"]')
+                .classList.add("active");
+
+            atualizarTitulosPorIndicador("matriculas");
+
+            limparDadosSubregioes();
+
+        }
+
+        function inicializarRankingTabsSubregioes() {
+            const tabs = document.querySelectorAll(".ranking-tab[data-ranking-sub]");
+            const filtroIndicador = document.getElementById("filtroIndicador");
+
+            if (!tabs.length || !filtroIndicador) return;
+
+            tabs.forEach(tab => {
+                tab.addEventListener("click", () => {
+                    const indicador = tab.dataset.rankingSub;
+
+                    tabs.forEach(t => t.classList.remove("active"));
+                    tab.classList.add("active");
+
+                    filtroIndicador.value = indicador;
+
+                    atualizarTitulosPorIndicador(indicador);
+                    renderizarRankingSubregioes();
+                    atualizarGraficoTopSubregioes();
+                    atualizarGraficoModalidades();
+                    atualizarCardsResumoModalidades();
+
+                    if (subregiaoSelecionada) {
+                        carregarDetalhamentoSubregiao(subregiaoSelecionada);
+                    }
+                });
+            });
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             carregarUsuario();
             inicializarFiltroPeriodo();
             carregarFiltroSubregioes();
+
+            inicializarAbasSubregioes();
+            inicializarRankingTabsSubregioes();
+
             inicializarEventosFiltros();
             inicializarFiltroIndicador();
+
+            document
+                .getElementById("btnLimparFiltros")
+                ?.addEventListener(
+                    "click",
+                    limparFiltrosSubregioes
+                );
+
             atualizarPaginaSubregioes();
-            inicializarAbasSubregioes();
 
             const indicadorInicial =
                 document.getElementById("filtroIndicador")?.value ||
@@ -1934,8 +2633,16 @@
 
             const texto = textos[indicador] || textos.matriculas;
 
-            document.getElementById("tituloRanking").textContent = texto.titulo;
-            document.getElementById("subtituloRanking").textContent = texto.subtitulo;
+            const tituloRankingEl = document.getElementById("tituloRanking");
+            const subtituloRankingEl = document.getElementById("subtituloRanking");
+
+            if (tituloRankingEl) {
+                tituloRankingEl.textContent = texto.titulo;
+            }
+
+            if (subtituloRankingEl) {
+                subtituloRankingEl.textContent = texto.subtitulo;
+            }
 
             const titulosGraficos = {
                 matriculas: {
@@ -2716,7 +3423,7 @@
                 const select = document.getElementById("filtroSubregiao");
 
                 select.innerHTML = `
-        <option value="">Todas as sub-regiões</option>
+        <option value="">Selecione...</option>
     `;
 
                 select.innerHTML += dados.map(item => `

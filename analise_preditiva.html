@@ -8,6 +8,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
   <style>
     :root {
       --bg: #f6f7fb;
@@ -19,7 +22,7 @@
       --radius: 14px;
       --radius-sm: 12px;
 
-      --brand: #2563eb;
+      --brand: #003B8F;
       --ok: #16a34a;
       --warn: #f59e0b;
       --bad: #ef4444;
@@ -130,18 +133,24 @@
     }
 
     .field {
-      flex: 1;
-      min-width: 320px;
-    }
-
-    .field:first-child {
-      display: flex;
-      flex-direction: column;
+      flex: 0 1 220px;
+      min-width: 220px;
     }
 
     .field.sm {
-      flex: 0 0 160px;
-      min-width: 160px;
+      flex: 0 0 110px;
+      min-width: 110px;
+    }
+
+    .field.field-xxl {
+      flex: 1 1 420px;
+      min-width: 320px;
+    }
+
+    .field.periodo-field {
+      flex: 0 1 auto;
+      min-width: 320px;
+      width: auto;
     }
 
     label {
@@ -178,6 +187,7 @@
       flex-wrap: wrap;
       align-items: center;
       align-self: flex-end;
+      flex: 0 0 auto;
     }
 
     button {
@@ -274,13 +284,24 @@
     }
 
     .card {
-      background: var(--panel);
+      background:
+        linear-gradient(180deg,
+          rgba(0, 59, 143, .03) 0%,
+          #ffffff 100%);
+
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 20px;
       box-shadow: var(--shadow);
-      padding: 14px;
+
+      padding: 18px;
       position: relative;
       overflow: hidden;
+
+      cursor: pointer;
+      transition:
+        transform .12s ease,
+        box-shadow .12s ease,
+        border-color .12s ease;
     }
 
     .card .h {
@@ -292,9 +313,11 @@
     }
 
     .prog {
-      font-weight: 900;
-      letter-spacing: .2px;
-      line-height: 1.15;
+      font-size: 14px;
+      font-weight: 850;
+      letter-spacing: .3px;
+      line-height: 1.25;
+      color: var(--text);
     }
 
     .emoji {
@@ -336,7 +359,7 @@
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      background: rgba(37, 99, 235, .85);
+      background: #003B8F;
       transition: width .25s ease;
     }
 
@@ -369,9 +392,9 @@
     }
 
     .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
-      border-color: rgba(37, 99, 235, .35);
+      transform: translateY(-3px);
+      box-shadow: 0 18px 34px rgba(15, 23, 42, .14);
+      border-color: rgba(0, 59, 143, .35);
     }
 
     /* Dá um feedback visual no header do card */
@@ -435,30 +458,6 @@
       color: var(--text);
     }
 
-    .card-fechamento.matriculas {
-      border-top: 4px solid #2563eb;
-    }
-
-    .card-fechamento.hora-aluno {
-      border-top: 4px solid #16a34a;
-    }
-
-    .card-fechamento.receita {
-      border-top: 4px solid #f59e0b;
-    }
-
-    .card-fechamento.status-critico {
-      border-top: 4px solid #dc2626;
-    }
-
-    .card-fechamento.status-atencao {
-      border-top: 4px solid #f59e0b;
-    }
-
-    .card-fechamento.status-ok {
-      border-top: 4px solid #16a34a;
-    }
-
     .card-fechamento .status-fechamento {
       font-size: 13px;
       font-weight: 700;
@@ -491,6 +490,283 @@
       align-items: center;
       gap: 10px;
     }
+
+    /* ===== LAYOUT EXECUTIVO ===== */
+
+    .page-layout {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .sidebar-executiva {
+      width: 220px;
+      min-height: calc(100vh - 90px);
+      background: #003B8F;
+      border-radius: 20px;
+      padding: 20px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 18px;
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-logo img {
+      width: 100px;
+      max-width: 100%;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: .2s;
+      font-size: 15px;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .sidebar-nav a.active {
+      background: #0F5FFF;
+    }
+
+    .main-executiva {
+      flex: 1;
+    }
+
+    /* RESPONSIVO */
+
+    @media (max-width: 1200px) {
+      .page-layout {
+        flex-direction: column;
+      }
+
+      .sidebar-executiva {
+        width: 100%;
+        min-height: auto;
+        position: relative;
+      }
+    }
+
+    .cards-executivos {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-fechamento {
+      background:
+        linear-gradient(180deg,
+          rgba(0, 59, 143, .03) 0%,
+          #ffffff 100%);
+
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+
+      padding: 18px;
+    }
+
+    .card-fechamento .titulo {
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: .5px;
+    }
+
+    .card-fechamento .valor {
+      font-size: 28px;
+      font-weight: 850;
+      margin-top: 12px;
+    }
+
+    .card-fechamento .sub {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bloco-executivo {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-top: 18px;
+      margin-bottom: 24px;
+    }
+
+    .bloco-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .bloco-kicker {
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .bloco-header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .bloco-badge {
+      background: rgba(0, 59, 143, .08);
+      color: #003B8F;
+      border: 1px solid rgba(0, 59, 143, .15);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .dashboard-footer {
+      margin-top: 24px;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-footer strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* ===== TOM SELECT - PERÍODO DINÂMICO ===== */
+
+    .field.periodo-field {
+      flex: 0 0 auto;
+      min-width: 320px;
+      width: max-content;
+      max-width: 100%;
+    }
+
+    .periodo-field .ts-wrapper {
+      display: inline-block;
+      width: max-content;
+      min-width: 320px;
+      max-width: none;
+      visibility: visible;
+    }
+
+    .periodo-field .ts-control {
+      width: max-content !important;
+      min-width: 320px !important;
+      max-width: none !important;
+      height: 42px !important;
+      min-height: 42px !important;
+
+      display: inline-flex !important;
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+
+      overflow: visible !important;
+      white-space: nowrap !important;
+
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      padding: 8px 10px !important;
+      background: #fff !important;
+      box-shadow: none !important;
+    }
+
+    .periodo-field .ts-control>.item {
+      flex: 0 0 auto !important;
+      margin: 0 6px 0 0 !important;
+      padding: 2px 8px !important;
+      border-radius: 999px !important;
+      background: rgba(0, 59, 143, .10) !important;
+      border: 1px solid rgba(0, 59, 143, .25) !important;
+      color: #003B8F !important;
+      font-size: 12px !important;
+      line-height: 18px !important;
+      white-space: nowrap !important;
+    }
+
+    .periodo-field .ts-control input {
+      flex: 0 0 90px !important;
+      width: 90px !important;
+      min-width: 90px !important;
+      height: 22px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: #000 !important;
+    }
+
+    .periodo-field .ts-control input::placeholder {
+      color: #000 !important;
+      opacity: 1 !important;
+    }
+
+    .periodo-field .ts-wrapper.has-items .ts-control input::placeholder {
+      color: transparent !important;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .usuario-badge {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .btn-sair {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .btn-sair:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
   </style>
 </head>
 
@@ -529,137 +805,199 @@
 
   <div class="container">
 
-    <nav class="topnav">
-      <a href="index.html" class="navlink">Dashboard</a>
-      <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html?v=2" class="navlink">Programas</a>
-      <a href="performance.html" class="navlink">Performance</a>
-      <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-      <a href="unidades.html" class="navlink">Unidades</a>
-      <a href="sge_turmas.html" class="navlink">Turmas</a>
-      <a href="analise_preditiva.html" class="navlink active">Análise Preditiva</a>
-      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
+    <div class="page-layout">
 
-      <div class="topnav-right">
-        <a href="alterar_senha.html" class="navlink">
-          Alterar senha
-        </a>
-        <div id="usuario-logado" class="badge">
-          <span class="dot"></span>
-          Usuário: —
+      <aside class="sidebar-executiva">
+
+        <div class="sidebar-logo">
+          <img src="assets/logo.png" alt="Logo">
         </div>
 
-        <button onclick="logout()">Sair</button>
-      </div>
-    </nav>
+        <nav class="sidebar-nav">
+          <a href="index.html">🏠 Dashboard</a>
+          <a href="po.html">🎯 PO</a>
+          <a href="programas.html?v=2">🧩 Programas</a>
+          <a href="performance.html">📊 Performance</a>
+          <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+          <a href="unidades.html">🏢 Unidades</a>
+          <a href="sge_turmas.html">📚 Ofertas</a>
+          <a href="analise_preditiva.html" class="active">🔮 Análise Preditiva</a>
+          <a href="visao_executiva.html">🧠 Visão Executiva</a>
+          <a href="indicadores.html">📈 Indicadores</a>
+          <a href="regioes.html">🌎 Regiões</a>
+          <a href="subregioes.html">📍 Sub-regiões</a>
+          <a href="turmas.html">🏫 Turmas</a>
+          <a href="acoes.html">✅ Ações</a>
+          <a href="relatoriosexecutivos.html">📄 Relatórios</a>
+        </nav>
 
-    <div class="header">
-      <div class="title">
-        <h1>Análise Preditiva</h1>
-        <p>Análise de tendência e projeção com base em meta e realizado</p>
-      </div>
-      <div class="badge" id="badge-filtro"><span class="dot"></span>Filtro: todas as sub-regiões</div>
-    </div>
+      </aside>
 
-    <div class="panel">
-      <div class="filters">
+      <main class="main-executiva">
 
-        <div class="field">
-          <label for="subregioes">Sub-regiões (Ctrl + clique para múltiplas)</label>
-          <select id="subregioes" multiple></select>
+        <div class="header">
+          <div class="title">
+            <h1>Análise Preditiva</h1>
+          </div>
+
+          <div class="header-actions">
+
+            <div class="badge usuario-badge" id="usuario-logado">
+              <span class="dot"></span>
+              Usuário: —
+            </div>
+
+            <button class="btn-sair" onclick="logout()">
+              Sair
+            </button>
+
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="filters">
+
+            <div class="field sm">
+              <label for="ano">Ano</label>
+              <select id="ano">
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+              </select>
+            </div>
+
+            <div class="field periodo-field">
+              <label for="meses">Período</label>
+              <select id="meses" multiple placeholder="Selecione...">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+              </select>
+            </div>
+
+            <div class="field field-xxl">
+              <label for="programas">Programa</label>
+              <select id="programas">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="regioes">Região</label>
+              <select id="regioes">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="subregioes">Sub-região</label>
+              <select id="subregioes">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" onclick="limparFiltros()">Limpar</button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="cards cards-executivos">
+
+          <div class="card-fechamento matriculas">
+            <div class="titulo">Fechamento previsto • Matrículas</div>
+            <div class="valor" id="fechamentoMatriculas">0</div>
+
+            <div class="status-fechamento" id="statusMatriculas">🔴 Crítico</div>
+
+            <div class="sub" id="fechamentoMatriculasSub">0% da meta anual</div>
+          </div>
+
+          <div class="card-fechamento hora-aluno">
+            <div class="titulo">Fechamento previsto • Hora-Aluno</div>
+            <div class="valor" id="fechamentoHoraAluno">0</div>
+
+            <div class="status-fechamento" id="statusHoraAluno">🔴 Crítico</div>
+
+            <div class="sub" id="fechamentoHoraAlunoSub">0% da meta anual</div>
+          </div>
+
+          <div class="card-fechamento receita">
+            <div class="titulo">Fechamento previsto • Receita</div>
+            <div class="valor" id="fechamentoReceita">R$ 0,00</div>
+
+            <div class="status-fechamento" id="statusReceita">🔴 Crítico</div>
+
+            <div class="sub" id="fechamentoReceitaSub">0% da meta anual</div>
+          </div>
 
         </div>
 
-        <div class="field">
-          <label for="programas">Programas (depende do filtro de sub-regiões)</label>
-          <select id="programas" multiple></select>
+        <div class="bloco-executivo">
+          <div class="bloco-header">
+            <div>
+              <div class="bloco-kicker">ANÁLISE PREDITIVA</div>
+              <h2>Matrículas</h2>
+            </div>
+            <div class="bloco-badge">🎓 Matrículas</div>
+          </div>
+
+          <div style="height:360px;">
+            <canvas id="graficoMatriculas"></canvas>
+          </div>
         </div>
 
-        <div class="field">
-          <label for="meses">Meses (Ctrl + clique para múltiplos)</label>
-          <select id="meses" multiple>
-            <option value="1">Janeiro</option>
-            <option value="2">Fevereiro</option>
-            <option value="3">Março</option>
-            <option value="4">Abril</option>
-            <option value="5">Maio</option>
-            <option value="6">Junho</option>
-            <option value="7">Julho</option>
-            <option value="8">Agosto</option>
-            <option value="9">Setembro</option>
-            <option value="10">Outubro</option>
-            <option value="11">Novembro</option>
-            <option value="12">Dezembro</option>
-          </select>
+        <div class="bloco-executivo">
+          <div class="bloco-header">
+            <div>
+              <div class="bloco-kicker">ANÁLISE PREDITIVA</div>
+              <h2>Hora-Aluno</h2>
+            </div>
+            <div class="bloco-badge">⏱️ Hora-Aluno</div>
+          </div>
+
+          <div style="height:360px;">
+            <canvas id="graficoHoraAluno"></canvas>
+          </div>
         </div>
 
-        <div class="field sm">
-          <label for="ano">Ano</label>
-          <input id="ano" type="number" min="2000" max="2100" />
+        <div class="bloco-executivo">
+          <div class="bloco-header">
+            <div>
+              <div class="bloco-kicker">ANÁLISE PREDITIVA</div>
+              <h2>Receita</h2>
+            </div>
+            <div class="bloco-badge">💰 Receita</div>
+          </div>
+
+          <div style="height:360px;">
+            <canvas id="graficoReceita"></canvas>
+          </div>
         </div>
 
-        <div class="actions">
-          <button class="btn-primary" onclick="limparFiltros()">Limpar</button>
-        </div>
-      </div>
-    </div>
+        <div id="cards" class="cards"></div>
 
-    <div class="cards-fechamento">
+        <footer class="dashboard-footer">
 
-      <div class="card-fechamento matriculas">
-        <div class="titulo">Fechamento previsto • Matrículas</div>
-        <div class="valor" id="fechamentoMatriculas">0</div>
+          <div class="footer-left">
+            <strong>Fontes dos dados:</strong>
+            Solução Integradora • Cubo Orçamento
+          </div>
 
-        <div class="status-fechamento" id="statusMatriculas">🔴 Crítico</div>
+        </footer>
 
-        <div class="sub" id="fechamentoMatriculasSub">0% da meta anual</div>
-      </div>
-
-      <div class="card-fechamento hora-aluno">
-        <div class="titulo">Fechamento previsto • Hora-Aluno</div>
-        <div class="valor" id="fechamentoHoraAluno">0</div>
-
-        <div class="status-fechamento" id="statusHoraAluno">🔴 Crítico</div>
-
-        <div class="sub" id="fechamentoHoraAlunoSub">0% da meta anual</div>
-      </div>
-
-      <div class="card-fechamento receita">
-        <div class="titulo">Fechamento previsto • Receita</div>
-        <div class="valor" id="fechamentoReceita">R$ 0,00</div>
-
-        <div class="status-fechamento" id="statusReceita">🔴 Crítico</div>
-
-        <div class="sub" id="fechamentoReceitaSub">0% da meta anual</div>
-      </div>
+      </main>
 
     </div>
-
-    <div class="panel">
-      <h2 style="margin:0 0 6px; font-size:20px;">Matrículas</h2>
-      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-      <div style="height:360px;">
-        <canvas id="graficoMatriculas"></canvas>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2 style="margin:0 0 6px; font-size:20px;">Hora-Aluno</h2>
-      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-      <div style="height:360px;">
-        <canvas id="graficoHoraAluno"></canvas>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2 style="margin:0 0 6px; font-size:20px;">Receita</h2>
-      <p class="muted" style="margin:0 0 14px;">Meta, realizado e projeção mensal</p>
-      <div style="height:360px;">
-        <canvas id="graficoReceita"></canvas>
-      </div>
-    </div>
-
-    <div id="cards" class="cards"></div>
 
   </div>
 
@@ -683,6 +1021,12 @@
       Array.from(sel.options).forEach(o => {
         o.selected = Number(o.value) === atual.mes;
       });
+
+      const programas = document.getElementById("programas");
+      if (programas) programas.value = "";
+
+      const subregioes = document.getElementById("subregioes");
+      if (subregioes) subregioes.value = "";
     }
 
     function format(n) { return Number(n || 0).toLocaleString("pt-BR"); }
@@ -915,90 +1259,35 @@
     function selecionarTudo(id) {
       const sel = document.getElementById(id);
       Array.from(sel.options).forEach(o => o.selected = true);
-      atualizarBadgeFiltro();
     }
 
     async function limparFiltros() {
-      ["subregioes", "programas", "meses"].forEach(id => {
-        const sel = document.getElementById(id);
-        if (sel) Array.from(sel.options).forEach(o => o.selected = false);
-      });
+      const atual = getDataAtual();
 
-      aplicarAnoMesPadrao();
-      atualizarBadgeFiltro();
-      await aplicarFiltros();
-    }
+      document.getElementById("ano").value = String(atual.ano);
 
-    function atualizarBadgeFiltro() {
-      const badge = document.getElementById("badge-filtro");
-      if (!badge) return;
+      const selMeses = document.getElementById("meses");
 
-      const selSub = document.getElementById("subregioes");
-      const selProg = document.getElementById("programas");
-      const selMes = document.getElementById("meses");
-      const ano = document.getElementById("ano")?.value || new Date().getFullYear();
-
-      const subs = Array.from(selSub?.selectedOptions || [])
-        .map(o => o.textContent.trim());
-
-      const progs = Array.from(selProg?.selectedOptions || [])
-        .map(o => o.textContent.trim());
-
-      const mesesValores = Array.from(selMes?.selectedOptions || [])
-        .map(o => Number(o.value))
-        .filter(Boolean)
-        .sort((a, b) => a - b);
-
-      const nomesMeses = [
-        "", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-      ];
-
-      const resumo = (lista, limite = 2) => {
-        return lista.length <= limite
-          ? lista.join(", ")
-          : `${lista.slice(0, limite).join(", ")} +${lista.length - limite}`;
-      };
-
-      const subTxt = subs.length
-        ? `Sub-regiões: ${resumo(subs)}`
-        : "Sub-regiões: todas";
-
-      const progTxt = progs.length
-        ? `Programas: ${resumo(progs)}`
-        : "Programas: todos";
-
-      let mesTxt = "";
-
-      if (mesesValores.length) {
-
-        const ehContinuo = mesesValores.every((m, i, arr) =>
-          i === 0 || m === arr[i - 1] + 1
-        );
-
-        if (mesesValores.length === 1) {
-          mesTxt = `Meses: ${nomesMeses[mesesValores[0]]}`;
-        }
-        else if (ehContinuo) {
-          const primeiro = nomesMeses[mesesValores[0]];
-          const ultimo = nomesMeses[mesesValores[mesesValores.length - 1]];
-          mesTxt = `Meses: ${primeiro} - ${ultimo}`;
-        }
-        else {
-          const lista = mesesValores.map(m => nomesMeses[m]);
-
-          const resumo = lista.length <= 3
-            ? lista.join(", ")
-            : `${lista.slice(0, 3).join(", ")} +${lista.length - 3}`;
-
-          mesTxt = `Meses: ${resumo}`;
-        }
-
-      } else {
-        mesTxt = "Meses: todos";
+      if (selMeses?.tomselect) {
+        selMeses.tomselect.clear(true);
+        selMeses.tomselect.addItem(String(atual.mes), true);
+        selMeses.tomselect.refreshOptions(false);
+      } else if (selMeses) {
+        Array.from(selMeses.options).forEach(o => {
+          o.selected = Number(o.value) === atual.mes;
+        });
       }
 
-      badge.innerHTML = `<span class="dot"></span>Filtro: ${subTxt} • ${progTxt} • ${mesTxt} • Ano: ${ano}`;
+      ["programas", "regioes", "subregioes"].forEach(id => {
+        const sel = document.getElementById(id);
+        if (sel) sel.value = "";
+      });
+
+      await carregarRegioes();
+      await carregarSubregioes();
+      await carregarProgramas();
+
+      await aplicarFiltros();
     }
 
     async function carregarSubregioes() {
@@ -1007,56 +1296,95 @@
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
-      const programasSelecionados = Array.from(document.getElementById("programas").selectedOptions).map(o => o.value);
+      const programaSelecionado = document.getElementById("programas")?.value || "";
+      const regiaoSelecionada = document.getElementById("regioes")?.value || "";
+
+      const qs = new URLSearchParams({
+        ano: String(ano)
+      });
+
+      if (meses.length) qs.set("meses", meses.join(","));
+      if (programaSelecionado) qs.set("programa", programaSelecionado);
+      if (regiaoSelecionada) qs.set("regiao", regiaoSelecionada);
+
+      const resp = await fetch(`${API}/modalidades/subregioes?${qs.toString()}`);
 
       let data = [];
 
-      if (programasSelecionados.length === 1 && meses.length > 0) {
-        const qs = new URLSearchParams({
-          ano: String(ano),
-          programa_id: String(programasSelecionados[0]),
-          meses: meses.join(",")
-        });
-
-        const res = await fetch(API + `/planejamento/filtros/subregioes-por-programa?` + qs.toString());
-        data = await res.json();
+      if (!resp.ok) {
+        console.error("Erro ao carregar sub-regiões:", resp.status);
+        data = [];
       } else {
-        const res = await fetch(API + `/planejamento/filtros/subregioes?ano=${ano}`);
-        data = await res.json();
+        data = await resp.json();
+      }
+
+      const mapaCodigos = new Map();
+
+      try {
+        const respCodigos = await fetch(`${API}/planejamento/filtros/subregioes?ano=${ano}`);
+
+        if (respCodigos.ok) {
+          const listaCodigos = await respCodigos.json();
+
+          listaCodigos.forEach(s => {
+            mapaCodigos.set(String(s.nome || s.subregiao).trim(), s.codigo);
+          });
+        }
+      } catch (e) {
+        console.warn("Não foi possível mapear códigos das sub-regiões", e);
       }
 
       const sel = document.getElementById("subregioes");
-      const prev = new Set(Array.from(sel.selectedOptions).map(o => String(o.value)));
+      const valorAnterior = sel.value || "";
 
-      sel.innerHTML = "";
+      sel.innerHTML = `<option value="">Selecione...</option>`;
 
       data.forEach(r => {
+        const nomeSub = String(r.subregiao || r.nome || r.descricao || "").trim();
+
         const opt = document.createElement("option");
-        opt.value = r.codigo;
-        opt.textContent = r.nome;
-        if (prev.has(String(r.codigo))) opt.selected = true;
+        opt.value = mapaCodigos.get(nomeSub) || nomeSub;
+        opt.textContent = nomeSub;
+
         sel.appendChild(opt);
       });
 
+      const aindaExiste = Array.from(sel.options)
+        .some(o => o.value === valorAnterior);
+
+      sel.value = valorAnterior && aindaExiste ? valorAnterior : "";
+
       setStatus("");
-      atualizarBadgeFiltro();
     }
 
     async function carregarProgramas() {
       const atual = getDataAtual();
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
-      const subs = selecionados("subregioes");
+
+      const selSub = document.getElementById("subregioes");
+      const subsCodigo = Array.from(selSub?.selectedOptions || [])
+        .map(o => o.value)
+        .filter(Boolean)
+        .join(",");
 
       const qs = new URLSearchParams({
         indicador: "matriculas",
         ano: String(ano),
-        meses: meses.join(","),
+        meses: meses.join(",")
       });
 
-      if (subs) qs.set("subregioes", subs);
+      if (subsCodigo) {
+        qs.set("subregioes", subsCodigo);
+      }
 
       const res = await fetch(API + "/performance/cards?" + qs.toString());
+
+      if (!res.ok) {
+        console.error("Erro ao carregar programas:", res.status);
+        return;
+      }
+
       const data = await res.json();
 
       const validos = (data || []).filter(item =>
@@ -1066,6 +1394,7 @@
       );
 
       const mapa = new Map();
+
       validos.forEach(item => {
         mapa.set(String(item.programa_id), {
           codigo: item.programa_id,
@@ -1074,9 +1403,9 @@
       });
 
       const sel = document.getElementById("programas");
-      const prev = new Set(Array.from(sel.selectedOptions).map(o => String(o.value)));
+      const valorAnterior = sel.value || "";
 
-      sel.innerHTML = "";
+      sel.innerHTML = `<option value="">Selecione...</option>`;
 
       Array.from(mapa.values())
         .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"))
@@ -1084,9 +1413,46 @@
           const opt = document.createElement("option");
           opt.value = r.codigo;
           opt.textContent = r.nome;
-          if (prev.has(String(r.codigo))) opt.selected = true;
           sel.appendChild(opt);
         });
+
+      const aindaExiste = Array.from(sel.options)
+        .some(o => o.value === valorAnterior);
+
+      sel.value = valorAnterior && aindaExiste ? valorAnterior : "";
+    }
+
+    async function sincronizarFiltros(origem = "") {
+      const temRegiao = !!document.getElementById("regioes")?.value;
+
+      if (origem === "programas") {
+        await carregarSubregioes();
+
+        if (!temRegiao) {
+          await carregarRegioes();
+        }
+      }
+
+      else if (origem === "regioes") {
+        await carregarSubregioes();
+        await carregarProgramas();
+      }
+
+      else if (origem === "subregioes") {
+        await carregarProgramas();
+
+        if (!temRegiao) {
+          await carregarRegioes();
+        }
+      }
+
+      else {
+        await carregarRegioes();
+        await carregarSubregioes();
+        await carregarProgramas();
+      }
+
+      await aplicarFiltros();
     }
 
     async function aplicarFiltros() {
@@ -1094,7 +1460,6 @@
 
       try {
         setStatus("Aplicando filtros…");
-        atualizarBadgeFiltro();
 
         await carregarProgramas();
 
@@ -1112,34 +1477,123 @@
       }
     }
 
-    // Atualiza programas quando muda sub-região
-    document.getElementById("subregioes").addEventListener("change", async () => {
-      await aplicarFiltros();
-    });
-
     document.getElementById("programas").addEventListener("change", async () => {
-      await carregarSubregioes();
-      await aplicarFiltros();
+      await sincronizarFiltros("programas");
     });
 
-    // Atualiza quando mudar mês/ano
+    document.getElementById("regioes").addEventListener("change", async () => {
+      await sincronizarFiltros("regioes");
+    });
+
+    document.getElementById("subregioes").addEventListener("change", async () => {
+      await sincronizarFiltros("subregioes");
+    });
+
     document.getElementById("meses").addEventListener("change", async () => {
-      await carregarSubregioes();
-      await aplicarFiltros();
+      await sincronizarFiltros("meses");
     });
 
     document.getElementById("ano").addEventListener("change", async () => {
-      await carregarSubregioes();
-      await aplicarFiltros();
+      await sincronizarFiltros("ano");
     });
 
+    function criarTomSelectPeriodo() {
+      const el = document.getElementById("meses");
+
+      if (!el) return;
+
+      if (el.tomselect) {
+        el.tomselect.destroy();
+      }
+
+      new TomSelect(el, {
+        plugins: ["remove_button"],
+        hideSelected: true,
+        closeAfterSelect: false,
+        create: false
+      });
+
+      el.tomselect.wrapper.style.visibility = "visible";
+    }
+
+    async function carregarRegioes() {
+      const atual = getDataAtual();
+      const ano = document.getElementById("ano").value || String(atual.ano);
+      const meses = mesesSelecionados();
+
+      const selPrograma = document.getElementById("programas");
+      const programaCodigo = selPrograma?.value || "";
+      const programaNome = programaCodigo
+        ? selPrograma.options[selPrograma.selectedIndex].textContent.trim()
+        : "";
+
+      const selSub = document.getElementById("subregioes");
+      const subregioes = Array.from(selSub?.selectedOptions || [])
+        .filter(o => o.value && o.textContent.trim() !== "Selecione...")
+        .map(o => o.textContent.trim())
+        .filter(Boolean)
+        .join(",");
+
+      async function buscarRegioes(programaValor = "") {
+        const qs = new URLSearchParams({ ano: String(ano) });
+
+        if (meses.length) qs.set("meses", meses.join(","));
+        if (programaValor) qs.set("programa", programaValor);
+        if (subregioes) qs.set("subregioes", subregioes);
+
+        const url = `${API}/modalidades/regioes?${qs.toString()}`;
+
+        const resp = await fetch(url);
+
+        if (!resp.ok) {
+          console.error("Erro ao carregar regiões:", resp.status);
+          return [];
+        }
+
+        return await resp.json();
+      }
+
+      let dados = [];
+
+      // 1ª tentativa: código do programa
+      if (programaCodigo) {
+        dados = await buscarRegioes(programaCodigo);
+      }
+
+      // 2ª tentativa: nome do programa
+      if ((!dados || dados.length === 0) && programaNome) {
+        dados = await buscarRegioes(programaNome);
+      }
+
+      // 3ª tentativa: sem programa, para não deixar o campo vazio
+      if (!dados || dados.length === 0) {
+        dados = await buscarRegioes("");
+      }
+
+      const select = document.getElementById("regioes");
+      const valorAnterior = select.value || "";
+
+      select.innerHTML = `<option value="">Selecione...</option>` + dados.map(r =>
+        `<option value="${r.regiao}">${r.regiao}</option>`
+      ).join("");
+
+      const aindaExiste = Array.from(select.options)
+        .some(o => o.value === valorAnterior);
+
+      select.value = valorAnterior && aindaExiste ? valorAnterior : "";
+    }
+
     (async function init() {
-      await carregarUsuario();
       try {
-        setStatus("Carregando…");
         aplicarAnoMesPadrao();
+        criarTomSelectPeriodo();
+
+        await carregarUsuario();
+
+        setStatus("Carregando…");
+        await carregarRegioes();
         await carregarSubregioes();
-        atualizarBadgeFiltro();
+        await carregarProgramas();
         await aplicarFiltros();
         setStatus("");
       } catch (e) {
@@ -1154,12 +1608,14 @@
       const meses = mesesSelecionados();
       const subs = selecionados("subregioes");
       const progs = selecionados("programas");
+      const regiao = document.getElementById("regioes")?.value || "";
 
       const qs = new URLSearchParams({
         ano: String(ano),
         meses: meses.join(",")
       });
 
+      if (regiao) qs.set("regiao", regiao);
       if (subs) qs.set("subregioes", subs);
       if (progs) qs.set("programas", progs);
 
@@ -1172,12 +1628,14 @@
       const ano = document.getElementById("ano").value || String(atual.ano);
       const subs = selecionados("subregioes");
       const progs = selecionados("programas");
+      const regiao = document.getElementById("regioes")?.value || "";
 
       const qs = new URLSearchParams({
         ano: String(ano),
         meses: "1,2,3,4,5,6,7,8,9,10,11,12"
       });
 
+      if (regiao) qs.set("regiao", regiao);
       if (subs) qs.set("subregioes", subs);
       if (progs) qs.set("programas", progs);
 
@@ -1189,6 +1647,8 @@
         hora_aluno: Number(data?.hora_aluno?.meta_total || 0),
         receita: Number(data?.receita?.meta_total || 0),
 
+        matriculas_realizadas: Number(data?.matriculas?.realizado_total || data?.matriculas?.total || 0),
+        hora_aluno_realizada: Number(data?.hora_aluno?.realizado_total || data?.hora_aluno?.total || 0),
         receita_realizada: Number(data?.receita?.realizado_total || data?.receita?.total || 0)
       };
     }

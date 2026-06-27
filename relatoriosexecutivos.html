@@ -247,8 +247,9 @@
         .tabs-indicadores {
             display: flex;
             gap: 28px;
-            margin-bottom: 24px;
+            margin: 0 0 24px;
             padding-left: 6px;
+            border-bottom: 1px solid var(--border);
         }
 
         .tab-ind {
@@ -258,12 +259,24 @@
             font-weight: 700;
             color: #64748b;
             cursor: pointer;
-            padding-bottom: 12px;
+            padding: 0 0 12px;
+            border-radius: 0;
+        }
+
+        .tab-ind:hover {
+            background: transparent;
+            color: #003B8F;
         }
 
         .tab-ind.active {
-            color: #2563eb;
-            border-bottom: 3px solid #2563eb;
+            color: #003B8F;
+            border-bottom: 3px solid #003B8F;
+        }
+
+        .tab-ind:focus,
+        .tab-ind:focus-visible {
+            outline: none;
+            box-shadow: none;
         }
 
         .filtros-subregioes {
@@ -432,42 +445,46 @@
 
         .relatorios-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
+            grid-template-columns: repeat(4, minmax(220px, 1fr));
+            gap: 16px;
         }
 
         .relatorio-card {
-            background: #fff;
+            background: linear-gradient(180deg, rgba(0, 59, 143, .03) 0%, #ffffff 100%);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: var(--radius);
+            padding: 22px;
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             min-height: 240px;
             transition: .2s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .relatorio-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 14px 28px rgba(15, 23, 42, .12);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .14);
+            border-color: rgba(0, 59, 143, .35);
         }
 
         .relatorio-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            background: #eff6ff;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(0, 59, 143, .10);
+            color: #003B8F;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            margin-bottom: 18px;
+            font-size: 20px;
+            margin-bottom: 16px;
         }
 
         .relatorio-card h3 {
             margin: 0 0 10px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 900;
             color: #071b52;
             line-height: 1.4;
@@ -475,7 +492,7 @@
 
         .relatorio-card p {
             margin: 0;
-            color: #64748b;
+            color: var(--muted);
             font-size: 13px;
             line-height: 1.5;
             flex: 1;
@@ -483,20 +500,28 @@
 
         .relatorio-card button {
             margin-top: 18px;
-            height: 44px;
+            height: 46px;
             border: none;
-            border-radius: 12px;
-            background: #2563eb;
+            border-radius: 14px;
+            background: #003B8F;
             color: white;
+            font-size: 14px;
             font-weight: 800;
+            box-shadow: 0 8px 20px rgba(0, 59, 143, .25);
+            transition: .2s;
         }
 
         .relatorio-card button:hover {
-            background: #1d4ed8;
+            background: #0F5FFF;
+            transform: translateY(-2px);
+        }
+
+        .relatorio-card button:active {
+            transform: translateY(0);
         }
 
         .relatorio-card.destaque {
-            border: 2px solid #2563eb;
+            border: 1px solid rgba(0, 59, 143, .35);
         }
 
         @media (max-width: 1500px) {
@@ -946,9 +971,10 @@
 
         .mini-relatorio-card {
             padding: 18px;
-            border-radius: 14px;
-            background: #f8fafc;
+            border-radius: var(--radius);
+            background: linear-gradient(180deg, rgba(0, 59, 143, .03) 0%, #ffffff 100%);
             border: 1px solid var(--border);
+            box-shadow: var(--shadow);
         }
 
         .mini-relatorio-card strong {
@@ -959,7 +985,7 @@
         }
 
         .mini-relatorio-card span {
-            color: #2563eb;
+            color: #003B8F;
             font-size: 22px;
             font-weight: 900;
         }
@@ -993,24 +1019,27 @@
             width: 100%;
             max-width: 980px;
             background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 24px 60px rgba(15, 23, 42, .25);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             overflow: hidden;
         }
 
         .modal-relatorio-header {
-            padding: 22px 24px;
+            padding: 20px 24px;
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
+            align-items: center;
             gap: 16px;
+            background: #f8fafc;
         }
 
         .modal-relatorio-header h2 {
             margin: 0;
-            color: #071b52;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 900;
+            color: var(--text);
         }
 
         .modal-relatorio-header p {
@@ -1023,8 +1052,14 @@
             width: 38px;
             height: 38px;
             border-radius: 999px;
-            font-size: 24px;
+            border: 1px solid var(--border);
+            background: #fff;
+            font-size: 22px;
             line-height: 1;
+        }
+
+        .btn-fechar-modal:hover {
+            background: #f8fafc;
         }
 
         .modal-relatorio-body {
@@ -1140,32 +1175,40 @@
 
         .preview-kpi {
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: var(--radius);
             padding: 18px;
-            background: #f8fafc;
+            background: linear-gradient(180deg, rgba(0, 59, 143, .03) 0%, #ffffff 100%);
+            box-shadow: var(--shadow);
+            transition: .2s;
+        }
+
+        .preview-kpi:hover {
+            transform: translateY(-2px);
         }
 
         .preview-kpi span {
             display: block;
             font-size: 12px;
             font-weight: 900;
-            color: #071b52;
+            color: var(--muted);
             margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
         }
 
         .preview-kpi strong {
             display: block;
             font-size: 26px;
             font-weight: 900;
-            color: #071b52;
+            color: #003B8F;
             margin-bottom: 8px;
         }
 
         .preview-kpi p {
             margin: 0;
             font-size: 12px;
-            color: #64748b;
-            line-height: 1.4;
+            color: var(--muted);
+            line-height: 1.5;
         }
 
         @media (max-width: 1000px) {
@@ -1178,6 +1221,112 @@
             .preview-body {
                 grid-template-columns: 1fr;
             }
+        }
+
+        /* ===== AJUSTE AZUL PADRÃO - RELATÓRIOS ===== */
+
+        .dot {
+            background: #003B8F;
+            box-shadow: 0 0 0 5px rgba(0, 59, 143, .12);
+        }
+
+        .relatorio-card.destaque {
+            border-color: rgba(0, 59, 143, .35);
+        }
+
+        .btn-gerar-modal {
+            background: #003B8F;
+        }
+
+        .btn-gerar-modal:hover {
+            background: #0F5FFF;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .usuario-badge {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .btn-sair {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 34px;
+            padding: 0 14px;
+            border-radius: 999px;
+            background: #fff;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .btn-sair:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+
+        .relatorio-card.disabled {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            box-shadow: none;
+            opacity: .85;
+        }
+
+        .relatorio-card.disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #e2e8f0;
+        }
+
+        .relatorio-card.disabled .relatorio-icon {
+            background: #e5e7eb;
+            color: #64748b;
+        }
+
+        .relatorio-card.disabled h3 {
+            color: #64748b;
+        }
+
+        .relatorio-card.disabled p {
+            color: #94a3b8;
+        }
+
+        .relatorio-card.disabled button {
+            background: #e5e7eb;
+            color: #64748b;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .relatorio-card.disabled button:hover {
+            background: #e5e7eb;
+            transform: none;
+        }
+
+        .relatorio-card.disabled {
+            position: relative;
+        }
+
+        .relatorio-card.disabled::after {
+            content: "EM BREVE";
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 999px;
+            letter-spacing: .4px;
         }
     </style>
 </head>
@@ -1217,72 +1366,52 @@
 
     <div class="container">
 
-        <nav class="topnav">
-            <a href="index.html" class="navlink">Dashboard</a>
-            <a href="po.html" class="navlink">PO</a>
-            <a href="programas.html?v=2" class="navlink">Programas</a>
-            <a href="performance.html" class="navlink">Performance</a>
-            <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-            <a href="unidades.html" class="navlink">Unidades</a>
-            <a href="sge_turmas.html" class="navlink">Turmas</a>
-            <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-            <a href="visao_executiva.html" class="navlink active">Visão Executiva</a>
-
-            <div class="topnav-right">
-                <a href="alterar_senha.html" class="navlink">
-                    Alterar senha
-                </a>
-                <div id="usuario-logado" class="badge">
-                    <span class="dot"></span>
-                    Usuário: —
-                </div>
-                <button onclick="logout()">Sair</button>
-            </div>
-        </nav>
         <div class="page-layout">
-            <aside class="sidebar-executiva">
-                <div class="sidebar-logo">
-                    <img src="/assets/logo.png" alt="SENAI">
-                </div>
-                <nav class="sidebar-nav">
-                    <a href="visao_executiva.html">
-                        🏠
-                        <span>Visão Executiva</span>
-                    </a>
-                    <a href="indicadores.html">
-                        📊
-                        <span>Indicadores</span>
-                    </a>
-                    <a href="regioes.html">
-                        🌎
-                        <span>Regiões</span>
-                    </a>
 
-                    <a href="subregioes.html">
-                        📍
-                        <span>Sub-regiões</span>
-                    </a>
-                    <a href="turmas.html">
-                        👥
-                        <span>Turmas</span>
-                    </a>
-                    <a href="acoes.html">
-                        🎯
-                        <span>Ações</span>
-                    </a>
-                    <a href="relatoriosexecutivos.html" class="active">
-                        📄
-                        <span>Relatórios</span>
-                    </a>
+            <aside class="sidebar-executiva">
+
+                <div class="sidebar-logo">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="index.html">🏠 Dashboard</a>
+                    <a href="po.html">🎯 PO</a>
+                    <a href="programas.html?v=2">🧩 Programas</a>
+                    <a href="performance.html">📊 Performance</a>
+                    <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+                    <a href="unidades.html">🏢 Unidades</a>
+                    <a href="sge_turmas.html">📚 Ofertas</a>
+                    <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+                    <a href="visao_executiva.html">🧠 Visão Executiva</a>
+                    <a href="indicadores.html">📈 Indicadores</a>
+                    <a href="regioes.html">🌎 Regiões</a>
+                    <a href="subregioes.html">📍 Sub-regiões</a>
+                    <a href="turmas.html">🏫 Turmas</a>
+                    <a href="acoes.html">✅ Ações</a>
+                    <a href="relatoriosexecutivos.html" class="active">📄 Relatórios</a>
                 </nav>
+
             </aside>
+
             <main class="main-executiva">
 
                 <div class="header">
                     <div class="title">
                         <h1>Relatórios Executivos</h1>
-                        <p>Gere, personalize e exporte relatórios estratégicos para tomada de decisão.
-                        </p>
+                    </div>
+
+                    <div class="header-actions">
+
+                        <div class="badge usuario-badge" id="usuario-logado">
+                            <span class="dot"></span>
+                            Usuário: —
+                        </div>
+
+                        <button class="btn-sair" onclick="logout()">
+                            Sair
+                        </button>
+
                     </div>
                 </div>
 
@@ -1291,231 +1420,239 @@
                 </div>
 
                 <div id="aba-disponiveis" class="aba-subregioes active">
-                    <section class="relatorios-grid">
 
-                        <div class="relatorio-card">
-                            <div class="relatorio-icon">📊</div>
-                            <h3>RELATÓRIO EXECUTIVO</h3>
-                            <p>Visão consolidada de metas, realizado, tendências e recomendações.</p>
-                            <button onclick="gerarRelatorio('executivo')">Gerar Relatório</button>
-                        </div>
+                    <div class="panel">
 
-                        <div class="relatorio-card">
-                            <div class="relatorio-icon">📍</div>
-                            <h3>DESEMPENHO POR SUB-REGIÃO</h3>
-                            <p>Ranking, evolução e análise territorial por sub-região.</p>
-                            <button onclick="gerarRelatorio('subregiao')">Gerar Relatório</button>
-                        </div>
+                        <section class="relatorios-grid">
 
-                        <div class="relatorio-card">
-                            <div class="relatorio-icon">🌎</div>
-                            <h3>DESEMPENHO POR REGIÃO</h3>
-                            <p>Comparativo entre regiões e evolução dos indicadores.</p>
-                            <button onclick="gerarRelatorio('regiao')">Gerar Relatório</button>
-                        </div>
-
-                        <div class="relatorio-card">
-                            <div class="relatorio-icon">📈</div>
-                            <h3>INDICADORES DETALHADOS</h3>
-                            <p>Todos os indicadores com histórico mensal e análise comparativa.</p>
-                            <button onclick="gerarRelatorio('indicadores')">Gerar Relatório</button>
-                        </div>
-
-                        <div class="relatorio-card">
-                            <div class="relatorio-icon">👥</div>
-                            <h3>TURMAS DETALHADAS</h3>
-                            <p>Relação completa de turmas, matrículas e resultados.</p>
-                            <button onclick="gerarRelatorio('turmas')">Gerar Relatório</button>
-                        </div>
-
-                        <div class="relatorio-card">
-                            <div class="relatorio-icon">🎯</div>
-                            <h3>AÇÕES E PLANO DE AÇÃO</h3>
-                            <p>Ações cadastradas, status, responsáveis e evidências.</p>
-                            <button onclick="gerarRelatorio('acoes')">Gerar Relatório</button>
-                        </div>
-
-                        <div class="relatorio-card">
-                            <div class="relatorio-icon">💰</div>
-                            <h3>RELATÓRIO FINANCEIRO</h3>
-                            <p>Receita, projeções e comparativos financeiros.</p>
-                            <button onclick="gerarRelatorio('financeiro')">Gerar Relatório</button>
-                        </div>
-
-                        <div class="relatorio-card destaque">
-                            <div class="relatorio-icon">⚙️</div>
-                            <h3>RELATÓRIO PERSONALIZADO</h3>
-                            <p>Monte seu próprio relatório selecionando os blocos desejados.</p>
-                            <button onclick="gerarRelatorio('personalizado')">Personalizar</button>
-                        </div>
-
-                    </section>
-                    <section class="sub-card" style="margin-top:20px;">
-                        <div class="sub-card-title">
-                            <h2>RELATÓRIOS MAIS UTILIZADOS</h2>
-                            <p class="ranking-subtitulo">
-                                Relatórios com maior número de downloads pelos gestores.
-                            </p>
-                        </div>
-
-                        <div class="mais-utilizados-grid">
-
-                            <div class="mini-relatorio-card">
-                                <strong>RELATÓRIO EXECUTIVO</strong>
-                                <span>248 downloads</span>
+                            <div class="relatorio-card">
+                                <div class="relatorio-icon">📊</div>
+                                <h3>RELATÓRIO EXECUTIVO</h3>
+                                <p>Visão consolidada de metas, realizado, tendências e recomendações.</p>
+                                <button onclick="gerarRelatorio('executivo')">Gerar Relatório</button>
                             </div>
 
-                            <div class="mini-relatorio-card">
-                                <strong>DESEMPENHO POR SUB-REGIÃO</strong>
-                                <span>176 downloads</span>
+                            <div class="relatorio-card disabled">
+                                <div class="relatorio-icon">📍</div>
+                                <h3>DESEMPENHO POR SUB-REGIÃO</h3>
+                                <p>Ranking, evolução e análise territorial por sub-região.</p>
+                                <button onclick="gerarRelatorio('subregiao')">Gerar Relatório</button>
                             </div>
 
-                            <div class="mini-relatorio-card">
-                                <strong>AÇÕES E PLANO DE AÇÃO</strong>
-                                <span>122 downloads</span>
+                            <div class="relatorio-card disabled">
+                                <div class="relatorio-icon">🌎</div>
+                                <h3>DESEMPENHO POR REGIÃO</h3>
+                                <p>Comparativo entre regiões e evolução dos indicadores.</p>
+                                <button onclick="gerarRelatorio('regiao')">Gerar Relatório</button>
                             </div>
 
-                        </div>
-                    </section>
+                            <div class="relatorio-card disabled">
+                                <div class="relatorio-icon">📈</div>
+                                <h3>INDICADORES DETALHADOS</h3>
+                                <p>Todos os indicadores com histórico mensal e análise comparativa.</p>
+                                <button onclick="gerarRelatorio('indicadores')">Gerar Relatório</button>
+                            </div>
+
+                            <div class="relatorio-card disabled">
+                                <div class="relatorio-icon">👥</div>
+                                <h3>TURMAS DETALHADAS</h3>
+                                <p>Relação completa de turmas, matrículas e resultados.</p>
+                                <button onclick="gerarRelatorio('turmas')">Gerar Relatório</button>
+                            </div>
+
+                            <div class="relatorio-card disabled">
+                                <div class="relatorio-icon">🎯</div>
+                                <h3>AÇÕES E PLANO DE AÇÃO</h3>
+                                <p>Ações cadastradas, status, responsáveis e evidências.</p>
+                                <button onclick="gerarRelatorio('acoes')">Gerar Relatório</button>
+                            </div>
+
+                            <div class="relatorio-card disabled">
+                                <div class="relatorio-icon">💰</div>
+                                <h3>RELATÓRIO FINANCEIRO</h3>
+                                <p>Receita, projeções e comparativos financeiros.</p>
+                                <button onclick="gerarRelatorio('financeiro')">Gerar Relatório</button>
+                            </div>
+
+                            <div class="relatorio-card">
+                                <div class="relatorio-icon">📚</div>
+                                <h3>CARTEIRA DE PROGRAMAS</h3>
+                                <p>Apresentação executiva em PowerPoint com a relação dos programas, vigência,
+                                    financiamento, modalidades e interlocutores.</p>
+                                <button onclick="gerarRelatorio('carteira_programas')">Gerar PPTX</button>
+                            </div>
+
+                        </section>
+                    </div>
                 </div>
+                <!--
+                <section class="sub-card" style="margin-top:20px;">
+                    <div class="sub-card-title">
+                        <h2>RELATÓRIOS MAIS UTILIZADOS</h2>
+                        <p class="ranking-subtitulo">
+                            Relatórios com maior número de downloads pelos gestores.
+                        </p>
+                    </div>
 
-                <div id="modalRelatorio" class="modal-relatorio hidden">
-                    <div class="modal-relatorio-card">
+                    <div class="mais-utilizados-grid">
 
-                        <div class="modal-relatorio-header">
-                            <div>
-                                <h2 id="modalTituloRelatorio">Gerar Relatório</h2>
-                                <p id="modalDescricaoRelatorio">
-                                    Configure as opções antes de gerar o relatório.
-                                </p>
-                            </div>
-
-                            <button class="btn-fechar-modal" onclick="fecharModalRelatorio()">×</button>
+                        <div class="mini-relatorio-card">
+                            <strong>RELATÓRIO EXECUTIVO</strong>
+                            <span>248 downloads</span>
                         </div>
 
-                        <div class="modal-bloco-escopo">
-
-                            <h3>Escopo do Relatório</h3>
-
-                            <div class="modal-filtros-grid">
-
-                                <div class="filtro-item">
-                                    <label>Ano</label>
-                                    <select id="modalAno">
-                                        <option value="2026">2026</option>
-                                        <option value="2025">2025</option>
-                                    </select>
-                                </div>
-
-                                <div class="filtro-item periodo-field">
-                                    <label>Período</label>
-                                    <select id="modalPeriodo" multiple>
-                                        <option value="1">Janeiro</option>
-                                        <option value="2">Fevereiro</option>
-                                        <option value="3">Março</option>
-                                        <option value="4">Abril</option>
-                                        <option value="5">Maio</option>
-                                        <option value="6">Junho</option>
-                                        <option value="7">Julho</option>
-                                        <option value="8">Agosto</option>
-                                        <option value="9">Setembro</option>
-                                        <option value="10">Outubro</option>
-                                        <option value="11">Novembro</option>
-                                        <option value="12">Dezembro</option>
-                                    </select>
-                                </div>
-
-                                <div class="filtro-item">
-                                    <label>Programa</label>
-                                    <select id="modalPrograma">
-                                        <option value="">Todos os programas</option>
-                                    </select>
-                                </div>
-
-                                <div class="filtro-item">
-                                    <label>Região</label>
-                                    <select id="modalRegiao">
-                                        <option value="">Todas as regiões</option>
-                                    </select>
-                                </div>
-
-                                <div class="filtro-item">
-                                    <label>Sub-região</label>
-                                    <select id="modalSubregiao">
-                                        <option value="">Todas as sub-regiões</option>
-                                    </select>
-                                </div>
-
-                                <div class="filtro-item">
-                                    <label>UO</label>
-                                    <select id="modalUo">
-                                        <option value="">Todas as UOs</option>
-                                    </select>
-                                </div>
-
-                            </div>
-
+                        <div class="mini-relatorio-card">
+                            <strong>DESEMPENHO POR SUB-REGIÃO</strong>
+                            <span>176 downloads</span>
                         </div>
 
-                        <div class="modal-relatorio-footer">
-                            <button class="btn-cancelar-modal" onclick="fecharModalRelatorio()">Cancelar</button>
-                            <button class="btn-gerar-modal" onclick="confirmarGeracaoRelatorio()">Gerar
-                                relatório</button>
+                        <div class="mini-relatorio-card">
+                            <strong>AÇÕES E PLANO DE AÇÃO</strong>
+                            <span>122 downloads</span>
                         </div>
 
                     </div>
-                </div>
-
-                <div id="modalPreviewRelatorio" class="modal-relatorio hidden">
-                    <div class="modal-relatorio-card preview-card">
-
-                        <div class="modal-relatorio-header">
-                            <div>
-                                <h2>Prévia do Relatório Executivo</h2>
-                                <p id="previewSubtitulo">Confira os principais indicadores antes de gerar o PDF.</p>
-                            </div>
-
-                            <button class="btn-fechar-modal" onclick="fecharPreviewRelatorio()">×</button>
-                        </div>
-
-                        <div class="preview-body">
-
-                            <div class="preview-kpi">
-                                <span>MATRÍCULAS</span>
-                                <strong id="previewMatriculas">0</strong>
-                                <p id="previewMatriculasMeta">Meta: —</p>
-                            </div>
-
-                            <div class="preview-kpi">
-                                <span>HORA-ALUNO</span>
-                                <strong id="previewHoraAluno">0</strong>
-                                <p id="previewHoraAlunoMeta">Meta: —</p>
-                            </div>
-
-                            <div class="preview-kpi">
-                                <span>RECEITA</span>
-                                <strong id="previewReceita">R$ 0</strong>
-                                <p id="previewReceitaMeta">Meta: —</p>
-                            </div>
-
-                            <div class="preview-kpi">
-                                <span>TURMAS</span>
-                                <strong id="previewTurmas">0</strong>
-                                <p>Ativas no período</p>
-                            </div>
-
-                        </div>
-
-                        <div class="modal-relatorio-footer">
-                            <button class="btn-cancelar-modal" onclick="fecharPreviewRelatorio()">Fechar</button>
-                            <button class="btn-gerar-modal" onclick="gerarPdfRelatorio()">📄 Gerar PDF</button>
-                        </div>
-
-                    </div>
-                </div>
-
-            </main>
+                </section>
+            -->
         </div>
+
+        <div id="modalRelatorio" class="modal-relatorio hidden">
+            <div class="modal-relatorio-card">
+
+                <div class="modal-relatorio-header">
+                    <div>
+                        <h2 id="modalTituloRelatorio">Gerar Relatório</h2>
+                        <p id="modalDescricaoRelatorio">
+                            Configure as opções antes de gerar o relatório.
+                        </p>
+                    </div>
+
+                    <button class="btn-fechar-modal" onclick="fecharModalRelatorio()">×</button>
+                </div>
+
+                <div class="modal-bloco-escopo">
+
+                    <h3>Escopo do Relatório</h3>
+
+                    <div class="modal-filtros-grid">
+
+                        <div class="filtro-item">
+                            <label>Ano</label>
+                            <select id="modalAno">
+                                <option value="2026">2026</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-item periodo-field">
+                            <label>Período</label>
+                            <select id="modalPeriodo" multiple>
+                                <option value="1">Janeiro</option>
+                                <option value="2">Fevereiro</option>
+                                <option value="3">Março</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Maio</option>
+                                <option value="6">Junho</option>
+                                <option value="7">Julho</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Setembro</option>
+                                <option value="10">Outubro</option>
+                                <option value="11">Novembro</option>
+                                <option value="12">Dezembro</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-item">
+                            <label>Programa</label>
+                            <select id="modalPrograma">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-item">
+                            <label>Região</label>
+                            <select id="modalRegiao">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-item">
+                            <label>Sub-região</label>
+                            <select id="modalSubregiao">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                        <div class="filtro-item">
+                            <label>UO</label>
+                            <select id="modalUo">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-relatorio-footer">
+                    <button class="btn-cancelar-modal" onclick="fecharModalRelatorio()">Cancelar</button>
+                    <button class="btn-gerar-modal" onclick="confirmarGeracaoRelatorio()">Gerar
+                        relatório</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="modalPreviewRelatorio" class="modal-relatorio hidden">
+            <div class="modal-relatorio-card preview-card">
+
+                <div class="modal-relatorio-header">
+                    <div>
+                        <h2>Prévia do Relatório Executivo</h2>
+                        <p id="previewSubtitulo">Confira os principais indicadores antes de gerar o PDF.</p>
+                    </div>
+
+                    <button class="btn-fechar-modal" onclick="fecharPreviewRelatorio()">×</button>
+                </div>
+
+                <div class="preview-body">
+
+                    <div class="preview-kpi">
+                        <span>MATRÍCULAS</span>
+                        <strong id="previewMatriculas">0</strong>
+                        <p id="previewMatriculasMeta">Meta: —</p>
+                    </div>
+
+                    <div class="preview-kpi">
+                        <span>HORA-ALUNO</span>
+                        <strong id="previewHoraAluno">0</strong>
+                        <p id="previewHoraAlunoMeta">Meta: —</p>
+                    </div>
+
+                    <div class="preview-kpi">
+                        <span>RECEITA</span>
+                        <strong id="previewReceita">R$ 0</strong>
+                        <p id="previewReceitaMeta">Meta: —</p>
+                    </div>
+
+                    <div class="preview-kpi">
+                        <span>TURMAS</span>
+                        <strong id="previewTurmas">0</strong>
+                        <p>Ativas no período</p>
+                    </div>
+
+                </div>
+
+                <div class="modal-relatorio-footer">
+                    <button class="btn-cancelar-modal" onclick="fecharPreviewRelatorio()">Fechar</button>
+                    <button class="btn-gerar-modal" onclick="gerarPdfRelatorio()">📄 Gerar PDF</button>
+                </div>
+
+            </div>
+        </div>
+
+        </main>
+    </div>
     </div>
 
     <script>
@@ -2062,7 +2199,7 @@
                 const dados = await resp.json();
 
                 filtroPrograma.innerHTML =
-                    `<option value="">Todos os programas</option>`;
+                    `<option value="">Selecione...</option>`;
 
                 dados.forEach(item => {
                     const nome =
@@ -2100,7 +2237,7 @@
                 const dados = await resp.json();
 
                 filtroUo.innerHTML =
-                    `<option value="">Todas as UOs</option>`;
+                    `<option value="">Selecione...</option>`;
 
                 dados.forEach(item => {
                     const nome =
@@ -2138,7 +2275,7 @@
                 const dados = await resp.json();
 
                 filtroSubregiao.innerHTML =
-                    `<option value="">Todas as sub-regiões</option>`;
+                    `<option value="">Selecione...</option>`;
 
                 dados.forEach(item => {
                     const nome = item.nome || item.subregiao || item;
@@ -2236,7 +2373,7 @@
 
             tomSelectPeriodoModal = new TomSelect("#modalPeriodo", {
                 plugins: ["remove_button"],
-                placeholder: "Selecione um ou mais meses",
+                placeholder: "Selecione...",
                 maxItems: null,
                 hideSelected: true,
                 closeAfterSelect: false,
@@ -2256,7 +2393,7 @@
 
                     if (!this.items.length) {
                         this.control_input.placeholder =
-                            "Selecione um ou mais meses";
+                            "Selecione...";
                     }
 
                     ajustarLarguraPeriodoModal();
@@ -2305,7 +2442,45 @@
         }
 
         function gerarRelatorio(tipo) {
+            if (tipo === "carteira_programas") {
+                gerarCarteiraProgramasPptx();
+                return;
+            }
+
             abrirModalRelatorio(tipo);
+        }
+
+        async function gerarCarteiraProgramasPptx() {
+            try {
+                const resp = await fetch(`${API}/executivo/relatorios/carteira-programas`, {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        ano: 2026
+                    })
+                });
+
+                if (!resp.ok) {
+                    throw new Error("Erro ao gerar Carteira de Programas.");
+                }
+
+                const blob = await resp.blob();
+                const url = window.URL.createObjectURL(blob);
+
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "carteira_de_programas.pptx";
+                link.click();
+
+                window.URL.revokeObjectURL(url);
+
+            } catch (erro) {
+                console.error(erro);
+                alert("Não foi possível gerar a Carteira de Programas.");
+            }
         }
 
         async function confirmarGeracaoRelatorio() {
@@ -2719,28 +2894,28 @@
 
                 preencherSelectRelatorio(
                     "modalPrograma",
-                    "Todos os programas",
+                    "Selecione...",
                     data.programas,
                     valoresAtuais.programa
                 );
 
                 preencherSelectRelatorio(
                     "modalRegiao",
-                    "Todas as regiões",
+                    "Selecione...",
                     data.regioes,
                     valoresAtuais.regiao
                 );
 
                 preencherSelectRelatorio(
                     "modalSubregiao",
-                    "Todas as sub-regiões",
+                    "Selecione...",
                     data.subregioes,
                     valoresAtuais.subregiao
                 );
 
                 preencherSelectRelatorio(
                     "modalUo",
-                    "Todas as UOs",
+                    "Selecione...",
                     data.uos,
                     valoresAtuais.uo
                 );

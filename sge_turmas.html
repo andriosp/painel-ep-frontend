@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,238 +9,464 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-  <style>
-    :root{
-      --bg:#f6f7fb;
-      --panel:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:#e5e7eb;
-      --shadow: 0 10px 24px rgba(15,23,42,.08);
-      --radius:14px;
-      --radius-sm:12px;
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
-      --brand:#2563eb;
-      --ok:#16a34a;
-      --warn:#f59e0b;
-      --bad:#ef4444;
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e5e7eb;
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --radius: 14px;
+      --radius-sm: 12px;
+
+      --brand: #003B8F;
+      --ok: #16a34a;
+      --warn: #f59e0b;
+      --bad: #ef4444;
     }
 
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
-    .container{
+    .container {
       max-width: 1800px;
       margin: 0 auto;
       padding: 18px 18px 36px;
     }
 
-    /* Top nav (igual às outras páginas) */
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .navlink{
-      text-decoration:none;
-      color: var(--muted);
-      font-weight: 750;
-      font-size: 13px;
-      padding:8px 12px;
-      border-radius: 12px;
-      border:1px solid transparent;
-      white-space:nowrap;
-    }
-    .navlink:hover{
-      background:#fff;
+    .navlink:hover {
+      background: #fff;
       border-color: var(--border);
     }
-    .navlink.active{
-      background: rgba(37,99,235,.10);
+
+    /* ===== LAYOUT EXECUTIVO ===== */
+
+    .page-layout {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .sidebar-executiva {
+      width: 220px;
+      min-height: calc(100vh - 90px);
+      background: #003B8F;
+      border-radius: 20px;
+      padding: 20px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 18px;
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .sidebar-logo img {
+      width: 100px;
+      max-width: 100%;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: .2s;
+      font-size: 15px;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(255, 255, 255, .12);
+    }
+
+    .sidebar-nav a.active {
+      background: #0F5FFF;
+    }
+
+    .main-executiva {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width:1200px) {
+      .page-layout {
+        flex-direction: column;
+      }
+
+      .sidebar-executiva {
+        width: 100%;
+        min-height: auto;
+        position: relative;
+      }
+    }
+
+    .navlink.active {
+      background: rgba(37, 99, 235, .10);
       color: var(--text);
-      border-color: rgba(37,99,235,.25);
+      border-color: rgba(37, 99, 235, .25);
     }
 
-    .header{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
-      flex-wrap:wrap;
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
     }
 
-    .title h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.2px;
+    .title h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: .2px;
     }
-    .title p{
-      margin:6px 0 0;
+
+    .title p {
+      margin: 6px 0 0;
       color: var(--muted);
-      font-size:13px;
+      font-size: 13px;
     }
 
-    .badge{
-      display:flex;
-      align-items:flex-start;
-      gap:8px;
-      padding:8px 12px;
-      border:1px solid var(--border);
+    .badge {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
       border-radius: 14px;
-      background:#fff;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.35;
-      box-shadow:0 6px 14px rgba(15,23,42,.06);
-      white-space:normal;
-      max-width:720px;
-      overflow:visible;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, .06);
+      white-space: normal;
+      max-width: 720px;
+      overflow: visible;
     }
 
-    .dot{
-      width:8px;height:8px;border-radius:50%;
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
       background: var(--brand);
-      box-shadow: 0 0 0 5px rgba(37,99,235,.12);
+      box-shadow: 0 0 0 5px rgba(37, 99, 235, .12);
       flex: 0 0 auto;
     }
 
-    .panel{
+    .panel {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 14px;
-      margin-bottom: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
     }
 
-    .filters{
-      display:flex;
-      gap:12px;
-      align-items:flex-end;
-      flex-wrap:wrap;
-    }
-    .field{
-      flex: 1;
-      min-width: 280px;
-    }
-    .field.small{
-      flex: 0 0 160px;
-      min-width: 160px;
-      max-width: 160px;
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
     }
 
-    label{
-      display:block;
-      font-size:12px;
+    .field {
+      flex: 0 0 220px;
+      min-width: 220px;
+    }
+
+    .field.small {
+      flex: 0 0 110px;
+      min-width: 110px;
+      max-width: 110px;
+    }
+
+    #dt_inicio_de,
+    #dt_inicio_ate,
+    #dt_mat_de,
+    #dt_mat_ate {
+      min-width: 130px;
+    }
+
+    .field:has(#dt_inicio_de),
+    .field:has(#dt_inicio_ate),
+    .field:has(#dt_mat_de),
+    .field:has(#dt_mat_ate) {
+      flex: 0 0 130px;
+      min-width: 130px;
+      max-width: 130px;
+    }
+
+    .field:has(#turma) {
+      flex: 0 0 180px;
+      min-width: 180px;
+      max-width: 180px;
+    }
+
+    .field:has(#uo) {
+      flex: 0 0 450px;
+      min-width: 450px;
+      max-width: 450px;
+    }
+
+    #uo-ts-control .item {
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ts-dropdown .option {
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .field:has(#status_matricula) {
+      flex: 0 0 180px;
+      min-width: 180px;
+      max-width: 180px;
+    }
+
+    #status_matricula-ts-dropdown {
+      min-width: 180px !important;
+    }
+
+    .field:has(#faixa_preenchimento) {
+      flex: 0 0 140px;
+      min-width: 140px;
+      max-width: 140px;
+    }
+
+    #faixa_preenchimento-ts-dropdown {
+      min-width: 140px !important;
+    }
+
+    .field:has(#condicao_aluno) {
+      flex: 0 0 275px;
+      min-width: 275px;
+      max-width: 275px;
+    }
+
+    #condicao_aluno-ts-dropdown {
+      min-width: 275px !important;
+    }
+
+    .field:has(#modalidade) {
+      flex: 0 0 275px;
+      min-width: 275px;
+      max-width: 275px;
+    }
+
+    #modalidade-ts-dropdown {
+      min-width: 275px !important;
+    }
+
+    .field:has(#programa) {
+      flex: 0 0 275px;
+      min-width: 275px;
+      max-width: 275px;
+    }
+
+    #programa-ts-dropdown {
+      min-width: 275px !important;
+    }
+
+    .field:has(#formato) {
+      flex: 0 0 170px;
+      min-width: 170px;
+      max-width: 170px;
+    }
+
+    #formato-ts-dropdown {
+      min-width: 170px !important;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
       color: var(--muted);
-      margin-bottom:8px;
-    }
-    select{
-      width:100%;
-      border:1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding:10px;
-      background:#fff;
-      outline:none;
-      height: 44px;
-    }
-    select:focus{
-      border-color: rgba(37,99,235,.45);
-      box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+      margin-bottom: 6px;
     }
 
-    .actions{
-      margin-left:auto;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    button{
-      appearance:none;
-      border:1px solid var(--border);
-      background:#fff;
-      color: var(--text);
-      padding:10px 12px;
+    select {
+      width: 100%;
+      height: 42px !important;
+      min-height: 42px !important;
+      max-height: 42px !important;
+
+      border: 1px solid var(--border);
       border-radius: 12px;
-      cursor:pointer;
+      padding: 8px 10px;
+
+      background: #fff;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: rgba(37, 99, 235, .45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+    }
+
+    .actions {
+      margin-left: auto;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor: pointer;
       font-weight: 650;
-      font-size:13px;
+      font-size: 13px;
       transition: transform .05s ease, background .15s ease, border-color .15s ease;
     }
-    button:hover{ background:#f8fafc; border-color:#dbe3ef; }
-    button:active{ transform: translateY(1px); }
-    .btn-primary{
-      background: var(--brand);
-      color:#fff;
-      border-color: rgba(37,99,235,.65);
-    }
-    .btn-primary:hover{ background:#1d4ed8; }
 
-    .status{
+    button:hover {
+      background: #f8fafc;
+      border-color: #dbe3ef;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: #003B8F;
+      color: #fff;
+      border-color: #003B8F;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .actions .btn-primary {
+      height: 42px;
+      padding: 0 18px;
+    }
+
+    .status {
       margin-top: 10px;
-      font-size:12px;
+      font-size: 12px;
       color: var(--muted);
     }
 
     /* Cards (estilo “dashboard”) */
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(240px, 1fr));
+      gap: 16px;
       margin-bottom: 14px;
     }
-    @media (max-width: 1200px){
-      .cards{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 720px){
-      .cards{ grid-template-columns: 1fr; }
-      .field{ min-width: 100%; }
-      .field.small{ min-width: 100%; max-width: 100%; flex: 1; }
-      .actions{ margin-left:0; }
+
+    @media (max-width:1200px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .card{
+    @media (max-width:760px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 14px;
-    }
-    .card .t{
-      font-size:12px;
-      color: var(--muted);
-      font-weight: 800;
-      letter-spacing:.2px;
-      text-transform: uppercase;
-    }
-    .card .v{
-      margin-top: 10px;
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing:.2px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+
+      background:
+        linear-gradient(180deg,
+          rgba(0, 59, 143, .03) 0%,
+          #ffffff 100%);
     }
 
-    .grid2{
-      display:grid;
+    .card-topo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-icone {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+
+      background: rgba(0, 59, 143, .10);
+      color: #003B8F;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 18px;
+    }
+
+    .card .t {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .card .v {
+      margin-top: 10px;
+      font-size: 26px;
+      font-weight: 820;
+      letter-spacing: .2px;
+    }
+
+    .grid2 {
+      display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       margin-bottom: 14px;
     }
-    @media (max-width: 980px){
-      .grid2{ grid-template-columns: 1fr; }
+
+    @media (max-width: 980px) {
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .section-title{
-      margin: 16px 2px 10px;
+    .section-title {
+      margin: 40px 2px 14px;
       font-size: 12px;
       color: var(--muted);
       font-weight: 850;
@@ -247,299 +474,520 @@
       text-transform: uppercase;
     }
 
-    .chart-card{
+    .chart-card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 14px;
+      padding: 18px;
+
+      background:
+        linear-gradient(180deg,
+          rgba(0, 59, 143, .03) 0%,
+          #ffffff 100%);
     }
-    .chart-card h3{
-      margin:0 0 10px;
-      font-size: 13px;
+
+    .chart-card h3 {
+      margin: 0 0 14px;
+      font-size: 12px;
       color: var(--muted);
       font-weight: 850;
-      letter-spacing:.2px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
     }
 
     /* altura padrão igual aos outros gráficos */
-    .chart-card.chart-sm{
-      height: 300px;              /* ajuste fino: 280~340 */
+    .chart-card.chart-sm {
+      height: 300px;
+      /* ajuste fino: 280~340 */
     }
 
     /* o canvas precisa preencher o card */
-    .chart-card.chart-sm canvas{
+    .chart-card.chart-sm canvas {
       width: 100% !important;
       height: 100% !important;
     }
 
-    .chart-box{
+    .chart-box {
       position: relative;
       width: 100%;
     }
 
-    .chart-box-sm{
-      height: 300px; /* coloque o mesmo “padrão” dos outros */
+    .chart-box-sm {
+      height: 300px;
+      /* coloque o mesmo “padrão” dos outros */
     }
 
-    .chart-box canvas{
+    .chart-box canvas {
       display: block;
       width: 100% !important;
       height: 100% !important;
     }
 
-    .table-card{
+    .table-card {
       background: var(--panel);
-      border:1px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      overflow:hidden;
+      overflow: hidden;
       margin-bottom: 14px;
     }
-    .table-wrap{ overflow-x: hidden; }
-    table{
-      width:100%;
+
+    .table-wrap {
+      overflow-x: hidden;
+    }
+
+    table {
+      width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
     }
 
-    thead th{
+    thead th {
       position: sticky;
-      top:0;
-      background: #fbfcfe;
-      border-bottom:1px solid var(--border);
-      color: var(--muted);
-      font-size: 12px;
+      top: 0;
+
+      background: linear-gradient(to bottom,
+          #f8fafc,
+          #f1f5f9);
+
+      border-bottom: 2px solid #dbe3ef;
+
+      color: #64748b;
+
+      font-weight: 800;
+      font-size: 10px;
+
       text-transform: uppercase;
-      letter-spacing: .28px;
-      padding: 12px 10px;
-      text-align:left;
-      white-space: normal;
-      word-break: break-word;
+      letter-spacing: .08em;
+
+      padding: 12px 8px;
+
+      white-space: nowrap;
+
+      z-index: 2;
     }
 
-    tbody td{
-      border-bottom:1px solid #eef2f7;
-      padding: 10px;
-      text-align:left;
-      white-space: normal;
-      word-break: break-word;
-      vertical-align: top;
+    tbody td {
+      border-bottom: 1px solid #eef2f7;
+      padding: 8px 8px;
       font-size: 12px;
+      vertical-align: middle;
     }
-    tbody tr:nth-child(odd){ background:#fcfdff; }
-    tbody tr:hover{ background: rgba(37,99,235,.06); }
 
-    .col-nowrap{
+    tbody tr:nth-child(odd) {
+      background: #fcfdff;
+    }
+
+    tbody td:first-child {
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    tbody tr:hover {
+      background: #eef5ff;
+    }
+
+    .col-nowrap {
       white-space: nowrap !important;
       word-break: normal !important;
     }
 
-    .col-wrap{
+    .col-wrap {
       white-space: normal !important;
       word-break: break-word !important;
     }
 
-    .col-num{
+    .col-num {
       white-space: nowrap !important;
       text-align: center;
     }
 
-    #tblTurmas table{
+    #tblTurmas table {
       table-layout: auto;
     }
 
     #tblTurmas table th:nth-child(1),
-    #tblTurmas table td:nth-child(1){
-      width: 190px;        /* 👈 reduz */
+    #tblTurmas table td:nth-child(1) {
+      width: 190px;
+      /* 👈 reduz */
       min-width: 190px;
-      padding-right: 6px;  /* 👈 aproxima da coluna 2 */
+      padding-right: 6px;
+      /* 👈 aproxima da coluna 2 */
     }
 
     #tblTurmas table th:nth-child(2),
-    #tblTurmas table td:nth-child(2){
+    #tblTurmas table td:nth-child(2) {
       min-width: 240px;
       width: 240px;
       word-break: normal !important;
     }
 
     #tblTurmas table th:nth-child(3),
-    #tblTurmas table td:nth-child(3){
+    #tblTurmas table td:nth-child(3) {
       min-width: 150px;
       width: 150px;
     }
 
     #tblTurmas table th:nth-child(5),
-    #tblTurmas table td:nth-child(5){
-      min-width: 150px;
-      width: 150px;
+    #tblTurmas table td:nth-child(5) {
+      min-width: 70px;
+      width: 70px;
       white-space: normal !important;
       word-break: normal !important;
     }
 
     #tblTurmas table th:nth-child(6),
-    #tblTurmas table td:nth-child(6){
-      min-width: 90px;
-      width: 90px;
+    #tblTurmas table td:nth-child(6) {
+      min-width: 70px;
+      width: 70px;
       white-space: nowrap !important;
       word-break: normal !important;
     }
 
-    .col-turma{
+    #tblTurmas table th:nth-child(14),
+    #tblTurmas table td:nth-child(14) {
+      min-width: 90px;
+      width: 90px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .col-turma {
       white-space: nowrap !important;
       word-break: normal !important;
       overflow-wrap: normal !important;
     }
 
-    #tblUO table{
+    #tblUO table {
       table-layout: auto;
     }
 
     #tblUO table th:nth-child(1),
-    #tblUO table td:nth-child(1){
+    #tblUO table td:nth-child(1) {
       min-width: 320px;
       width: 320px;
-      padding-right: 20px; /* 👈 espaço entre colunas */
+      padding-right: 20px;
+      /* 👈 espaço entre colunas */
     }
 
-    .empty{
+    .empty {
       padding: 14px;
       color: var(--muted);
       font-size: 13px;
     }
-    input{
-        width:100%;
-        border:1px solid var(--border);
-        border-radius: var(--radius-sm);
-        padding:10px;
-        background:#fff;
-        outline:none;
-        height: 44px;
-        }
-        input:focus{
-        border-color: rgba(37,99,235,.45);
-        box-shadow: 0 0 0 4px rgba(37,99,235,.12);
-        }
-    .tag-pct{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:72px;
-      padding:4px 8px;
-      border-radius:999px;
-      font-weight:700;
-      font-size:11px;
-      line-height:1;
+
+    input {
+      width: 100%;
+      height: 42px !important;
+      min-height: 42px !important;
+      max-height: 42px !important;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 10px;
+
+      background: #fff;
+      outline: none;
     }
 
-    .tag-pct-100{
-      background:#15803d;
-      color:#fff;
+    input:focus {
+      border-color: rgba(37, 99, 235, .45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
     }
 
-    .tag-pct-90{
-      background:#4ade80;
-      color:#064e3b;
+    .tag-pct {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-width: 76px;
+      padding: 6px 10px;
+
+      border-radius: 999px;
+
+      font-weight: 800;
+      font-size: 11px;
+
+      border: 1px solid transparent;
     }
 
-    .tag-pct-80{
-      background:#fef3c7;
-      color:#92400e;
+    .tag-pct-100 {
+      background: #15803d;
+      color: #fff;
     }
 
-    .tag-pct-70{
-      background:#fde047;
-      color:#92400e;
+    .tag-pct-90 {
+      background: #4ade80;
+      color: #064e3b;
     }
 
-    .tag-pct-bad{
-      background:#ef4444;
-      color:#fff;
+    .tag-pct-80 {
+      background: #fef3c7;
+      color: #92400e;
     }
 
-    .legend{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
+    .tag-pct-70 {
+      background: #fde047;
+      color: #92400e;
+    }
+
+    .tag-pct-bad {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
       padding: 0 2px 14px;
     }
 
-    .legend-item{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      font-size:12px;
-      color:var(--muted);
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    .legend-swatch{
-      width:14px;
-      height:14px;
-      border-radius:4px;
-    }
-    .tag-status{
-      padding:4px 8px;
-      border-radius:999px;
-      font-weight:700;
-      font-size:11px;
-      display:inline-block;
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
     }
 
-    .tag-planejada{
-      background:#fde047;
-      color:#92400e;
+    .tag-status {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 11px;
+      display: inline-block;
     }
 
-    .tag-cancelada{
-      background:#ef4444;
-      color:#fff;
+    .tag-planejada {
+      background: #fde047;
+      color: #92400e;
     }
 
-    .tag-ativa{
-      background:#4ade80;
-      color:#064e3b;
+    .tag-cancelada {
+      background: #ef4444;
+      color: #fff;
     }
 
-    .tag-encerrada{
-      background:#1e3a8a;
-      color:#dbeafe;
+    .tag-ativa {
+      background: #4ade80;
+      color: #064e3b;
     }
 
-    .grid2 .chart-card{
+    .tag-encerrada {
+      background: #1e3a8a;
+      color: #dbeafe;
+    }
+
+    .grid2 .chart-card {
       height: 340px;
     }
 
-    .grid2 .chart-card canvas{
+    .grid2 .chart-card canvas {
       width: 100% !important;
       height: calc(100% - 28px) !important;
     }
 
-    .topnav{
-      display:flex;
-      gap:10px;
-      padding:10px 0 14px;
-      align-items:center;
-      flex-wrap:wrap;
+    .data-info {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
     }
 
-    .topnav-right{
-      margin-left:auto;
-      display:flex;
-      align-items:center;
-      gap:10px;
+    /* ===== TOM SELECT ===== */
+
+    .ts-wrapper {
+      width: 100%;
     }
 
-    .data-info{
-      margin-top:8px;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:600;
+    .ts-control {
+      min-height: 42px !important;
+      height: 42px !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      padding: 8px 10px !important;
+      background: #fff !important;
+      display: flex !important;
+      align-items: center !important;
+      box-shadow: none !important;
     }
 
+    .ts-control:focus,
+    .ts-wrapper.focus .ts-control {
+      border-color: rgba(37, 99, 235, .45) !important;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .12) !important;
+    }
+
+    .ts-dropdown {
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      box-shadow: var(--shadow) !important;
+      overflow: hidden !important;
+    }
+
+    .ts-dropdown .option {
+      font-size: 13px;
+      padding: 8px 10px;
+    }
+
+    .dashboard-footer {
+      margin-top: 24px;
+      padding: 14px 20px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      border-top: 1px solid var(--border);
+
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-footer strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .footer-right {
+      font-weight: 600;
+    }
+
+    @media (max-width:768px) {
+      .dashboard-footer {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+      }
+    }
+
+    .ts-wrapper.single .ts-control {
+      padding-right: 32px !important;
+    }
+
+    /* Mantém o "vezinho" padrão do Tom Select */
+    .ts-wrapper.single .ts-control {
+      padding-right: 32px !important;
+    }
+
+    .ts-wrapper.single .ts-control::after {
+      content: "⌄";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-52%);
+      color: #64748b;
+      font-size: 18px;
+      line-height: 1;
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    /* Mantém o item selecionado centralizado no campo */
+    .ts-wrapper.single.has-items .ts-control {
+      align-items: center !important;
+      flex-wrap: nowrap !important;
+    }
+
+    /* Evita quebra de linha dentro do campo */
+    .ts-wrapper.single.has-items .ts-control .item {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 100% !important;
+    }
+
+    .ts-control input {
+      min-width: 1px !important;
+      height: 22px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      color: #000 !important;
+    }
+
+    .ts-control input::placeholder {
+      color: #000 !important;
+      opacity: 1 !important;
+    }
+
+    .ts-wrapper.has-items .ts-control input::placeholder {
+      color: transparent !important;
+    }
+
+    /* COR PRETA DOS VALORES EXIBIDOS NOS DROPDOWNS */
+    body .filters .ts-wrapper.single .ts-control>.item,
+    body .filters .ts-wrapper.single .ts-control>.item[data-value=""] {
+      color: #000 !important;
+      -webkit-text-fill-color: #000 !important;
+      opacity: 1 !important;
+      background: transparent !important;
+      border: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Padroniza placeholders dos inputs normais */
+    #turma,
+    #curso,
+    #dt_inicio_de,
+    #dt_inicio_ate,
+    #dt_mat_de,
+    #dt_mat_ate {
+      font-size: 13px !important;
+    }
+
+    /* COR PRETA DOS PLACEHOLDERS DOS CAMPOS INPUT */
+    #turma::placeholder,
+    #curso::placeholder {
+      color: #000 !important;
+      opacity: 1 !important;
+      font-size: 13px !important;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .usuario-badge {
+      color: var(--text);
+      font-weight: 700;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .btn-sair {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .btn-sair:hover {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
   </style>
 </head>
 
@@ -551,13 +999,13 @@
         : "/api";
   </script>
   <script>
-    (async function validarSessao(){
-      try{
+    (async function validarSessao() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok){
+        if (!resp.ok) {
           window.location.href = "/login.html";
           return;
         }
@@ -565,12 +1013,12 @@
         const data = await resp.json();
 
         // 🔥 AQUI é o que faltava
-        if(data.deve_trocar_senha){
+        if (data.deve_trocar_senha) {
           window.location.href = "/alterar_senha.html";
           return;
         }
 
-      }catch(e){
+      } catch (e) {
         window.location.href = "/login.html";
       }
     })();
@@ -578,717 +1026,792 @@
 
   <div class="container">
 
-    <nav class="topnav">
-      <a href="index.html" class="navlink">Dashboard</a>
-      <a href="po.html" class="navlink">PO</a>
-      <a href="programas.html?v=2" class="navlink">Programas</a>
-      <a href="performance.html" class="navlink">Performance</a>
-      <a href="modalidades.html?v=2" class="navlink">Modalidades</a>
-      <a href="unidades.html" class="navlink">Unidades</a>
-      <a href="sge_turmas.html" class="navlink active">Turmas</a>
-      <a href="analise_preditiva.html" class="navlink">Análise Preditiva</a>
-      <a href="visao_executiva.html" class="navlink">Visão Executiva</a>
-    
-      <div class="topnav-right">
-        <a href="alterar_senha.html" class="navlink">
-          Alterar senha
-        </a>
-        <div id="usuario-logado" class="badge">
-          <span class="dot"></span>
-          Usuário: —
-        </div>
-    
-        <button onclick="logout()">Sair</button>
-      </div>
-    </nav>
+    <div class="page-layout">
 
-    <div class="header">
-      <div class="title">
-        <h1>Painel • Turmas, Vagas e Matrículas</h1>
-        <p>Visão mensal • Cards, gráficos e tabelas</p>
-    
-        <div id="badge-data-importacao" class="data-info">
-          Data de Atualização: —
-        </div>
-      </div>
-    
-      <div class="badge" id="badge-filtro">
-        <span class="dot"></span>
-        Filtro: —
-      </div>
-    </div>
+      <aside class="sidebar-executiva">
 
-    <div class="panel">
-      <div class="filters">
-        <!-- Data de início da turma -->
-        <div class="field small">
-            <label for="dt_inicio_de">Início (de)</label>
-            <input id="dt_inicio_de" type="date" />
-        </div>
-        <div class="field small">
-            <label for="dt_inicio_ate">Início (até)</label>
-            <input id="dt_inicio_ate" type="date" />
+        <div class="sidebar-logo">
+          <img src="assets/logo.png" alt="Logo">
         </div>
 
-        <!-- Formato / Turno -->
-        <div class="field small">
-            <label for="formato">Formato</label>
-            <select id="formato">
-              <option value="">Todos</option>
-            </select>
-        </div>
-        
-        <div class="field small">
-            <label for="turno">Turno</label>
-            <select id="turno">
-              <option value="">Todos</option>
-            </select>
-        </div>
+        <nav class="sidebar-nav">
+          <a href="index.html">🏠 Dashboard</a>
+          <a href="po.html">🎯 PO</a>
+          <a href="programas.html?v=2">🧩 Programas</a>
+          <a href="performance.html">📊 Performance</a>
+          <a href="modalidades.html?v=2">🏷️ Modalidades</a>
+          <a href="unidades.html">🏢 Unidades</a>
+          <a href="sge_turmas.html" class="active">📚 Ofertas</a>
+          <a href="analise_preditiva.html">🔮 Análise Preditiva</a>
+          <a href="visao_executiva.html">🧠 Visão Executiva</a>
+          <a href="indicadores.html">📈 Indicadores</a>
+          <a href="regioes.html">🌎 Regiões</a>
+          <a href="subregioes.html">📍 Sub-regiões</a>
+          <a href="turmas.html">🏫 Turmas</a>
+          <a href="acoes.html">✅ Ações</a>
+          <a href="relatoriosexecutivos.html">📄 Relatórios</a>
+        </nav>
 
-        <!-- Turma / Curso -->
-        <div class="field">
-            <label for="turma">Turma</label>
-            <input id="turma" list="dl-turmas" placeholder="Digite para buscar..." />
-            <datalist id="dl-turmas"></datalist>
-        </div>
+      </aside>
 
-        <div class="field">
-            <label for="curso">Curso</label>
-            <input id="curso" list="dl-cursos" placeholder="Digite para buscar..." />
-            <datalist id="dl-cursos"></datalist>
-        </div>
+      <main class="main-executiva">
 
-        <!-- Unidade Operacional -->
-        <div class="field">
-            <label for="uo">Unidade Operacional</label>
-            <select id="uo">
-            <option value="">Todas</option>
-            </select>
-        </div>
+        <div class="header">
+          <div class="title">
+            <h1>Ofertas</h1>
 
-        <!-- Status matrícula / faixa preenchimento -->
-        <div class="field small">
-            <label for="status_matricula">Status da Matrícula</label>
-            <select id="status_matricula">
-            <option value="">Todos</option>
-            <option value="MATRICULADO">MATRICULADO</option>
-            <option value="PRE_MATRICULADO">PRÉ-MATRICULADO</option>
-            <option value="CANCELADO">CANCELADO</option>
-            <option value="DESISTENTE">DESISTENTE</option>
-            <option value="EVADIDO">EVADIDO</option>
-            </select>
+            <div id="badge-data-importacao" class="data-info">
+              Data de Atualização: —
+            </div>
+          </div>
+
+          <div class="header-actions">
+
+            <div class="badge usuario-badge" id="usuario-logado">
+              <span class="dot"></span>
+              Usuário: —
+            </div>
+
+            <button class="btn-sair" onclick="logout()">
+              Sair
+            </button>
+
+          </div>
         </div>
 
-        <div class="field small">
-            <label for="faixa_preenchimento">Preenchimento</label>
-            <select id="faixa_preenchimento">
-            <option value="">Todos</option>
-            <option value="100">100%</option>
-            <option value="90_99">90% a 99%</option>
-            <option value="80_89">80% a 89%</option>
-            <option value="70_79">70% a 79%</option>
-            <option value="lt_70">Abaixo de 70%</option>
-            </select>
+        <div class="panel">
+          <div class="filters">
+            <!-- Data de início da turma -->
+            <div class="field small">
+              <label for="dt_inicio_de">Início (de)</label>
+              <input id="dt_inicio_de" type="date" />
+            </div>
+            <div class="field small">
+              <label for="dt_inicio_ate">Início (até)</label>
+              <input id="dt_inicio_ate" type="date" />
+            </div>
+
+            <!-- Formato / Turno -->
+            <div class="field small">
+              <label for="formato">Formato</label>
+              <select id="formato">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field small">
+              <label for="turno">Turno</label>
+              <select id="turno">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <!-- Turma / Curso -->
+            <div class="field">
+              <label for="turma">Turma</label>
+              <input id="turma" list="dl-turmas" placeholder="Digite para buscar..." />
+              <datalist id="dl-turmas"></datalist>
+            </div>
+
+            <div class="field">
+              <label for="curso">Curso</label>
+              <input id="curso" list="dl-cursos" placeholder="Digite para buscar..." />
+              <datalist id="dl-cursos"></datalist>
+            </div>
+
+            <!-- Unidade Operacional -->
+            <div class="field">
+              <label for="uo">Unidade Operacional</label>
+              <select id="uo">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <!-- Status matrícula / faixa preenchimento -->
+            <div class="field small">
+              <label for="status_matricula">Status da Matrícula</label>
+              <select id="status_matricula">
+                <option value="">Selecione...</option>
+                <option value="MATRICULADO">MATRICULADO</option>
+                <option value="PRE_MATRICULADO">PRÉ-MATRICULADO</option>
+                <option value="CANCELADO">CANCELADO</option>
+                <option value="DESISTENTE">DESISTENTE</option>
+                <option value="EVADIDO">EVADIDO</option>
+              </select>
+            </div>
+
+            <div class="field small">
+              <label for="faixa_preenchimento">Preenchimento</label>
+              <select id="faixa_preenchimento">
+                <option value="">Selecione...</option>
+                <option value="100">100%</option>
+                <option value="90_99">90% a 99%</option>
+                <option value="80_89">80% a 89%</option>
+                <option value="70_79">70% a 79%</option>
+                <option value="lt_70">Abaixo de 70%</option>
+              </select>
+            </div>
+
+            <!-- Condição do Aluno -->
+            <div class="field">
+              <label for="condicao_aluno">Condição do Aluno</label>
+              <select id="condicao_aluno">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="modalidade">Modalidade</label>
+              <select id="modalidade">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="programa">Programa</label>
+              <select id="programa">
+                <option value="">Selecione...</option>
+              </select>
+            </div>
+
+            <!-- Data matrícula -->
+            <div class="field small">
+              <label for="dt_mat_de">Matrícula (de)</label>
+              <input id="dt_mat_de" type="date" />
+            </div>
+            <div class="field small">
+              <label for="dt_mat_ate">Matrícula (até)</label>
+              <input id="dt_mat_ate" type="date" />
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" onclick="limpar()">Limpar</button>
+            </div>
+          </div>
+
+          <div class="status" id="status"></div>
         </div>
 
-        <!-- Condição do Aluno -->
-        <div class="field">
-            <label for="condicao_aluno">Condição do Aluno</label>
-            <select id="condicao_aluno">
-              <option value="">Todas</option>
-            </select>
+        <div class="cards" id="cards"></div>
+
+        <div class="grid2">
+          <div class="chart-card">
+            <h3>Pré-matrículas, matrículas e vagas restantes</h3>
+            <canvas id="chartFunil"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Faixas de preenchimento</h3>
+            <canvas id="chartFaixas"></canvas>
+          </div>
         </div>
 
-        <div class="field">
-          <label for="modalidade">Modalidade</label>
-          <select id="modalidade">
-            <option value="">Todas</option>
-          </select>
-        </div>
-        
-        <div class="field">
-          <label for="programa">Programa</label>
-          <select id="programa">
-            <option value="">Todos</option>
-          </select>
+        <div class="chart-card chart-sm" style="margin-bottom:14px;">
+          <h3>Matrículas e Pré-matrículas por mês (data da matrícula)</h3>
+          <canvas id="chartMeses"></canvas>
         </div>
 
-        <!-- Data matrícula -->
-        <div class="field small">
-            <label for="dt_mat_de">Matrícula (de)</label>
-            <input id="dt_mat_de" type="date" />
-        </div>
-        <div class="field small">
-            <label for="dt_mat_ate">Matrícula (até)</label>
-            <input id="dt_mat_ate" type="date" />
+        <div class="section-title">Tabela por Unidade Operacional</div>
+        <div class="table-card">
+          <div class="table-wrap" id="tblUO"></div>
         </div>
 
-        <div class="actions">
-            <button class="btn-primary" onclick="aplicar()">Aplicar</button>
-            <button onclick="limpar()">Limpar</button>
+        <div class="section-title">
+          LEGENDA DE OCUPAÇÃO DAS UNIDADES OPERACIONAIS
         </div>
-      </div>
 
-      <div class="status" id="status"></div>
-    </div>
+        <div class="legend" id="legendPctMat">
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#15803d;"></span>
+            >= 100%
+          </span>
 
-    <div class="cards" id="cards"></div>
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#4ade80;"></span>
+            90 a 99%
+          </span>
 
-    <div class="grid2">
-      <div class="chart-card">
-        <h3>Pré-matrículas, matrículas e vagas restantes</h3>
-        <canvas id="chartFunil"></canvas>
-      </div>
-      <div class="chart-card">
-        <h3>Faixas de preenchimento</h3>
-        <canvas id="chartFaixas"></canvas>
-      </div>
-    </div>
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#fef3c7;"></span>
+            80 a 89%
+          </span>
 
-    <div class="chart-card chart-sm" style="margin-bottom:14px;">
-      <h3>Matrículas e Pré-matrículas por mês (data da matrícula)</h3>
-      <canvas id="chartMeses"></canvas>
-    </div>
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#fde047;"></span>
+            70 a 79%
+          </span>
 
-    <div class="section-title">Tabela por Unidade Operacional</div>
-    <div class="table-card">
-      <div class="table-wrap" id="tblUO"></div>
-    </div>
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#ef4444;"></span>
+            Abaixo de 70%
+          </span>
+        </div>
 
-    <div class="legend" id="legendPctMat">
-      <span class="legend-item">
-        <span class="legend-swatch" style="background:#15803d;"></span>
-        >= 100%
-      </span>
+        <div class="section-title">Tabela detalhada de Turmas</div>
+        <div class="table-card">
+          <div class="table-wrap" id="tblTurmas"></div>
+        </div>
 
-      <span class="legend-item">
-        <span class="legend-swatch" style="background:#4ade80;"></span>
-        90 a 99%
-      </span>
+        <div class="section-title">
+          LEGENDA DE OCUPAÇÃO DAS TURMAS
+        </div>
 
-      <span class="legend-item">
-        <span class="legend-swatch" style="background:#fef3c7;"></span>
-        80 a 89%
-      </span>
+        <div class="legend" id="legendPctMat">
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#15803d;"></span>
+            >= 100%
+          </span>
 
-      <span class="legend-item">
-        <span class="legend-swatch" style="background:#fde047;"></span>
-        70 a 79%
-      </span>
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#4ade80;"></span>
+            90 a 99%
+          </span>
 
-      <span class="legend-item">
-        <span class="legend-swatch" style="background:#ef4444;"></span>
-        Abaixo de 70%
-      </span>
-    </div>
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#fef3c7;"></span>
+            80 a 89%
+          </span>
 
-    <div class="section-title">Tabela detalhada de Turmas</div>
-    <div class="table-card">
-      <div class="table-wrap" id="tblTurmas"></div>
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#fde047;"></span>
+            70 a 79%
+          </span>
+
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#ef4444;"></span>
+            Abaixo de 70%
+          </span>
+        </div>
+
+        <footer class="dashboard-footer">
+
+          <div class="footer-left">
+            <strong>Fonte dos dados:</strong>
+            SGE
+          </div>
+
+        </footer>
+
+      </main>
+
     </div>
 
   </div>
 
-<script>
-  let chartFunil, chartFaixas, chartMatriculasMes;
+  <script>
+    let chartFunil, chartFaixas, chartMatriculasMes;
 
-  function setStatus(t){ document.getElementById("status").textContent = t || ""; }
+    let tsFormato;
+    let tsTurno;
+    let tsUO;
+    let tsStatusMatricula;
+    let tsFaixaPreenchimento;
+    let tsCondicaoAluno;
+    let tsModalidade;
+    let tsPrograma;
 
-  function formatInt(n){ return Number(n || 0).toLocaleString("pt-BR"); }
+    function setStatus(t) { document.getElementById("status").textContent = t || ""; }
 
-  function mesNome(m){
-    const nomes = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-    return nomes[(Number(m||1)-1)] || String(m);
-  }
+    function formatInt(n) { return Number(n || 0).toLocaleString("pt-BR"); }
 
-  function atualizarBadge(){
-    const badge = document.getElementById("badge-filtro");
-    if(!badge) return;
-
-    const parts = [];
-    const v = (id) => (document.getElementById(id)?.value || "").trim();
-
-    if(v("dt_inicio_de") || v("dt_inicio_ate")) {
-      parts.push(`Início: ${v("dt_inicio_de") || "—"} a ${v("dt_inicio_ate") || "—"}`);
+    function mesNome(m) {
+      const nomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+      return nomes[(Number(m || 1) - 1)] || String(m);
     }
 
-    if(v("formato")) parts.push(`Formato: ${v("formato")}`);
-    else parts.push("Formato: todos");
+    function carregarAnoMes(forceNow = true) {
+      const anoSel = document.getElementById("ano");
+      const mesSel = document.getElementById("mes");
+      const agora = new Date();
+      const anoAtual = agora.getFullYear();
+      const mesAtual = agora.getMonth() + 1;
 
-    if(v("turno")) parts.push(`Turno: ${v("turno")}`);
-    else parts.push("Turno: todos");
-
-    if(v("turma")) parts.push(`Turma: ${v("turma")}`);
-    else parts.push("Turmas: todas");
-
-    if(v("curso")) parts.push(`Curso: ${v("curso")}`);
-    else parts.push("Cursos: todos");
-
-    if(v("uo")) {
-      parts.push(`UO: ${document.querySelector("#uo option:checked")?.textContent || v("uo")}`);
-    } else {
-      parts.push("UOs: todas");
-    }
-
-    if(v("status_matricula")) parts.push(`Status: ${v("status_matricula")}`);
-    else parts.push("Status: todos");
-
-    if(v("faixa_preenchimento")) parts.push(`Preenchimento: ${v("faixa_preenchimento")}`);
-    else parts.push("Preenchimento: todos");
-
-    if(v("condicao_aluno")) {
-      parts.push(`Condição: ${document.querySelector("#condicao_aluno option:checked")?.textContent || v("condicao_aluno")}`);
-    } else {
-      parts.push("Condições: todas");
-    }
-
-    if(v("modalidade")) {
-      parts.push(`Modalidade: ${document.querySelector("#modalidade option:checked")?.textContent || v("modalidade")}`);
-    } else {
-      parts.push("Modalidades: todas");
-    }
-
-    if(v("programa")) {
-      parts.push(`Programa: ${document.querySelector("#programa option:checked")?.textContent || v("programa")}`);
-    } else {
-      parts.push("Programas: todos");
-    }
-
-    if(v("dt_mat_de") || v("dt_mat_ate")) {
-      parts.push(`Matrícula: ${v("dt_mat_de") || "—"} a ${v("dt_mat_ate") || "—"}`);
-    }
-
-    badge.innerHTML = `<span class="dot"></span>Filtro: ${parts.join(" • ")}`;
-  }
-
-  function carregarAnoMes(forceNow = true){
-    const anoSel = document.getElementById("ano");
-    const mesSel = document.getElementById("mes");
-    const agora = new Date();
-    const anoAtual = agora.getFullYear();
-    const mesAtual = agora.getMonth()+1;
-
-    anoSel.innerHTML = "";
-    for(let a=anoAtual-1;a<=anoAtual+1;a++){
-      const opt=document.createElement("option");
-      opt.value=a; opt.textContent=a;
-      anoSel.appendChild(opt);
-    }
-
-    mesSel.innerHTML = "";
-    for(let m=1;m<=12;m++){
-      const opt=document.createElement("option");
-      opt.value=m; opt.textContent=String(m).padStart(2,"0");
-      mesSel.appendChild(opt);
-    }
-
-    if(forceNow){
-      anoSel.value = String(anoAtual);
-      mesSel.value = String(mesAtual);
-    }
-
-    atualizarBadge();
-  }
-
-  function qs(){
-    const p = new URLSearchParams();
-    const get = (id)=> (document.getElementById(id)?.value || "").trim();
-
-    if(get("dt_inicio_de")) p.set("dt_inicio_de", get("dt_inicio_de"));
-    if(get("dt_inicio_ate")) p.set("dt_inicio_ate", get("dt_inicio_ate"));
-
-    if(get("formato")) p.set("formato", get("formato"));
-    if(get("turno")) p.set("turno", get("turno"));
-
-    if(get("turma")) p.set("turma", get("turma"));
-    if(get("curso")) p.set("curso", get("curso"));
-
-    if(get("uo")) p.set("uo", get("uo"));
-
-    if(get("status_matricula")) p.set("status_matricula", get("status_matricula"));
-    if(get("faixa_preenchimento")) p.set("faixa_preenchimento", get("faixa_preenchimento"));
-
-    if(get("condicao_aluno")) p.set("condicao_aluno", get("condicao_aluno"));
-
-    if(get("modalidade")) p.set("modalidade", get("modalidade"));
-    if(get("programa")) p.set("programa", get("programa"));
-
-    if(get("dt_mat_de")) p.set("dt_mat_de", get("dt_mat_de"));
-    if(get("dt_mat_ate")) p.set("dt_mat_ate", get("dt_mat_ate"));
-
-    return p.toString();
-    }
-
-  function card(titulo, valor){
-    return `<div class="card"><div class="t">${titulo}</div><div class="v">${valor}</div></div>`;
-  }
-
-  async function fetchJson(url){
-    const r = await fetch(url);
-    if(!r.ok) throw new Error(`HTTP ${r.status}: ${url}`);
-    return await r.json();
-  }
-
-  function renderTableSchema(divId, rows, schema){
-    const host = document.getElementById(divId);
-
-    if(!rows || rows.length===0){
-      host.innerHTML = `<div class="empty">Sem dados.</div>`;
-      return;
-    }
-
-    const cols = schema; // [{key,label,fmt?}...]
-
-    let html = "<table><thead><tr>"
-      + cols.map(c => `<th class="${c.cls || ""}">${c.label}</th>`).join("")
-      + "</tr></thead><tbody>";
-
-    html += rows.map(r => {
-      return "<tr>" + cols.map(c => {
-        const v = r[c.key];
-        const out = c.fmt ? c.fmt(v, r) : (v ?? "");
-        return `<td class="${c.cls || ""}">${out}</td>`;
-      }).join("") + "</tr>";
-    }).join("");
-
-    html += "</tbody></table>";
-    host.innerHTML = html;
-  }
-
-  function upsertChart(ref, canvasId, cfg){
-    if(ref) ref.destroy();
-    return new Chart(document.getElementById(canvasId), cfg);
-  }
-
-  const noTooltipWithLabels = {
-    responsive: true,
-    plugins: {
-      tooltip: { enabled: false },     // ✅ remove tooltip
-      datalabels: {                    // ✅ escreve o valor na barra
-        anchor: "end",
-        align: "end",
-        formatter: (v) => (v ? v : ""), // não mostra zero
-        font: { weight: "700" }
+      anoSel.innerHTML = "";
+      for (let a = anoAtual - 1; a <= anoAtual + 1; a++) {
+        const opt = document.createElement("option");
+        opt.value = a; opt.textContent = a;
+        anoSel.appendChild(opt);
       }
-    }
-  };
-  
-  function tagPctMat(v){
-    const n = Number(v ?? 0);
 
-    if (n >= 100){
-      return `<span class="tag-pct tag-pct-100">${n.toFixed(1)}%</span>`;
-    }
+      mesSel.innerHTML = "";
+      for (let m = 1; m <= 12; m++) {
+        const opt = document.createElement("option");
+        opt.value = m; opt.textContent = String(m).padStart(2, "0");
+        mesSel.appendChild(opt);
+      }
 
-    if (n >= 90){
-      return `<span class="tag-pct tag-pct-90">${n.toFixed(1)}%</span>`;
-    }
+      if (forceNow) {
+        anoSel.value = String(anoAtual);
+        mesSel.value = String(mesAtual);
+      }
 
-    if (n >= 80){
-      return `<span class="tag-pct tag-pct-80">${n.toFixed(1)}%</span>`;
     }
 
-    if (n >= 70){
-      return `<span class="tag-pct tag-pct-70">${n.toFixed(1)}%</span>`;
+    function qs() {
+      const p = new URLSearchParams();
+      const get = (id) => (document.getElementById(id)?.value || "").trim();
+
+      if (get("dt_inicio_de")) p.set("dt_inicio_de", get("dt_inicio_de"));
+      if (get("dt_inicio_ate")) p.set("dt_inicio_ate", get("dt_inicio_ate"));
+
+      if (get("formato")) p.set("formato", get("formato"));
+      if (get("turno")) p.set("turno", get("turno"));
+
+      if (get("turma")) p.set("turma", get("turma"));
+      if (get("curso")) p.set("curso", get("curso"));
+
+      if (get("uo")) p.set("uo", get("uo"));
+
+      if (get("status_matricula")) p.set("status_matricula", get("status_matricula"));
+      if (get("faixa_preenchimento")) p.set("faixa_preenchimento", get("faixa_preenchimento"));
+
+      if (get("condicao_aluno")) p.set("condicao_aluno", get("condicao_aluno"));
+
+      if (get("modalidade")) p.set("modalidade", get("modalidade"));
+      if (get("programa")) p.set("programa", get("programa"));
+
+      if (get("dt_mat_de")) p.set("dt_mat_de", get("dt_mat_de"));
+      if (get("dt_mat_ate")) p.set("dt_mat_ate", get("dt_mat_ate"));
+
+      return p.toString();
     }
 
-    return `<span class="tag-pct tag-pct-bad">${n.toFixed(1)}%</span>`;
-  }
+    function card(titulo, valor, icone = "📊") {
+      return `
+        <div class="card">
+          <div class="card-topo">
+            <div class="card-icone">${icone}</div>
+            <div class="t">${titulo}</div>
+          </div>
 
-  function normalizarTexto(v){
-    return String(v || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toUpperCase();
-  }
+          <div class="v">${valor}</div>
+        </div>
+      `;
+    }
 
-  async function carregarTudo() {
-    const q = qs();
+    async function fetchJson(url) {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error(`HTTP ${r.status}: ${url}`);
+      return await r.json();
+    }
 
-    //cards
-    const s = await fetchJson(`${API}/sge_turmas/summary?${q}`);
-    console.log("SUMMARY SGE TURMAS:", s);
+    function renderTableSchema(divId, rows, schema) {
+      const host = document.getElementById(divId);
 
-    const vagasRestantes = Math.max(
-      0,
-      (s.total_vagas ?? 0) - (s.total_matriculados ?? 0) - (s.total_pre_matriculados ?? 0)
-    );
+      if (!rows || rows.length === 0) {
+        host.innerHTML = `<div class="empty">Sem dados.</div>`;
+        return;
+      }
 
-    document.getElementById("cards").innerHTML = [
-      card("Total de Turmas", formatInt(s.total_turmas ?? 0)),
-      card("Total de Vagas", formatInt(s.total_vagas ?? 0)),
-      card("Total de Pré-matrículas", formatInt(s.total_pre_matriculados ?? 0)),
-      card("Total de Matrículas", formatInt(s.total_matriculados ?? 0)),
-      card("Total de Cancelados", formatInt(s.total_cancelados ?? 0)),
-      card("Total de Desistentes", formatInt(s.total_desistentes ?? 0)),
-      card("Total de Evadidos", formatInt(s.total_evadidos ?? 0)),
-      card("Vagas Restantes", formatInt(vagasRestantes)),
-    ].join("");
+      const cols = schema; // [{key,label,fmt?}...]
 
-    //gráfico 1
-    const resumoGrafico = await fetchJson(`${API}/sge_turmas/grafico/resumo?${q}`);
+      let html = "<table><thead><tr>"
+        + cols.map(c => `<th class="${c.cls || ""}">${c.label}</th>`).join("")
+        + "</tr></thead><tbody>";
 
-    chartFunil = upsertChart(chartFunil, "chartFunil", {
-      type: "bar",
-      data: {
-        labels: resumoGrafico.labels,
-        datasets: [{
-          label: "", // evita "undefined"
-          data: resumoGrafico.values,
-          backgroundColor: [
-            "#2563eb", // Matrículas
-            "#f59e0b", // Pré-matrículas
-            "#16a34a"  // Vagas restantes
-          ],
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            top: 28
-          }
-        },
-        plugins: {
-          legend: { display: false },
-          datalabels: {
-            anchor: "end",
-            align: "top",
-            offset: 6,
-            clamp: true,
-            clip: false,
-            formatter: (v) => v ? v.toLocaleString("pt-BR") : "",
-            font: {
-              weight: "bold",
-              size: 12
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grace: "15%",
-            ticks: {
-              padding: 8
-            }
-          }
+      html += rows.map(r => {
+        return "<tr>" + cols.map(c => {
+          const v = r[c.key];
+          const out = c.fmt ? c.fmt(v, r) : (v ?? "");
+          return `<td class="${c.cls || ""}">${out}</td>`;
+        }).join("") + "</tr>";
+      }).join("");
+
+      html += "</tbody></table>";
+      host.innerHTML = html;
+    }
+
+    function upsertChart(ref, canvasId, cfg) {
+      if (ref) ref.destroy();
+      return new Chart(document.getElementById(canvasId), cfg);
+    }
+
+    const noTooltipWithLabels = {
+      responsive: true,
+      plugins: {
+        tooltip: { enabled: false },     // ✅ remove tooltip
+        datalabels: {                    // ✅ escreve o valor na barra
+          anchor: "end",
+          align: "end",
+          formatter: (v) => (v ? v : ""), // não mostra zero
+          font: { weight: "700" }
         }
-      },
-      plugins: [ChartDataLabels],
-    });
+      }
+    };
 
-    //gráfico 2
-    const faixas = await fetchJson(`${API}/sge_turmas/grafico/faixas_preenchimento?${q}`);
+    function tagPctMat(v) {
+      const n = Number(v ?? 0);
 
-    chartFaixas = upsertChart(chartFaixas, "chartFaixas", {
-      type: "bar",
-      data: {
-        labels: faixas.map(x => x.faixa),
-        datasets: [{
-          label: "",
-          data: faixas.map(x => x.total),
-          backgroundColor: [
-            "#15803d", // >= 100%
-            "#4ade80", // 90 a 99%
-            "#fef3c7", // 80 a 89%
-            "#fde047", // 70 a 79%
-            "#ef4444", // abaixo de 70%
-            "#94a3b8"  // sem vagas
+      if (n >= 100) {
+        return `<span class="tag-pct tag-pct-100">${n.toFixed(1)}%</span>`;
+      }
+
+      if (n >= 90) {
+        return `<span class="tag-pct tag-pct-90">${n.toFixed(1)}%</span>`;
+      }
+
+      if (n >= 80) {
+        return `<span class="tag-pct tag-pct-80">${n.toFixed(1)}%</span>`;
+      }
+
+      if (n >= 70) {
+        return `<span class="tag-pct tag-pct-70">${n.toFixed(1)}%</span>`;
+      }
+
+      return `<span class="tag-pct tag-pct-bad">${n.toFixed(1)}%</span>`;
+    }
+
+    function normalizarTexto(v) {
+      return String(v || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toUpperCase();
+    }
+
+    async function carregarTudo() {
+      const q = qs();
+
+      //cards
+      const s = await fetchJson(`${API}/sge_turmas/summary?${q}`);
+      console.log("SUMMARY SGE TURMAS:", s);
+
+      const vagasRestantes = Math.max(
+        0,
+        (s.total_vagas ?? 0) - (s.total_matriculados ?? 0) - (s.total_pre_matriculados ?? 0)
+      );
+
+      document.getElementById("cards").innerHTML = [
+        card("TOTAL DE TURMAS", formatInt(s.total_turmas ?? 0), "🏫"),
+        card("TOTAL DE VAGAS", formatInt(s.total_vagas ?? 0), "🎯"),
+        card("TOTAL DE PRÉ-MATRÍCULAS", formatInt(s.total_pre_matriculados ?? 0), "📝"),
+        card("TOTAL DE MATRÍCULAS", formatInt(s.total_matriculados ?? 0), "🎓"),
+        card("TOTAL DE CANCELADOS", formatInt(s.total_cancelados ?? 0), "❌"),
+        card("TOTAL DE DESISTENTES", formatInt(s.total_desistentes ?? 0), "⚠️"),
+        card("TOTAL DE EVADIDOS", formatInt(s.total_evadidos ?? 0), "📉"),
+        card("VAGAS RESTANTES", formatInt(vagasRestantes), "📌")
+      ].join("");
+
+      //gráfico 1
+      const resumoGrafico = await fetchJson(`${API}/sge_turmas/grafico/resumo?${q}`);
+
+      chartFunil = upsertChart(chartFunil, "chartFunil", {
+        type: "bar",
+        data: {
+          labels: resumoGrafico.labels,
+          datasets: [{
+            label: "", // evita "undefined"
+            data: resumoGrafico.values,
+            backgroundColor: [
+              "#003B8F", // Matrículas
+              "#3B82F6", // Pré-matrículas
+              "#93C5FD"  // Vagas restantes
+            ],
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 28
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: "end",
+              align: "top",
+              offset: 6,
+              clamp: true,
+              clip: false,
+              formatter: (v) => v ? v.toLocaleString("pt-BR") : "",
+              font: {
+                weight: "bold",
+                size: 12
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grace: "15%",
+              title: {
+                display: true,
+                text: "QUANTIDADE"
+              }
+            }
+          }
+        },
+        plugins: [ChartDataLabels],
+      });
+
+      //gráfico 2
+      const faixas = await fetchJson(`${API}/sge_turmas/grafico/faixas_preenchimento?${q}`);
+
+      chartFaixas = upsertChart(chartFaixas, "chartFaixas", {
+        type: "bar",
+        data: {
+          labels: faixas.map(x => x.faixa),
+          datasets: [{
+            label: "",
+            data: faixas.map(x => x.total),
+            backgroundColor: [
+              "#003B8F",
+              "#2563EB",
+              "#60A5FA",
+              "#93C5FD",
+              "#BFDBFE",
+              "#CBD5E1"
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 28
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: "end",
+              align: "top",
+              offset: 6,
+              clamp: true,
+              clip: false,
+              formatter: (v) => v ? v.toLocaleString("pt-BR") : "",
+              font: {
+                weight: "bold",
+                size: 12
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grace: "15%",
+              ticks: {
+                padding: 8
+              }
+            }
+          }
+        },
+        plugins: [ChartDataLabels],
+      });
+
+      //gráfico 3
+      const meses = await fetchJson(`${API}/sge_turmas/grafico/matriculas_mes?${q}`);
+
+      const mesesFiltrados = meses.filter(x =>
+        (x.matriculados ?? 0) > 0 || (x.pre_matriculados ?? 0) > 0
+      );
+
+      chartMatriculasMes = upsertChart(chartMatriculasMes, "chartMeses", {
+        type: "bar",
+        data: {
+          labels: mesesFiltrados.map(x => x.mes),
+          datasets: [
+            {
+              label: "Matrículas",
+              data: mesesFiltrados.map(x => x.matriculados),
+              backgroundColor: "#003B8F"
+            },
+            {
+              label: "Pré-matrículas",
+              data: mesesFiltrados.map(x => x.pre_matriculados),
+              backgroundColor: "#f59e0b"
+            }
           ]
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            top: 28
-          }
         },
-        plugins: {
-          legend: { display: false },
-          datalabels: {
-            anchor: "end",
-            align: "top",
-            offset: 6,
-            clamp: true,
-            clip: false,
-            formatter: (v) => v ? v.toLocaleString("pt-BR") : "",
-            font: {
-              weight: "bold",
-              size: 12
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 10,
+              left: 20,
+              bottom: 10
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: "top",
+              align: "center"
+            },
+            datalabels: {
+              anchor: "end",
+              align: "top",
+              offset: 6,
+              clamp: true,
+              clip: false,
+              formatter: (v) => v.toLocaleString("pt-BR"),
+              font: {
+                weight: "bold",
+                size: 12
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: false,
+              ticks: {
+                padding: 8
+              }
+            },
+            y: {
+              beginAtZero: true,
+              grace: "15%",
+              ticks: {
+                padding: 8
+              }
             }
           }
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            grace: "15%",
-            ticks: {
-              padding: 8
-            }
-          }
-        }
-      },
-      plugins: [ChartDataLabels],
-    });
-
-    //gráfico 3
-    const meses = await fetchJson(`${API}/sge_turmas/grafico/matriculas_mes?${q}`);
-
-    const mesesFiltrados = meses.filter(x =>
-      (x.matriculados ?? 0) > 0 || (x.pre_matriculados ?? 0) > 0
-    );
-
-    chartMatriculasMes = upsertChart(chartMatriculasMes, "chartMeses", {
-      type: "bar",
-      data: {
-        labels: mesesFiltrados.map(x => x.mes),
-        datasets: [
+        plugins: [
+          ChartDataLabels,
           {
-            label: "Matrículas",
-            data: mesesFiltrados.map(x => x.matriculados),
-            backgroundColor: "#2563eb"
-          },
-          {
-            label: "Pré-matrículas",
-            data: mesesFiltrados.map(x => x.pre_matriculados),
-            backgroundColor: "#f59e0b"
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            top: 10,
-            left: 20,
-            bottom: 10
-          }
-        },
-        plugins: {
-          legend: {
-            display: true,
-            position: "top",
-            align: "center"
-          },
-          datalabels: {
-            anchor: "end",
-            align: "top",
-            offset: 6,
-            clamp: true,
-            clip: false,
-            formatter: (v) => v.toLocaleString("pt-BR"),
-            font: {
-              weight: "bold",
-              size: 12
+            id: "legendSpacing",
+            beforeInit(chart) {
+              const fit = chart.legend.fit;
+              chart.legend.fit = function () {
+                fit.bind(chart.legend)();
+                this.height += 20; // aumenta o espaço ABAIXO da legenda
+              };
             }
           }
-        },
-        scales: {
-          x: {
-            stacked: false,
-            ticks: {
-              padding: 8
-            }
-          },
-          y: {
-            beginAtZero: true,
-            grace: "15%",
-            ticks: {
-              padding: 8
-            }
-          }
-        }
-      },
-      plugins: [
-        ChartDataLabels,
+        ],
+      });
+
+      //tabela 2
+      const t2 = await fetchJson(`${API}/sge_turmas/estado?${q}`);
+
+      atualizarFiltrosFormatoTurno(t2);
+
+      renderTableSchema("tblTurmas", t2, [
+        { key: "cod_turma", label: "TURMA", cls: "col-turma" },
+        { key: "curso", label: "CURSO", cls: "col-wrap" },
+        { key: "filial", label: "UO", cls: "col-wrap" },
         {
-          id: "legendSpacing",
-          beforeInit(chart) {
-            const fit = chart.legend.fit;
-            chart.legend.fit = function() {
-              fit.bind(chart.legend)();
-              this.height += 20; // aumenta o espaço ABAIXO da legenda
-            };
+          key: "data_inicio",
+          label: "DATA INÍCIO",
+          cls: "col-nowrap",
+          fmt: (v) => v ? String(v).slice(0, 10).split("-").reverse().join("/") : ""
+        },
+        { key: "turno", label: "TURNO", cls: "col-wrap" },
+        {
+          key: "formato",
+          label: "FORMATO",
+          cls: "col-nowrap",
+          fmt: (v) => {
+            if (!v) return "";
+            if (v.toUpperCase().includes("DISTÂNCIA")) return "EAD";
+            return v;
+          }
+        },
+        { key: "vagas", label: "Nº VAGAS", cls: "col-num" },
+        { key: "matriculados", label: "Nº MAT.", cls: "col-num" },
+        { key: "pre_matriculados", label: "Nº PRÉ-MAT.", cls: "col-num" },
+        { key: "cancelados", label: "Nº CANC.", cls: "col-num" },
+        { key: "desistentes", label: "Nº DESIST.", cls: "col-num" },
+        { key: "evadidos", label: "Nº EVAD.", cls: "col-num" },
+        { key: "vagas_restantes", label: "Nº VAGAS REST.", cls: "col-num" },
+        {
+          key: "pct_ocupacao",
+          label: "%",
+          cls: "col-num",
+          fmt: (_, r) => {
+            const vagas = Number(r.vagas || 0);
+            const vagasRestantes = Number(r.vagas_restantes || 0);
+
+            const ocupadas = Math.max(0, vagas - vagasRestantes);
+            const pct = vagas > 0 ? (ocupadas / vagas) * 100 : 0;
+
+            return tagPctMat(pct);
           }
         }
-      ],
-    });
+      ]);
 
-    //tabela 2
-    const t2 = await fetchJson(`${API}/sge_turmas/estado?${q}`);
+      //tabela 1
+      const t1 = await fetchJson(`${API}/sge_turmas/tabela/uo?${q}`);
 
-    renderTableSchema("tblTurmas", t2, [
-      { key: "cod_turma", label: "TURMA", cls: "col-turma" },
-      { key: "curso", label: "CURSO", cls: "col-wrap" },
-      { key: "filial", label: "UO", cls: "col-wrap" },
-      {
-        key: "data_inicio",
-        label: "DATA INÍCIO",
-        cls: "col-nowrap",
-        fmt: (v) => v ? String(v).slice(0, 10).split("-").reverse().join("/") : ""
-      },
-      { key: "turno", label: "TURNO", cls: "col-wrap" },
-      {
-        key: "formato",
-        label: "FORMATO",
-        cls: "col-nowrap",
-        fmt: (v) => {
-          if (!v) return "";
-          if (v.toUpperCase().includes("DISTÂNCIA")) return "EAD";
-          return v;
-        }
-      },
-      { key: "vagas", label: "Nº VAGAS", cls: "col-num" },
-      { key: "matriculados", label: "Nº MAT.", cls: "col-num" },
-      { key: "pre_matriculados", label: "Nº PRÉ-MAT.", cls: "col-num" },
-      { key: "cancelados", label: "Nº CANC.", cls: "col-num" },
-      { key: "desistentes", label: "Nº DESIST.", cls: "col-num" },
-      { key: "evadidos", label: "Nº EVAD.", cls: "col-num" },
-      { key: "vagas_restantes", label: "Nº VAGAS REST.", cls: "col-num" }
-    ]);
+      renderTableSchema("tblUO", t1, [
+        { key: "uo", label: "UNIDADE OPERACIONAL", cls: "col-nowrap" },
+        { key: "qtd_turmas", label: "Nº TURMAS", cls: "col-num" },
+        { key: "qtd_vagas", label: "Nº VAGAS", cls: "col-num" },
+        { key: "qtd_matriculados", label: "Nº MATRICULADOS", cls: "col-num" },
+        { key: "pct_matriculados", label: "% MAT.", cls: "col-num", fmt: (v) => tagPctMat(v) },
+        { key: "qtd_pre_matriculados", label: "Nº PRÉ-MAT.", cls: "col-num" },
+        { key: "pct_pre_matriculados", label: "% PRÉ", cls: "col-num" },
+        { key: "pct_rep", label: "% REP", cls: "col-num", fmt: (v) => `${Number(v || 0).toFixed(1)}%` }
+      ]);
 
-    //tabela 1
-    const t1 = await fetchJson(`${API}/sge_turmas/tabela/uo?${q}`);
-
-    renderTableSchema("tblUO", t1, [
-      { key: "uo", label: "UNIDADE OPERACIONAL", cls: "col-nowrap" },
-      { key: "qtd_turmas", label: "Nº TURMAS", cls: "col-num" },
-      { key: "qtd_vagas", label: "Nº VAGAS", cls: "col-num" },
-      { key: "qtd_matriculados", label: "Nº MATRICULADOS", cls: "col-num" },
-      { key: "pct_matriculados", label: "% MAT.", cls: "col-num", fmt: (v) => tagPctMat(v) },
-      { key: "qtd_pre_matriculados", label: "Nº PRÉ-MAT.", cls: "col-num" },
-      { key: "pct_pre_matriculados", label: "% PRÉ", cls: "col-num" },
-      { key: "pct_rep", label: "% REP", cls: "col-num", fmt: (v) => `${Number(v || 0).toFixed(1)}%` }
-    ]);
-
-  }
-
-  async function aplicar(){
-    atualizarBadge();
-    await carregarTudo();
-  }
-
-  async function limpar(){
-    const ids = [
-        "dt_inicio_de","dt_inicio_ate","formato","turno","turma","curso","uo",
-        "status_matricula","faixa_preenchimento","condicao_aluno","modalidade","programa","dt_mat_de","dt_mat_ate"
-    ];
-    ids.forEach(id => {
-        const el = document.getElementById(id);
-        if(!el) return;
-        el.value = "";
-    });
-    atualizarBadge();
-    await carregarTudo();
     }
 
-    async function carregarFiltrosEstadoTurmas(){
+    async function aplicar() {
+      await carregarTudo();
+    }
+
+    async function limpar() {
+      const ids = [
+        "dt_inicio_de",
+        "dt_inicio_ate",
+        "formato",
+        "turno",
+        "turma",
+        "curso",
+        "uo",
+        "status_matricula",
+        "faixa_preenchimento",
+        "condicao_aluno",
+        "modalidade",
+        "programa",
+        "dt_mat_de",
+        "dt_mat_ate"
+      ];
+
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        if (el.tomselect) {
+
+          el.tomselect.clear();
+
+          if (el.id === "uo") {
+            el.tomselect.setTextboxValue("");
+          }
+
+          el.tomselect.refreshItems();
+          el.tomselect.refreshOptions(false);
+
+        } else {
+          el.value = "";
+        }
+      });
+
+      [
+        tsFormato,
+        tsTurno,
+        tsUO,
+        tsStatusMatricula,
+        tsFaixaPreenchimento,
+        tsCondicaoAluno,
+        tsModalidade,
+        tsPrograma
+      ].forEach(ts => {
+        if (ts) {
+          ts.sync();
+        }
+      });
+
+      await carregarTudo();
+    }
+
+    async function carregarFiltrosEstadoTurmas() {
       const q = qs();
       const rows = await fetchJson(`${API}/sge_turmas/estado?${q}`);
 
@@ -1310,149 +1833,293 @@
         turnos.map(v => `<option value="${v}">${v}</option>`).join("");
     }
 
-    // Sempre entra com mês/ano atual (inclusive ao voltar do cache do browser)
-    async function init(){
+    function atualizarFiltrosFormatoTurno(rows) {
+      const formatos = [...new Set(
+        rows.map(r => String(r.formato || "").trim()).filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+      const turnos = [...new Set(
+        rows.map(r => String(r.turno || "").trim()).filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+      const atualizarSelect = (id, lista, textoPadrao) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const valorAtual = el.value;
+
+        if (el.tomselect) {
+          el.tomselect.clearOptions();
+          el.tomselect.addOption({ value: "", text: textoPadrao });
+
+          lista.forEach(v => {
+            el.tomselect.addOption({ value: v, text: v });
+          });
+
+          el.tomselect.refreshOptions(false);
+
+          if (lista.includes(valorAtual)) {
+            el.tomselect.setValue(valorAtual, true);
+          } else {
+            el.tomselect.setValue("", true);
+          }
+        } else {
+          el.innerHTML =
+            `<option value="">${textoPadrao}</option>` +
+            lista.map(v => `<option value="${v}">${v}</option>`).join("");
+
+          el.value = lista.includes(valorAtual) ? valorAtual : "";
+        }
+      };
+
+      atualizarSelect("formato", formatos, "Selecione...");
+      atualizarSelect("turno", turnos, "Selecione...");
+    }
+
+    function inicializarTomSelect() {
+      const configPadrao = {
+        create: false,
+        allowEmptyOption: true,
+        persist: false
+      };
+
+      if (!tsFormato && document.getElementById("formato")) {
+        tsFormato = new TomSelect("#formato", configPadrao);
+      }
+
+      if (!tsTurno && document.getElementById("turno")) {
+        tsTurno = new TomSelect("#turno", configPadrao);
+      }
+
+      if (!tsUO && document.getElementById("uo")) {
+        tsUO = new TomSelect("#uo", configPadrao);
+      }
+
+      if (!tsStatusMatricula && document.getElementById("status_matricula")) {
+        tsStatusMatricula = new TomSelect("#status_matricula", configPadrao);
+      }
+
+      if (!tsFaixaPreenchimento && document.getElementById("faixa_preenchimento")) {
+        tsFaixaPreenchimento = new TomSelect("#faixa_preenchimento", configPadrao);
+      }
+
+      if (!tsCondicaoAluno && document.getElementById("condicao_aluno")) {
+        tsCondicaoAluno = new TomSelect("#condicao_aluno", configPadrao);
+      }
+
+      if (!tsModalidade && document.getElementById("modalidade")) {
+        tsModalidade = new TomSelect("#modalidade", configPadrao);
+      }
+
+      if (!tsPrograma && document.getElementById("programa")) {
+        tsPrograma = new TomSelect("#programa", configPadrao);
+      }
+
+    }
+
+    let filtroTimer = null;
+    let carregandoInicial = true;
+
+    function aplicarAutomatico() {
+      if (carregandoInicial) return;
+
+      clearTimeout(filtroTimer);
+
+      filtroTimer = setTimeout(async () => {
+        await carregarTudo();
+      }, 400);
+    }
+
+    function bindFiltrosAutomaticos() {
+      const ids = [
+        "dt_inicio_de",
+        "dt_inicio_ate",
+        "formato",
+        "turno",
+        "turma",
+        "curso",
+        "uo",
+        "status_matricula",
+        "faixa_preenchimento",
+        "condicao_aluno",
+        "modalidade",
+        "programa",
+        "dt_mat_de",
+        "dt_mat_ate"
+      ];
+
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const evento = el.tagName === "INPUT" ? "input" : "change";
+        el.addEventListener(evento, aplicarAutomatico);
+        el.addEventListener("change", aplicarAutomatico);
+      });
+
+      [
+        tsFormato,
+        tsTurno,
+        tsUO,
+        tsStatusMatricula,
+        tsFaixaPreenchimento,
+        tsCondicaoAluno,
+        tsModalidade,
+        tsPrograma
+      ].forEach(ts => {
+        if (ts) {
+          ts.on("change", aplicarAutomatico);
+        }
+      });
+    }
+
+    async function init() {
       await carregarUsuario();
       await carregarDataImportacao();
-      try{
+      try {
         setStatus("Carregando...");
-        atualizarBadge();
 
         await Promise.all([
           carregarUOs(),
           carregarCondicoes(),
-          carregarFiltrosEstadoTurmas(),
           carregarCursos(),
           carregarModalidades(),
           carregarProgramas(),
         ]);
 
+        inicializarTomSelect();
+
         bindTurmaAutocomplete();
 
         await carregarTudo();
 
+        bindFiltrosAutomaticos();
+
+        carregandoInicial = false;
+
         setStatus("");
-      }catch(e){
+      } catch (e) {
         console.error(e);
         setStatus("Erro ao carregar. Verifique os endpoints /sge no backend.");
       }
     }
 
-    (async () => { await init(); })();
-    window.addEventListener("pageshow", async () => { await init(); });
+    document.addEventListener("DOMContentLoaded", async () => {
+      await init();
+    });
 
-    async function carregarUOs(){
+    async function carregarUOs() {
       const sel = document.getElementById("uo");
       const rows = await fetchJson(`${API}/sge_turmas/uos`);
-      sel.innerHTML = `<option value="">Todas</option>` +
+      sel.innerHTML = `<option value="">Selecione...</option>` +
         rows.map(r => `<option value="${r.codigo}">${r.nome}</option>`).join("");
     }
 
-    async function carregarModalidades(){
+    async function carregarModalidades() {
       const sel = document.getElementById("modalidade");
       const rows = await fetchJson(`${API}/sge_turmas/modalidades`);
 
-      sel.innerHTML = `<option value="">Todas</option>` +
+      sel.innerHTML = `<option value="">Selecione...</option>` +
         rows.map(r => `<option value="${r.codigo}">${r.nome}</option>`).join("");
     }
 
-    async function carregarProgramas(){
+    async function carregarProgramas() {
       const sel = document.getElementById("programa");
       const rows = await fetchJson(`${API}/sge_turmas/programas`);
 
-      sel.innerHTML = `<option value="">Todos</option>` +
+      sel.innerHTML = `<option value="">Selecione...</option>` +
         rows.map(r => `<option value="${r.codigo}">${r.nome}</option>`).join("");
     }
 
-    async function carregarCondicoes(){
-      try{
+    async function carregarCondicoes() {
+      try {
         const sel = document.getElementById("condicao_aluno");
-        if(!sel) return;
+        if (!sel) return;
 
         const data = await fetchJson(`${API}/condicao_aluno/list`);
 
         // ✅ backend atual retorna ARRAY direto (ver main.py)
         const lista = Array.isArray(data) ? data : (data?.itens || []);
 
-        sel.innerHTML = `<option value="">Todas</option>`;
+        sel.innerHTML = `<option value="">Selecione...</option>`;
 
-        const unicos = [...new Set(lista.map(v => String(v||"").trim()).filter(Boolean))].sort();
+        const unicos = [...new Set(lista.map(v => String(v || "").trim()).filter(Boolean))].sort();
 
-        for(const v of unicos){
+        for (const v of unicos) {
           const label = v.replaceAll("_", " ");
           sel.innerHTML += `<option value="${v}">${label}</option>`;
         }
-      }catch(e){
+      } catch (e) {
         console.error("Erro ao carregar condições:", e);
       }
     }
 
-    async function preencherDatalistTurmas(q){
-        const dl = document.getElementById("dl-turmas");
-        const rows = await fetchJson(`${API}/sge/filtros/turmas?q=${encodeURIComponent(q||"")}&limit=50`);
-        dl.innerHTML = rows.map(r => {
-            const label = r.codigo_sge ? `${r.codigo_sge} (ID ${r.codigo})` : `ID ${r.codigo}`;
-            // value vai ser o codigo (recomendado para filtrar)
-            return `<option value="${r.codigo}" label="${label}"></option>`;
-        }).join("");
-        }
+    async function preencherDatalistTurmas(q) {
+      const dl = document.getElementById("dl-turmas");
+      const rows = await fetchJson(`${API}/sge/filtros/turmas?q=${encodeURIComponent(q || "")}&limit=50`);
+      dl.innerHTML = rows.map(r => {
+        const label = r.codigo_sge ? `${r.codigo_sge} (ID ${r.codigo})` : `ID ${r.codigo}`;
+        // value vai ser o codigo (recomendado para filtrar)
+        return `<option value="${r.codigo}" label="${label}"></option>`;
+      }).join("");
+    }
 
-        function bindTurmaAutocomplete(){
-        const inp = document.getElementById("turma");
-        let t = null;
-        inp.addEventListener("input", () => {
-            clearTimeout(t);
-            const q = inp.value.trim();
-            // só busca se digitou pelo menos 2 caracteres
-            if(q.length < 2) return;
-            t = setTimeout(() => preencherDatalistTurmas(q), 250);
-        });
-        }
-    
-  async function preencherDatalistTurmas(q){
-    const rows = await fetchJson(`${API}/sge_turmas/turmas?q=${encodeURIComponent(q || "")}`);
+    function bindTurmaAutocomplete() {
+      const inp = document.getElementById("turma");
+      let t = null;
+      inp.addEventListener("input", () => {
+        clearTimeout(t);
+        const q = inp.value.trim();
+        // só busca se digitou pelo menos 2 caracteres
+        if (q.length < 2) return;
+        t = setTimeout(() => preencherDatalistTurmas(q), 250);
+      });
+    }
 
-    const dl = document.getElementById("dl-turmas");
-    dl.innerHTML = rows.map(r =>
-      `<option value="${r.codigo_sge}" label="${r.nome_curso}"></option>`
-    ).join("");
-  }
+    async function preencherDatalistTurmas(q) {
+      const rows = await fetchJson(`${API}/sge_turmas/turmas?q=${encodeURIComponent(q || "")}`);
 
-  function bindTurmaAutocomplete(){
-    const inp = document.getElementById("turma");
-    let t;
-    inp.addEventListener("input", () => {
-      clearTimeout(t);
-      t = setTimeout(() => preencherDatalistTurmas(inp.value), 250);
-    });
-  }
-    
-    function tagStatus(status){
+      const dl = document.getElementById("dl-turmas");
+      dl.innerHTML = rows.map(r =>
+        `<option value="${r.codigo_sge}" label="${r.nome_curso}"></option>`
+      ).join("");
+    }
 
-      if(!status) return "";
+    function bindTurmaAutocomplete() {
+      const inp = document.getElementById("turma");
+      let t;
+      inp.addEventListener("input", () => {
+        clearTimeout(t);
+        t = setTimeout(() => preencherDatalistTurmas(inp.value), 250);
+      });
+    }
+
+    function tagStatus(status) {
+
+      if (!status) return "";
 
       const s = status.toUpperCase();
 
-      if(s === "PLANEJADA"){
+      if (s === "PLANEJADA") {
         return `<span class="tag-status tag-planejada">PLANEJADA</span>`;
       }
 
-      if(s === "CANCELADA"){
+      if (s === "CANCELADA") {
         return `<span class="tag-status tag-cancelada">CANCELADA</span>`;
       }
 
-      if(s === "ATIVA"){
+      if (s === "ATIVA") {
         return `<span class="tag-status tag-ativa">ATIVA</span>`;
       }
 
-      if(s === "ENCERRADA"){
+      if (s === "ENCERRADA") {
         return `<span class="tag-status tag-encerrada">ENCERRADA</span>`;
       }
 
       return status;
     }
 
-    async function carregarCursos(){
+    async function carregarCursos() {
       const cursos = await fetchJson(`${API}/sge_turmas/cursos`);
 
       const dl = document.getElementById("dl-cursos");
@@ -1461,8 +2128,8 @@
       dl.innerHTML = cursos.map(c => `<option value="${c}">`).join("");
     }
 
-    async function carregarDataImportacao(){
-      try{
+    async function carregarDataImportacao() {
+      try {
         const resp = await fetch(`${API}/importacoes/data/ultimo`, {
           credentials: "include"
         });
@@ -1470,9 +2137,9 @@
         const data = await resp.json();
 
         const el = document.getElementById("badge-data-importacao");
-        if(!el) return;
+        if (!el) return;
 
-        if(!data.ok || !data.data_importacao){
+        if (!data.ok || !data.data_importacao) {
           el.innerHTML = `<span class="dot"></span> Data de Atualização: não localizada`;
           return;
         }
@@ -1486,41 +2153,43 @@
         });
 
         el.textContent = `Data de Atualização: ${dataBR}`;
-      }catch(e){
+      } catch (e) {
         console.error("Erro ao carregar data de importação:", e);
       }
     }
 
-    async function carregarUsuario(){
-      try{
+    async function carregarUsuario() {
+      try {
         const resp = await fetch(`${API}/auth/me`, {
           credentials: "include"
         });
 
-        if(!resp.ok) return;
+        if (!resp.ok) return;
 
         const data = await resp.json();
 
         const el = document.getElementById("usuario-logado");
-        if(el){
+        if (el) {
           el.innerHTML = `<span class="dot"></span> Usuário: ${data.usuario}`;
         }
-      }catch(e){
+      } catch (e) {
         console.error(e);
       }
     }
 
-    async function logout(){
-      try{
+    async function logout() {
+      try {
         await fetch(`${API}/auth/logout`, {
           method: "POST",
           credentials: "include"
         });
-      } catch(e) {}
+      } catch (e) { }
 
       window.location.href = "/login.html";
     }
 
-</script>
+  </script>
+
 </body>
+
 </html>
