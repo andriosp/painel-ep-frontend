@@ -1113,6 +1113,15 @@
               <datalist id="dl-turmas"></datalist>
             </div>
 
+            <div class="field small">
+              <label for="incompany">In Company</label>
+              <select id="incompany">
+                <option value="">Todos</option>
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </div>
+
             <div class="field">
               <label for="curso">Curso</label>
               <input id="curso" list="dl-cursos" placeholder="Digite para buscar..." />
@@ -1357,6 +1366,7 @@
       if (get("turno")) p.set("turno", get("turno"));
 
       if (get("turma")) p.set("turma", get("turma"));
+      if (get("incompany")) p.set("incompany", get("incompany"));
       if (get("curso")) p.set("curso", get("curso"));
 
       if (get("uo")) p.set("uo", get("uo"));
@@ -1762,6 +1772,7 @@
         "formato",
         "turno",
         "turma",
+        "incompany",
         "curso",
         "uo",
         "status_matricula",
@@ -1937,6 +1948,7 @@
         "formato",
         "turno",
         "turma",
+        "incompany",
         "curso",
         "uo",
         "status_matricula",
