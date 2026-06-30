@@ -792,7 +792,6 @@
       background: #fef2f2;
       border-color: #fca5a5;
     }
-
   </style>
 </head>
 
@@ -1516,12 +1515,9 @@
       const temCRSelecionado = crsSelecionados();
 
       lista = (lista || []).filter(item => {
-        if (temCRSelecionado) {
-          return Number(item.meta || 0) > 0 ||
-            Number(item.projetado || 0) > 0;
-        }
-
-        return Number(item.realizado || 0) > 0;
+        return Number(item.meta || 0) > 0 ||
+          Number(item.projetado || 0) > 0 ||
+          Number(item.realizado || 0) > 0;
       });
 
       if (!lista || !lista.length) {
@@ -1600,10 +1596,10 @@
       const ano = document.getElementById("ano").value || String(atual.ano);
       const meses = mesesSelecionados();
 
-      const regiao = document.getElementById("regiao").value || "";
       const subs = subregioesFiltro();
       const progs = selecionados("programa");
       const crs = crsSelecionados();
+      const regiao = document.getElementById("regiao").value || "";
 
       const qs = new URLSearchParams({
         indicador: indicadorAtual,
@@ -1612,6 +1608,7 @@
       });
       if (subs) qs.set("subregioes", subs);
       if (progs) qs.set("programas", progs);
+      if (regiao) qs.set("regiao", regiao);
       if (crs) qs.set("crs", crs);
 
       setStatus("Carregando performance…");
